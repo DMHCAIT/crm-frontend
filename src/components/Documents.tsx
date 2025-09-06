@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { getDatabaseManager } from '../lib/backend';
 import { 
   FileText, 
   Upload, 
