@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { getDatabaseManager } from '../lib/backend';
+import { getApiClient } from '../lib/backend';
 import { 
   Search, 
   GraduationCap, 
@@ -11,14 +11,12 @@ import {
   Clock, 
   AlertCircle,
   User,
-  BookOpen,
   UserPlus
 } from 'lucide-react';
 
 const StudentsManagement: React.FC = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('all');
-  const [loading, setLoading] = useState(true);
   const [students, setStudents] = useState<any[]>([]);
   const currentUser = user?.name || 'Unknown User';
   const currentUserRole = user?.role || 'team_leader';
@@ -34,14 +32,12 @@ const StudentsManagement: React.FC = () => {
 
   const loadStudentsData = async () => {
     try {
-      setLoading(true);
+      // Get real students data from backend API (proper architecture)
+      const apiClient = getApiClient();
+      const studentsData: any = await apiClient.getStudents();
       
-      // Get real students data from backend
-      const dbManager = getDatabaseManager();
-      const studentsData = await dbManager.getStudents();
-      
-      // Convert backend data to frontend format
-      const formattedStudents = studentsData.map((student: any) => ({
+      // Convert API data to frontend format
+      const formattedStudents = (studentsData || []).map((student: any) => ({
         id: student.id,
         name: student.name || 'Unknown Student',
         email: student.email || '',
@@ -66,8 +62,6 @@ const StudentsManagement: React.FC = () => {
       console.error('Error loading students data:', error);
       // Fallback to converted students only
       setStudents(getConvertedStudents());
-    } finally {
-      setLoading(false);
     }
   };
 

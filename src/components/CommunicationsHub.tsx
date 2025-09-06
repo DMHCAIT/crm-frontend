@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { getApiClient, getDatabaseManager } from '../lib/backend';
+import { getApiClient } from '../lib/backend';
 import { 
   Mail, 
   MessageSquare, 
@@ -71,12 +71,12 @@ const CommunicationsHub: React.FC = () => {
     try {
       setLoading(true);
       
-      // Get real data from backend API
-      const dbManager = getDatabaseManager();
-      const communicationsData = await dbManager.getCommunications();
+      // Get real data from backend API (proper architecture)
+      const apiClient = getApiClient();
+      const communicationsData: any = await apiClient.getCommunications();
       
-      // Convert backend communications to frontend format
-      const formattedCommunications: Communication[] = communicationsData.map((comm: any) => ({
+      // Convert API communications to frontend format
+      const formattedCommunications: Communication[] = (communicationsData || []).map((comm: any) => ({
         id: comm.id,
         leadId: comm.lead_id || comm.leadId || '',
         leadName: comm.lead_name || comm.leadName || 'Unknown Lead',

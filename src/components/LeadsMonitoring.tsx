@@ -78,11 +78,11 @@ const LeadsMonitoring: React.FC = () => {
     try {
       setLoading(true);
       
-      // Get real data from backend API
+      // Get real data from backend API (proper architecture)
       const apiClient = getApiClient();
-      const leadsData = await apiClient.getLeads();
+      const leadsData: any = await apiClient.getLeads();
       
-      // Convert backend data to frontend format
+      // Convert API data to frontend format
       const formattedLeads: Lead[] = Array.isArray(leadsData) ? leadsData.map((lead: any) => ({
         id: lead.id || `LEAD-${Date.now()}-${Math.random().toString(36).substr(2, 3)}`,
         name: lead.name || 'Unknown Lead',

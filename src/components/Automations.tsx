@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { getApiClient } from '../lib/backend';
 import { 
   Zap, 
   Clock, 
@@ -10,10 +9,7 @@ import {
   Settings,
   Activity,
   TrendingUp,
-  Bell,
-  CheckCircle,
-  XCircle,
-  RotateCcw
+  Bell
 } from 'lucide-react';
 
 const Automations: React.FC = () => {
