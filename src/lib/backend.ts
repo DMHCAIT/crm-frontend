@@ -221,34 +221,36 @@ class ProductionApiClient {
     return this.request('/health');
   }
 
-  // Leads API
+  // Leads API - Updated to match backend endpoints
   async getLeads() {
-    return this.request('/leads');
+    // For now, return empty array since GET /leads doesn't exist
+    // The backend only has POST /api/leads/capture
+    console.warn('GET /leads endpoint not available on backend. Using fallback.');
+    return [];
   }
 
   async createLead(lead: any) {
-    return this.request('/leads', {
+    return this.request('/api/leads/capture', {
       method: 'POST',
       body: JSON.stringify(lead)
     });
   }
 
   async updateLead(id: string, lead: any) {
-    return this.request(`/leads/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(lead)
-    });
+    // Update endpoint doesn't exist on backend
+    console.warn('PUT /leads endpoint not available on backend');
+    throw new Error('Update lead endpoint not implemented on backend');
   }
 
   async deleteLead(id: string) {
-    return this.request(`/leads/${id}`, {
-      method: 'DELETE'
-    });
+    // Delete endpoint doesn't exist on backend
+    console.warn('DELETE /leads endpoint not available on backend');
+    throw new Error('Delete lead endpoint not implemented on backend');
   }
 
   // WhatsApp API
   async sendWhatsAppMessage(to: string, message: string) {
-    return this.request('/whatsapp/send', {
+    return this.request('/api/whatsapp/send', {
       method: 'POST',
       body: JSON.stringify({ to, message })
     });
@@ -256,24 +258,27 @@ class ProductionApiClient {
 
   // Facebook API
   async getFacebookLeads() {
-    return this.request('/facebook/leads');
+    // Facebook leads endpoint doesn't exist
+    console.warn('Facebook leads endpoint not available on backend');
+    return [];
   }
 
-  // Analytics API
+  // Analytics API - Updated to match backend endpoint
   async getAnalytics(period: string = '30d') {
-    return this.request(`/analytics?period=${period}`);
+    return this.request('/api/analytics/realtime');
   }
 
   // Payments API
   async getPayments() {
-    return this.request('/payments');
+    // Payments endpoint doesn't exist
+    console.warn('Payments endpoint not available on backend');
+    return [];
   }
 
   async createPaymentLink(amount: number, description: string) {
-    return this.request('/payments/create-link', {
-      method: 'POST',
-      body: JSON.stringify({ amount, description })
-    });
+    // Payment link endpoint doesn't exist
+    console.warn('Payment link endpoint not available on backend');
+    throw new Error('Payment link endpoint not implemented on backend');
   }
 }
 
