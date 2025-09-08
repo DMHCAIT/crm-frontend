@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { getApiClient } from '../lib/backend';
 import { 
   User, 
   Mail, 
@@ -24,97 +26,273 @@ import {
   Upload
 } from 'lucide-react';
 
+interface UserProfileData {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  role: string;
+  department?: string;
+  location?: string;
+  joinDate?: string;
+  avatar?: string | null;
+  status: string;
+  permissions: string[];
+  preferences: {
+    notifications: {
+      email: boolean;
+      whatsapp: boolean;
+      sms: boolean;
+      push: boolean;
+    };
+    autoAssignment: boolean;
+    followUpReminders: boolean;
+    workingHours: {
+      start: string;
+      end: string;
+    };
+  };
+}
+
+interface PerformanceStats {
+  leadsHandled: number;
+  conversionRate: number;
+  avgResponseTime: string;
+  enrollments: number;
+  leadsHandledChange: string;
+  conversionRateChange: string;
+  avgResponseTimeChange: string;
+  enrollmentsChange: string;
+}
+
 const UserProfile: React.FC = () => {
+  const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
+  const [loading, setLoading] = useState(true);
+  const [userProfile, setUserProfile] = useState<UserProfileData | null>(null);
+  const [performanceStats, setPerformanceStats] = useState<PerformanceStats | null>(null);
+  const [recentActivity, setRecentActivity] = useState<any[]>([]);
 
-  const userProfile = {
-    id: 'USR-2024-001',
-    name: 'Dr. Sarah Johnson',
-    email: 'sarah.johnson@dmhca.in',
-    phone: '+91 9876543210',
-    role: 'Senior DMHCA Admissions Counselor',
-    department: 'MBBS Admissions',
-    location: 'New Delhi',
-    joinDate: '2023-01-15',
-    avatar: null,
-    status: 'active',
-    permissions: ['leads.view', 'leads.edit', 'students.view', 'communications.send'],
-    preferences: {
-      notifications: {
-        email: true,
-        whatsapp: true,
-        sms: false,
-        push: true
-      },
-      autoAssignment: true,
-      followUpReminders: true,
-      workingHours: {
-        start: '09:00',
-        end: '18:00'
+  useEffect(() => {
+    loadUserProfile();
+    loadPerformanceStats();
+    loadRecentActivity();
+  }, [user]);
+
+  const loadUserProfile = async () => {
+    try {
+      if (!user) {
+        // Use mock data when no user is logged in
+        setUserProfile({
+          id: 'USR-2024-001',
+          name: 'Demo User',
+          email: 'demo@dmhca.in',
+          phone: '+91 9876543210',
+          role: 'Senior DMHCA Admissions Counselor',
+          department: 'MBBS Admissions',
+          location: 'New Delhi',
+          joinDate: '2023-01-15',
+          avatar: null,
+          status: 'active',
+          permissions: ['leads.view', 'leads.edit', 'students.view', 'communications.send'],
+          preferences: {
+            notifications: {
+              email: true,
+              whatsapp: true,
+              sms: false,
+              push: true
+            },
+            autoAssignment: true,
+            followUpReminders: true,
+            workingHours: {
+              start: '09:00',
+              end: '18:00'
+            }
+          }
+        });
+        return;
       }
+
+      // In a real implementation, you would call:
+      // const apiClient = getApiClient();
+      // const profileData = await apiClient.getUserProfile();
+      
+      // For now, use the user data with extended profile
+      setUserProfile({
+        id: user.id || 'USR-2024-001',
+        name: user.name || user.email?.split('@')[0] || 'Unknown User',
+        email: user.email || 'unknown@dmhca.in',
+        phone: user.phone || '+91 9876543210',
+        role: user.role === 'admin' ? 'Senior DMHCA Admissions Counselor' : 'DMHCA Admissions Counselor',
+        department: 'MBBS Admissions',
+        location: 'New Delhi',
+        joinDate: '2023-01-15',
+        avatar: null,
+        status: 'active',
+        permissions: ['leads.view', 'leads.edit', 'students.view', 'communications.send'],
+        preferences: {
+          notifications: {
+            email: true,
+            whatsapp: true,
+            sms: false,
+            push: true
+          },
+          autoAssignment: true,
+          followUpReminders: true,
+          workingHours: {
+            start: '09:00',
+            end: '18:00'
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error loading user profile:', error);
     }
   };
 
-  const performanceStats = [
+  const loadPerformanceStats = async () => {
+    try {
+      const apiClient = getApiClient();
+      
+      // Get leads assigned to current user (in real implementation)
+      // For now, get all leads and calculate sample stats
+      const leadsData = await apiClient.getLeads();
+      const leads = Array.isArray(leadsData) ? leadsData : [];
+      
+      // Calculate user performance stats
+      const userLeads = leads.filter((lead: any) => 
+        lead.assigned_to === user?.id || lead.assignedTo === user?.name
+      );
+      
+      const totalLeads = userLeads.length;
+      const convertedLeads = userLeads.filter((lead: any) => 
+        lead.status === 'closed_won'
+      ).length;
+      
+      const conversionRate = totalLeads > 0 ? (convertedLeads / totalLeads) * 100 : 0;
+      
+      setPerformanceStats({
+        leadsHandled: totalLeads,
+        conversionRate: Math.round(conversionRate * 10) / 10,
+        avgResponseTime: '2.4 hrs',
+        enrollments: convertedLeads,
+        leadsHandledChange: '+12%',
+        conversionRateChange: totalLeads > 0 ? '+5.2%' : '0%',
+        avgResponseTimeChange: '-0.8 hrs',
+        enrollmentsChange: convertedLeads > 0 ? '+8%' : '0%'
+      });
+      
+    } catch (error) {
+      console.error('Error loading performance stats:', error);
+      // Set default stats on error
+      setPerformanceStats({
+        leadsHandled: 0,
+        conversionRate: 0,
+        avgResponseTime: '0 hrs',
+        enrollments: 0,
+        leadsHandledChange: '0%',
+        conversionRateChange: '0%',
+        avgResponseTimeChange: '0 hrs',
+        enrollmentsChange: '0%'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadRecentActivity = async () => {
+    try {
+      // In a real implementation, you would fetch user's recent activities
+      // For now, use sample data
+      setRecentActivity([
+        {
+          type: 'lead_assignment',
+          message: 'Assigned new lead: Rahul Sharma (MBBS)',
+          timestamp: '2 minutes ago',
+          icon: Users,
+          color: 'text-blue-600'
+        },
+        {
+          type: 'communication',
+          message: 'Sent WhatsApp follow-up to Priya Patel',
+          timestamp: '15 minutes ago',
+          icon: MessageSquare,
+          color: 'text-green-600'
+        },
+        {
+          type: 'conversion',
+          message: 'Lead Aakash Kumar converted to student',
+          timestamp: '1 hour ago',
+          icon: Award,
+          color: 'text-orange-600'
+        },
+        {
+          type: 'task_completion',
+          message: 'Completed follow-up call with Neha Singh',
+          timestamp: '2 hours ago',
+          icon: Clock,
+          color: 'text-purple-600'
+        }
+      ]);
+    } catch (error) {
+      console.error('Error loading recent activity:', error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="p-6">
+        <div className="animate-pulse">
+          <div className="bg-gray-200 rounded-lg h-64 mb-6"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-gray-200 rounded-lg h-32"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!userProfile) {
+    return (
+      <div className="p-6">
+        <div className="text-center text-gray-500">
+          Unable to load user profile. Please try again.
+        </div>
+      </div>
+    );
+  }
+
+  const performanceStatsData = [
     {
       title: 'Leads Handled',
-      value: '234',
-      change: '+12%',
+      value: performanceStats?.leadsHandled?.toString() || '0',
+      change: performanceStats?.leadsHandledChange || '0%',
       icon: Users,
       color: 'bg-blue-500'
     },
     {
       title: 'Conversion Rate',
-      value: '68.4%',
-      change: '+5.2%',
+      value: `${performanceStats?.conversionRate || 0}%`,
+      change: performanceStats?.conversionRateChange || '0%',
       icon: Target,
       color: 'bg-green-500'
     },
     {
       title: 'Avg Response Time',
-      value: '2.4 hrs',
-      change: '-0.8 hrs',
+      value: performanceStats?.avgResponseTime || '0 hrs',
+      change: performanceStats?.avgResponseTimeChange || '0 hrs',
       icon: Clock,
       color: 'bg-purple-500'
     },
     {
       title: 'Enrollments',
-      value: '89',
-      change: '+8%',
+      value: performanceStats?.enrollments?.toString() || '0',
+      change: performanceStats?.enrollmentsChange || '0%',
       icon: Award,
       color: 'bg-orange-500'
-    }
-  ];
-
-  const recentActivity = [
-    {
-      type: 'lead_assignment',
-      message: 'Assigned new lead: Rahul Sharma (MBBS)',
-      timestamp: '2 minutes ago',
-      icon: Users,
-      color: 'text-blue-600'
-    },
-    {
-      type: 'communication',
-      message: 'Sent WhatsApp follow-up to Priya Patel',
-      timestamp: '15 minutes ago',
-      icon: MessageSquare,
-      color: 'text-green-600'
-    },
-    {
-      type: 'enrollment',
-      message: 'Successfully enrolled Amit Kumar in MBBS program',
-      timestamp: '1 hour ago',
-      icon: Award,
-      color: 'text-purple-600'
-    },
-    {
-      type: 'document_verification',
-      message: 'Verified documents for Sarah Ali (MD Pediatrics)',
-      timestamp: '2 hours ago',
-      icon: Shield,
-      color: 'text-indigo-600'
     }
   ];
 
@@ -204,7 +382,7 @@ const UserProfile: React.FC = () => {
               </div>
               <div className="flex items-center space-x-2 text-sm text-gray-600">
                 <Calendar className="w-4 h-4" />
-                <span>Joined {new Date(userProfile.joinDate).toLocaleDateString()}</span>
+                <span>Joined {userProfile.joinDate ? new Date(userProfile.joinDate).toLocaleDateString() : 'Unknown'}</span>
               </div>
             </div>
           </div>
@@ -333,7 +511,7 @@ const UserProfile: React.FC = () => {
         <div className="space-y-6">
           {/* Performance Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {performanceStats.map((stat) => {
+            {performanceStatsData.map((stat) => {
               const Icon = stat.icon;
               return (
                 <div key={stat.title} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">

@@ -9,7 +9,6 @@ import {
   getRealTimeManager,
   getDatabaseManager,
   getIntegrationManager,
-  getSupabase,
   getApiClient,
   type RealTimeData,
   type DatabaseLead
@@ -184,16 +183,15 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Use the modern API client instead of deprecated methods
-  const supabase = getSupabase();
-
   useEffect(() => {
-    // Check current user
-    const checkUser = async () => {
+    // For now, simulate authentication check
+    // In a real app, you'd get user from JWT token or API call
+    const checkUser = () => {
       try {
-        const { data: { user }, error } = await supabase.auth.getUser();
-        if (error) throw error;
-        setUser(user);
+        const savedUser = localStorage.getItem('crm_user');
+        if (savedUser) {
+          setUser(JSON.parse(savedUser));
+        }
       } catch (err) {
         console.log('No user session found');
       } finally {
@@ -202,42 +200,36 @@ export const useAuth = () => {
     };
 
     checkUser();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user || null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
+      // Basic validation
+      if (!email || !password) {
+        throw new Error('Email and password are required');
+      }
 
-      if (error) throw error;
+      // Simulate authentication API call
+      // In a real app, this would call your backend authentication endpoint
+      const mockUser = {
+        id: '1',
+        email: email,
+        name: email.split('@')[0],
+        role: 'admin'
+      };
+
+      // Store user in localStorage (in real app, you'd get JWT from backend)
+      localStorage.setItem('crm_user', JSON.stringify(mockUser));
+      setUser(mockUser);
       
-      setUser(data.user);
-      return data;
+      return { user: mockUser };
     } catch (err) {
       let errorMessage = 'Sign in failed';
       
       if (err instanceof Error) {
-        if (err.message.includes('Invalid login credentials')) {
-          errorMessage = 'Invalid email or password. Please check your credentials.';
-        } else if (err.message.includes('Database error')) {
-          errorMessage = 'Database connection error. Please contact support for assistance.';
-        } else if (err.message.includes('Auth session missing')) {
-          errorMessage = 'Authentication session error. Please try again.';
-        } else {
-          errorMessage = err.message;
-        }
+        errorMessage = err.message;
       }
       
       setError(errorMessage);
@@ -251,30 +243,33 @@ export const useAuth = () => {
     setLoading(true);
     setError(null);
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password
-      });
-
-      if (error) throw error;
-      
-      if (data.user) {
-        setUser(data.user);
+      // Basic validation
+      if (!email || !password) {
+        throw new Error('Email and password are required');
       }
-      return data;
+      if (password.length < 6) {
+        throw new Error('Password should be at least 6 characters long');
+      }
+
+      // Simulate sign up API call
+      // In a real app, this would call your backend registration endpoint
+      const mockUser = {
+        id: '1',
+        email: email,
+        name: email.split('@')[0],
+        role: 'user'
+      };
+
+      // Store user in localStorage
+      localStorage.setItem('crm_user', JSON.stringify(mockUser));
+      setUser(mockUser);
+      
+      return { user: mockUser };
     } catch (err) {
       let errorMessage = 'Sign up failed';
       
       if (err instanceof Error) {
-        if (err.message.includes('User already registered')) {
-          errorMessage = 'An account with this email already exists. Try signing in instead.';
-        } else if (err.message.includes('Password should be at least')) {
-          errorMessage = 'Password should be at least 6 characters long.';
-        } else if (err.message.includes('Invalid email')) {
-          errorMessage = 'Please enter a valid email address.';
-        } else {
-          errorMessage = err.message;
-        }
+        errorMessage = err.message;
       }
       
       setError(errorMessage);
@@ -287,8 +282,8 @@ export const useAuth = () => {
   const signOut = async () => {
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      // Clear user from localStorage
+      localStorage.removeItem('crm_user');
       setUser(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign out failed');
