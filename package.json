@@ -1,8 +1,9 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "dmhca-crm-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.1.0",
   "type": "module",
+  "description": "DMHCA CRM Frontend with Production Authentication - FIXED VERSION",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
