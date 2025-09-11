@@ -29,20 +29,36 @@ export const useAuth = (): UseAuthReturn => {
       try {
         setLoading(true);
         
-        // Check if user is already authenticated
+        // Check if there's a stored token and it's not expired
+        const token = TokenManager.getToken();
         const storedUser = authService.getCurrentUser();
-        if (storedUser && authService.isAuthenticated()) {
-          // Verify token with backend
-          const verifiedUser = await authService.verifyToken();
-          setUser(verifiedUser);
+        
+        if (token && storedUser && !TokenManager.isTokenExpired()) {
+          // Only verify token if we have a valid, non-expired token
+          try {
+            const verifiedUser = await authService.verifyToken();
+            if (verifiedUser) {
+              setUser(verifiedUser);
+            } else {
+              // Token verification failed, clear everything
+              TokenManager.removeToken();
+              setUser(null);
+            }
+          } catch (verifyError) {
+            // If verification fails, clear tokens and continue as unauthenticated
+            console.warn('Token verification failed, clearing session:', verifyError);
+            TokenManager.removeToken();
+            setUser(null);
+          }
         } else {
-          // Clear invalid tokens
+          // No token or expired token, clear everything
           TokenManager.removeToken();
           setUser(null);
         }
       } catch (err) {
         console.error('Auth initialization error:', err);
-        setError(err instanceof Error ? err.message : 'Authentication error');
+        // Don't set error state for initialization issues, just clear session
+        TokenManager.removeToken();
         setUser(null);
       } finally {
         setLoading(false);
