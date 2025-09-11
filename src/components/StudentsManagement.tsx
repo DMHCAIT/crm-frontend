@@ -32,27 +32,28 @@ const StudentsManagement: React.FC = () => {
       const studentsData: any = await apiClient.getStudents();
       
       // Convert API data to frontend format
-      const formattedStudents = (studentsData || []).map((student: any) => ({
-        id: student.id,
-        name: student.name || 'Unknown Student',
-        email: student.email || '',
-        phone: student.phone || '',
-        course: student.course || 'Not specified',
-        year: student.year || 'Module 1 of 1',
-        status: student.status || 'active',
-        enrollmentDate: student.created_at?.split('T')[0] || new Date().toISOString().split('T')[0],
-        feeStatus: student.fee_status || 'pending',
-        documents: student.documents_status || 'incomplete',
-        nextPayment: student.next_payment_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        amount: student.fee_amount || '₹0'
-      }));
+      const formattedStudents = Array.isArray(studentsData) ? 
+        studentsData.map((student: any) => ({
+          id: student.id,
+          name: student.name || 'Unknown Student',
+          email: student.email || '',
+          phone: student.phone || '',
+          course: student.course || 'Not specified',
+          year: student.year || 'Module 1 of 1',
+          status: student.status || 'active',
+          enrollmentDate: student.created_at?.split('T')[0] || new Date().toISOString().split('T')[0],
+          feeStatus: student.fee_status || 'pending',
+          documents: student.documents_status || 'incomplete',
+          nextPayment: student.next_payment_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          amount: student.fee_amount || '₹0'
+        })) : [];
 
       setStudents(formattedStudents);
       
     } catch (error) {
       console.error('Error loading students data:', error);
-      // Fallback to converted students only
-      setStudents(getConvertedStudents());
+      // Fallback to empty array if data loading fails
+      setStudents([]);
     }
   };
 

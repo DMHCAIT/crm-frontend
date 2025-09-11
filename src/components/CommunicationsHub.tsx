@@ -76,19 +76,20 @@ const CommunicationsHub: React.FC = () => {
       const communicationsData: any = await apiClient.getCommunications();
       
       // Convert API communications to frontend format
-      const formattedCommunications: Communication[] = (communicationsData || []).map((comm: any) => ({
-        id: comm.id,
-        leadId: comm.lead_id || comm.leadId || '',
-        leadName: comm.lead_name || comm.leadName || 'Unknown Lead',
-        channel: comm.type || comm.channel || 'email',
-        direction: comm.direction || 'outbound',
-        subject: comm.subject || '',
-        content: comm.content || '',
-        status: comm.status || 'sent',
-        timestamp: comm.created_at || comm.timestamp || new Date().toISOString(),
-        counselor: comm.sender || comm.counselor || 'System',
-        campaignId: comm.campaign_id || comm.campaignId
-      }));
+      const formattedCommunications: Communication[] = Array.isArray(communicationsData) ? 
+        communicationsData.map((comm: any) => ({
+          id: comm.id,
+          leadId: comm.lead_id || comm.leadId || '',
+          leadName: comm.lead_name || comm.leadName || 'Unknown Lead',
+          channel: comm.type || comm.channel || 'email',
+          direction: comm.direction || 'outbound',
+          subject: comm.subject || '',
+          content: comm.content || '',
+          status: comm.status || 'sent',
+          timestamp: comm.created_at || comm.timestamp || new Date().toISOString(),
+          counselor: comm.sender || comm.counselor || 'System',
+          campaignId: comm.campaign_id || comm.campaignId
+        })) : [];
 
       // For campaigns, we'll create some basic data since the backend might not have campaigns yet
       const campaignData: Campaign[] = [
