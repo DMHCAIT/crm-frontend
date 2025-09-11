@@ -85,6 +85,7 @@ export interface DatabaseUser {
   created_at: string;
   updated_at: string;
   name: string;
+  username: string;
   email: string;
   phone?: string;
   office_phone?: string;
@@ -808,6 +809,7 @@ export class DatabaseManager {
           created_at: user.created_at,
           updated_at: user.updated_at || user.created_at,
           name: user.user_metadata?.name || user.email?.split('@')[0] || 'Unknown',
+          username: user.user_metadata?.username || user.email?.split('@')[0] || 'unknown',
           email: user.email || '',
           phone: user.user_metadata?.phone,
           office_phone: user.user_metadata?.office_phone,

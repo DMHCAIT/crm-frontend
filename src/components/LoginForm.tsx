@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { Mail, Lock, Eye, EyeOff, GraduationCap } from 'lucide-react';
+import { User, Lock, Eye, EyeOff, GraduationCap } from 'lucide-react';
 
 const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
@@ -13,8 +13,8 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
     
     // Validation
-    if (!email.trim()) {
-      alert('Please enter your email address');
+    if (!username.trim()) {
+      alert('Please enter your username');
       return;
     }
     if (!password.trim()) {
@@ -24,9 +24,9 @@ const LoginForm: React.FC = () => {
 
     try {
       if (isSignUp) {
-        await signUp(email, password);
+        await signUp(username, password);
       } else {
-        await signIn(email, password);
+        await signIn(username, password);
       }
     } catch (err) {
       console.error('Authentication error:', err);
@@ -56,22 +56,22 @@ const LoginForm: React.FC = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Email Field */}
+          {/* Username Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+              Username
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                placeholder="Enter your email"
-                autoComplete="email"
+                placeholder="Enter your username"
+                autoComplete="username"
               />
             </div>
           </div>
@@ -106,7 +106,7 @@ const LoginForm: React.FC = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading || !email.trim() || !password.trim()}
+            disabled={loading || !username.trim() || !password.trim()}
             className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
@@ -126,7 +126,7 @@ const LoginForm: React.FC = () => {
             type="button"
             onClick={() => {
               setIsSignUp(!isSignUp);
-              setEmail('');
+              setUsername('');
               setPassword('');
             }}
             className="text-blue-600 hover:text-blue-800 text-sm font-medium"

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Download, FileText, Calendar, Users, BarChart3, Filter, CheckCircle } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
+import { getApiClient } from '../lib/backend';
+import { Download, FileText, Users, BarChart3, Filter, CheckCircle } from 'lucide-react';
 import { LoadingSpinner } from './LoadingComponents';
 
 interface ExportOption {
@@ -22,7 +24,9 @@ interface ExportFilters {
 }
 
 const DataExport: React.FC = () => {
+  const { user } = useAuth();
   const [selectedExports, setSelectedExports] = useState<string[]>([]);
+  const [selectedFormat, setSelectedFormat] = useState<'csv' | 'pdf' | 'xlsx'>('csv');
   const [filters, setFilters] = useState<ExportFilters>({
     dateRange: 'last_30_days',
     includeNotes: true,
@@ -85,26 +89,151 @@ const DataExport: React.FC = () => {
   const handleExport = async () => {
     if (selectedExports.length === 0) return;
 
+    if (!user) return;
+
     setIsExporting(true);
     try {
-      // Simulate export process
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      const apiClient = getApiClient();
       
+      // Export data based on selections
+      const exportPromises = selectedExports.map(async (exportId) => {
+        const exportOption = exportOptions.find(opt => opt.id === exportId);
+        if (!exportOption) return null;
+
+        let endpoint = '';
+        let filename = '';
+        
+        // Map export options to backend endpoints
+        if (exportId.includes('leads')) {
+          endpoint = '/leads';
+          filename = `leads_export_${new Date().toISOString().split('T')[0]}`;
+        } else if (exportId.includes('students')) {
+          endpoint = '/students';
+          filename = `students_export_${new Date().toISOString().split('T')[0]}`;
+        } else if (exportId.includes('analytics')) {
+          endpoint = '/analytics/export';
+          filename = `analytics_export_${new Date().toISOString().split('T')[0]}`;
+        } else if (exportId.includes('communications')) {
+          endpoint = '/communications';
+          filename = `communications_export_${new Date().toISOString().split('T')[0]}`;
+        }
+
+        if (!endpoint) return null;
+
+        try {
+          // Get data from API using the request method
+          const response = await (apiClient as any).request(endpoint);
+          
+          // Convert data to selected format and trigger download
+          const fileContent = convertDataToFormat(response, selectedFormat);
+          const blob = new Blob([fileContent], { 
+            type: getContentType(selectedFormat) 
+          });
+          
+          // Create download link
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `${filename}.${selectedFormat}`);
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          window.URL.revokeObjectURL(url);
+
+          return {
+            name: exportOption.name,
+            filename: `${filename}.${selectedFormat}`,
+            size: blob.size
+          };
+        } catch (error) {
+          console.error(`Failed to export ${exportOption.name}:`, error);
+          return null;
+        }
+      });
+
+      const results = await Promise.all(exportPromises);
+      const successfulExports = results.filter(r => r !== null);
+
       // Add to history
-      const newExport = {
+      if (successfulExports.length > 0) {
+        const newExport = {
+          id: Date.now().toString(),
+          date: new Date().toISOString(),
+          exports: successfulExports.map(r => r.name).join(', '),
+          status: 'completed' as const,
+          downloadUrl: '#',
+          format: selectedFormat,
+          fileCount: successfulExports.length
+        };
+        
+        setExportHistory(prev => [newExport, ...prev]);
+        setSelectedExports([]);
+      }
+    } catch (error) {
+      console.error('Export failed:', error);
+      
+      // Add failed export to history
+      const failedExport = {
         id: Date.now().toString(),
         date: new Date().toISOString(),
         exports: selectedExports.map(id => exportOptions.find(opt => opt.id === id)?.name).join(', '),
-        status: 'completed',
-        downloadUrl: '#'
+        status: 'failed' as const,
+        downloadUrl: '#',
+        format: selectedFormat,
+        fileCount: 0
       };
       
-      setExportHistory(prev => [newExport, ...prev]);
-      setSelectedExports([]);
-    } catch (error) {
-      console.error('Export failed:', error);
+      setExportHistory(prev => [failedExport, ...prev]);
     } finally {
       setIsExporting(false);
+    }
+  };
+
+  // Helper functions for data conversion
+  const convertDataToFormat = (data: any, format: 'csv' | 'pdf' | 'xlsx'): string => {
+    if (format === 'csv') {
+      return convertToCSV(data);
+    } else if (format === 'xlsx') {
+      // For now, return CSV format - in production, use a library like xlsx
+      return convertToCSV(data);
+    } else if (format === 'pdf') {
+      // For now, return JSON format - in production, use a PDF library
+      return JSON.stringify(data, null, 2);
+    }
+    return JSON.stringify(data, null, 2);
+  };
+
+  const convertToCSV = (data: any): string => {
+    if (!data || !Array.isArray(data.data || data)) {
+      return 'No data available';
+    }
+    
+    const items = data.data || data;
+    if (items.length === 0) return 'No data available';
+    
+    // Get headers from first item
+    const headers = Object.keys(items[0]);
+    const csvHeaders = headers.join(',');
+    
+    // Convert data to CSV rows
+    const csvRows = items.map((item: any) => 
+      headers.map(header => {
+        const value = item[header];
+        // Escape quotes and wrap in quotes if contains comma
+        const stringValue = String(value || '');
+        return stringValue.includes(',') ? `"${stringValue.replace(/"/g, '""')}"` : stringValue;
+      }).join(',')
+    );
+    
+    return [csvHeaders, ...csvRows].join('\n');
+  };
+
+  const getContentType = (format: 'csv' | 'pdf' | 'xlsx'): string => {
+    switch (format) {
+      case 'csv': return 'text/csv';
+      case 'pdf': return 'application/pdf';
+      case 'xlsx': return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      default: return 'text/plain';
     }
   };
 
@@ -144,6 +273,26 @@ const DataExport: React.FC = () => {
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white rounded-lg border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Select Data to Export</h2>
+            
+            {/* Format Selection */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Export Format</label>
+              <div className="flex space-x-4">
+                {(['csv', 'xlsx', 'pdf'] as const).map((format) => (
+                  <label key={format} className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="exportFormat"
+                      value={format}
+                      checked={selectedFormat === format}
+                      onChange={(e) => setSelectedFormat(e.target.value as 'csv' | 'pdf' | 'xlsx')}
+                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-700">{format.toUpperCase()}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {exportOptions.map((option) => {

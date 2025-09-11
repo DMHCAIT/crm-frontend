@@ -66,14 +66,14 @@ export class TokenManager {
 export class ProductionAuthService {
   private apiConfig = getApiConfig();
 
-  async signIn(email: string, password: string): Promise<User> {
+  async signIn(username: string, password: string): Promise<User> {
     try {
       const response = await fetch(`${this.apiConfig.baseUrl}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ username, password })
       });
 
       if (!response.ok) {
@@ -94,14 +94,14 @@ export class ProductionAuthService {
     }
   }
 
-  async signUp(email: string, password: string, name?: string): Promise<User> {
+  async signUp(username: string, password: string, name?: string): Promise<User> {
     try {
       const response = await fetch(`${this.apiConfig.baseUrl}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password, name })
+        body: JSON.stringify({ username, password, name })
       });
 
       if (!response.ok) {
@@ -228,8 +228,8 @@ export const useProductionAuth = () => {
   const authService = getAuthService();
   
   return {
-    signIn: (email: string, password: string) => authService.signIn(email, password),
-    signUp: (email: string, password: string, name?: string) => authService.signUp(email, password, name),
+    signIn: (username: string, password: string) => authService.signIn(username, password),
+    signUp: (username: string, password: string, name?: string) => authService.signUp(username, password, name),
     signOut: () => authService.signOut(),
     verifyToken: () => authService.verifyToken(),
     refreshToken: () => authService.refreshToken(),

@@ -20,8 +20,6 @@ import {
   Target,
   Activity,
   Bell,
-  Eye,
-  EyeOff,
   Key,
   Upload
 } from 'lucide-react';
@@ -83,47 +81,17 @@ const UserProfile: React.FC = () => {
   const loadUserProfile = async () => {
     try {
       if (!user) {
-        // Use mock data when no user is logged in
-        setUserProfile({
-          id: 'USR-2024-001',
-          name: 'Demo User',
-          email: 'demo@dmhca.in',
-          phone: '+91 9876543210',
-          role: 'Senior DMHCA Admissions Counselor',
-          department: 'MBBS Admissions',
-          location: 'New Delhi',
-          joinDate: '2023-01-15',
-          avatar: null,
-          status: 'active',
-          permissions: ['leads.view', 'leads.edit', 'students.view', 'communications.send'],
-          preferences: {
-            notifications: {
-              email: true,
-              whatsapp: true,
-              sms: false,
-              push: true
-            },
-            autoAssignment: true,
-            followUpReminders: true,
-            workingHours: {
-              start: '09:00',
-              end: '18:00'
-            }
-          }
-        });
+        // No user data available
+        setUserProfile(null);
         return;
       }
 
-      // In a real implementation, you would call:
-      // const apiClient = getApiClient();
-      // const profileData = await apiClient.getUserProfile();
-      
-      // For now, use the user data with extended profile
+      // Use real user data from authentication with extended profile info
       setUserProfile({
         id: user.id || 'USR-2024-001',
         name: user.name || user.email?.split('@')[0] || 'Unknown User',
         email: user.email || 'unknown@dmhca.in',
-        phone: user.phone || '+91 9876543210',
+        phone: '+91 9876543210', // Default phone since user object may not have phone
         role: user.role === 'admin' ? 'Senior DMHCA Admissions Counselor' : 'DMHCA Admissions Counselor',
         department: 'MBBS Admissions',
         location: 'New Delhi',

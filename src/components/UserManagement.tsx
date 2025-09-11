@@ -86,7 +86,7 @@ const UserManagement: React.FC = () => {
 
   const getFilteredUsers = () => {
     // Get current user's role level for hierarchy filtering
-    const currentUserRole = currentUser?.user_metadata?.role || 'counselor';
+    const currentUserRole = currentUser?.role || 'counselor';
     const currentUserLevel = roleHierarchy[currentUserRole as keyof typeof roleHierarchy]?.level || 1;
     
     return users.filter(user => {
@@ -103,14 +103,14 @@ const UserManagement: React.FC = () => {
 
   const getVisibleRoles = () => {
     // Get current user's role level to filter available role options
-    const currentUserRole = currentUser?.user_metadata?.role || 'counselor';
+    const currentUserRole = currentUser?.role || 'counselor';
     const currentUserLevel = roleHierarchy[currentUserRole as keyof typeof roleHierarchy]?.level || 1;
     
     return Object.entries(roleHierarchy).filter(([_, role]) => role.level <= currentUserLevel);
   };
 
   const getCurrentUserPermissions = () => {
-    const currentUserRole = currentUser?.user_metadata?.role || 'counselor';
+    const currentUserRole = currentUser?.role || 'counselor';
     const currentUserLevel = roleHierarchy[currentUserRole as keyof typeof roleHierarchy]?.level || 1;
     
     return {
@@ -548,20 +548,58 @@ const UserModal: React.FC<UserModalProps> = ({
 }) => {
   const [formData, setFormData] = useState({
     name: user?.name || '',
+    username: user?.username || '',
     email: user?.email || '',
     phone: user?.phone || '',
     role: user?.role || 'counselor',
     designation: user?.designation || '',
     department: user?.department || '',
     location: user?.location || '',
-    status: user?.status || 'active'
+    status: user?.status || 'active',
+    password: '', // Password field for new users
+    confirmPassword: '' // Confirm password field
   });
+
+  const [passwordError, setPasswordError] = useState('');
 
   if (!isOpen) return null;
 
+  const validatePasswords = () => {
+    if (!user) { // Only validate for new users
+      if (!formData.password) {
+        setPasswordError('Password is required for new users');
+        return false;
+      }
+      if (formData.password.length < 6) {
+        setPasswordError('Password must be at least 6 characters');
+        return false;
+      }
+      if (formData.password !== formData.confirmPassword) {
+        setPasswordError('Passwords do not match');
+        return false;
+      }
+    }
+    setPasswordError('');
+    return true;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    
+    if (!validatePasswords()) {
+      return;
+    }
+
+    // Prepare user data - exclude password confirmation
+    const { confirmPassword, ...userData } = formData;
+    
+    // For existing users, don't send password if it's empty
+    if (user && !formData.password) {
+      const { password, ...userDataWithoutPassword } = userData;
+      onSave(userDataWithoutPassword);
+    } else {
+      onSave(userData);
+    }
   };
 
   return (
@@ -579,6 +617,18 @@ const UserModal: React.FC<UserModalProps> = ({
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
               className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Username</label>
+            <input
+              type="text"
+              value={formData.username}
+              onChange={(e) => setFormData({...formData, username: e.target.value})}
+              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+              placeholder="Username for login"
               required
             />
           </div>
@@ -603,6 +653,65 @@ const UserModal: React.FC<UserModalProps> = ({
               className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
             />
           </div>
+          
+          {/* Password fields - only show for new users or when editing password */}
+          {!user && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Password *</label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({...formData, password: e.target.value})}
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                  placeholder="Minimum 6 characters"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Confirm Password *</label>
+                <input
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                  placeholder="Re-enter password"
+                  required
+                />
+                {passwordError && (
+                  <p className="text-red-600 text-sm mt-1">{passwordError}</p>
+                )}
+              </div>
+            </>
+          )}
+          
+          {user && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700">New Password (optional)</label>
+              <input
+                type="password"
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                placeholder="Leave blank to keep current password"
+              />
+              {formData.password && (
+                <div className="mt-2">
+                  <input
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                    placeholder="Confirm new password"
+                  />
+                  {passwordError && (
+                    <p className="text-red-600 text-sm mt-1">{passwordError}</p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
           
           <div>
             <label className="block text-sm font-medium text-gray-700">Role</label>

@@ -28,71 +28,12 @@ const Automations: React.FC = () => {
     try {
       setLoading(true);
       
-      // For now, we'll create basic automation data based on real system capabilities
-      // In a full implementation, these would come from a dedicated automations API
+      // Initialize with empty arrays - automation features will be implemented in future versions
+      // These would come from a dedicated automations API when fully implemented
       
-      const workflowData = [
-        {
-          id: 1,
-          name: 'New Lead Welcome Sequence',
-          description: 'Automated welcome series for new leads with course information',
-          status: 'active',
-          trigger: 'New lead capture',
-          actions: 3,
-          conversions: 0,
-          enrolled: 0,
-          conversionRate: 0,
-          lastTriggered: 'Never'
-        },
-        {
-          id: 2,
-          name: 'Follow-up Automation',
-          description: 'Automated follow-up for leads based on status',
-          status: 'active',
-          trigger: 'Lead status change',
-          actions: 2,
-          conversions: 0,
-          enrolled: 0,
-          conversionRate: 0,
-          lastTriggered: 'Never'
-        }
-      ];
-
-      const followUpData = [
-        {
-          id: 1,
-          name: 'Hot Lead Immediate Follow-up',
-          condition: 'Lead score > 80',
-          action: 'Assign to senior counselor + immediate notification',
-          priority: 'high',
-          status: 'active',
-          triggerCount: 0
-        },
-        {
-          id: 2,
-          name: 'New Lead Response',
-          condition: 'New lead created',
-          action: 'Send welcome email within 5 minutes',
-          priority: 'medium',
-          status: 'active',
-          triggerCount: 0
-        }
-      ];
-
-      const assignmentData = [
-        {
-          id: 1,
-          name: 'Round Robin Assignment',
-          criteria: 'All new leads',
-          assignment: 'Distribute equally among available counselors',
-          status: 'active',
-          assignmentCount: 0
-        }
-      ];
-
-      setWorkflows(workflowData);
-      setFollowUpRules(followUpData);
-      setAssignmentRules(assignmentData);
+      setWorkflows([]);
+      setFollowUpRules([]);
+      setAssignmentRules([]);
 
     } catch (error) {
       console.error('Error loading automation data:', error);

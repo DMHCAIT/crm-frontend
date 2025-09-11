@@ -6,8 +6,6 @@ import {
   Users, 
   GraduationCap, 
   DollarSign, 
-  Phone, 
-  Mail, 
   MessageSquare,
   UserPlus,
   Target,
@@ -37,6 +35,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     leadScore: 0,
     followUpsDue: 0
   });
+  const [recentActivities, setRecentActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Load real stats from Railway API
@@ -65,6 +64,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           leadScore: 75, // Could be calculated from leads data
           followUpsDue: 3 // Could be calculated from leads data
         });
+
+        // Load recent activities from real data
+        await loadRecentActivities();
         
         console.log('✅ Dashboard stats loaded from Railway API');
       } catch (error) {
@@ -77,6 +79,34 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
     loadDashboardStats();
   }, []);
+
+  const loadRecentActivities = async () => {
+    try {
+      const apiClient = getApiClient();
+      const leadsData = await apiClient.getLeads();
+      const leads = Array.isArray(leadsData) ? leadsData : [];
+      
+      // Create activity entries from recent leads data
+      const activities = leads.slice(0, 4).map((lead: any, index: number) => ({
+        id: index + 1,
+        type: 'lead',
+        message: `New lead "${lead.name || 'Unknown Lead'}" added`,
+        time: new Date(lead.created_at || Date.now()).toLocaleString('en-IN', {
+          hour: '2-digit',
+          minute: '2-digit',
+          day: '2-digit',
+          month: 'short'
+        }),
+        icon: UserPlus,
+        color: 'text-blue-600'
+      }));
+      
+      setRecentActivities(activities);
+    } catch (error) {
+      console.warn('⚠️ Failed to load recent activities:', error);
+      setRecentActivities([]);
+    }
+  };
 
   // Enhanced Quick Actions with Navigation
   const quickActions = [
@@ -137,7 +167,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       description: 'Manage campaigns and communications',
       icon: MessageSquare,
       route: 'communications',
-      stats: '5 Active Campaigns',
+      stats: loading ? 'Loading...' : '0 Active Campaigns',
       color: 'border-purple-200 bg-purple-50'
     },
     {
@@ -166,42 +196,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     }
   ];
 
-  // Recent Activities
-  const recentActivities = [
-    {
-      id: 1,
-      type: 'lead',
-      message: 'New lead "John Smith" added',
-      time: '2 minutes ago',
-      icon: UserPlus,
-      color: 'text-blue-600'
-    },
-    {
-      id: 2,
-      type: 'conversion',
-      message: 'Lead "Sarah Wilson" converted to student',
-      time: '15 minutes ago',
-      icon: GraduationCap,
-      color: 'text-green-600'
-    },
-    {
-      id: 3,
-      type: 'communication',
-      message: 'Email campaign sent to leads',
-      time: '1 hour ago',
-      icon: Mail,
-      color: 'text-purple-600'
-    },
-    {
-      id: 4,
-      type: 'follow-up',
-      message: 'Follow-up call scheduled with Mike Chen',
-      time: '2 hours ago',
-      icon: Phone,
-      color: 'text-orange-600'
-    }
-  ];
-
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       {/* Header */}
@@ -219,7 +213,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Leads</p>
               <p className="text-3xl font-bold text-gray-900">{stats.totalLeads}</p>
-              <p className="text-sm text-green-600 mt-1">+12% from last month</p>
+              <p className="text-sm text-gray-500 mt-1">Total leads in system</p>
             </div>
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
               <Users className="w-6 h-6 text-blue-600" />
@@ -232,7 +226,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             <div>
               <p className="text-sm font-medium text-gray-600">Active Students</p>
               <p className="text-3xl font-bold text-gray-900">{stats.activeStudents}</p>
-              <p className="text-sm text-green-600 mt-1">+8% from last month</p>
+              <p className="text-sm text-gray-500 mt-1">Currently enrolled</p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
               <GraduationCap className="w-6 h-6 text-green-600" />
@@ -245,7 +239,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             <div>
               <p className="text-sm font-medium text-gray-600">Revenue</p>
               <p className="text-3xl font-bold text-gray-900">₹{(stats.revenue / 1000).toFixed(0)}K</p>
-              <p className="text-sm text-green-600 mt-1">+15% from last month</p>
+              <p className="text-sm text-gray-500 mt-1">Estimated revenue</p>
             </div>
             <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
               <DollarSign className="w-6 h-6 text-yellow-600" />
@@ -258,7 +252,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             <div>
               <p className="text-sm font-medium text-gray-600">Conversion Rate</p>
               <p className="text-3xl font-bold text-gray-900">{stats.conversionRate}%</p>
-              <p className="text-sm text-green-600 mt-1">+3% from last month</p>
+              <p className="text-sm text-gray-500 mt-1">Leads to students</p>
             </div>
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
               <TrendingUp className="w-6 h-6 text-purple-600" />

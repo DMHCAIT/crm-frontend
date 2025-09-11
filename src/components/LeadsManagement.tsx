@@ -1593,10 +1593,8 @@ const LeadsManagement: React.FC = () => {
                               className="text-sm text-gray-600 bg-white border border-gray-300 rounded px-2 py-1 w-full"
                               onClick={(e) => e.stopPropagation()}
                             >
-                              <option value="beenish">Beenish</option>
-                              <option value="john">John Doe</option>
-                              <option value="jane">Jane Smith</option>
-                              <option value="mike">Mike Johnson</option>
+                              <option value="">Unassigned</option>
+                              <option value="santhosh@dmhca.in">Santhosh DMHCA</option>
                             </select>
                           ) : (
                             <p className="text-sm text-gray-600 font-medium">{lead.assignedTo}</p>
@@ -1954,10 +1952,8 @@ const LeadsManagement: React.FC = () => {
                               onChange={(e) => setEditedLead(prev => ({ ...prev, assignedTo: e.target.value }))}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
-                              <option value="beenish">Beenish</option>
-                              <option value="john">John Doe</option>
-                              <option value="jane">Jane Smith</option>
-                              <option value="mike">Mike Johnson</option>
+                              <option value="">Unassigned</option>
+                              <option value="santhosh@dmhca.in">Santhosh DMHCA</option>
                             </select>
                           ) : (
                             <div className="flex items-center justify-between">
@@ -2092,10 +2088,7 @@ const LeadsManagement: React.FC = () => {
                 </label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                   <option value="">Select Counselor</option>
-                  <option value="beenish">Beenish</option>
-                  <option value="john">John Doe</option>
-                  <option value="jane">Jane Smith</option>
-                  <option value="mike">Mike Johnson</option>
+                  <option value="santhosh@dmhca.in">Santhosh DMHCA</option>
                 </select>
               </div>
               <div>
@@ -2202,12 +2195,7 @@ const LeadsManagement: React.FC = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">Select Counselor</option>
-                  <option value="beenish">Beenish</option>
-                  <option value="john">John Doe</option>
-                  <option value="jane">Jane Smith</option>
-                  <option value="mike">Mike Johnson</option>
-                  <option value="sara">Sara Wilson</option>
-                  <option value="alex">Alex Brown</option>
+                  <option value="santhosh@dmhca.in">Santhosh DMHCA</option>
                 </select>
               </div>
               

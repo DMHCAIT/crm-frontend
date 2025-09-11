@@ -10,8 +10,8 @@ interface UseAuthReturn {
   user: User | null;
   loading: boolean;
   error: string | null;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name?: string) => Promise<void>;
+  signIn: (username: string, password: string) => Promise<void>;
+  signUp: (username: string, password: string, name?: string) => Promise<void>;
   signOut: () => Promise<void>;
   isAuthenticated: boolean;
 }
@@ -68,12 +68,12 @@ export const useAuth = (): UseAuthReturn => {
     initAuth();
   }, []);
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (username: string, password: string) => {
     setLoading(true);
     setError(null);
 
     try {
-      const userData = await authService.signIn(email, password);
+      const userData = await authService.signIn(username, password);
       setUser(userData);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Login failed';
@@ -84,12 +84,12 @@ export const useAuth = (): UseAuthReturn => {
     }
   };
 
-  const signUp = async (email: string, password: string, name?: string) => {
+  const signUp = async (username: string, password: string, name?: string) => {
     setLoading(true);
     setError(null);
 
     try {
-      const userData = await authService.signUp(email, password, name);
+      const userData = await authService.signUp(username, password, name);
       setUser(userData);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Registration failed';

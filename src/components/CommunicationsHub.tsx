@@ -91,29 +91,8 @@ const CommunicationsHub: React.FC = () => {
           campaignId: comm.campaign_id || comm.campaignId
         })) : [];
 
-      // For campaigns, we'll create some basic data since the backend might not have campaigns yet
-      const campaignData: Campaign[] = [
-        {
-          id: 'CAMP-001',
-          name: 'New Lead Welcome',
-          type: 'email',
-          status: 'active',
-          targetAudience: 'New Leads',
-          totalRecipients: formattedCommunications.filter(c => c.campaignId === 'CAMP-001').length || 0,
-          sent: formattedCommunications.filter(c => c.campaignId === 'CAMP-001' && c.status !== 'pending').length || 0,
-          delivered: formattedCommunications.filter(c => c.campaignId === 'CAMP-001' && c.status === 'delivered').length || 0,
-          opened: formattedCommunications.filter(c => c.campaignId === 'CAMP-001' && c.status === 'read').length || 0,
-          clicked: 0,
-          responded: 0,
-          converted: 0,
-          createdAt: new Date().toISOString(),
-          scheduledAt: new Date().toISOString(),
-          lastSent: formattedCommunications.length > 0 ? formattedCommunications[0].timestamp : new Date().toISOString(),
-          subject: 'Welcome to DMHCA',
-          content: 'Welcome message content...',
-          automationRules: ['Auto-send to new leads']
-        }
-      ];
+      // Initialize empty campaigns array - will be populated when campaign features are implemented
+      const campaignData: Campaign[] = [];
 
       setCommunications(formattedCommunications);
       setCampaigns(campaignData);

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import ErrorBoundary from './components/ErrorBoundary';
 import { NotificationProvider } from './components/NotificationSystem';
 import AuthWrapper from './components/AuthWrapper';
-import { DEPLOYMENT_INFO } from './deployment-trigger';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
@@ -26,7 +25,7 @@ const App: React.FC = () => {
 
   // Log deployment info for production tracking
   React.useEffect(() => {
-    console.log('🚀 DMHCA CRM Deployment Info:', DEPLOYMENT_INFO);
+    console.log('🚀 DMHCA CRM Frontend v1.1.0 with Authentication fixes Deployed');
   }, []);
 
   const renderActiveSection = () => {

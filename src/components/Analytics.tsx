@@ -42,32 +42,32 @@ const Analytics: React.FC = () => {
         {
           title: 'Lead Conversion Rate',
           value: `${Math.round(conversionRate * 10) / 10}%`,
-          change: '+5.2%', // This would come from comparing to previous period
-          changeType: 'positive',
+          change: '', // Change calculation requires historical data
+          changeType: 'neutral',
           icon: Target,
           description: 'Leads to enrollment conversion'
         },
         {
           title: 'Average Response Time',
-          value: `2.4h`, // Calculate from communications data
-          change: '-0.8 hrs',
-          changeType: 'positive',
+          value: `N/A`, // Calculate from communications data when available
+          change: '',
+          changeType: 'neutral',
           icon: Calendar,
           description: 'First response to new leads'
         },
         {
           title: 'Student Retention',
-          value: '94.2%', // This would come from student data
-          change: '+1.1%',
-          changeType: 'positive',
+          value: 'N/A', // This would come from student data
+          change: '',
+          changeType: 'neutral',
           icon: GraduationCap,
           description: 'Year-over-year retention rate'
         },
         {
           title: 'Revenue per Student',
-          value: '₹2.8L',
-          change: '+12%',
-          changeType: 'positive',
+          value: '₹2.5L', // Standard MBBS fee
+          change: '',
+          changeType: 'neutral',
           icon: DollarSign,
           description: 'Average annual revenue'
         }

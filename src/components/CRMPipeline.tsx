@@ -141,7 +141,7 @@ const CRMPipeline: React.FC = () => {
         avgResponseTime: 2.4, // Calculate from communications data
         revenue: convertedLeads * 250000, // Estimated revenue per conversion
         avgDealSize: convertedLeads > 0 ? (convertedLeads * 250000) / convertedLeads : 250000,
-        monthlyGrowth: 15.2 // Calculate from historical data
+        monthlyGrowth: 0 // Calculate from historical data when available
       };
 
       // Generate recent activities from leads
