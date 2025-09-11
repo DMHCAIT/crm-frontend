@@ -21,11 +21,6 @@ const StudentsManagement: React.FC = () => {
   const currentUser = user?.name || 'Unknown User';
   const currentUserRole = user?.role || 'team_leader';
 
-  // Get converted students from localStorage
-  const getConvertedStudents = () => {
-    return JSON.parse(localStorage.getItem('convertedStudents') || '[]');
-  };
-
   useEffect(() => {
     loadStudentsData();
   }, [user]);
@@ -43,20 +38,16 @@ const StudentsManagement: React.FC = () => {
         email: student.email || '',
         phone: student.phone || '',
         course: student.course || 'Not specified',
-        year: 'Module 1 of 1', // This would be calculated from enrollment data
+        year: student.year || 'Module 1 of 1',
         status: student.status || 'active',
         enrollmentDate: student.created_at?.split('T')[0] || new Date().toISOString().split('T')[0],
-        feeStatus: 'pending', // This would come from payment system
-        documents: 'incomplete', // This would come from document system
-        nextPayment: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
-        amount: '₹0'
+        feeStatus: student.fee_status || 'pending',
+        documents: student.documents_status || 'incomplete',
+        nextPayment: student.next_payment_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        amount: student.fee_amount || '₹0'
       }));
 
-      // Combine backend students with converted students from localStorage
-      const convertedStudents = getConvertedStudents();
-      const allStudentsData = [...formattedStudents, ...convertedStudents];
-      
-      setStudents(allStudentsData);
+      setStudents(formattedStudents);
       
     } catch (error) {
       console.error('Error loading students data:', error);
