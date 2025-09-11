@@ -33,8 +33,8 @@ const users = [
   },
   {
     name: "Counselor User",
-    email: "counselor@dmhca.in",
-    password: "Counselor@123"
+    email: "lahareesh@dmhca.in",
+    password: "Developer@123"
   }
 ];
 

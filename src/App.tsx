@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ErrorBoundary from './components/ErrorBoundary';
 import { NotificationProvider } from './components/NotificationSystem';
 import AuthWrapper from './components/AuthWrapper';
+import { DEPLOYMENT_INFO } from './deployment-trigger';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
@@ -22,6 +23,11 @@ import DataExport from './components/DataExport';
 
 const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
+
+  // Log deployment info for production tracking
+  React.useEffect(() => {
+    console.log('🚀 DMHCA CRM Deployment Info:', DEPLOYMENT_INFO);
+  }, []);
 
   const renderActiveSection = () => {
     switch (activeSection) {
