@@ -217,23 +217,43 @@ class ProductionApiClient {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
 
+    // Get authentication token from localStorage
+    const token = localStorage.getItem('token');
+    
     const defaultOptions: RequestInit = {
-      headers: this.config.headers,
+      headers: {
+        ...this.config.headers,
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+      },
       signal: controller.signal,
     };
 
     try {
+      console.log(`🔄 API Request: ${url}`, { 
+        headers: defaultOptions.headers,
+        hasToken: !!token 
+      });
+      
       const response = await fetch(url, { ...defaultOptions, ...options });
       clearTimeout(timeoutId);
       
+      console.log(`📡 API Response: ${response.status} ${response.statusText}`, {
+        ok: response.ok,
+        url: url
+      });
+      
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`❌ API Error ${response.status}:`, errorText);
         throw new Error(`API Error: ${response.status} - ${response.statusText}`);
       }
 
-      return await response.json();
+      const result = await response.json();
+      console.log(`✅ API Success:`, result);
+      return result;
     } catch (error) {
       clearTimeout(timeoutId);
-      console.error(`API Request failed for ${endpoint}:`, error);
+      console.error(`❌ API Request failed for ${endpoint}:`, error);
       throw error;
     }
   }
