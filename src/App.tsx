@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard';
 import CRMPipeline from './components/CRMPipeline';
 import LeadsManagement from './components/LeadsManagement';
 import LeadsMonitoring from './components/LeadsMonitoring';
+import FacebookLeadIntegration from './components/FacebookLeadIntegration';
 import MultiChannelInbox from './components/MultiChannelInbox';
 import CommunicationsHub from './components/CommunicationsHub';
 import StudentsManagement from './components/StudentsManagement';
@@ -38,6 +39,8 @@ const App: React.FC = () => {
         return <LeadsManagement />;
       case 'leads-monitoring':
         return <LeadsMonitoring />;
+      case 'facebook-leads':
+        return <FacebookLeadIntegration />;
       case 'inbox':
         return <MultiChannelInbox />;
       case 'communications':

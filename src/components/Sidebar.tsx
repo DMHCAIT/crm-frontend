@@ -14,7 +14,8 @@ import {
   User,
   Target,
   Activity,
-  Download
+  Download,
+  Facebook
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -28,6 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
     { id: 'crm-pipeline', label: 'CRM Pipeline', icon: Target },
     { id: 'leads', label: 'Lead Management', icon: Users },
     { id: 'leads-monitoring', label: 'Lead Monitoring', icon: Activity },
+    { id: 'facebook-leads', label: 'Facebook Integration', icon: Facebook },
     { id: 'inbox', label: 'Unified Inbox', icon: Inbox },
     { id: 'communications', label: 'Communications Hub', icon: MessageSquare },
     { id: 'students', label: 'Course Enrollments', icon: GraduationCap },
