@@ -3,9 +3,9 @@
 This is the production-ready frontend for the DMHCA CRM system.
 
 ## Live URLs
-- Frontend: [Deployed on Vercel]
-- Backend: https://crm-backend-production-5e32.up.railway.app
-- Database: Supabase (configured)
+- **Frontend:** https://crm-frontend-final-fat2u1gb5-dmhca.vercel.app ✅ **LIVE**
+- **Backend:** https://crm-backend-production-5e32.up.railway.app ⚠️ (502 Error - Needs Fix)
+- **Database:** Supabase (configured)
 
 ## Features
 - ✅ Lead Management
