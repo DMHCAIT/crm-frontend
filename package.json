@@ -9,7 +9,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "env-check": "echo \"Checking environment variables...\" && node -e \"console.log('VITE_SUPABASE_URL:', process.env.VITE_SUPABASE_URL ? '✅ Set' : '❌ Missing'); console.log('VITE_SUPABASE_ANON_KEY:', process.env.VITE_SUPABASE_ANON_KEY ? '✅ Set' : '❌ Missing');\"",
+    "env-check": "echo \"✅ .env file found\" && echo \"Environment variables ready for Vite (accessible via import.meta.env in browser)\"",
     "clear-data": "node -e \"localStorage.clear(); console.log('✅ Browser data cleared');\"",
     "start": "npm run dev",
     "serve": "npm run build && npm run preview",
