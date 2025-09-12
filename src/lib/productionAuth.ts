@@ -73,7 +73,7 @@ export class ProductionAuthService {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ email: username, password })
       });
 
       if (!response.ok) {
@@ -101,7 +101,7 @@ export class ProductionAuthService {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password, name })
+        body: JSON.stringify({ email: username, password, name: name || username })
       });
 
       if (!response.ok) {
