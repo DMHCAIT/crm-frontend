@@ -408,15 +408,24 @@ const LeadsManagement: React.FC = () => {
 
       setLoading(true);
 
-      // Prepare lead data for database insertion
+      // Prepare lead data for database insertion - include ALL fields
       const leadData = {
-        name: newLead.fullName,
+        fullName: newLead.fullName,
+        name: newLead.fullName, // For backend compatibility
         email: newLead.email,
         phone: newLead.phone,
+        country: newLead.country,
+        branch: newLead.branch,
+        qualification: newLead.qualification,
         source: (newLead.source || 'manual') as 'website' | 'social_media' | 'referral' | 'manual' | 'advertisement',
+        course: newLead.course,
         status: (newLead.status || 'new') as 'new' | 'contacted' | 'qualified' | 'proposal' | 'closed_won' | 'closed_lost',
+        assignedTo: newLead.assignedTo || user?.name || 'Unassigned',
+        assigned_to: newLead.assignedTo || user?.name || 'Unassigned', // For backend compatibility
+        followUp: newLead.followUp,
+        priority: 'medium',
         score: 50, // Default score for new leads
-        assigned_to: newLead.assignedTo || user?.name || 'Unassigned',
+        notes: `Lead created via manual entry by ${user?.name || 'System'}`,
       };
 
       // Create via backend API (proper architecture)
