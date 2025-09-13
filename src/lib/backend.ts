@@ -443,6 +443,264 @@ class ProductionApiClient {
     });
   }
 
+  // ===========================
+  // EXTENDED API METHODS FOR FULL DATABASE SUPPORT
+  // ===========================
+
+  // Analytics Events API
+  async getAnalyticsEvents(filters?: any) {
+    const params = new URLSearchParams(filters).toString();
+    return this.request(`/analytics/events${params ? `?${params}` : ''}`);
+  }
+
+  async createAnalyticsEvent(eventData: any) {
+    return this.request('/analytics/events', {
+      method: 'POST',
+      body: JSON.stringify(eventData)
+    });
+  }
+
+  async getAnalyticsDashboard(dateRange?: string) {
+    return this.request(`/analytics/dashboard${dateRange ? `?range=${dateRange}` : ''}`);
+  }
+
+  // Campaigns API
+  async getCampaigns(filters?: any) {
+    const params = new URLSearchParams(filters).toString();
+    return this.request(`/campaigns${params ? `?${params}` : ''}`);
+  }
+
+  async createCampaign(campaignData: any) {
+    return this.request('/campaigns', {
+      method: 'POST',
+      body: JSON.stringify(campaignData)
+    });
+  }
+
+  async updateCampaign(id: string, campaignData: any) {
+    return this.request(`/campaigns/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(campaignData)
+    });
+  }
+
+  async deleteCampaign(id: string) {
+    return this.request(`/campaigns/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  async launchCampaign(id: string) {
+    return this.request(`/campaigns/${id}/launch`, {
+      method: 'POST'
+    });
+  }
+
+  // Communications API - Enhanced
+  async updateCommunication(id: string, communicationData: any) {
+    return this.request(`/communications/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(communicationData)
+    });
+  }
+
+  async deleteCommunication(id: string) {
+    return this.request(`/communications/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  async getCommunicationHistory(entityId: string, entityType: 'lead' | 'student') {
+    return this.request(`/communications/history?entityId=${entityId}&entityType=${entityType}`);
+  }
+
+  // Documents API - Enhanced
+  async updateDocument(id: string, documentData: any) {
+    return this.request(`/documents/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(documentData)
+    });
+  }
+
+  async deleteDocument(id: string) {
+    return this.request(`/documents/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  async verifyDocument(id: string, verificationData: any) {
+    return this.request(`/documents/${id}/verify`, {
+      method: 'POST',
+      body: JSON.stringify(verificationData)
+    });
+  }
+
+  async getDocumentsByStudent(studentId: string) {
+    return this.request(`/documents/student/${studentId}`);
+  }
+
+  async getDocumentsByLead(leadId: string) {
+    return this.request(`/documents/lead/${leadId}`);
+  }
+
+  // Payments API - Enhanced
+  async updatePayment(id: string, paymentData: any) {
+    return this.request(`/payments/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(paymentData)
+    });
+  }
+
+  async getPaymentsByStudent(studentId: string) {
+    return this.request(`/payments/student/${studentId}`);
+  }
+
+  async processPayment(paymentId: string, paymentDetails: any) {
+    return this.request(`/payments/${paymentId}/process`, {
+      method: 'POST',
+      body: JSON.stringify(paymentDetails)
+    });
+  }
+
+  async refundPayment(paymentId: string, refundData: any) {
+    return this.request(`/payments/${paymentId}/refund`, {
+      method: 'POST',
+      body: JSON.stringify(refundData)
+    });
+  }
+
+  // Notifications API
+  async getNotifications(userId?: string) {
+    return this.request(`/notifications${userId ? `?userId=${userId}` : ''}`);
+  }
+
+  async createNotification(notificationData: any) {
+    return this.request('/notifications', {
+      method: 'POST',
+      body: JSON.stringify(notificationData)
+    });
+  }
+
+  async markNotificationAsRead(id: string) {
+    return this.request(`/notifications/${id}/read`, {
+      method: 'PUT'
+    });
+  }
+
+  async deleteNotification(id: string) {
+    return this.request(`/notifications/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  // Notes API
+  async getNotes(entityId?: string, entityType?: 'lead' | 'student') {
+    const params = new URLSearchParams();
+    if (entityId) params.append('entityId', entityId);
+    if (entityType) params.append('entityType', entityType);
+    return this.request(`/notes${params.toString() ? `?${params.toString()}` : ''}`);
+  }
+
+  async createNote(noteData: any) {
+    return this.request('/notes', {
+      method: 'POST',
+      body: JSON.stringify(noteData)
+    });
+  }
+
+  async updateNote(id: string, noteData: any) {
+    return this.request(`/notes/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(noteData)
+    });
+  }
+
+  async deleteNote(id: string) {
+    return this.request(`/notes/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  // Automation Workflows API
+  async getAutomationWorkflows() {
+    return this.request('/automation/workflows');
+  }
+
+  async createAutomationWorkflow(workflowData: any) {
+    return this.request('/automation/workflows', {
+      method: 'POST',
+      body: JSON.stringify(workflowData)
+    });
+  }
+
+  async updateAutomationWorkflow(id: string, workflowData: any) {
+    return this.request(`/automation/workflows/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(workflowData)
+    });
+  }
+
+  async deleteAutomationWorkflow(id: string) {
+    return this.request(`/automation/workflows/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  async executeWorkflow(id: string, triggerData?: any) {
+    return this.request(`/automation/workflows/${id}/execute`, {
+      method: 'POST',
+      body: JSON.stringify(triggerData || {})
+    });
+  }
+
+  // Integration Logs API
+  async getIntegrationLogs(filters?: any) {
+    const params = new URLSearchParams(filters).toString();
+    return this.request(`/integration-logs${params ? `?${params}` : ''}`);
+  }
+
+  async createIntegrationLog(logData: any) {
+    return this.request('/integration-logs', {
+      method: 'POST',
+      body: JSON.stringify(logData)
+    });
+  }
+
+  // System Settings API
+  async getSystemSettings(category?: string) {
+    return this.request(`/system/settings${category ? `?category=${category}` : ''}`);
+  }
+
+  async updateSystemSetting(key: string, value: any) {
+    return this.request('/system/settings', {
+      method: 'PUT',
+      body: JSON.stringify({ key, value })
+    });
+  }
+
+  // User Profiles API - Enhanced
+  async getUserProfile(userId?: string) {
+    return this.request(`/users/profile${userId ? `?userId=${userId}` : ''}`);
+  }
+
+  async updateUserProfile(userId: string, profileData: any) {
+    return this.request(`/users/profile/${userId}`, {
+      method: 'PUT',
+      body: JSON.stringify(profileData)
+    });
+  }
+
+  // User Sessions API
+  async getUserSessions(userId?: string) {
+    return this.request(`/users/sessions${userId ? `?userId=${userId}` : ''}`);
+  }
+
+  async revokeUserSession(sessionId: string) {
+    return this.request(`/users/sessions/${sessionId}/revoke`, {
+      method: 'DELETE'
+    });
+  }
+
   // WhatsApp API
   async sendWhatsAppMessage(to: string, message: string) {
     return this.request('/api/whatsapp/send', {
