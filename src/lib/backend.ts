@@ -213,7 +213,7 @@ class ProductionApiClient {
     const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
 
     // Get authentication token from localStorage
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('crm_auth_token') || localStorage.getItem('token');
     
     const defaultOptions: RequestInit = {
       headers: {

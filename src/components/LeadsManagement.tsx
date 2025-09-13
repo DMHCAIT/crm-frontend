@@ -320,7 +320,23 @@ const LeadsManagement: React.FC = () => {
     };
 
     try {
-      // In production, this would save to Supabase
+      // Save to backend API first
+      const apiClient = getApiClient();
+      const noteData = {
+        content: noteContent,
+        lead_id: leadId,
+        user_id: user?.id,
+        author_id: user?.id,
+        note_type: 'general',
+        priority: 'normal',
+        is_private: false,
+        tags: []
+      };
+      
+      await apiClient.createNote(noteData);
+      console.log('✅ Note saved to backend successfully');
+      
+      // Update frontend state after successful save
       setLeads(prev => prev.map(lead => 
         lead.id === leadId 
           ? { 
@@ -338,8 +354,11 @@ const LeadsManagement: React.FC = () => {
       setLastUpdateTime(new Date());
       
       setNewNote(prev => ({ ...prev, [leadId]: '' }));
+      
     } catch (error) {
-      console.error('Error adding note:', error);
+      console.error('❌ Error saving note to backend:', error);
+      // Show user-friendly error message
+      alert('Failed to save note. Please check your connection and try again.');
     }
   };
 
