@@ -53,7 +53,8 @@ const UserManagement: React.FC = () => {
         processedUsers = userData.users || userData.result || [];
       }
       
-        // Users loaded successfully      // If no users found, add a fallback admin user for testing
+      // Users loaded successfully
+      // If no users found, add a fallback admin user for testing
       if (processedUsers.length === 0 && currentUser) {
         processedUsers = [{
           id: '1',
@@ -74,8 +75,56 @@ const UserManagement: React.FC = () => {
       setError(null);
     } catch (err) {
       console.error('❌ Error loading users:', err);
-      setError('Failed to load users. Please try again.');
-      setUsers([]); // Ensure users is always an array even on error
+      
+      // Provide fallback mock data when API fails
+      const fallbackUsers: DatabaseUser[] = [
+        {
+          id: 'user-001',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          name: currentUser?.name || 'Santhosh DMHCA',
+          username: 'santhosh',
+          email: currentUser?.email || 'santhosh@dmhca.edu',
+          role: 'super_admin',
+          department: 'Administration',
+          designation: 'CRM Administrator',
+          status: 'active',
+          phone: '+91-9876543210',
+          location: 'Delhi'
+        },
+        {
+          id: 'user-002',
+          created_at: '2025-09-10T10:00:00Z',
+          updated_at: new Date().toISOString(),
+          name: 'Dr. Priya Sharma',
+          username: 'priya.sharma',
+          email: 'priya@dmhca.edu',
+          role: 'manager',
+          department: 'Admissions',
+          designation: 'Senior Counselor',
+          status: 'active',
+          phone: '+91-9876543211',
+          location: 'Delhi'
+        },
+        {
+          id: 'user-003',
+          created_at: '2025-09-08T14:30:00Z',
+          updated_at: '2025-09-13T09:15:00Z',
+          name: 'Rahul Kumar',
+          username: 'rahul.kumar',
+          email: 'rahul@dmhca.edu',
+          role: 'counselor',
+          department: 'Admissions',
+          designation: 'Lead Counselor',
+          status: 'active',
+          phone: '+91-9876543212',
+          location: 'Delhi'
+        }
+      ];
+      
+      setUsers(fallbackUsers);
+      setError('Using demo data - backend connection failed. Contact administrator to fix authentication.');
+      console.log('🔄 Using fallback user data due to API failure');
     } finally {
       setLoading(false);
     }
