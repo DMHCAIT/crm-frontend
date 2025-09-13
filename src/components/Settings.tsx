@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import DatabaseConnectionTester from './DatabaseConnectionTester';
 import { 
   Settings as SettingsIcon, 
   Bell, 
@@ -170,9 +169,6 @@ const Settings: React.FC = () => {
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Database Settings</h2>
                 
                 <div className="space-y-6">
-                  {/* Database Connection Tester */}
-                  <DatabaseConnectionTester />
-                  
                   <div className="p-4 border border-gray-200 rounded-lg">
                     <h3 className="font-medium text-gray-900 mb-2">Connection Status</h3>
                     <div className="flex items-center space-x-2 mb-3">
