@@ -163,11 +163,11 @@ const LeadsManagement: React.FC = () => {
         }));
         
         setLeads(transformedLeads);
-        console.log('✅ Loaded leads from production API:', transformedLeads.length);
+        // Leads loaded from production API
       } else {
         // No leads found, set empty array
         setLeads([]);
-        console.log('📋 No leads found in production database');
+        // No leads found in database
       }
       
     } catch (error) {
@@ -480,7 +480,7 @@ const LeadsManagement: React.FC = () => {
       setShowAddLeadModal(false);
 
       alert(`Lead "${newLead.fullName}" added successfully!`);
-      console.log('✅ Lead created via production API');
+      // Lead created successfully
       
     } catch (error) {
       console.error('❌ Error adding lead:', error);
@@ -2121,7 +2121,7 @@ const LeadsManagement: React.FC = () => {
               <button
                 onClick={() => {
                   // Handle transfer logic here
-                  console.log('Transfer lead:', transferLeadId);
+                  // Transfer lead initiated
                   setShowTransferModal(false);
                   setTransferLeadId(null);
                 }}

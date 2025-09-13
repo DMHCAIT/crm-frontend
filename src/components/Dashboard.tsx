@@ -68,7 +68,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         // Load recent activities from real data
         await loadRecentActivities();
         
-        console.log('✅ Dashboard stats loaded from Railway API');
+        // Dashboard stats loaded
       } catch (error) {
         console.warn('⚠️ Failed to load dashboard stats from Railway API:', error);
         // Keep default values (0s) if database fails

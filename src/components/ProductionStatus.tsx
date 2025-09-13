@@ -28,7 +28,7 @@ const ProductionStatus: React.FC = () => {
           connection: 'Direct Database Access',
           leads_count: Array.isArray(leads) ? leads.length : 0
         });
-        console.log('✅ Database connection successful');
+        // Database connection successful
       } else {
         setStatus('disconnected');
       }

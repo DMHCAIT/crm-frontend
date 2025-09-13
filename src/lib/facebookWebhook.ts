@@ -34,7 +34,7 @@ export class FacebookWebhookHandler {
     const challenge = req.query['hub.challenge'];
 
     if (mode === 'subscribe' && token === FacebookWebhookHandler.VERIFY_TOKEN) {
-      console.log('✅ Facebook webhook verified successfully');
+      // Facebook webhook verified
       res.status(200).send(challenge);
     } else {
       console.error('❌ Failed to verify Facebook webhook');
@@ -49,10 +49,10 @@ export class FacebookWebhookHandler {
     try {
       const payload: FacebookWebhookPayload = req.body;
       
-      console.log('📨 Received Facebook webhook payload:', JSON.stringify(payload, null, 2));
+      // Facebook webhook payload received
 
       if (payload.object !== 'page') {
-        console.log('⚠️  Webhook not for page object, ignoring');
+        // Webhook not for page object, ignoring
         res.sendStatus(404);
         return;
       }

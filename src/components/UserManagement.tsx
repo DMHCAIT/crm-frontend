@@ -53,9 +53,7 @@ const UserManagement: React.FC = () => {
         processedUsers = userData.users || userData.result || [];
       }
       
-      console.log('✅ Users loaded:', processedUsers.length, 'users found');
-      
-      // If no users found, add a fallback admin user for testing
+        // Users loaded successfully      // If no users found, add a fallback admin user for testing
       if (processedUsers.length === 0 && currentUser) {
         processedUsers = [{
           id: '1',
@@ -69,7 +67,7 @@ const UserManagement: React.FC = () => {
           designation: 'System Administrator',
           status: 'active'
         }];
-        console.log('📋 No users in database, using fallback admin user');
+        // Using fallback admin user
       }
       
       setUsers(processedUsers);

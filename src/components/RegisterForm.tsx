@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { productionAuth } from '../config/productionAuth';
+import { getAuthService } from '../lib/productionAuth';
 
 interface RegisterFormProps {
   onSuccess?: () => void;
@@ -41,20 +41,17 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onBack }) => {
     setLoading(true);
 
     try {
-      const result = await productionAuth.register({
-        name: formData.name,
-        email: formData.email,
-        password: formData.password
-      });
+      const authService = getAuthService();
+      const user = await authService.signUp(formData.email, formData.password, formData.name);
 
-      if (result.success) {
+      if (user) {
         setSuccess('Account created successfully! You can now login.');
         setFormData({ name: '', email: '', password: '', confirmPassword: '' });
         if (onSuccess) {
           setTimeout(onSuccess, 2000);
         }
       } else {
-        setError(result.message || 'Registration failed');
+        setError('Registration failed');
       }
     } catch (error) {
       console.error('Registration error:', error);

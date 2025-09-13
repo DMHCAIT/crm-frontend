@@ -227,7 +227,7 @@ const Integrations: React.FC = () => {
 
   const handleConnect = async (integrationId: string) => {
     try {
-      console.log('Connecting integration:', integrationId);
+      // Connecting integration
       
       setRealTimeStats(prev => ({
         ...prev,
@@ -252,7 +252,7 @@ const Integrations: React.FC = () => {
 
   const handleDisconnect = async (integrationId: string) => {
     try {
-      console.log('Disconnecting integration:', integrationId);
+      // Disconnecting integration
       
       setRealTimeStats(prev => ({
         ...prev,

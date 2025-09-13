@@ -174,7 +174,7 @@ const CommunicationsHub: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">Communications Hub</h1>
           <div className="flex items-center space-x-4">
             <button 
-              onClick={() => console.log('New Campaign functionality coming soon')}
+              onClick={() => {/* New Campaign functionality coming soon */}}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
             >
               <Plus className="w-4 h-4" />

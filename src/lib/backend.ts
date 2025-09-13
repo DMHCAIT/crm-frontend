@@ -181,12 +181,7 @@ export const initializeSupabase = (): SupabaseClient<any> => {
     }
   });
 
-  if (config.debugMode) {
-    console.log('✅ Supabase client initialized', {
-      url: config.supabaseUrl,
-      realTime: config.enableRealTime
-    });
-  }
+  // Supabase client initialized
 
   return supabaseClient;
 };
@@ -229,18 +224,12 @@ class ProductionApiClient {
     };
 
     try {
-      console.log(`🔄 API Request: ${url}`, { 
-        headers: defaultOptions.headers,
-        hasToken: !!token 
-      });
+      // API request initiated
       
       const response = await fetch(url, { ...defaultOptions, ...options });
       clearTimeout(timeoutId);
       
-      console.log(`📡 API Response: ${response.status} ${response.statusText}`, {
-        ok: response.ok,
-        url: url
-      });
+      // API response received
       
       if (!response.ok) {
         const errorText = await response.text();
@@ -249,7 +238,7 @@ class ProductionApiClient {
       }
 
       const result = await response.json();
-      console.log(`✅ API Success:`, result);
+      // API request successful
       return result;
     } catch (error) {
       clearTimeout(timeoutId);
@@ -795,7 +784,7 @@ export class RealTimeManager {
       await this.loadInitialData();
       
       if (this.config.debugMode) {
-        console.log('✅ Real-time manager initialized with', this.channels.length, 'channels');
+        // Real-time manager initialized
       }
     } catch (error) {
       console.error('❌ Failed to initialize real-time manager:', error);
@@ -811,7 +800,7 @@ export class RealTimeManager {
         { event: '*', schema: 'public', table: 'leads' },
         (payload) => {
           if (this.config.debugMode) {
-            console.log('📊 Leads update:', payload);
+            // Leads update received
           }
           
           this.updateData();
@@ -832,7 +821,7 @@ export class RealTimeManager {
         { event: '*', schema: 'public', table: 'students' },
         (payload) => {
           if (this.config.debugMode) {
-            console.log('🎓 Students update:', payload);
+            // Students update received
           }
           
           this.updateData();
@@ -853,7 +842,7 @@ export class RealTimeManager {
         { event: '*', schema: 'public', table: 'communications' },
         (payload) => {
           if (this.config.debugMode) {
-            console.log('💬 Communications update:', payload);
+            // Communications update received
           }
           
           this.updateData();
@@ -874,7 +863,7 @@ export class RealTimeManager {
         { event: '*', schema: 'public', table: 'integrations_status' },
         (payload) => {
           if (this.config.debugMode) {
-            console.log('🔗 Integrations update:', payload);
+            // Integrations update received
           }
           
           this.callbacks.onIntegrationsUpdate?.(payload);
@@ -960,7 +949,7 @@ export class RealTimeManager {
     this.channels = [];
     
     if (this.config.debugMode) {
-      console.log('🔌 Real-time manager disconnected');
+      // Real-time manager disconnected
     }
   }
 }
@@ -1233,81 +1222,11 @@ export class DatabaseManager {
 }
 
 // ===========================
-// 6. AUTHENTICATION
+// 6. AUTHENTICATION (DEPRECATED - Use lib/productionAuth.ts instead)
 // ===========================
 
-export class AuthManager {
-  private supabase: SupabaseClient<any>;
-
-  constructor() {
-    this.supabase = getSupabase();
-  }
-
-  async signIn(email: string, password: string): Promise<any> {
-    try {
-      const { data, error } = await this.supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) {
-        console.error('Supabase auth error:', error);
-        throw error;
-      }
-      
-      return data;
-    } catch (error) {
-      console.error('Authentication failed:', error);
-      throw error;
-    }
-  }
-
-  async signUp(email: string, password: string): Promise<any> {
-    try {
-      const { data, error } = await this.supabase.auth.signUp({
-        email,
-        password
-      });
-
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      console.error('Signup failed:', error);
-      
-      // If database error, provide helpful message
-      if (error instanceof Error && error.message.includes('Database error')) {
-        throw new Error('Database connection error. Please contact support for assistance.');
-      }
-      
-      throw error;
-    }
-  }
-
-  async signOut(): Promise<void> {
-    try {
-      const { error } = await this.supabase.auth.signOut();
-      if (error) throw error;
-    } catch (error) {
-      console.error('Signout error:', error);
-    }
-  }
-
-  async getCurrentUser(): Promise<any> {
-
-    try {
-      const { data: { user }, error } = await this.supabase.auth.getUser();
-      if (error) throw error;
-      return user;
-    } catch (error) {
-      console.error('Get user error:', error);
-      return null;
-    }
-  }
-
-  onAuthStateChange(callback: (event: string, session: any) => void) {
-    return this.supabase.auth.onAuthStateChange(callback);
-  }
-}
+// Authentication is now handled by ProductionAuthService in lib/productionAuth.ts
+// This section is kept for reference but should not be used
 
 // ===========================
 // 7. INTEGRATION SERVICES
@@ -1359,7 +1278,6 @@ export class IntegrationManager {
 // Default singleton instances
 let realTimeManager: RealTimeManager | null = null;
 let databaseManager: DatabaseManager | null = null;
-let authManager: AuthManager | null = null;
 let integrationManager: IntegrationManager | null = null;
 
 export const getRealTimeManager = (callbacks?: RealTimeCallbacks): RealTimeManager => {
@@ -1381,14 +1299,7 @@ export const getDatabaseManager = (): DatabaseManager => {
   return databaseManager;
 };
 
-// Deprecated: Use getApiClient() instead  
-export const getAuthManager = (): AuthManager => {
-  console.warn('⚠️  DEPRECATED: getAuthManager() - Use getApiClient() instead for proper API-based communication');
-  if (!authManager) {
-    authManager = new AuthManager();
-  }
-  return authManager;
-};
+// DEPRECATED: getAuthManager() removed - Use getAuthService() from lib/productionAuth.ts instead
 
 // Deprecated: Use getApiClient() instead
 export const getIntegrationManager = (): IntegrationManager => {
@@ -1403,7 +1314,7 @@ export const getIntegrationManager = (): IntegrationManager => {
 export const initializeBackend = async () => {
   try {
     initializeSupabase();
-    console.log('✅ CRM Backend initialized successfully');
+    // CRM Backend initialized
   } catch (error) {
     console.error('❌ Failed to initialize CRM Backend:', error);
     throw error;

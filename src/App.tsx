@@ -24,9 +24,9 @@ import DataExport from './components/DataExport';
 const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
 
-  // Log deployment info for production tracking
+  // Application initialization
   React.useEffect(() => {
-    console.log('🚀 DMHCA CRM Frontend v1.1.0 with Authentication fixes Deployed');
+    // CRM Frontend v1.1.0 initialized
   }, []);
 
   const renderActiveSection = () => {
