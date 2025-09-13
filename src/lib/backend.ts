@@ -1277,8 +1277,6 @@ export class IntegrationManager {
 
 // Default singleton instances
 let realTimeManager: RealTimeManager | null = null;
-let databaseManager: DatabaseManager | null = null;
-let integrationManager: IntegrationManager | null = null;
 
 export const getRealTimeManager = (callbacks?: RealTimeCallbacks): RealTimeManager => {
   if (!realTimeManager) {
@@ -1290,25 +1288,9 @@ export const getRealTimeManager = (callbacks?: RealTimeCallbacks): RealTimeManag
 // ARCHITECTURAL NOTE: Frontend should ONLY use API client, never direct database access
 // These functions are deprecated and will be removed to enforce proper separation
 
-// Deprecated: Use getApiClient() instead
-export const getDatabaseManager = (): DatabaseManager => {
-  console.warn('⚠️  DEPRECATED: getDatabaseManager() - Use getApiClient() instead for proper API-based communication');
-  if (!databaseManager) {
-    databaseManager = new DatabaseManager();
-  }
-  return databaseManager;
-};
-
-// DEPRECATED: getAuthManager() removed - Use getAuthService() from lib/productionAuth.ts instead
-
-// Deprecated: Use getApiClient() instead
-export const getIntegrationManager = (): IntegrationManager => {
-  console.warn('⚠️  DEPRECATED: getIntegrationManager() - Use getApiClient() instead for proper API-based communication');
-  if (!integrationManager) {
-    integrationManager = new IntegrationManager();
-  }
-  return integrationManager;
-};
+// DEPRECATED FUNCTIONS REMOVED
+// Use getApiClient() for all backend communication
+// Use getAuthService() from lib/productionAuth.ts for authentication
 
 // Initialize backend on import
 export const initializeBackend = async () => {
