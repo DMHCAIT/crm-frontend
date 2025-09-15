@@ -56,6 +56,20 @@ interface Lead {
   notes: Note[];
 }
 
+interface NewLeadForm {
+  fullName: string;
+  email: string;
+  phone: string;
+  country: string;
+  branch: string;
+  qualification: string;
+  source: string;
+  course: string;
+  status: string;
+  assignedTo: string;
+  followUp: string;
+}
+
 interface Note {
   id: string;
   content: string;
@@ -110,7 +124,7 @@ const LeadsManagement: React.FC = () => {
 
   // Add Lead Modal States
   const [showAddLeadModal, setShowAddLeadModal] = useState(false);
-  const [newLead, setNewLead] = useState<Partial<Lead>>({
+  const [newLead, setNewLead] = useState<NewLeadForm>({
     fullName: '',
     email: '',
     phone: '',
@@ -262,14 +276,14 @@ const LeadsManagement: React.FC = () => {
     if (selectedLeads.length === filteredLeads.length) {
       setSelectedLeads([]);
     } else {
-      setSelectedLeads(filteredLeads.map(lead => lead.id));
+      setSelectedLeads(filteredLeads.map((lead: Lead) => lead.id));
     }
   };
 
   const handleLeadSelect = (leadId: string) => {
-    setSelectedLeads(prev => 
+    setSelectedLeads((prev: string[]) => 
       prev.includes(leadId) 
-        ? prev.filter(id => id !== leadId)
+        ? prev.filter((id: string) => id !== leadId)
         : [...prev, leadId]
     );
   };
@@ -284,7 +298,7 @@ const LeadsManagement: React.FC = () => {
       // In production, this would update the lead in Supabase
       const currentDate = new Date().toISOString();
       
-      setLeads(prev => prev.map(lead => 
+      setLeads((prev: Lead[]) => prev.map((lead: Lead) => 
         lead.id === editingLead 
           ? { ...lead, ...editedLead, updatedAt: currentDate }
           : lead
@@ -292,7 +306,7 @@ const LeadsManagement: React.FC = () => {
       
       // Track this lead as updated today
       if (editingLead && !leadsUpdatedToday.includes(editingLead)) {
-        setLeadsUpdatedToday(prev => [...prev, editingLead]);
+        setLeadsUpdatedToday((prev: string[]) => [...prev, editingLead]);
       }
       setLastUpdateTime(new Date());
       
@@ -337,7 +351,7 @@ const LeadsManagement: React.FC = () => {
       console.log('✅ Note saved to backend successfully');
       
       // Update frontend state after successful save
-      setLeads(prev => prev.map(lead => 
+      setLeads((prev: Lead[]) => prev.map((lead: Lead) => 
         lead.id === leadId 
           ? { 
               ...lead, 
@@ -349,11 +363,11 @@ const LeadsManagement: React.FC = () => {
       
       // Track this lead as updated today when note is added
       if (!leadsUpdatedToday.includes(leadId)) {
-        setLeadsUpdatedToday(prev => [...prev, leadId]);
+        setLeadsUpdatedToday((prev: string[]) => [...prev, leadId]);
       }
       setLastUpdateTime(new Date());
       
-      setNewNote(prev => ({ ...prev, [leadId]: '' }));
+      setNewNote((prev: {[key: string]: string}) => ({ ...prev, [leadId]: '' }));
       
     } catch (error) {
       console.error('❌ Error saving note to backend:', error);
@@ -363,7 +377,7 @@ const LeadsManagement: React.FC = () => {
   };
 
   const getUniqueValues = (field: keyof Omit<Lead, 'notes'>) => {
-    return [...new Set(leads.map(lead => lead[field] as string).filter(Boolean))];
+    return [...new Set(leads.map((lead: Lead) => lead[field] as string).filter(Boolean))];
   };
 
   const quickStatusFilter = (status: string) => {
@@ -419,7 +433,7 @@ const LeadsManagement: React.FC = () => {
       }
 
       // Check for duplicate email
-      const existingLead = leads.find(lead => lead.email.toLowerCase() === (newLead.email || '').toLowerCase());
+      const existingLead = leads.find((lead: Lead) => lead.email.toLowerCase() === (newLead.email || '').toLowerCase());
       if (existingLead) {
         alert('A lead with this email already exists!');
         return;
@@ -476,10 +490,10 @@ const LeadsManagement: React.FC = () => {
       };
 
       // Add to leads list
-      setLeads(prev => [leadToAdd, ...prev]);
+      setLeads((prev: Lead[]) => [leadToAdd, ...prev]);
 
       // Track as updated today
-      setLeadsUpdatedToday(prev => [...prev, leadToAdd.id]);
+      setLeadsUpdatedToday((prev: string[]) => [...prev, leadToAdd.id]);
       setLastUpdateTime(new Date());
 
       // Reset form and close modal
@@ -547,7 +561,7 @@ const LeadsManagement: React.FC = () => {
   const handleExportLeads = () => {
     const csvContent = [
       ['ID', 'Full Name', 'Email', 'Phone', 'Country', 'Branch', 'Qualification', 'Source', 'Course', 'Status', 'Assigned To', 'Follow Up', 'Created At', 'Updated At'],
-      ...filteredLeads.map(lead => [
+      ...filteredLeads.map((lead: Lead) => [
         lead.id,
         lead.fullName,
         lead.email,
@@ -607,7 +621,7 @@ const LeadsManagement: React.FC = () => {
         };
       }).filter(lead => lead.fullName); // Filter out empty rows
 
-      setLeads(prev => [...prev, ...importedLeads]);
+      setLeads((prev: Lead[]) => [...prev, ...importedLeads]);
     };
     reader.readAsText(file);
     
@@ -619,7 +633,7 @@ const LeadsManagement: React.FC = () => {
   const handleBulkStatusUpdate = (newStatus: string) => {
     if (!newStatus) return;
     
-    setLeads(prev => prev.map(lead => 
+    setLeads((prev: Lead[]) => prev.map((lead: Lead) => 
       selectedLeads.includes(lead.id) 
         ? { ...lead, status: newStatus, updatedAt: new Date().toISOString() }
         : lead
@@ -632,7 +646,7 @@ const LeadsManagement: React.FC = () => {
   // Handle bulk delete
   const handleBulkDelete = () => {
     if (window.confirm(`Are you sure you want to delete ${selectedLeads.length} lead(s)? This action cannot be undone.`)) {
-      setLeads(prev => prev.filter(lead => !selectedLeads.includes(lead.id)));
+      setLeads((prev: Lead[]) => prev.filter((lead: Lead) => !selectedLeads.includes(lead.id)));
       setSelectedLeads([]);
       
       // Close detail panel if selected lead is deleted
@@ -666,7 +680,7 @@ const LeadsManagement: React.FC = () => {
         console.log('✅ Bulk transfer saved to backend successfully');
         
         // Update frontend state after successful save
-        setLeads(prev => prev.map(lead => 
+        setLeads((prev: Lead[]) => prev.map((lead: Lead) => 
           selectedLeads.includes(lead.id) 
             ? { 
                 ...lead, 
@@ -686,9 +700,9 @@ const LeadsManagement: React.FC = () => {
         ));
         
         // Track transferred leads as updated today
-        const newUpdatedLeads = selectedLeads.filter(id => !leadsUpdatedToday.includes(id));
+        const newUpdatedLeads = selectedLeads.filter((id: string) => !leadsUpdatedToday.includes(id));
         if (newUpdatedLeads.length > 0) {
-          setLeadsUpdatedToday(prev => [...prev, ...newUpdatedLeads]);
+          setLeadsUpdatedToday((prev: string[]) => [...prev, ...newUpdatedLeads]);
         }
         setLastUpdateTime(new Date());
         
@@ -722,11 +736,11 @@ const LeadsManagement: React.FC = () => {
 
     return {
       total: leads.length,
-      hot: leads.filter(lead => lead.status === 'hot').length,
-      warm: leads.filter(lead => lead.status === 'warm').length,
-      followup: leads.filter(lead => lead.status === 'Followup').length,
-      converted: leads.filter(lead => lead.status === 'converted').length,
-      thisMonth: leads.filter(lead => {
+      hot: leads.filter((lead: Lead) => lead.status === 'hot').length,
+      warm: leads.filter((lead: Lead) => lead.status === 'warm').length,
+      followup: leads.filter((lead: Lead) => lead.status === 'Followup').length,
+      converted: leads.filter((lead: Lead) => lead.status === 'converted').length,
+      thisMonth: leads.filter((lead: Lead) => {
         const leadDate = new Date(lead.createdAt);
         return leadDate.getMonth() === currentMonth && leadDate.getFullYear() === currentYear;
       }).length
@@ -743,43 +757,43 @@ const LeadsManagement: React.FC = () => {
     weekAgo.setDate(weekAgo.getDate() - 7);
     
     // Lead velocity metrics
-    const todayLeads = leads.filter(lead => {
+    const todayLeads = leads.filter((lead: Lead) => {
       const leadDate = new Date(lead.createdAt);
       const leadDateOnly = new Date(leadDate.getFullYear(), leadDate.getMonth(), leadDate.getDate());
       return leadDateOnly.getTime() === today.getTime();
     });
     
-    const yesterdayLeads = leads.filter(lead => {
+    const yesterdayLeads = leads.filter((lead: Lead) => {
       const leadDate = new Date(lead.createdAt);
       const leadDateOnly = new Date(leadDate.getFullYear(), leadDate.getMonth(), leadDate.getDate());
       return leadDateOnly.getTime() === yesterday.getTime();
     });
     
-    const weekLeads = leads.filter(lead => {
+    const weekLeads = leads.filter((lead: Lead) => {
       const leadDate = new Date(lead.createdAt);
       return leadDate >= weekAgo;
     });
     
     // Conversion metrics
-    const convertedLeads = leads.filter(lead => lead.status === 'converted');
+    const convertedLeads = leads.filter((lead: Lead) => lead.status === 'converted');
     const conversionRate = leads.length > 0 ? (convertedLeads.length / leads.length * 100) : 0;
     
     // Response time metrics
-    const followupDueLeads = leads.filter(lead => {
+    const followupDueLeads = leads.filter((lead: Lead) => {
       if (!lead.followUp) return false;
       const followupDate = new Date(lead.followUp);
       return followupDate <= now && lead.status !== 'converted';
     });
     
     // Assignment distribution
-    const assignmentDistribution = leads.reduce((acc, lead) => {
+    const assignmentDistribution = leads.reduce((acc: Record<string, number>, lead: Lead) => {
       const assignee = lead.assignedTo || 'Unassigned';
       acc[assignee] = (acc[assignee] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
     
     // Source performance
-    const sourcePerformance = leads.reduce((acc, lead) => {
+    const sourcePerformance = leads.reduce((acc: Record<string, {total: number, converted: number}>, lead: Lead) => {
       const source = lead.source || 'Unknown';
       if (!acc[source]) {
         acc[source] = { total: 0, converted: 0 };
@@ -792,7 +806,7 @@ const LeadsManagement: React.FC = () => {
     }, {} as Record<string, { total: number, converted: number }>);
     
     // Activity metrics
-    const lastActivity = leads.reduce((latest, lead) => {
+    const lastActivity = leads.reduce((latest: Date, lead: Lead) => {
       const leadUpdate = new Date(lead.updatedAt);
       return leadUpdate > latest ? leadUpdate : latest;
     }, new Date(0));
@@ -866,7 +880,8 @@ const LeadsManagement: React.FC = () => {
     const insights = [];
     
     // Best performing source
-    const bestSource = Object.entries(metrics.sourcePerformance)
+    const sourceEntries = Object.entries(metrics.sourcePerformance) as [string, {total: number, converted: number}][];
+    const bestSource = sourceEntries
       .filter(([_, data]) => data.total >= 3)
       .sort((a, b) => (b[1].converted / b[1].total) - (a[1].converted / a[1].total))[0];
     
@@ -881,7 +896,8 @@ const LeadsManagement: React.FC = () => {
     }
     
     // Most active counselor
-    const topCounselor = Object.entries(metrics.assignmentDistribution)
+    const counselorEntries = Object.entries(metrics.assignmentDistribution) as [string, number][];
+    const topCounselor = counselorEntries
       .filter(([name]) => name !== 'Unassigned')
       .sort((a, b) => b[1] - a[1])[0];
     
