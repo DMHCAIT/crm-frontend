@@ -105,7 +105,6 @@ const LeadsManagement: React.FC = () => {
   const [showDetailPanel, setShowDetailPanel] = useState(false);
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [showBulkTransferModal, setShowBulkTransferModal] = useState(false);
-  const [transferLeadId, setTransferLeadId] = useState<string | null>(null);
   const [bulkTransferCounselor, setBulkTransferCounselor] = useState('');
   const [bulkTransferReason, setBulkTransferReason] = useState('');
   
@@ -551,10 +550,10 @@ const LeadsManagement: React.FC = () => {
     setShowDetailPanel(true);
   };
 
-  // Handle lead transfer
+  // Handle lead transfer (using bulk transfer modal for individual leads)
   const handleTransferLead = (leadId: string) => {
-    setTransferLeadId(leadId);
-    setShowTransferModal(true);
+    setSelectedLeads([leadId]);
+    setShowBulkTransferModal(true);
   };
 
   // Export leads to CSV
@@ -2182,7 +2181,6 @@ const LeadsManagement: React.FC = () => {
                   // Handle transfer logic here
                   // Transfer lead initiated
                   setShowTransferModal(false);
-                  setTransferLeadId(null);
                 }}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
@@ -2548,10 +2546,24 @@ const LeadsManagement: React.FC = () => {
               </button>
               <button
                 onClick={handleSaveNewLead}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                disabled={loading}
+                className={`px-6 py-2 rounded-lg transition-colors flex items-center space-x-2 ${
+                  loading 
+                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
               >
-                <Plus className="w-4 h-4" />
-                <span>Add Lead</span>
+                {loading ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span>Adding Lead...</span>
+                  </>
+                ) : (
+                  <>
+                    <Plus className="w-4 h-4" />
+                    <span>Add Lead</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
