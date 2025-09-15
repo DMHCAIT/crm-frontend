@@ -112,6 +112,11 @@ const LeadsManagement: React.FC = () => {
   const [dateFilter, setDateFilter] = useState('all');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+  
+  // Enhanced Date Filter States
+  const [dateFilterType, setDateFilterType] = useState<'on' | 'after' | 'before' | 'between'>('on');
+  const [specificDate, setSpecificDate] = useState('');
+  
   const [statusFilter, setStatusFilter] = useState('all');
   const [countryFilter, setCountryFilter] = useState('all');
   const [sourceFilter, setSourceFilter] = useState('all');
@@ -238,7 +243,25 @@ const LeadsManagement: React.FC = () => {
             if (dateFrom && dateTo) {
               const fromDate = new Date(dateFrom);
               const toDate = new Date(dateTo);
+              toDate.setHours(23, 59, 59, 999); // Include full day
               return leadDate >= fromDate && leadDate <= toDate;
+            }
+            return true;
+          case 'advanced':
+            if (specificDate) {
+              const targetDate = new Date(specificDate);
+              const targetDateOnly = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+              
+              switch (dateFilterType) {
+                case 'on':
+                  return leadDateOnly.getTime() === targetDateOnly.getTime();
+                case 'after':
+                  return leadDateOnly.getTime() > targetDateOnly.getTime();
+                case 'before':
+                  return leadDateOnly.getTime() < targetDateOnly.getTime();
+                default:
+                  return true;
+              }
             }
             return true;
           default:
@@ -1353,6 +1376,7 @@ const LeadsManagement: React.FC = () => {
                   <option value="month">Last 30 Days</option>
                   <option value="updated_today">Updated Today ({getLeadsUpdatedTodayCount()})</option>
                   <option value="custom">Custom Range</option>
+                  <option value="advanced">Advanced Date Filter</option>
                 </select>
               </div>
 
@@ -1373,6 +1397,35 @@ const LeadsManagement: React.FC = () => {
                       type="date"
                       value={dateTo}
                       onChange={(e) => setDateTo(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </>
+              )}
+
+              {dateFilter === 'advanced' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Filter Type</label>
+                    <select
+                      value={dateFilterType}
+                      onChange={(e) => setDateFilterType(e.target.value as 'on' | 'after' | 'before')}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="on">On Specific Date</option>
+                      <option value="after">After Date</option>
+                      <option value="before">Before Date</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {dateFilterType === 'on' ? 'Select Date' : 
+                       dateFilterType === 'after' ? 'After Date' : 'Before Date'}
+                    </label>
+                    <input
+                      type="date"
+                      value={specificDate}
+                      onChange={(e) => setSpecificDate(e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>

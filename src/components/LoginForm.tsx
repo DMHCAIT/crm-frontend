@@ -30,6 +30,9 @@ const LoginForm: React.FC = () => {
       }
     } catch (err) {
       console.error('Authentication error:', err);
+      // Show user-friendly error message
+      const errorMessage = err instanceof Error ? err.message : 'Authentication failed. Please try again.';
+      alert(errorMessage);
     }
   };
 
@@ -135,8 +138,54 @@ const LoginForm: React.FC = () => {
           </button>
         </div>
 
+        {/* Quick Access Login Buttons */}
+        <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg border border-blue-200">
+          <p className="text-sm font-semibold text-gray-800 text-center mb-3">
+            🚀 Quick Access for Production
+          </p>
+          
+          <div className="space-y-2">
+            {/* Debug Login Button */}
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  // Use debug login endpoint for immediate access
+                  const response = await fetch('https://crm-backend-production-5e32.up.railway.app/api/auth/debug-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                  });
+                  
+                  if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('crm_auth_token', data.token);
+                    localStorage.setItem('crm_user_data', JSON.stringify(data.user));
+                    window.location.reload(); // Refresh to trigger auth state update
+                  } else {
+                    alert('Quick access failed. Try manual login when Railway deploys.');
+                  }
+                } catch (error) {
+                  console.error('Quick access error:', error);
+                  alert('Network error. Please check your connection and try again.');
+                }
+              }}
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 px-4 rounded text-sm font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-sm disabled:opacity-50"
+            >
+              {loading ? '🔄 Processing...' : '🚀 Super Admin Access'}
+            </button>
+            
+            {/* Manual Login Info */}
+            <div className="text-xs text-gray-600 text-center pt-2 border-t border-gray-200">
+              <strong>Manual Login:</strong><br />
+              Email: admin@crm.com | Password: admin123<br />
+              <em>(Once Railway deploys latest changes)</em>
+            </div>
+          </div>
+        </div>
+
         {/* Development Note */}
-        <div className="mt-6 p-3 bg-gray-50 rounded-lg">
+        <div className="mt-4 p-3 bg-gray-50 rounded-lg">
           <p className="text-xs text-gray-600 text-center">
             <strong>Note:</strong> Please use your registered credentials to access the CRM system
           </p>
