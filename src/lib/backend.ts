@@ -396,6 +396,11 @@ class ProductionApiClient {
     });
   }
 
+  // Get current user profile
+  async getCurrentUser() {
+    return this.request('/users/me');
+  }
+
   // Communications API - New endpoints
   async getCommunications(filters?: any) {
     const params = new URLSearchParams(filters).toString();

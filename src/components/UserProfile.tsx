@@ -86,19 +86,37 @@ const UserProfile: React.FC = () => {
         return;
       }
 
-      // Use real user data from authentication with extended profile info
+      // Fetch real user profile from backend API
+      const apiClient = getApiClient();
+      
+      try {
+        console.log('🔍 Fetching real user profile from API...');
+        const response = await apiClient.getCurrentUser();
+        
+        if (response && response.user) {
+          console.log('✅ Real user profile loaded:', response.user.name);
+          setUserProfile(response.user);
+          return;
+        }
+      } catch (apiError: any) {
+        console.warn('⚠️ API call failed, using fallback profile:', apiError?.message || 'Unknown error');
+      }
+
+      // Fallback to enhanced user data from authentication context
       setUserProfile({
         id: user.id || 'USR-2024-001',
         name: user.name || user.email?.split('@')[0] || 'Unknown User',
         email: user.email || 'unknown@dmhca.in',
-        phone: '+91 9876543210', // Default phone since user object may not have phone
-        role: user.role === 'admin' ? 'Senior DMHCA Admissions Counselor' : 'DMHCA Admissions Counselor',
+        phone: '+91 9876543210',
+        role: user.role === 'super_admin' ? 'Super Administrator' :
+              user.role === 'admin' ? 'Senior DMHCA Admissions Counselor' : 
+              'DMHCA Admissions Counselor',
         department: 'MBBS Admissions',
         location: 'New Delhi',
         joinDate: '2023-01-15',
         avatar: null,
         status: 'active',
-        permissions: ['leads.view', 'leads.edit', 'students.view', 'communications.send'],
+        permissions: user.permissions || ['leads.view', 'leads.edit', 'students.view', 'communications.send'],
         preferences: {
           notifications: {
             email: true,
