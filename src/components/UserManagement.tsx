@@ -54,77 +54,15 @@ const UserManagement: React.FC = () => {
       }
       
       // Users loaded successfully
-      // If no users found, add a fallback admin user for testing
-      if (processedUsers.length === 0 && currentUser) {
-        processedUsers = [{
-          id: '1',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          name: currentUser.name || 'Admin User',
-          username: 'admin',
-          email: currentUser.email || 'admin@dmhca.in',
-          role: 'super_admin',
-          department: 'Administration',
-          designation: 'System Administrator',
-          status: 'active'
-        }];
-        // Using fallback admin user
-      }
       
       setUsers(processedUsers);
       setError(null);
     } catch (err) {
       console.error('❌ Error loading users:', err);
       
-      // Provide fallback mock data when API fails
-      const fallbackUsers: DatabaseUser[] = [
-        {
-          id: 'user-001',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          name: currentUser?.name || 'Santhosh DMHCA',
-          username: 'santhosh',
-          email: currentUser?.email || 'santhosh@dmhca.edu',
-          role: 'super_admin',
-          department: 'Administration',
-          designation: 'CRM Administrator',
-          status: 'active',
-          phone: '+91-9876543210',
-          location: 'Delhi'
-        },
-        {
-          id: 'user-002',
-          created_at: '2025-09-10T10:00:00Z',
-          updated_at: new Date().toISOString(),
-          name: 'Dr. Priya Sharma',
-          username: 'priya.sharma',
-          email: 'priya@dmhca.edu',
-          role: 'manager',
-          department: 'Admissions',
-          designation: 'Senior Counselor',
-          status: 'active',
-          phone: '+91-9876543211',
-          location: 'Delhi'
-        },
-        {
-          id: 'user-003',
-          created_at: '2025-09-08T14:30:00Z',
-          updated_at: '2025-09-13T09:15:00Z',
-          name: 'Rahul Kumar',
-          username: 'rahul.kumar',
-          email: 'rahul@dmhca.edu',
-          role: 'counselor',
-          department: 'Admissions',
-          designation: 'Lead Counselor',
-          status: 'active',
-          phone: '+91-9876543212',
-          location: 'Delhi'
-        }
-      ];
-      
-      setUsers(fallbackUsers);
-      setError('Using demo data - backend connection failed. Contact administrator to fix authentication.');
-      console.log('🔄 Using fallback user data due to API failure');
+      // Set proper error state without fallback data
+      setUsers([]);
+      setError('Failed to load users. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
