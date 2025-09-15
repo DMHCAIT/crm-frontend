@@ -5,7 +5,9 @@
 
 // Add this to your browser console or create a debug component
 
-const API_BASE = 'https://crm-backend-production-5e32.up.railway.app';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || (() => {
+  throw new Error('VITE_API_BASE_URL environment variable is required');
+})();
 
 class ProductionDebugger {
   static async testHealth() {

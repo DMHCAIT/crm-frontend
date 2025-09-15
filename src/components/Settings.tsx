@@ -175,7 +175,7 @@ const Settings: React.FC = () => {
                       <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                       <span className="text-sm text-gray-700">Connected to Railway Backend</span>
                     </div>
-                    <p className="text-sm text-gray-500">Backend: crm-backend-production-5e32.up.railway.app</p>
+                    <p className="text-sm text-gray-500">Backend: {import.meta.env.VITE_API_BASE_URL?.replace('https://', '')}</p>
                   </div>
 
                   <div className="p-4 border border-gray-200 rounded-lg">

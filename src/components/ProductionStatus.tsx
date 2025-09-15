@@ -16,7 +16,7 @@ const ProductionStatus: React.FC = () => {
 
   const checkBackendConnection = async () => {
     try {
-      const API_BASE = 'https://crm-backend-production-5e32.up.railway.app';
+      const API_BASE = import.meta.env.VITE_API_BASE_URL;
       
       // Test backend health first
       const healthResponse = await fetch(`${API_BASE}/health`);

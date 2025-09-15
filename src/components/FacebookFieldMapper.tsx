@@ -87,7 +87,7 @@ const FacebookFieldMapper: React.FC = () => {
       localStorage.setItem('facebook_field_mappings', JSON.stringify(mappings));
       
       // Also save to backend for server-side processing
-      const response = await fetch('https://crm-backend-production-5e32.up.railway.app/api/facebook/field-mappings', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/facebook/field-mappings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

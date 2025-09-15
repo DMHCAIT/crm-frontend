@@ -239,7 +239,7 @@ const FacebookLeadIntegration: React.FC = () => {
   const submitLeadToCRM = async (leadData: any) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://crm-backend-production-5e32.up.railway.app/api/leads', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/leads`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

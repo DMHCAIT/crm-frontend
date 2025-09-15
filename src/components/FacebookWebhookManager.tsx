@@ -37,7 +37,7 @@ const FacebookWebhookManager: React.FC = () => {
 
   const loadWebhookStatus = async () => {
     try {
-      const response = await fetch('https://crm-backend-production-5e32.up.railway.app/api/facebook/webhook/status', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/facebook/webhook/status`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -55,7 +55,7 @@ const FacebookWebhookManager: React.FC = () => {
   const testWebhook = async () => {
     setLoading(true);
     try {
-      const response = await fetch('https://crm-backend-production-5e32.up.railway.app/api/facebook/webhook/test', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/facebook/webhook/test`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -73,7 +73,7 @@ const FacebookWebhookManager: React.FC = () => {
   };
 
   const copyWebhookUrl = () => {
-    const url = 'https://crm-backend-production-5e32.up.railway.app/api/facebook/webhook';
+    const url = `${import.meta.env.VITE_API_BASE_URL}/api/facebook/webhook`;
     navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -164,7 +164,7 @@ const FacebookWebhookManager: React.FC = () => {
           </div>
         </div>
         <div className="bg-gray-50 p-3 rounded border font-mono text-sm">
-          https://crm-backend-production-5e32.up.railway.app/api/facebook/webhook
+          {import.meta.env.VITE_API_BASE_URL}/api/facebook/webhook
         </div>
       </div>
 

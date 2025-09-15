@@ -159,12 +159,12 @@ const FacebookSetupGuide: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <input
                     type="text"
-                    value="https://crm-backend-production-5e32.up.railway.app/api/facebook/webhook"
+                    value={`${import.meta.env.VITE_API_BASE_URL}/api/facebook/webhook`}
                     readOnly
                     className="flex-1 px-3 py-2 bg-gray-50 border border-gray-300 rounded-md font-mono text-sm"
                   />
                   <button
-                    onClick={() => copyToClipboard('https://crm-backend-production-5e32.up.railway.app/api/facebook/webhook', 'webhook')}
+                    onClick={() => copyToClipboard(`${import.meta.env.VITE_API_BASE_URL}/api/facebook/webhook`, 'webhook')}
                     className="flex items-center space-x-1 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                   >
                     <Copy className="h-4 w-4" />

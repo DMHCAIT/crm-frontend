@@ -27,9 +27,16 @@ interface ApiConfig {
 }
 
 export const getApiConfig = (): ApiConfig => {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const backendUrl = import.meta.env.VITE_API_BACKEND_URL;
+  
+  if (!baseUrl || !backendUrl) {
+    throw new Error('API configuration missing: VITE_API_BASE_URL and VITE_API_BACKEND_URL must be set in environment variables');
+  }
+  
   return {
-    baseUrl: import.meta.env.VITE_API_BASE_URL || 'https://crm-backend-production-5e32.up.railway.app',
-    backendUrl: import.meta.env.VITE_API_BACKEND_URL || 'https://crm-backend-production-5e32.up.railway.app/api',
+    baseUrl,
+    backendUrl,
     timeout: 30000,
     headers: {
       'Content-Type': 'application/json',
@@ -39,9 +46,16 @@ export const getApiConfig = (): ApiConfig => {
 };
 
 export const getEnvironmentConfig = (): EnvironmentConfig => {
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Supabase configuration missing: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY must be set in environment variables');
+  }
+  
   return {
-    supabaseUrl: import.meta.env.VITE_SUPABASE_URL || 'https://cyzbdpsfquetmftlaswk.supabase.co',
-    supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5emJkcHNmcXVldG1mdGxhc3drIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NzQzMjUsImV4cCI6MjA3MjA1MDMyNX0.n6Fflxbe12IMm5ICkoa6jGM2V3c3aohGU-cGW1WJIRA',
+    supabaseUrl,
+    supabaseAnonKey,
     enableRealTime: import.meta.env.VITE_ENABLE_REAL_TIME !== 'false',
     enableNotifications: import.meta.env.VITE_ENABLE_NOTIFICATIONS !== 'false',
     autoRefreshInterval: 30000,

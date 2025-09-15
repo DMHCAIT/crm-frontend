@@ -92,6 +92,7 @@ const LeadsManagement: React.FC = () => {
   // State Management
   const [leads, setLeads] = useState<Lead[]>([]);
   const [filteredLeads, setFilteredLeads] = useState<Lead[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
@@ -145,6 +146,7 @@ const LeadsManagement: React.FC = () => {
   // Effects
   useEffect(() => {
     loadLeads();
+    loadUsers();
   }, []);
 
   useEffect(() => {
@@ -196,6 +198,23 @@ const LeadsManagement: React.FC = () => {
       alert('Unable to connect to the CRM database. Please check your internet connection and try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Load users for dropdowns
+  const loadUsers = async () => {
+    try {
+      const apiClient = getApiClient();
+      const dbUsers = await apiClient.getUsers();
+      
+      if (dbUsers && Array.isArray(dbUsers)) {
+        setUsers(dbUsers);
+      } else {
+        setUsers([]);
+      }
+    } catch (error) {
+      console.error('❌ Error loading users:', error);
+      setUsers([]);
     }
   };
 
@@ -1714,7 +1733,9 @@ const LeadsManagement: React.FC = () => {
                               onClick={(e) => e.stopPropagation()}
                             >
                               <option value="">Unassigned</option>
-                              <option value="santhosh@dmhca.in">Santhosh DMHCA</option>
+                              {users.map(user => (
+                                <option key={user.id} value={user.email}>{user.name}</option>
+                              ))}
                             </select>
                           ) : (
                             <p className="text-sm text-gray-600 font-medium">{lead.assignedTo}</p>
@@ -2073,7 +2094,9 @@ const LeadsManagement: React.FC = () => {
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
                               <option value="">Unassigned</option>
-                              <option value="santhosh@dmhca.in">Santhosh DMHCA</option>
+                              {users.map((user: any) => (
+                                <option key={user.id} value={user.email}>{user.name}</option>
+                              ))}
                             </select>
                           ) : (
                             <div className="flex items-center justify-between">
@@ -2224,7 +2247,9 @@ const LeadsManagement: React.FC = () => {
                 </label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                   <option value="">Select Counselor</option>
-                  <option value="santhosh@dmhca.in">Santhosh DMHCA</option>
+                  {users.map((user: any) => (
+                    <option key={user.id} value={user.email}>{user.name}</option>
+                  ))}
                 </select>
               </div>
               <div>
@@ -2330,12 +2355,9 @@ const LeadsManagement: React.FC = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">Select Counselor</option>
-                  <option value="santhosh@dmhca.in">Santhosh DMHCA</option>
-                  <option value="priya@dmhca.in">Priya - Senior Counselor</option>
-                  <option value="rahul@dmhca.in">Rahul - Admissions Counselor</option>
-                  <option value="anjali@dmhca.in">Anjali - International Counselor</option>
-                  <option value="vikram@dmhca.in">Vikram - Career Counselor</option>
-                  <option value="team-leads@dmhca.in">Team Leads (Shared)</option>
+                  {users.map((user: any) => (
+                    <option key={user.id} value={user.email}>{user.name}</option>
+                  ))}
                 </select>
               </div>
               
