@@ -68,17 +68,26 @@ export const useAuth = (): UseAuthReturn => {
     initAuth();
   }, []);
 
-  const signIn = async (username: string, password: string) => {
-    setLoading(true);
-    setError(null);
-
+    const signIn = async (username: string, password: string): Promise<void> => {
+    console.log('🔐 Starting signIn process for:', username);
     try {
+      setLoading(true);
+      setError(null);
+      
       const userData = await authService.signIn(username, password);
+      console.log('✅ Login successful, setting user state:', userData);
+      
+      // Immediately set the user state and force a re-render
       setUser(userData);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Login failed';
-      setError(errorMessage);
-      throw err;
+      
+      // Small delay to ensure state is fully updated before continuing
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      console.log('🔄 Auth state updated, user should now be authenticated');
+    } catch (error) {
+      console.error('❌ Login failed:', error);
+      setError(error instanceof Error ? error.message : 'Login failed');
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -124,6 +133,6 @@ export const useAuth = (): UseAuthReturn => {
     signIn,
     signUp,
     signOut,
-    isAuthenticated: !!user && authService.isAuthenticated()
+    isAuthenticated: !!user && !!TokenManager.getToken()
   };
 };

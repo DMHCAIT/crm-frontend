@@ -1,13 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import LoginForm from './LoginForm';
+import { TokenManager } from '../lib/productionAuth';
 
 interface AuthWrapperProps {
   children: React.ReactNode;
 }
 
 const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {
-  const { isAuthenticated, loading, error } = useAuth();
+  const { isAuthenticated, loading, error, user } = useAuth();
+  const [forceRender, setForceRender] = useState(0);
+  
+  // Debug log to track authentication state changes
+  useEffect(() => {
+    console.log('🔍 AuthWrapper state:', { isAuthenticated, loading, error, user });
+  }, [isAuthenticated, loading, error, user]);
+
+  // Additional check for authentication completion
+  useEffect(() => {
+    if (user && TokenManager.getToken() && !loading) {
+      console.log('✅ User logged in successfully, forcing component re-render');
+      setForceRender(prev => prev + 1);
+    }
+  }, [user, loading]);
 
   if (loading) {
     return (
@@ -17,12 +32,11 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Loading DMHCA CRM</h2>
           <p className="text-gray-600 mb-4">Initializing your dashboard...</p>
           
-          {/* Debug info */}
           <div className="text-left bg-gray-50 p-3 rounded text-xs text-gray-600 mt-4">
             <p><strong>Debug Info:</strong></p>
-            <p>• Check browser console (F12) for logs</p>
-            <p>• Verify Supabase environment variables</p>
-            <p>• If stuck, try refreshing the page</p>
+            <p>Check browser console (F12) for logs</p>
+            <p>Verify Supabase environment variables</p>
+            <p>If stuck, try refreshing the page</p>
           </div>
           
           <button 
@@ -68,10 +82,10 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    return <LoginForm />;
+    return <LoginForm key={forceRender} />;
   }
 
-  return <>{children}</>;
+  return <div key={forceRender}>{children}</div>;
 };
 
 export default AuthWrapper;

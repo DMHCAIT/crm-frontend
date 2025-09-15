@@ -2095,7 +2095,23 @@ const LeadsManagement: React.FC = () => {
                           <label className="block text-sm font-medium text-gray-700 mb-2">Follow Up Date</label>
                           <input
                             type="datetime-local"
-                            value={editedLead.followUp || selectedLead.followUp}
+                            value={(() => {
+                              const followUpDate = editedLead.followUp || selectedLead.followUp;
+                              if (!followUpDate) return '';
+                              
+                              // Convert date to datetime-local format (yyyy-MM-ddTHH:mm)
+                              const date = new Date(followUpDate);
+                              if (isNaN(date.getTime())) return '';
+                              
+                              // Format to datetime-local format
+                              const year = date.getFullYear();
+                              const month = String(date.getMonth() + 1).padStart(2, '0');
+                              const day = String(date.getDate()).padStart(2, '0');
+                              const hours = String(date.getHours()).padStart(2, '0');
+                              const minutes = String(date.getMinutes()).padStart(2, '0');
+                              
+                              return `${year}-${month}-${day}T${hours}:${minutes}`;
+                            })()}
                             onChange={(e) => {
                               const newFollowUp = e.target.value;
                               setEditedLead(prev => ({ ...prev, followUp: newFollowUp }));

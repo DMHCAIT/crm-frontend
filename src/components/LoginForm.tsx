@@ -27,6 +27,11 @@ const LoginForm: React.FC = () => {
         await signUp(username, password);
       } else {
         await signIn(username, password);
+        console.log('🚀 Login completed successfully, forcing component refresh...');
+        // Force a slight delay to ensure auth state propagates
+        setTimeout(() => {
+          console.log('🔄 Post-login state check complete');
+        }, 200);
       }
     } catch (err) {
       console.error('Authentication error:', err);
