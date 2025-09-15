@@ -2465,10 +2465,9 @@ const LeadsManagement: React.FC = () => {
                   >
                     <option value="">Select Branch</option>
                     <option value="Delhi">Delhi</option>
-                    <option value="Mumbai">Mumbai</option>
-                    <option value="Bangalore">Bangalore</option>
-                    <option value="Chennai">Chennai</option>
-                    <option value="Kolkata">Kolkata</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Kashmir">Kashmir</option>
+                    
                     <option value="Online">Online</option>
                   </select>
                 </div>
@@ -2568,11 +2567,7 @@ const LeadsManagement: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="">Auto-assign to me</option>
-                    <option value="Arti Mohd">Arti Mohd</option>
-                    <option value="Beenish">Beenish</option>
-                    <option value="Sarah Johnson">Sarah Johnson</option>
-                    <option value="Mike Chen">Mike Chen</option>
-                    <option value="Emma Wilson">Emma Wilson</option>
+                    
                   </select>
                 </div>
 

@@ -83,6 +83,7 @@ export interface DatabaseUser {
   join_date?: string;
   status: 'active' | 'inactive' | 'suspended';
   reports_to?: string; // UUID reference to another user
+  assignedTo?: string; // Manager or supervisor assigned to this user
   profile_image?: string;
   last_login?: string;
   login_count?: number;

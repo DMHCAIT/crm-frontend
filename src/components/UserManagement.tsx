@@ -584,6 +584,7 @@ const UserModal: React.FC<UserModalProps> = ({
     department: user?.department || '',
     location: user?.location || '',
     status: user?.status || 'active',
+    assignedTo: user?.assignedTo || '',
     password: '', // Password field for new users
     confirmPassword: '' // Confirm password field
   });
@@ -763,6 +764,20 @@ const UserModal: React.FC<UserModalProps> = ({
               onChange={(e) => setFormData({...formData, department: e.target.value})}
               className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Assigned To</label>
+            <select
+              value={formData.assignedTo}
+              onChange={(e) => setFormData({...formData, assignedTo: e.target.value})}
+              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+            >
+              <option value="">Select Supervisor (Optional)</option>
+              <option value="santhosh@dmhca.in">Santhosh DMHCA (Super Admin)</option>
+              <option value="admin@dmhca.in">Admin User</option>
+              <option value="manager@dmhca.in">Department Manager</option>
+            </select>
           </div>
           
           <div>
