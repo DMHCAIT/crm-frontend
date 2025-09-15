@@ -359,10 +359,14 @@ const LeadsManagement: React.FC = () => {
       // Save to backend API first
       const apiClient = getApiClient();
       const noteData = {
-        title: `Note for ${leads.find(l => l.id === leadId)?.fullName || 'Lead'}`,
         content: noteContent,
         leadId: leadId,
-        category: 'general'
+        userId: user?.id,
+        authorId: user?.id,
+        noteType: 'general',
+        priority: 'normal',
+        isPrivate: false,
+        tags: []
       };
       
       await apiClient.createNote(noteData);
