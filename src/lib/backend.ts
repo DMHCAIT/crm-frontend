@@ -1125,8 +1125,10 @@ export class DatabaseManager {
   }
 
   async createUser(user: Omit<DatabaseUser, 'id' | 'created_at' | 'updated_at'>): Promise<DatabaseUser> {
-    // Note: In a real implementation, this would require admin privileges
-    // For now, we'll create in the users table if it exists
+    // DEPRECATED: Use getApiClient().createUser() instead for proper backend integration
+    console.warn('⚠️ DatabaseManager.createUser() is deprecated. Use getApiClient().createUser() for proper password hashing and validation.');
+    
+    // Fallback to direct database insertion (no password hashing!)
     const { data, error } = await this.supabase
       .from('users')
       .insert(user)
@@ -1138,6 +1140,10 @@ export class DatabaseManager {
   }
 
   async updateUser(id: string, updates: Partial<Omit<DatabaseUser, 'id' | 'created_at'>>): Promise<DatabaseUser> {
+    // DEPRECATED: Use getApiClient().updateUser() instead for proper backend integration
+    console.warn('⚠️ DatabaseManager.updateUser() is deprecated. Use getApiClient().updateUser() for proper password hashing and validation.');
+    
+    // Fallback to direct database update (no password hashing!)
     const { data, error } = await this.supabase
       .from('users')
       .update(updates)

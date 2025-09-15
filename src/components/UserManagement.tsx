@@ -215,12 +215,16 @@ const UserManagement: React.FC = () => {
       setActionLoading('save');
       const apiClient = getApiClient();
       
+      console.log('💾 Saving user data:', userData);
+      
       if (selectedUser) {
-        // Update existing user
-        await apiClient.updateUser(selectedUser.id, userData);
+        // Update existing user using proper backend API
+        const result = await apiClient.updateUser(selectedUser.id, userData);
+        console.log('✅ User updated successfully:', result);
       } else {
-        // Create new user
-        await apiClient.createUser(userData as Omit<DatabaseUser, 'id' | 'created_at' | 'updated_at'>);
+        // Create new user using proper backend API 
+        const result = await apiClient.createUser(userData);
+        console.log('✅ User created successfully:', result);
       }
       
       // Reload users and close modal
