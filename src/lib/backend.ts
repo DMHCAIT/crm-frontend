@@ -98,6 +98,8 @@ export interface DatabaseUser {
   status: 'active' | 'inactive' | 'suspended';
   reports_to?: string;
   profile_image?: string;
+  branch?: 'Delhi' | 'Hyderabad' | 'Kashmir';
+  assignedTo?: string;
 }
 
 export interface DatabaseCommunication {

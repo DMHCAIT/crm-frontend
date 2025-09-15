@@ -538,6 +538,7 @@ const UserManagement: React.FC = () => {
           onSave={saveUser}
           loading={actionLoading === 'save'}
           availableRoles={visibleRoles}
+          users={users}
         />
       )}
 
@@ -550,6 +551,7 @@ const UserManagement: React.FC = () => {
           loading={actionLoading === 'save'}
           user={selectedUser}
           availableRoles={visibleRoles}
+          users={users}
         />
       )}
     </div>
@@ -564,6 +566,7 @@ interface UserModalProps {
   loading: boolean;
   user?: DatabaseUser;
   availableRoles: [string, any][];
+  users: DatabaseUser[];
 }
 
 const UserModal: React.FC<UserModalProps> = ({ 
@@ -572,7 +575,8 @@ const UserModal: React.FC<UserModalProps> = ({
   onSave, 
   loading, 
   user, 
-  availableRoles 
+  availableRoles,
+  users 
 }) => {
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -585,6 +589,7 @@ const UserModal: React.FC<UserModalProps> = ({
     location: user?.location || '',
     status: user?.status || 'active',
     assignedTo: user?.assignedTo || '',
+    branch: user?.branch || '',
     password: '', // Password field for new users
     confirmPassword: '' // Confirm password field
   });
@@ -619,15 +624,19 @@ const UserModal: React.FC<UserModalProps> = ({
       return;
     }
 
-    // Prepare user data - exclude password confirmation
+    // Prepare user data - exclude password confirmation and cast branch to correct type
     const { confirmPassword, ...userData } = formData;
+    const typedUserData = {
+      ...userData,
+      branch: userData.branch as 'Delhi' | 'Hyderabad' | 'Kashmir' | undefined
+    };
     
     // For existing users, don't send password if it's empty
     if (user && !formData.password) {
-      const { password, ...userDataWithoutPassword } = userData;
+      const { password, ...userDataWithoutPassword } = typedUserData;
       onSave(userDataWithoutPassword);
     } else {
-      onSave(userData);
+      onSave(typedUserData);
     }
   };
 
@@ -767,6 +776,20 @@ const UserModal: React.FC<UserModalProps> = ({
           </div>
 
           <div>
+            <label className="block text-sm font-medium text-gray-700">Branch</label>
+            <select
+              value={formData.branch}
+              onChange={(e) => setFormData({...formData, branch: e.target.value})}
+              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+            >
+              <option value="">Select Branch</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Hyderabad">Hyderabad</option>
+              <option value="Kashmir">Kashmir</option>
+            </select>
+          </div>
+
+          <div>
             <label className="block text-sm font-medium text-gray-700">Assigned To</label>
             <select
               value={formData.assignedTo}
@@ -774,9 +797,13 @@ const UserModal: React.FC<UserModalProps> = ({
               className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
             >
               <option value="">Select Supervisor (Optional)</option>
-              <option value="santhosh@dmhca.in">Santhosh DMHCA (Super Admin)</option>
-              <option value="admin@dmhca.in">Admin User</option>
-              <option value="manager@dmhca.in">Department Manager</option>
+              {users
+                .filter(u => u.id !== user?.id) // Don't show current user in dropdown
+                .map(u => (
+                  <option key={u.id} value={u.email}>
+                    {u.name} ({u.role}) - {u.branch || 'No Branch'}
+                  </option>
+                ))}
             </select>
           </div>
           

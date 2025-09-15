@@ -79,6 +79,7 @@ export interface DatabaseUser {
   department?: string;
   designation?: string;
   location?: string;
+  branch?: string;
   date_of_birth?: string;
   join_date?: string;
   status: 'active' | 'inactive' | 'suspended';
