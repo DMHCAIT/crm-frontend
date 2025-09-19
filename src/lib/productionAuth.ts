@@ -68,8 +68,8 @@ export class ProductionAuthService {
 
   async signIn(username: string, password: string): Promise<User> {
     try {
-      // 🚨 EMERGENCY FIX: Use working simple-auth endpoint (Updated: Sep 19, 2025)
-      const response = await fetch(`${this.apiConfig.baseUrl}/api/simple-auth/login`, {
+      // � STANDARD AUTH: Use standard auth endpoint (Frontend expects this)
+      const response = await fetch(`${this.apiConfig.baseUrl}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
