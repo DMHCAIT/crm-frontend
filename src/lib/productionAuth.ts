@@ -3,7 +3,7 @@
  * Real JWT-based authentication replacing mock localStorage system
  */
 
-import { getApiClient, getApiConfig } from './backend';
+import { getApiConfig } from './backend';
 
 // Types
 export interface User {

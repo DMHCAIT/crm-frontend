@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { 
-  Settings as SettingsIcon, 
   Bell, 
   Shield, 
   Database, 
@@ -9,11 +8,8 @@ import {
   Key,
   Mail,
   MessageSquare,
-  Phone,
   Save,
-  RefreshCw,
-  Download,
-  Upload
+  Download
 } from 'lucide-react';
 
 const Settings: React.FC = () => {

@@ -108,6 +108,10 @@ const LeadsManagement: React.FC = () => {
   const [showBulkTransferModal, setShowBulkTransferModal] = useState(false);
   const [bulkTransferCounselor, setBulkTransferCounselor] = useState('');
   const [bulkTransferReason, setBulkTransferReason] = useState('');
+
+  // Dynamic Configuration States - From API
+  const [statusOptions, setStatusOptions] = useState(['hot', 'warm', 'follow-up', 'enrolled', 'fresh', 'not interested']);
+  const [countryOptions, setCountryOptions] = useState(['India', 'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France', 'Japan', 'Singapore', 'UAE']);
   
   // Filter States
   const [dateFilter, setDateFilter] = useState('all');
@@ -160,11 +164,37 @@ const LeadsManagement: React.FC = () => {
       
       // Load from backend API (proper architecture)
       const apiClient = getApiClient();
-      const dbLeads = await apiClient.getLeads();
+      const apiResponse = await apiClient.getLeads() as any;
       
-      if (dbLeads && Array.isArray(dbLeads)) {
+      // Handle new response format with config data
+      let leadsArray = [];
+      let statusOptions = ['hot', 'warm', 'follow-up', 'enrolled', 'fresh', 'not interested'];
+      let countries = ['India', 'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France', 'Japan', 'Singapore', 'UAE'];
+      
+      if (apiResponse) {
+        // New format with config
+        if (apiResponse.leads && Array.isArray(apiResponse.leads)) {
+          leadsArray = apiResponse.leads;
+          if (apiResponse.config) {
+            statusOptions = apiResponse.config.statusOptions || statusOptions;
+            countries = apiResponse.config.countries || countries;
+          }
+        }
+        // Legacy format - direct array
+        else if (Array.isArray(apiResponse)) {
+          leadsArray = apiResponse;
+        }
+        
+        // Update component state with API configuration
+        setStatusOptions(statusOptions);
+        setCountryOptions(countries);
+        console.log(`✅ Loaded ${leadsArray.length} leads with status options:`, statusOptions.join(', '));
+        console.log(`✅ Available countries:`, countries.join(', '));
+      }
+      
+      if (leadsArray.length > 0) {
         // Transform API data to match component format
-        const transformedLeads = dbLeads.map((lead: any) => ({
+        const transformedLeads = leadsArray.map((lead: any) => ({
           id: lead.id || lead._id || String(Math.random()),
           fullName: lead.name || lead.fullName || 'Unknown',
           email: lead.email || '',
@@ -183,11 +213,11 @@ const LeadsManagement: React.FC = () => {
         }));
         
         setLeads(transformedLeads);
-        // Leads loaded from production API
+        console.log(`✅ Successfully loaded ${transformedLeads.length} leads from API`);
       } else {
         // No leads found, set empty array
         setLeads([]);
-        // No leads found in database
+        console.log('ℹ️ No leads found in database - starting with empty state');
       }
       
     } catch (error) {
