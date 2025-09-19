@@ -62,7 +62,7 @@ export class TokenManager {
   }
 }
 
-// Production Authentication Service
+// Production Authentication Service - Version 2.0 (Sep 19, 2025)
 export class ProductionAuthService {
   private apiConfig = getApiConfig();
 

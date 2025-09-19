@@ -1,9 +1,9 @@
 {
   "name": "dmhca-crm-frontend",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
-  "description": "DMHCA CRM Frontend with Production Authentication - FIXED VERSION",
+  "description": "DMHCA CRM Frontend with Production Authentication - AUTH FIX v1.1.1",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
