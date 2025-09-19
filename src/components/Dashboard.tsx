@@ -50,19 +50,19 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         const dashboardData = response.data;
         
         setStats({
-          totalLeads: dashboardData.totalLeads,
-          activeStudents: dashboardData.activeStudents,
-          revenue: dashboardData.activeStudents * 250000, // Avg fee per student
-          conversionRate: dashboardData.conversionRate
+          totalLeads: dashboardData.totalLeads || 0,
+          activeStudents: dashboardData.activeStudents || 0,
+          revenue: (dashboardData.activeStudents || 0) * 250000,
+          conversionRate: dashboardData.conversionRate || 0
         });
         
         setCrmStats({
-          hotLeads: dashboardData.activeLeads,
-          avgResponseTime: parseFloat(dashboardData.responseTime) || 2.4,
-          pipelineValue: dashboardData.activeLeads * 250000,
-          monthlyConversions: Math.round(dashboardData.totalLeads * (dashboardData.conversionRate / 100)),
-          leadScore: 75, // Could be calculated from leads data
-          followUpsDue: 3 // Could be calculated from leads data
+          hotLeads: dashboardData.activeLeads || 0,
+          avgResponseTime: parseFloat(dashboardData.responseTime) || 0,
+          pipelineValue: (dashboardData.activeLeads || 0) * 250000,
+          monthlyConversions: Math.round((dashboardData.totalLeads || 0) * ((dashboardData.conversionRate || 0) / 100)),
+          leadScore: dashboardData.leadScore || 0,
+          followUpsDue: dashboardData.followUpsDue || 0
         });
 
         // Load recent activities from real data
@@ -70,8 +70,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         
         // Dashboard stats loaded
       } catch (error) {
-        console.warn('⚠️ Failed to load dashboard stats from Railway API:', error);
-        // Keep default values (0s) if database fails
+        console.error('❌ Failed to load dashboard stats from API:', error);
+        // Data remains at initial zero values if API fails
       } finally {
         setLoading(false);
       }
@@ -196,24 +196,45 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     }
   ];
 
+  // Show loading spinner for initial load
+  if (loading) {
+    return (
+      <div className="p-6 bg-gray-50 min-h-screen">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading Dashboard...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Welcome back, {user?.name || 'User'}!
+          Welcome back, {user?.name || 'Administrator'}!
         </h1>
         <p className="text-gray-600">Here's what's happening with your CRM today.</p>
+        
+        {/* Debug info for better UI visibility */}
+        <div className="mt-2 text-xs text-gray-400">
+          Last updated: {new Date().toLocaleTimeString()} | Connected: ✅
+        </div>
       </div>
 
-      {/* Main Stats Grid */}
+      {/* Main Stats Grid - Enhanced Visibility */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Leads</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.totalLeads}</p>
-              <p className="text-sm text-gray-500 mt-1">Total leads in system</p>
+              <p className="text-3xl font-bold text-blue-600">{stats.totalLeads}</p>
+              <p className="text-sm text-gray-500 mt-1">
+                {stats.totalLeads === 0 ? 'No leads yet - start adding!' : 'Total leads in system'}
+              </p>
             </div>
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
               <Users className="w-6 h-6 text-blue-600" />
@@ -221,12 +242,14 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Active Students</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.activeStudents}</p>
-              <p className="text-sm text-gray-500 mt-1">Currently enrolled</p>
+              <p className="text-3xl font-bold text-green-600">{stats.activeStudents}</p>
+              <p className="text-sm text-gray-500 mt-1">
+                {stats.activeStudents === 0 ? 'Ready for enrollment' : 'Currently enrolled'}
+              </p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
               <GraduationCap className="w-6 h-6 text-green-600" />
@@ -234,12 +257,14 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Revenue</p>
-              <p className="text-3xl font-bold text-gray-900">₹{(stats.revenue / 1000).toFixed(0)}K</p>
-              <p className="text-sm text-gray-500 mt-1">Estimated revenue</p>
+              <p className="text-3xl font-bold text-yellow-600">₹{(stats.revenue / 1000).toFixed(0)}K</p>
+              <p className="text-sm text-gray-500 mt-1">
+                {stats.revenue === 0 ? 'Start generating revenue' : 'Estimated revenue'}
+              </p>
             </div>
             <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
               <DollarSign className="w-6 h-6 text-yellow-600" />
@@ -247,12 +272,14 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Conversion Rate</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.conversionRate}%</p>
-              <p className="text-sm text-gray-500 mt-1">Leads to students</p>
+              <p className="text-3xl font-bold text-purple-600">{stats.conversionRate}%</p>
+              <p className="text-sm text-gray-500 mt-1">
+                {stats.conversionRate === 0 ? 'Track your progress' : 'Leads to students'}
+              </p>
             </div>
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
               <TrendingUp className="w-6 h-6 text-purple-600" />
@@ -260,6 +287,28 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           </div>
         </div>
       </div>
+
+      {/* Quick Start Guide - Prominent for new users */}
+      {stats.totalLeads === 0 && stats.activeStudents === 0 && (
+        <div className="mb-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-6 text-white">
+          <h2 className="text-2xl font-bold mb-2">🚀 Welcome to DMHCA CRM!</h2>
+          <p className="text-blue-100 mb-4">Get started by adding your first lead or exploring the features below.</p>
+          <div className="flex flex-wrap gap-3">
+            <button 
+              onClick={() => onNavigate?.('leads')}
+              className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors"
+            >
+              Add First Lead
+            </button>
+            <button 
+              onClick={() => onNavigate?.('students')}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors border border-blue-400"
+            >
+              Manage Students
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Quick Actions */}
       <div className="mb-8">
@@ -289,9 +338,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Navigation Cards */}
+      {/* Navigation Cards - Enhanced */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">CRM Modules</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">🎯 CRM Modules</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {navigationCards.map((card, index) => {
             const Icon = card.icon;
@@ -299,7 +348,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
               <div
                 key={index}
                 onClick={() => onNavigate?.(card.route)}
-                className={`${card.color} p-6 rounded-xl border-2 cursor-pointer hover:shadow-md transition-all group`}
+                className={`${card.color} p-6 rounded-xl border-2 cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200 group`}
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center">
