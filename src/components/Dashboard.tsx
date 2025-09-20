@@ -90,8 +90,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       const activities = leads.slice(0, 4).map((lead: any, index: number) => ({
         id: index + 1,
         type: 'lead',
-        message: `New lead "${lead.name || 'Unknown Lead'}" added`,
-        time: new Date(lead.created_at || Date.now()).toLocaleString('en-IN', {
+        message: `New lead "${lead.fullName || lead.name || 'Unknown Lead'}" added`,
+        time: new Date(lead.createdAt || lead.created_at || Date.now()).toLocaleString('en-IN', {
           hour: '2-digit',
           minute: '2-digit',
           day: '2-digit',

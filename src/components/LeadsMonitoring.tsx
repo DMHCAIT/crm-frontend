@@ -25,6 +25,7 @@ import {
 interface Lead {
   id: string;
   name: string;
+  fullName?: string;  // Add fullName field for API compatibility
   email: string;
   phone: string;
   course: string;
@@ -85,7 +86,7 @@ const LeadsMonitoring: React.FC = () => {
       // Convert API data to frontend format
       const formattedLeads: Lead[] = Array.isArray(leadsData) ? leadsData.map((lead: any) => ({
         id: lead.id || `LEAD-${Date.now()}-${Math.random().toString(36).substr(2, 3)}`,
-        name: lead.name || 'Unknown Lead',
+        name: lead.fullName || lead.name || 'Unknown Lead',
         email: lead.email || '',
         phone: lead.phone || '',
         course: lead.course || 'Not specified',
@@ -140,7 +141,7 @@ const LeadsMonitoring: React.FC = () => {
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(lead =>
-        lead.name.toLowerCase().includes(query) ||
+        (lead.name || lead.fullName || '').toLowerCase().includes(query) ||
         lead.email.toLowerCase().includes(query) ||
         lead.phone.includes(query) ||
         lead.course.toLowerCase().includes(query) ||

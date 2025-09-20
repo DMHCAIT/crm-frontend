@@ -120,7 +120,7 @@ const CRMPipeline: React.FC = () => {
       
       const totalLeads = leads.length;
       const newLeads = leads.filter((lead: any) => {
-        const createdAt = new Date(lead.created_at || lead.createdAt);
+        const createdAt = new Date(lead.createdAt || lead.created_at);
         const daysDiff = (Date.now() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
         return daysDiff <= 7;
       }).length;
@@ -146,15 +146,15 @@ const CRMPipeline: React.FC = () => {
 
       // Generate recent activities from leads
       const recentActivities: LeadActivity[] = leads
-        .sort((a: any, b: any) => new Date(b.updated_at || b.updatedAt).getTime() - new Date(a.updated_at || a.updatedAt).getTime())
+        .sort((a: any, b: any) => new Date(b.lastContact || b.last_contact || b.updatedAt || b.updated_at || b.createdAt || b.created_at).getTime() - new Date(a.lastContact || a.last_contact || a.updatedAt || a.updated_at || a.createdAt || a.created_at).getTime())
         .slice(0, 5)
         .map((lead: any, index: number) => ({
           id: lead.id || `activity-${index}`,
-          leadName: lead.name || 'Unknown Lead',
+          leadName: lead.fullName || lead.name || 'Unknown Lead',
           activity: getActivityMessage(lead.status),
-          timestamp: getRelativeTime(lead.updated_at || lead.updatedAt),
+          timestamp: getRelativeTime(lead.lastContact || lead.last_contact || lead.updatedAt || lead.updated_at || lead.createdAt || lead.created_at),
           status: lead.status || 'new',
-          counselor: lead.assigned_to || 'Unassigned'
+          counselor: lead.assigned_to || lead.assignedCounselor || 'Unassigned'
         }));
 
       setPipelineStats(realStats);
