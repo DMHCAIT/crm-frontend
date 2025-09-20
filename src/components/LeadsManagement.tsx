@@ -110,8 +110,9 @@ const LeadsManagement: React.FC = () => {
   const [bulkTransferReason, setBulkTransferReason] = useState('');
 
   // Dynamic Configuration States - From API
-  const [statusOptions, setStatusOptions] = useState(['hot', 'warm', 'follow-up', 'enrolled', 'fresh', 'not interested']);
+  const [statusOptions, setStatusOptions] = useState(['Hot', 'Warm', 'Follow Up', 'Not Interested', 'Enrolled', 'Fresh']);
   const [countryOptions, setCountryOptions] = useState(['India', 'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France', 'Japan', 'Singapore', 'UAE']);
+  const [assignableUsers, setAssignableUsers] = useState([]);
   
   // Filter States
   const [dateFilter, setDateFilter] = useState('all');
@@ -179,6 +180,11 @@ const LeadsManagement: React.FC = () => {
           if (apiResponse.config) {
             statusOptions = apiResponse.config.statusOptions || statusOptions;
             countries = apiResponse.config.countries || countries;
+            
+            // Handle assignable users from hierarchy
+            if (apiResponse.config.assignableUsers) {
+              setAssignableUsers(apiResponse.config.assignableUsers);
+            }
           }
         }
         // Legacy format - direct array
@@ -1554,7 +1560,11 @@ const LeadsManagement: React.FC = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="all">All Assigned</option>
-                  {getUniqueValues('assignedTo').map(assigned => (
+                  {assignableUsers.map((user: any) => (
+                    <option key={user.id} value={user.name}>{user.name} ({user.role})</option>
+                  ))}
+                  {/* Fallback to existing assigned users if no hierarchy data */}
+                  {assignableUsers.length === 0 && getUniqueValues('assignedTo').map(assigned => (
                     <option key={assigned} value={assigned}>{assigned}</option>
                   ))}
                 </select>
