@@ -543,6 +543,7 @@ const UserManagement: React.FC = () => {
           loading={actionLoading === 'save'}
           availableRoles={visibleRoles}
           users={users}
+          roleHierarchy={roleHierarchy}
         />
       )}
 
@@ -556,6 +557,7 @@ const UserManagement: React.FC = () => {
           user={selectedUser}
           availableRoles={visibleRoles}
           users={users}
+          roleHierarchy={roleHierarchy}
         />
       )}
     </div>
@@ -571,6 +573,7 @@ interface UserModalProps {
   user?: DatabaseUser;
   availableRoles: [string, any][];
   users: DatabaseUser[];
+  roleHierarchy: any;
 }
 
 const UserModal: React.FC<UserModalProps> = ({ 
@@ -580,7 +583,8 @@ const UserModal: React.FC<UserModalProps> = ({
   loading, 
   user, 
   availableRoles,
-  users 
+  users,
+  roleHierarchy
 }) => {
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -592,8 +596,7 @@ const UserModal: React.FC<UserModalProps> = ({
     department: user?.department || '',
     location: user?.location || '',
     status: user?.status || 'active',
-    assignedTo: user?.assignedTo || '',
-    branch: user?.branch || '',
+    reports_to: user?.reports_to || '', // Fixed: Use correct field name
     password: '', // Password field for new users
     confirmPassword: '' // Confirm password field
   });
@@ -628,19 +631,15 @@ const UserModal: React.FC<UserModalProps> = ({
       return;
     }
 
-    // Prepare user data - exclude password confirmation and cast branch to correct type
+    // Prepare user data - exclude password confirmation
     const { confirmPassword, ...userData } = formData;
-    const typedUserData = {
-      ...userData,
-      branch: userData.branch as 'Delhi' | 'Hyderabad' | 'Kashmir' | undefined
-    };
     
     // For existing users, don't send password if it's empty
     if (user && !formData.password) {
-      const { password, ...userDataWithoutPassword } = typedUserData;
+      const { password, ...userDataWithoutPassword } = userData;
       onSave(userDataWithoutPassword);
     } else {
-      onSave(typedUserData);
+      onSave(userData);
     }
   };
 
@@ -780,32 +779,39 @@ const UserModal: React.FC<UserModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Branch</label>
+            <label className="block text-sm font-medium text-gray-700">Location</label>
             <select
-              value={formData.branch}
-              onChange={(e) => setFormData({...formData, branch: e.target.value})}
+              value={formData.location}
+              onChange={(e) => setFormData({...formData, location: e.target.value})}
               className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
             >
-              <option value="">Select Branch</option>
+              <option value="">Select Location</option>
               <option value="Delhi">Delhi</option>
               <option value="Hyderabad">Hyderabad</option>
               <option value="Kashmir">Kashmir</option>
+              <option value="Remote">Remote</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Assigned To</label>
+            <label className="block text-sm font-medium text-gray-700">Reports To (Supervisor)</label>
             <select
-              value={formData.assignedTo}
-              onChange={(e) => setFormData({...formData, assignedTo: e.target.value})}
+              value={formData.reports_to}
+              onChange={(e) => setFormData({...formData, reports_to: e.target.value})}
               className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
             >
               <option value="">Select Supervisor (Optional)</option>
               {users
-                .filter(u => u.id !== user?.id) // Don't show current user in dropdown
+                .filter(u => u.id !== user?.id && u.status === 'active') // Don't show current user and only active users
+                .filter(u => {
+                  // Only show users with higher or equal role hierarchy
+                  const currentUserLevel = roleHierarchy[user?.role || 'counselor']?.level || 1;
+                  const supervisorLevel = roleHierarchy[u.role as keyof typeof roleHierarchy]?.level || 1;
+                  return supervisorLevel >= currentUserLevel;
+                })
                 .map(u => (
-                  <option key={u.id} value={u.email}>
-                    {u.name} ({u.role}) - {u.branch || 'No Branch'}
+                  <option key={u.id} value={u.id}>
+                    {u.name} ({roleHierarchy[u.role as keyof typeof roleHierarchy]?.label || u.role}) - {u.department || 'No Department'}
                   </option>
                 ))}
             </select>
