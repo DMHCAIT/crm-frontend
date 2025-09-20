@@ -113,6 +113,7 @@ const LeadsManagement: React.FC = () => {
   const [statusOptions, setStatusOptions] = useState(['Hot', 'Warm', 'Follow Up', 'Not Interested', 'Enrolled', 'Fresh']);
   const [countryOptions, setCountryOptions] = useState(['India', 'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France', 'Japan', 'Singapore', 'UAE']);
   const [assignableUsers, setAssignableUsers] = useState([]);
+  const [courseOptions, setCourseOptions] = useState({ fellowship: [], pgDiploma: [], all: [] });
   
   // Filter States
   const [dateFilter, setDateFilter] = useState('all');
@@ -128,6 +129,7 @@ const LeadsManagement: React.FC = () => {
   const [sourceFilter, setSourceFilter] = useState('all');
   const [assignedToFilter, setAssignedToFilter] = useState('all');
   const [qualificationFilter, setQualificationFilter] = useState('all');
+  const [courseFilter, setCourseFilter] = useState('all');
   
   // Updated Today Tracking
   const [leadsUpdatedToday, setLeadsUpdatedToday] = useState<string[]>([]);
@@ -157,7 +159,7 @@ const LeadsManagement: React.FC = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [leads, searchQuery, dateFilter, dateFrom, dateTo, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, leadsUpdatedToday]);
+  }, [leads, searchQuery, dateFilter, dateFrom, dateTo, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, leadsUpdatedToday]);
 
   // Data Loading - Production Only
   const loadLeads = async () => {
@@ -184,6 +186,11 @@ const LeadsManagement: React.FC = () => {
             // Handle assignable users from hierarchy
             if (apiResponse.config.assignableUsers) {
               setAssignableUsers(apiResponse.config.assignableUsers);
+            }
+            
+            // Handle course options
+            if (apiResponse.config.courseOptions) {
+              setCourseOptions(apiResponse.config.courseOptions);
             }
           }
         }
@@ -349,6 +356,11 @@ const LeadsManagement: React.FC = () => {
     // Qualification filter
     if (qualificationFilter !== 'all') {
       filtered = filtered.filter(lead => lead.qualification === qualificationFilter);
+    }
+
+    // Course filter
+    if (courseFilter !== 'all') {
+      filtered = filtered.filter(lead => lead.course === courseFilter);
     }
 
     setFilteredLeads(filtered);
@@ -1583,6 +1595,31 @@ const LeadsManagement: React.FC = () => {
                   ))}
                 </select>
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Course</label>
+                <select
+                  value={courseFilter}
+                  onChange={(e) => setCourseFilter(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="all">All Courses</option>
+                  <optgroup label="Fellowship Courses">
+                    {courseOptions.fellowship.map((course: string) => (
+                      <option key={`fellowship-${course}`} value={course}>{course}</option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="PG Diploma Courses">
+                    {courseOptions.pgDiploma.map((course: string) => (
+                      <option key={`pgdiploma-${course}`} value={course}>{course}</option>
+                    ))}
+                  </optgroup>
+                  {/* Fallback to existing courses if no API data */}
+                  {courseOptions.all.length === 0 && getUniqueValues('course').map(course => (
+                    <option key={course} value={course}>{course}</option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
         )}
@@ -2058,50 +2095,24 @@ const LeadsManagement: React.FC = () => {
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
                               <option value="">Select Course</option>
-                              <optgroup label="Medical Sciences">
-                                <option value="MBBS">MBBS</option>
-                                <option value="BDS">BDS</option>
-                                <option value="Pharmacy">Pharmacy</option>
-                                <option value="Nursing">Nursing</option>
-                                <option value="Physical Therapy">Physical Therapy</option>
-                                <option value="Medical Laboratory Technology">Medical Laboratory Technology</option>
+                              <optgroup label="Fellowship Courses">
+                                {courseOptions.fellowship.map((course: string) => (
+                                  <option key={`fellowship-${course}`} value={course}>{course}</option>
+                                ))}
                               </optgroup>
-                              <optgroup label="Engineering">
-                                <option value="Computer Engineering">Computer Engineering</option>
-                                <option value="Software Engineering">Software Engineering</option>
-                                <option value="Electrical Engineering">Electrical Engineering</option>
-                                <option value="Mechanical Engineering">Mechanical Engineering</option>
-                                <option value="Civil Engineering">Civil Engineering</option>
-                                <option value="Chemical Engineering">Chemical Engineering</option>
+                              <optgroup label="PG Diploma Courses">
+                                {courseOptions.pgDiploma.map((course: string) => (
+                                  <option key={`pgdiploma-${course}`} value={course}>{course}</option>
+                                ))}
                               </optgroup>
-                              <optgroup label="Business & Management">
-                                <option value="MBA">MBA</option>
-                                <option value="BBA">BBA</option>
-                                <option value="Accounting & Finance">Accounting & Finance</option>
-                                <option value="Marketing">Marketing</option>
-                                <option value="Human Resources">Human Resources</option>
-                              </optgroup>
-                              <optgroup label="Computer Science">
-                                <option value="Computer Science">Computer Science</option>
-                                <option value="Information Technology">Information Technology</option>
-                                <option value="Data Science">Data Science</option>
-                                <option value="Artificial Intelligence">Artificial Intelligence</option>
-                                <option value="Cybersecurity">Cybersecurity</option>
-                              </optgroup>
-                              <optgroup label="Social Sciences">
-                                <option value="Psychology">Psychology</option>
-                                <option value="Sociology">Sociology</option>
-                                <option value="International Relations">International Relations</option>
-                                <option value="Political Science">Political Science</option>
-                              </optgroup>
-                              <optgroup label="Others">
-                                <option value="Law">Law</option>
-                                <option value="Architecture">Architecture</option>
-                                <option value="Fine Arts">Fine Arts</option>
-                                <option value="Mass Communication">Mass Communication</option>
-                                <option value="Education">Education</option>
-                                <option value="Other">Other</option>
-                              </optgroup>
+                              {/* Fallback to existing courses if no API data */}
+                              {courseOptions.all.length === 0 && (
+                                <optgroup label="Available Courses">
+                                  {getUniqueValues('course').map(course => (
+                                    <option key={course} value={course}>{course}</option>
+                                  ))}
+                                </optgroup>
+                              )}
                             </select>
                           ) : (
                             <span className="text-gray-700">{selectedLead.course}</span>
