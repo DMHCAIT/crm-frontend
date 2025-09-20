@@ -321,61 +321,14 @@ class ProductionApiClient {
     }
   }
 
-  // Leads API - EMERGENCY WORKAROUND: Use working dashboard API
+  // Leads API - Direct connection to backend database
   async getLeads() {
     try {
-      // Try the original leads API first
-      return await this.request('/leads');
+      const response = await this.request('/leads');
+      return response;
     } catch (error) {
-      console.log('⚠️ Leads API not available, using dashboard API workaround');
-      
-      // EMERGENCY: Use working dashboard API to get leads data
-      const dashboardData = await this.request('/dashboard') as any;
-      
-      if (dashboardData && dashboardData.totalLeads > 0) {
-        // Generate mock leads based on dashboard stats until leads API works
-        const mockLeads = [];
-        for (let i = 1; i <= Math.min(dashboardData.totalLeads, 10); i++) {
-          mockLeads.push({
-            id: `lead-${i}`,
-            fullName: `Lead ${i}`,
-            email: `lead${i}@example.com`,
-            phone: `+91-987654321${i}`,
-            country: 'India',
-            branch: 'Main',
-            qualification: 'Bachelor\'s Degree',
-            source: 'Website',
-            course: 'MBBS',
-            status: i <= 2 ? 'hot' : i <= 4 ? 'warm' : 'follow-up',
-            assignedTo: 'Admin',
-            followUp: '',
-            createdAt: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
-            updatedAt: new Date().toISOString(),
-            notes: []
-          });
-        }
-        
-        return {
-          success: true,
-          leads: mockLeads,
-          config: {
-            statusOptions: ['hot', 'warm', 'follow-up', 'enrolled', 'fresh', 'not interested'],
-            countries: ['India', 'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France', 'Japan', 'Singapore', 'UAE']
-          },
-          message: `Emergency workaround: Generated ${mockLeads.length} leads from dashboard data (${dashboardData.totalLeads} total in database)`
-        };
-      }
-      
-      // Return empty array with config if no dashboard data
-      return {
-        success: true,
-        leads: [],
-        config: {
-          statusOptions: ['hot', 'warm', 'follow-up', 'enrolled', 'fresh', 'not interested'],
-          countries: ['India', 'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France', 'Japan', 'Singapore', 'UAE']
-        },
-        message: 'Emergency mode: Dashboard API working, leads API being restored'
-      };
+      console.error('Failed to fetch leads from database:', error);
+      throw new Error('Unable to connect to leads database. Please check your connection.');
     }
   }
 

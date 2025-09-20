@@ -112,6 +112,11 @@ export class ProductionAuthService {
       TokenManager.setToken(token);
       TokenManager.setStoredUser(compatibleUser);
 
+      // Force a page refresh to ensure clean state after login
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 100);
+
       return compatibleUser;
     } catch (error) {
       console.error('Login error:', error);
@@ -162,8 +167,16 @@ export class ProductionAuthService {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      // Always clear local auth state
-      TokenManager.removeToken();
+      // Clear ALL authentication data
+      TokenManager.removeToken(); // This already clears both token and user data
+      
+      // Clear any additional cached data
+      localStorage.removeItem('crm_user');
+      localStorage.removeItem('crm_auth_token');
+      localStorage.removeItem('token');
+      
+      // Force a hard redirect to login page to ensure clean state
+      window.location.href = '/login';
     }
   }
 
@@ -188,20 +201,10 @@ export class ProductionAuthService {
         TokenManager.setStoredUser(user);
         return user;
       } catch (decodeError) {
-        // If token decode fails, fallback to stored user or return admin user for emergency
-        const storedUser = TokenManager.getStoredUser();
-        if (storedUser) {
-          return storedUser;
-        }
-        // Emergency fallback - return admin user
-        const emergencyUser: User = {
-          id: 'admin-1',
-          email: 'admin@dmhca.com',
-          name: 'Administrator',
-          role: 'super_admin'
-        };
-        TokenManager.setStoredUser(emergencyUser);
-        return emergencyUser;
+        // If token decode fails, clear everything and return null
+        console.warn('Token decode failed, clearing authentication:', decodeError);
+        TokenManager.removeToken();
+        return null;
       }
     } catch (error) {
       console.error('Token verification error:', error);
