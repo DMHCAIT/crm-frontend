@@ -23,27 +23,65 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+    <div 
+      className="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%)',
+        minHeight: '100vh',
+        width: '100vw'
+      }}
+    >
       {/* Enhanced Background Pattern */}
-      <div className="absolute inset-0 bg-black/30"></div>
+      <div 
+        className="absolute inset-0"
+        style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
+      ></div>
       
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl animate-pulse delay-500"></div>
+        <div 
+          className="absolute w-64 h-64 rounded-full animate-pulse"
+          style={{
+            top: '25%',
+            left: '25%',
+            background: 'rgba(59, 130, 246, 0.2)',
+            filter: 'blur(60px)'
+          }}
+        ></div>
+        <div 
+          className="absolute w-96 h-96 rounded-full animate-pulse"
+          style={{
+            top: '75%',
+            right: '25%',
+            background: 'rgba(147, 51, 234, 0.2)',
+            filter: 'blur(60px)',
+            animationDelay: '1s'
+          }}
+        ></div>
+        <div 
+          className="absolute w-80 h-80 rounded-full animate-pulse"
+          style={{
+            bottom: '25%',
+            left: '33%',
+            background: 'rgba(99, 102, 241, 0.2)',
+            filter: 'blur(60px)',
+            animationDelay: '0.5s'
+          }}
+        ></div>
       </div>
       
       {/* Grid Background */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0" style={{
+      <div 
+        className="absolute inset-0"
+        style={{
+          opacity: 0.1,
           backgroundImage: `
             linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
             linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
           `,
           backgroundSize: '50px 50px'
-        }}></div>
-      </div>
+        }}
+      ></div>
       
       {/* Main Login Container - PERFECTLY CENTERED */}
       <div className="relative z-20 w-full max-w-lg mx-auto">
@@ -139,15 +177,6 @@ const LoginForm: React.FC = () => {
                   )}
                 </button>
               </form>
-
-              {/* Demo Credentials */}
-              <div className="mt-8 p-4 bg-white/5 rounded-xl border border-white/10">
-                <p className="text-white/70 text-xs text-center mb-2">Demo Credentials:</p>
-                <div className="text-center space-y-1">
-                  <p className="text-white/90 text-sm font-mono">Username: <span className="text-blue-300">admin</span></p>
-                  <p className="text-white/90 text-sm font-mono">Password: <span className="text-blue-300">admin123</span></p>
-                </div>
-              </div>
             </div>
           </div>
 
