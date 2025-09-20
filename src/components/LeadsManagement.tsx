@@ -56,6 +56,13 @@ interface Lead {
   notes: Note[];
 }
 
+interface AssignableUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
 interface NewLeadForm {
   fullName: string;
   email: string;
@@ -111,8 +118,9 @@ const LeadsManagement: React.FC = () => {
 
   // Dynamic Configuration States - From API
   const [statusOptions, setStatusOptions] = useState(['Hot', 'Warm', 'Follow Up', 'Not Interested', 'Enrolled', 'Fresh']);
-  const [countryOptions, setCountryOptions] = useState(['India', 'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France', 'Japan', 'Singapore', 'UAE']);
-  const [assignableUsers, setAssignableUsers] = useState([]);
+  const [countryOptions, setCountryOptions] = useState([{code: 'IN', name: 'India'}, {code: 'US', name: 'United States'}]);
+  const [qualificationOptions, setQualificationOptions] = useState(['MBBS', 'MD', 'MS', 'BDS', 'FMGS', 'AYUSH', 'Others']);
+  const [assignableUsers, setAssignableUsers] = useState<AssignableUser[]>([]);
   const [courseOptions, setCourseOptions] = useState({ fellowship: [], pgDiploma: [], all: [] });
   
   // Filter States
@@ -172,16 +180,26 @@ const LeadsManagement: React.FC = () => {
       
       // Handle new response format with config data
       let leadsArray = [];
-      let statusOptions = ['hot', 'warm', 'follow-up', 'enrolled', 'fresh', 'not interested'];
-      let countries = ['India', 'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France', 'Japan', 'Singapore', 'UAE'];
       
       if (apiResponse) {
         // New format with config
         if (apiResponse.leads && Array.isArray(apiResponse.leads)) {
           leadsArray = apiResponse.leads;
           if (apiResponse.config) {
-            statusOptions = apiResponse.config.statusOptions || statusOptions;
-            countries = apiResponse.config.countries || countries;
+            // Update status options
+            if (apiResponse.config.statusOptions) {
+              setStatusOptions(apiResponse.config.statusOptions);
+            }
+            
+            // Update country options with proper structure
+            if (apiResponse.config.countries && Array.isArray(apiResponse.config.countries)) {
+              setCountryOptions(apiResponse.config.countries);
+            }
+            
+            // Update qualification options
+            if (apiResponse.config.qualificationOptions) {
+              setQualificationOptions(apiResponse.config.qualificationOptions);
+            }
             
             // Handle assignable users from hierarchy
             if (apiResponse.config.assignableUsers) {
@@ -199,11 +217,7 @@ const LeadsManagement: React.FC = () => {
           leadsArray = apiResponse;
         }
         
-        // Update component state with API configuration
-        setStatusOptions(statusOptions);
-        setCountryOptions(countries);
-        console.log(`✅ Loaded ${leadsArray.length} leads with status options:`, statusOptions.join(', '));
-        console.log(`✅ Available countries:`, countries.join(', '));
+        console.log(`✅ Loaded ${leadsArray.length} leads with dynamic configuration from backend`);
       }
       
       if (leadsArray.length > 0) {
@@ -1590,9 +1604,16 @@ const LeadsManagement: React.FC = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="all">All Qualifications</option>
-                  {getUniqueValues('qualification').map(qualification => (
+                  {qualificationOptions.map(qualification => (
                     <option key={qualification} value={qualification}>{qualification}</option>
                   ))}
+                  {/* Include any additional qualifications from leads data not in predefined list */}
+                  {getUniqueValues('qualification')
+                    .filter(qual => !qualificationOptions.includes(qual))
+                    .map(qualification => (
+                      <option key={`custom-${qualification}`} value={qualification}>{qualification}</option>
+                    ))
+                  }
                 </select>
               </div>
 
@@ -1801,12 +1822,11 @@ const LeadsManagement: React.FC = () => {
                                 className="text-sm text-gray-600 bg-white border border-gray-300 rounded px-2 py-1 w-full"
                                 onClick={(e) => e.stopPropagation()}
                               >
-                                <option value="USA">USA</option>
-                                <option value="Canada">Canada</option>
-                                <option value="UK">UK</option>
-                                <option value="Australia">Australia</option>
-                                <option value="Pakistan">Pakistan</option>
-                                <option value="India">India</option>
+                                {countryOptions.map(country => (
+                                  <option key={country.code} value={country.name}>
+                                    {country.name}
+                                  </option>
+                                ))}
                               </select>
                               <select
                                 value={editedLead.qualification || lead.qualification}
@@ -1815,17 +1835,11 @@ const LeadsManagement: React.FC = () => {
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 <option value="">Select Qualification</option>
-                                <option value="High School">High School</option>
-                                <option value="Intermediate">Intermediate</option>
-                                <option value="A-Levels">A-Levels</option>
-                                <option value="Bachelor's Degree">Bachelor's Degree</option>
-                                <option value="Master's Degree">Master's Degree</option>
-                                <option value="PhD">PhD</option>
-                                <option value="MBBS">MBBS</option>
-                                <option value="BDS">BDS</option>
-                                <option value="Engineering">Engineering</option>
-                                <option value="MBA">MBA</option>
-                                <option value="Other">Other</option>
+                                {qualificationOptions.map(qualification => (
+                                  <option key={qualification} value={qualification}>
+                                    {qualification}
+                                  </option>
+                                ))}
                               </select>
                             </>
                           ) : (
@@ -2032,12 +2046,11 @@ const LeadsManagement: React.FC = () => {
                               onChange={(e) => setEditedLead(prev => ({ ...prev, country: e.target.value }))}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
-                              <option value="USA">USA</option>
-                              <option value="Canada">Canada</option>
-                              <option value="UK">UK</option>
-                              <option value="Australia">Australia</option>
-                              <option value="Pakistan">Pakistan</option>
-                              <option value="India">India</option>
+                              {countryOptions.map(country => (
+                                <option key={country.code} value={country.name}>
+                                  {country.name}
+                                </option>
+                              ))}
                             </select>
                           ) : (
                             <span className="text-gray-700">{selectedLead.country}</span>
@@ -2067,19 +2080,11 @@ const LeadsManagement: React.FC = () => {
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
                               <option value="">Select Qualification</option>
-                              <option value="High School">High School</option>
-                              <option value="Intermediate">Intermediate</option>
-                              <option value="A-Levels">A-Levels</option>
-                              <option value="Bachelor's Degree">Bachelor's Degree</option>
-                              <option value="Master's Degree">Master's Degree</option>
-                              <option value="PhD">PhD</option>
-                              <option value="Diploma">Diploma</option>
-                              <option value="Certificate">Certificate</option>
-                              <option value="MBBS">MBBS</option>
-                              <option value="BDS">BDS</option>
-                              <option value="Engineering">Engineering</option>
-                              <option value="MBA">MBA</option>
-                              <option value="Other">Other</option>
+                              {qualificationOptions.map(qualification => (
+                                <option key={qualification} value={qualification}>
+                                  {qualification}
+                                </option>
+                              ))}
                             </select>
                           ) : (
                             <span className="text-gray-700">{selectedLead.qualification}</span>
@@ -2164,12 +2169,17 @@ const LeadsManagement: React.FC = () => {
                             }}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           >
-                            <option value="hot">🔥 Hot</option>
-                            <option value="warm">🌡️ Warm</option>
-                            <option value="Followup">📞 Follow Up</option>
-                            <option value="will enroll later">⏳ Will Enroll Later</option>
-                            <option value="Not interested">❌ Not Interested</option>
-                            <option value="enrolled">✅ Enrolled</option>
+                            {statusOptions.map(status => (
+                              <option key={status} value={status.toLowerCase()}>
+                                {status === 'Hot' && '🔥 '}
+                                {status === 'Warm' && '🌡️ '}
+                                {status === 'Follow Up' && '📞 '}
+                                {status === 'Not Interested' && '❌ '}
+                                {status === 'Enrolled' && '✅ '}
+                                {status === 'Fresh' && '🆕 '}
+                                {status}
+                              </option>
+                            ))}
                           </select>
                         </div>
 
@@ -2182,8 +2192,10 @@ const LeadsManagement: React.FC = () => {
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
                               <option value="">Unassigned</option>
-                              {users.map((user: any) => (
-                                <option key={user.id} value={user.email}>{user.name}</option>
+                              {assignableUsers.map(user => (
+                                <option key={user.id} value={user.name || user.email}>
+                                  {user.name || user.email} ({user.role})
+                                </option>
                               ))}
                             </select>
                           ) : (
@@ -2568,16 +2580,11 @@ const LeadsManagement: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="">Select Country</option>
-                    <option value="IN">India</option>
-                    <option value="US">United States</option>
-                    <option value="UK">United Kingdom</option>
-                    <option value="CA">Canada</option>
-                    <option value="AU">Australia</option>
-                    <option value="BD">Bangladesh</option>
-                    <option value="PK">Pakistan</option>
-                    <option value="LK">Sri Lanka</option>
-                    <option value="NP">Nepal</option>
-                    <option value="Other">Other</option>
+                    {countryOptions.map(country => (
+                      <option key={country.code} value={country.name}>
+                        {country.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -2607,16 +2614,11 @@ const LeadsManagement: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="">Select Qualification</option>
-                    <option value="MBBS">MBBS</option>
-                    <option value="MD">MD</option>
-                    <option value="MS">MS</option>
-                    <option value="BDS">BDS</option>
-                    <option value="MDS">MDS</option>
-                    <option value="BAMS">BAMS</option>
-                    <option value="BHMS">BHMS</option>
-                    <option value="BPT">BPT</option>
-                    <option value="MBBS/FMG">MBBS/FMG</option>
-                    <option value="Other">Other</option>
+                    {qualificationOptions.map(qualification => (
+                      <option key={qualification} value={qualification}>
+                        {qualification}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -2650,15 +2652,20 @@ const LeadsManagement: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="">Select Course</option>
-                    <option value="Internal Medicine">Internal Medicine</option>
-                    <option value="Pulmonary">Pulmonary</option>
-                    <option value="Cardiology">Cardiology</option>
-                    <option value="Dermatology">Dermatology</option>
-                    <option value="Neurology">Neurology</option>
-                    <option value="Psychiatry">Psychiatry</option>
-                    <option value="Emergency Medicine">Emergency Medicine</option>
-                    <option value="Family Medicine">Family Medicine</option>
-                    <option value="Other">Other</option>
+                    {courseOptions.fellowship && courseOptions.fellowship.length > 0 && (
+                      <optgroup label="Fellowship Courses">
+                        {courseOptions.fellowship.map(course => (
+                          <option key={course} value={course}>{course}</option>
+                        ))}
+                      </optgroup>
+                    )}
+                    {courseOptions.pgDiploma && courseOptions.pgDiploma.length > 0 && (
+                      <optgroup label="PG Diploma Courses">
+                        {courseOptions.pgDiploma.map(course => (
+                          <option key={course} value={course}>{course}</option>
+                        ))}
+                      </optgroup>
+                    )}
                   </select>
                 </div>
 
@@ -2666,21 +2673,15 @@ const LeadsManagement: React.FC = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
                   <select
-                    value={newLead.status || 'new'}
+                    value={newLead.status || statusOptions[0]?.toLowerCase() || 'new'}
                     onChange={(e) => setNewLead({...newLead, status: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="new">New</option>
-                    <option value="contacted">Contacted</option>
-                    <option value="qualified">Qualified</option>
-                    <option value="hot">Hot</option>
-                    <option value="warm">Warm</option>
-                    <option value="cold">Cold</option>
-                    <option value="Followup">Follow-up</option>
-                    <option value="interested">Interested</option>
-                    <option value="Not interested">Not Interested</option>
-                    <option value="will enroll later">Will Enroll Later</option>
-                    <option value="converted">Converted</option>
+                    {statusOptions.map(status => (
+                      <option key={status} value={status.toLowerCase()}>
+                        {status}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -2693,7 +2694,11 @@ const LeadsManagement: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="">Auto-assign to me</option>
-                    
+                    {assignableUsers.map(user => (
+                      <option key={user.id} value={user.name || user.email}>
+                        {user.name || user.email} ({user.role})
+                      </option>
+                    ))}
                   </select>
                 </div>
 
