@@ -126,6 +126,7 @@ const LeadsManagement: React.FC = () => {
   const [countryFilter, setCountryFilter] = useState('all');
   const [sourceFilter, setSourceFilter] = useState('all');
   const [assignedToFilter, setAssignedToFilter] = useState('all');
+  const [qualificationFilter, setQualificationFilter] = useState('all');
   
   // Updated Today Tracking
   const [leadsUpdatedToday, setLeadsUpdatedToday] = useState<string[]>([]);
@@ -155,7 +156,7 @@ const LeadsManagement: React.FC = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [leads, searchQuery, dateFilter, dateFrom, dateTo, statusFilter, countryFilter, sourceFilter, assignedToFilter, leadsUpdatedToday]);
+  }, [leads, searchQuery, dateFilter, dateFrom, dateTo, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, leadsUpdatedToday]);
 
   // Data Loading - Production Only
   const loadLeads = async () => {
@@ -337,6 +338,11 @@ const LeadsManagement: React.FC = () => {
     // Assigned to filter
     if (assignedToFilter !== 'all') {
       filtered = filtered.filter(lead => lead.assignedTo === assignedToFilter);
+    }
+
+    // Qualification filter
+    if (qualificationFilter !== 'all') {
+      filtered = filtered.filter(lead => lead.qualification === qualificationFilter);
     }
 
     setFilteredLeads(filtered);
@@ -1550,6 +1556,20 @@ const LeadsManagement: React.FC = () => {
                   <option value="all">All Assigned</option>
                   {getUniqueValues('assignedTo').map(assigned => (
                     <option key={assigned} value={assigned}>{assigned}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Qualification</label>
+                <select
+                  value={qualificationFilter}
+                  onChange={(e) => setQualificationFilter(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="all">All Qualifications</option>
+                  {getUniqueValues('qualification').map(qualification => (
+                    <option key={qualification} value={qualification}>{qualification}</option>
                   ))}
                 </select>
               </div>
