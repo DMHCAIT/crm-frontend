@@ -393,44 +393,58 @@ const LeadsManagement: React.FC = () => {
     setEditedLead({});
   };
 
+  // Load notes for a specific lead from backend
+  const loadNotesForLead = async (leadId: string) => {
+    try {
+      const apiClient = getApiClient();
+      const response = await apiClient.getNotes(leadId, 'lead');
+      
+      if (response.success && response.data) {
+        // Transform backend notes to frontend format
+        const transformedNotes = response.data.map((note: any) => ({
+          id: note.id,
+          content: note.content,
+          timestamp: note.created_at,
+          author: 'User' // We'll need to fetch user names later
+        }));
+        
+        // Update the specific lead with the loaded notes
+        setLeads((prev: Lead[]) => prev.map((lead: Lead) => 
+          lead.id === leadId 
+            ? { ...lead, notes: transformedNotes }
+            : lead
+        ));
+        
+        console.log(`✅ Loaded ${transformedNotes.length} notes for lead ${leadId}`);
+      }
+    } catch (error) {
+      console.error('❌ Error loading notes for lead:', error);
+    }
+  };
+
   const handleAddNote = async (leadId: string) => {
     const noteContent = newNote[leadId];
     if (!noteContent?.trim()) return;
 
-    const newNoteObj: Note = {
-      id: Date.now().toString(),
-      content: noteContent,
-      timestamp: new Date().toISOString(),
-      author: user?.name || 'Unknown User'
-    };
-
     try {
-      // Save to backend API first
+      // Save to backend API first with correct field names
       const apiClient = getApiClient();
       const noteData = {
         content: noteContent,
-        leadId: leadId,
-        userId: user?.id,
-        authorId: user?.id,
-        noteType: 'general',
+        lead_id: leadId,  // Use snake_case for backend
+        user_id: user?.id,
+        author_id: user?.id,
+        note_type: 'general',
         priority: 'normal',
-        isPrivate: false,
+        is_private: false,
         tags: []
       };
       
       await apiClient.createNote(noteData);
       console.log('✅ Note saved to backend successfully');
       
-      // Update frontend state after successful save
-      setLeads((prev: Lead[]) => prev.map((lead: Lead) => 
-        lead.id === leadId 
-          ? { 
-              ...lead, 
-              notes: [newNoteObj, ...lead.notes],
-              updatedAt: new Date().toISOString()
-            }
-          : lead
-      ));
+      // Reload notes from backend to ensure consistency
+      await loadNotesForLead(leadId);
       
       // Track this lead as updated today when note is added
       if (!leadsUpdatedToday.includes(leadId)) {
@@ -617,9 +631,12 @@ const LeadsManagement: React.FC = () => {
   };
 
   // Handle lead selection for detail view
-  const handleLeadClick = (leadId: string) => {
+  const handleLeadClick = async (leadId: string) => {
     setSelectedLeadId(leadId);
     setShowDetailPanel(true);
+    
+    // Load notes for the selected lead
+    await loadNotesForLead(leadId);
   };
 
   // Handle lead transfer (using bulk transfer modal for individual leads)
