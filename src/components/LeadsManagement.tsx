@@ -500,7 +500,7 @@ const LeadsManagement: React.FC = () => {
   };
 
   const getUniqueValues = (field: keyof Omit<Lead, 'notes'>) => {
-    return [...new Set(leads.map((lead: Lead) => lead[field] as string).filter(Boolean))];
+    return [...new Set((leads || []).map((lead: Lead) => lead[field] as string).filter(Boolean))];
   };
 
   const quickStatusFilter = (status: string) => {
@@ -861,12 +861,12 @@ const LeadsManagement: React.FC = () => {
     const currentYear = now.getFullYear();
 
     return {
-      total: leads.length,
-      hot: leads.filter((lead: Lead) => lead.status === 'hot').length,
-      warm: leads.filter((lead: Lead) => lead.status === 'warm').length,
-      followup: leads.filter((lead: Lead) => lead.status === 'followup').length,
-      converted: leads.filter((lead: Lead) => lead.status === 'enrolled').length,
-      thisMonth: leads.filter((lead: Lead) => {
+      total: (leads || []).length,
+      hot: (leads || []).filter((lead: Lead) => lead.status === 'hot').length,
+      warm: (leads || []).filter((lead: Lead) => lead.status === 'warm').length,
+      followup: (leads || []).filter((lead: Lead) => lead.status === 'followup').length,
+      converted: (leads || []).filter((lead: Lead) => lead.status === 'enrolled').length,
+      thisMonth: (leads || []).filter((lead: Lead) => {
         const leadDate = new Date(lead.createdAt);
         return leadDate.getMonth() === currentMonth && leadDate.getFullYear() === currentYear;
       }).length
@@ -1554,7 +1554,7 @@ const LeadsManagement: React.FC = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="all">All Status</option>
-                  {getUniqueValues('status').map(status => (
+                  {(statusOptions || []).map(status => (
                     <option key={status} value={status}>{status}</option>
                   ))}
                 </select>
@@ -1646,7 +1646,7 @@ const LeadsManagement: React.FC = () => {
                     ))}
                   </optgroup>
                   {/* Fallback to existing courses if no API data */}
-                  {courseOptions.all.length === 0 && getUniqueValues('course').map(course => (
+                  {(courseOptions.all || []).length === 0 && getUniqueValues('course').map(course => (
                     <option key={course} value={course}>{course}</option>
                   ))}
                 </select>
@@ -2121,7 +2121,7 @@ const LeadsManagement: React.FC = () => {
                                 ))}
                               </optgroup>
                               {/* Fallback to existing courses if no API data */}
-                              {courseOptions.all.length === 0 && (
+                              {(courseOptions.all || []).length === 0 && (
                                 <optgroup label="Available Courses">
                                   {getUniqueValues('course').map(course => (
                                     <option key={course} value={course}>{course}</option>
@@ -2179,14 +2179,15 @@ const LeadsManagement: React.FC = () => {
                             }}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           >
-                            {statusOptions.map(status => (
-                              <option key={status} value={status.toLowerCase()}>
-                                {status === 'Hot' && '🔥 '}
-                                {status === 'Warm' && '🌡️ '}
-                                {status === 'Follow Up' && '📞 '}
-                                {status === 'Not Interested' && '❌ '}
-                                {status === 'Enrolled' && '✅ '}
-                                {status === 'Fresh' && '🆕 '}
+                            {(statusOptions || []).map(status => (
+                              <option key={status} value={status}>
+                                {status === 'hot' && '🔥 '}
+                                {status === 'warm' && '🌡️ '}
+                                {status === 'followup' && '📞 '}
+                                {status === 'not interested' && '❌ '}
+                                {status === 'enrolled' && '✅ '}
+                                {status === 'fresh' && '🆕 '}
+                                {status === 'junk' && '🗑️ '}
                                 {status}
                               </option>
                             ))}
@@ -2683,12 +2684,12 @@ const LeadsManagement: React.FC = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
                   <select
-                    value={newLead.status || statusOptions[0]?.toLowerCase() || 'new'}
+                    value={newLead.status || statusOptions[0] || 'fresh'}
                     onChange={(e) => setNewLead({...newLead, status: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    {statusOptions.map(status => (
-                      <option key={status} value={status.toLowerCase()}>
+                    {(statusOptions || []).map(status => (
+                      <option key={status} value={status}>
                         {status}
                       </option>
                     ))}
