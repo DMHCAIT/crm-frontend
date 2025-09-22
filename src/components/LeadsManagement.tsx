@@ -345,10 +345,18 @@ const LeadsManagement: React.FC = () => {
       
       console.log(`🔍 Loaded users from API:`, dbUsers);
       
-      if (dbUsers && Array.isArray(dbUsers)) {
-        setUsers(dbUsers);
+      // Handle both direct array and {success: true, users: [...]} format
+      let usersArray: any[] = [];
+      if (Array.isArray(dbUsers)) {
+        usersArray = dbUsers;
+      } else if (dbUsers && (dbUsers as any).success && Array.isArray((dbUsers as any).users)) {
+        usersArray = (dbUsers as any).users;
+      }
+      
+      if (usersArray.length > 0) {
+        setUsers(usersArray);
         // Set all users as assignable users
-        const assignableUsersList = dbUsers.map(user => ({
+        const assignableUsersList = usersArray.map((user: any) => ({
           id: user.id,
           name: user.full_name || user.username || user.name,
           email: user.email,
