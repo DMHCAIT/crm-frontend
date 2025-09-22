@@ -343,18 +343,23 @@ const LeadsManagement: React.FC = () => {
       const apiClient = getApiClient();
       const dbUsers = await apiClient.getUsers();
       
+      console.log(`🔍 Loaded users from API:`, dbUsers);
+      
       if (dbUsers && Array.isArray(dbUsers)) {
         setUsers(dbUsers);
         // Set all users as assignable users
-        setAssignableUsers(dbUsers.map(user => ({
+        const assignableUsersList = dbUsers.map(user => ({
           id: user.id,
           name: user.full_name || user.username || user.name,
           email: user.email,
           role: user.role || 'User'
-        })));
+        }));
+        setAssignableUsers(assignableUsersList);
+        console.log(`✅ Set ${assignableUsersList.length} assignable users:`, assignableUsersList);
       } else {
         setUsers([]);
         setAssignableUsers([]);
+        console.log(`⚠️ No users loaded or invalid format:`, dbUsers);
       }
     } catch (error) {
       console.error('❌ Error loading users:', error);
@@ -533,14 +538,28 @@ const LeadsManagement: React.FC = () => {
           author: 'User' // We'll need to fetch user names later
         }));
         
+        console.log(`🔍 About to update lead ${leadId} with ${transformedNotes.length} notes`);
+        
         // Update the specific lead with the loaded notes
-        setLeads((prev: Lead[]) => prev.map((lead: Lead) => 
-          lead.id === leadId 
-            ? { ...lead, notes: transformedNotes }
-            : lead
-        ));
+        setLeads((prev: Lead[]) => {
+          const updatedLeads = prev.map((lead: Lead) => 
+            lead.id === leadId 
+              ? { ...lead, notes: transformedNotes }
+              : lead
+          );
+          
+          console.log(`🔍 Updated leads array, lead ${leadId} now has notes:`, 
+            updatedLeads.find(l => l.id === leadId)?.notes?.length || 0);
+          
+          return updatedLeads;
+        });
         
         console.log(`✅ Loaded ${transformedNotes.length} notes for lead ${leadId}`);
+        
+        // Force a re-render by updating a timestamp to ensure UI reflects changes
+        setLastUpdateTime(new Date());
+      } else {
+        console.log(`⚠️ No notes response or data for lead ${leadId}:`, response);
       }
     } catch (error) {
       console.error('❌ Error loading notes for lead:', error);
@@ -1704,14 +1723,22 @@ const LeadsManagement: React.FC = () => {
                   onChange={(e) => setAssignedToFilter(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="all">All Assigned</option>
+                  <option value="all">All Assigned ({assignableUsers.length} users)</option>
+                  {(() => {
+                    console.log(`🔍 Rendering assignable users in filter:`, assignableUsers);
+                    return null;
+                  })()}
                   {assignableUsers.map((user: any) => (
                     <option key={user.id} value={user.name}>{user.name} ({user.role})</option>
                   ))}
                   {/* Fallback to existing assigned users if no hierarchy data */}
-                  {assignableUsers.length === 0 && getUniqueValues('assignedTo').map(assigned => (
-                    <option key={assigned} value={assigned}>{assigned}</option>
-                  ))}
+                  {assignableUsers.length === 0 && (() => {
+                    const uniqueAssigned = getUniqueValues('assignedTo');
+                    console.log(`🔍 Using fallback assigned users:`, uniqueAssigned);
+                    return uniqueAssigned.map(assigned => (
+                      <option key={assigned} value={assigned}>{assigned}</option>
+                    ));
+                  })()}
                 </select>
               </div>
 
@@ -2412,10 +2439,14 @@ const LeadsManagement: React.FC = () => {
                     <div className="bg-gray-50 rounded-lg p-4">
                       <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
                         <MessageSquare className="w-5 h-5 mr-2 text-orange-600" />
-                        Notes & Communication
+                        Notes & Communication ({selectedLead.notes?.length || 0})
                       </h4>
                       <div className="space-y-3 max-h-60 overflow-y-auto">
-                        {selectedLead.notes.map((note) => (
+                        {(() => {
+                          console.log(`🔍 Rendering notes for lead ${selectedLead.id}:`, selectedLead.notes);
+                          return null;
+                        })()}
+                        {(selectedLead.notes || []).map((note) => (
                           <div key={note.id} className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
                             <p className="text-sm text-gray-900 mb-2">{note.content}</p>
                             <div className="flex items-center justify-between text-xs text-gray-500">
@@ -2424,7 +2455,7 @@ const LeadsManagement: React.FC = () => {
                             </div>
                           </div>
                         ))}
-                        {selectedLead.notes.length === 0 && (
+                        {(!selectedLead.notes || selectedLead.notes.length === 0) && (
                           <p className="text-gray-500 text-sm italic">No notes added yet</p>
                         )}
                       </div>
