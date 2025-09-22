@@ -771,15 +771,48 @@ const LeadsManagement: React.FC = () => {
   };
 
   // Handle bulk delete
-  const handleBulkDelete = () => {
+  const handleBulkDelete = async () => {
     if (window.confirm(`Are you sure you want to delete ${selectedLeads.length} lead(s)? This action cannot be undone.`)) {
-      setLeads((prev: Lead[]) => prev.filter((lead: Lead) => !selectedLeads.includes(lead.id)));
-      setSelectedLeads([]);
-      
-      // Close detail panel if selected lead is deleted
-      if (selectedLeadId && selectedLeads.includes(selectedLeadId)) {
-        setSelectedLeadId(null);
-        setShowDetailPanel(false);
+      try {
+        const apiClient = getApiClient();
+        
+        // Make API call to delete leads
+        const response = await fetch(`${apiClient}/leads-simple`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({
+            leadIds: selectedLeads
+          })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          // Update local state only after successful deletion
+          setLeads((prev: Lead[]) => prev.filter((lead: Lead) => !selectedLeads.includes(lead.id)));
+          setSelectedLeads([]);
+          
+          // Close detail panel if selected lead is deleted
+          if (selectedLeadId && selectedLeads.includes(selectedLeadId)) {
+            setSelectedLeadId(null);
+            setShowDetailPanel(false);
+          }
+
+          // Show success message
+          alert(`${result.deletedCount || selectedLeads.length} lead(s) deleted successfully`);
+          
+          // Refresh leads list to ensure consistency
+          loadLeads();
+        } else {
+          console.error('Delete failed:', result);
+          alert(`Failed to delete leads: ${result.error || 'Unknown error'}`);
+        }
+      } catch (error) {
+        console.error('Delete error:', error);
+        alert(`Failed to delete leads: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
   };
