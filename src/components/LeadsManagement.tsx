@@ -1410,6 +1410,16 @@ const LeadsManagement: React.FC = () => {
           📅 Follow-up
         </button>
         <button
+          onClick={() => quickStatusFilter('fresh')}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+            statusFilter === 'fresh' 
+              ? 'bg-green-100 text-green-800 border-2 border-green-300 shadow-md' 
+              : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
+          }`}
+        >
+          🌱 Fresh
+        </button>
+        <button
           onClick={() => quickStatusFilter('all')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
             statusFilter === 'all' 

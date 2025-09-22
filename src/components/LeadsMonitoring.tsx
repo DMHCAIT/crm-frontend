@@ -83,15 +83,16 @@ const LeadsMonitoring: React.FC = () => {
       const apiClient = getApiClient();
       const leadsData: any = await apiClient.getLeads();
       
-      // Convert API data to frontend format
-      const formattedLeads: Lead[] = Array.isArray(leadsData) ? leadsData.map((lead: any) => ({
+      // Convert API data to frontend format - handle both array and object responses
+      const leadsArray = Array.isArray(leadsData) ? leadsData : (leadsData?.data || []);
+      const formattedLeads: Lead[] = (leadsArray || []).map((lead: any) => ({
         id: lead.id || `LEAD-${Date.now()}-${Math.random().toString(36).substr(2, 3)}`,
         name: lead.fullName || lead.name || 'Unknown Lead',
         email: lead.email || '',
         phone: lead.phone || '',
         course: lead.course || 'Not specified',
         source: lead.source || 'Unknown',
-        status: lead.status || 'new',
+        status: lead.status || 'fresh',
         priority: lead.priority || 'medium',
         experience: lead.experience || 'Not specified',
         location: lead.location || 'Not specified',
@@ -103,7 +104,7 @@ const LeadsMonitoring: React.FC = () => {
         lastContact: lead.last_contact || lead.lastContact || lead.updated_at || lead.updatedAt || new Date().toISOString(),
         nextFollowUp: lead.next_follow_up || lead.nextFollowUp || '',
         communicationsCount: lead.communications_count || lead.communicationsCount || 0
-      })) : [];
+      }));
 
       setLeads(formattedLeads);
       
@@ -117,9 +118,9 @@ const LeadsMonitoring: React.FC = () => {
           if (!lead.nextFollowUp) return false;
           return new Date(lead.nextFollowUp) < new Date();
         }).length,
-        hotLeads: formattedLeads.filter(lead => lead.status === 'qualified' || lead.status === 'hot').length,
+        hotLeads: formattedLeads.filter(lead => lead.status === 'hot').length,
         recentConversions: formattedLeads.filter(lead => {
-          if (lead.status !== 'closed_won') return false;
+          if (lead.status !== 'enrolled') return false;
           const daysDiff = (Date.now() - new Date(lead.createdAt).getTime()) / (1000 * 60 * 60 * 24);
           return daysDiff <= 7;
         }).length
@@ -142,10 +143,10 @@ const LeadsMonitoring: React.FC = () => {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(lead =>
         (lead.name || lead.fullName || '').toLowerCase().includes(query) ||
-        lead.email.toLowerCase().includes(query) ||
-        lead.phone.includes(query) ||
-        lead.course.toLowerCase().includes(query) ||
-        lead.location.toLowerCase().includes(query)
+        (lead.email || '').toLowerCase().includes(query) ||
+        (lead.phone || '').includes(query) ||
+        (lead.course || '').toLowerCase().includes(query) ||
+        (lead.location || '').toLowerCase().includes(query)
       );
     }
 

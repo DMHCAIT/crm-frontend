@@ -39,14 +39,13 @@ interface LeadActivity {
 // Helper functions
 const getActivityMessage = (status: string): string => {
   const messages: Record<string, string> = {
-    'new': 'New lead captured',
-    'contacted': 'Initial contact made',
-    'qualified': 'Lead qualified',
-    'proposal': 'Proposal sent',
-    'closed_won': 'Converted to student',
-    'closed_lost': 'Lead closed',
+    'fresh': 'New lead captured',
     'hot': 'Marked as hot lead',
-    'follow_up': 'Follow-up scheduled'
+    'followup': 'Follow-up scheduled',
+    'warm': 'Lead qualified as warm',
+    'not interested': 'Lead marked as not interested',
+    'enrolled': 'Converted to student',
+    'junk': 'Lead marked as junk'
   };
   return messages[status] || 'Status updated';
 };
@@ -116,18 +115,18 @@ const CRMPipeline: React.FC = () => {
       const leadsData: any = await apiClient.getLeads();
 
       // Calculate real pipeline stats
-      const leads = Array.isArray(leadsData) ? leadsData : [];
+      const leads = Array.isArray(leadsData) ? leadsData : (leadsData?.data || []);
       
-      const totalLeads = leads.length;
-      const newLeads = leads.filter((lead: any) => {
+      const totalLeads = (leads || []).length;
+      const newLeads = (leads || []).filter((lead: any) => {
         const createdAt = new Date(lead.createdAt || lead.created_at);
         const daysDiff = (Date.now() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
         return daysDiff <= 7;
       }).length;
       
-      const hotLeads = leads.filter((lead: any) => lead.status === 'qualified' || lead.status === 'hot').length;
-      const qualifiedLeads = leads.filter((lead: any) => lead.status === 'qualified').length;
-      const convertedLeads = leads.filter((lead: any) => lead.status === 'closed_won').length;
+      const hotLeads = (leads || []).filter((lead: any) => lead.status === 'hot').length;
+      const qualifiedLeads = (leads || []).filter((lead: any) => lead.status === 'warm').length;
+      const convertedLeads = (leads || []).filter((lead: any) => lead.status === 'enrolled').length;
       
       const conversionRate = totalLeads > 0 ? (convertedLeads / totalLeads) * 100 : 0;
 
@@ -145,7 +144,7 @@ const CRMPipeline: React.FC = () => {
       };
 
       // Generate recent activities from leads
-      const recentActivities: LeadActivity[] = leads
+      const recentActivities: LeadActivity[] = (leads || [])
         .sort((a: any, b: any) => new Date(b.lastContact || b.last_contact || b.updatedAt || b.updated_at || b.createdAt || b.created_at).getTime() - new Date(a.lastContact || a.last_contact || a.updatedAt || a.updated_at || a.createdAt || a.created_at).getTime())
         .slice(0, 5)
         .map((lead: any, index: number) => ({
@@ -153,7 +152,7 @@ const CRMPipeline: React.FC = () => {
           leadName: lead.fullName || lead.name || 'Unknown Lead',
           activity: getActivityMessage(lead.status),
           timestamp: getRelativeTime(lead.lastContact || lead.last_contact || lead.updatedAt || lead.updated_at || lead.createdAt || lead.created_at),
-          status: lead.status || 'new',
+          status: lead.status || 'fresh',
           counselor: lead.assigned_to || lead.assignedCounselor || 'Unassigned'
         }));
 
