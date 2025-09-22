@@ -217,9 +217,28 @@ const LeadsManagement: React.FC = () => {
   const [qualificationFilter, setQualificationFilter] = useState('all');
   const [courseFilter, setCourseFilter] = useState('all');
   
-  // Updated Today Tracking
-  const [leadsUpdatedToday, setLeadsUpdatedToday] = useState<string[]>([]);
-  const [lastUpdateTime, setLastUpdateTime] = useState<Date | null>(null);
+  // Updated Today Tracking with persistence
+  const [leadsUpdatedToday, setLeadsUpdatedToday] = useState<string[]>(() => {
+    // Check if we're on a new day and clear old data
+    const today = new Date().toDateString();
+    const savedDate = localStorage.getItem('crm-updated-today-date');
+    
+    if (savedDate === today) {
+      const saved = localStorage.getItem('crm-leads-updated-today');
+      return saved ? JSON.parse(saved) : [];
+    } else {
+      // Clear old data for new day
+      localStorage.removeItem('crm-leads-updated-today');
+      localStorage.removeItem('crm-last-update-time');
+      localStorage.setItem('crm-updated-today-date', today);
+      return [];
+    }
+  });
+  
+  const [lastUpdateTime, setLastUpdateTime] = useState<Date | null>(() => {
+    const saved = localStorage.getItem('crm-last-update-time');
+    return saved ? new Date(saved) : null;
+  });
 
   // Add Lead Modal States
   const [showAddLeadModal, setShowAddLeadModal] = useState(false);
@@ -529,11 +548,15 @@ const LeadsManagement: React.FC = () => {
           : lead
       ));
       
-      // Track this lead as updated today
+      // Track this lead as updated today with persistence
       if (editingLead && !leadsUpdatedToday.includes(editingLead)) {
-        setLeadsUpdatedToday((prev: string[]) => [...prev, editingLead]);
+        const newUpdatedList = [...leadsUpdatedToday, editingLead];
+        setLeadsUpdatedToday(newUpdatedList);
+        localStorage.setItem('crm-leads-updated-today', JSON.stringify(newUpdatedList));
       }
-      setLastUpdateTime(new Date());
+      const newUpdateTime = new Date();
+      setLastUpdateTime(newUpdateTime);
+      localStorage.setItem('crm-last-update-time', newUpdateTime.toISOString());
       
       setEditingLead(null);
       setEditedLead({});
@@ -618,11 +641,15 @@ const LeadsManagement: React.FC = () => {
       // Reload notes from backend to ensure consistency
       await loadNotesForLead(leadId);
       
-      // Track this lead as updated today when note is added
+      // Track this lead as updated today when note is added with persistence
       if (!leadsUpdatedToday.includes(leadId)) {
-        setLeadsUpdatedToday((prev: string[]) => [...prev, leadId]);
+        const newUpdatedList = [...leadsUpdatedToday, leadId];
+        setLeadsUpdatedToday(newUpdatedList);
+        localStorage.setItem('crm-leads-updated-today', JSON.stringify(newUpdatedList));
       }
-      setLastUpdateTime(new Date());
+      const newUpdateTime = new Date();
+      setLastUpdateTime(newUpdateTime);
+      localStorage.setItem('crm-last-update-time', newUpdateTime.toISOString());
       
       setNewNote((prev: {[key: string]: string}) => ({ ...prev, [leadId]: '' }));
       
@@ -667,6 +694,8 @@ const LeadsManagement: React.FC = () => {
   const resetDailyCounter = () => {
     setLeadsUpdatedToday([]);
     setLastUpdateTime(null);
+    localStorage.removeItem('crm-leads-updated-today');
+    localStorage.removeItem('crm-last-update-time');
   };
 
   // Add Lead Functions
@@ -749,9 +778,14 @@ const LeadsManagement: React.FC = () => {
       // Add to leads list
       setLeads((prev: Lead[]) => [leadToAdd, ...prev]);
 
-      // Track as updated today
-      setLeadsUpdatedToday((prev: string[]) => [...prev, leadToAdd.id]);
-      setLastUpdateTime(new Date());
+      // Track as updated today with persistence
+      const newUpdatedList = [...leadsUpdatedToday, leadToAdd.id];
+      setLeadsUpdatedToday(newUpdatedList);
+      localStorage.setItem('crm-leads-updated-today', JSON.stringify(newUpdatedList));
+      
+      const newUpdateTime = new Date();
+      setLastUpdateTime(newUpdateTime);
+      localStorage.setItem('crm-last-update-time', newUpdateTime.toISOString());
 
       // Reset form and close modal
       setNewLead({
@@ -981,10 +1015,12 @@ const LeadsManagement: React.FC = () => {
             : lead
         ));
         
-        // Track transferred leads as updated today
+        // Track transferred leads as updated today with persistence
         const newUpdatedLeads = selectedLeads.filter((id: string) => !leadsUpdatedToday.includes(id));
         if (newUpdatedLeads.length > 0) {
-          setLeadsUpdatedToday((prev: string[]) => [...prev, ...newUpdatedLeads]);
+          const updatedList = [...leadsUpdatedToday, ...newUpdatedLeads];
+          setLeadsUpdatedToday(updatedList);
+          localStorage.setItem('crm-leads-updated-today', JSON.stringify(updatedList));
         }
         setLastUpdateTime(new Date());
         
