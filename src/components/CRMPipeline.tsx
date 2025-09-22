@@ -298,12 +298,13 @@ const CRMPipeline: React.FC = () => {
                 <div key={activity.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div className="flex items-center space-x-4">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                      activity.status === 'closed_won' ? 'bg-green-100 text-green-600' :
-                      activity.status === 'qualified' ? 'bg-orange-100 text-orange-600' :
+                      activity.status === 'enrolled' ? 'bg-green-100 text-green-600' :
+                      activity.status === 'hot' ? 'bg-red-100 text-red-600' :
+                      activity.status === 'warm' ? 'bg-orange-100 text-orange-600' :
                       'bg-blue-100 text-blue-600'
                     }`}>
-                      {activity.status === 'closed_won' ? <CheckCircle className="h-5 w-5" /> :
-                       activity.status === 'qualified' ? <Star className="h-5 w-5" /> :
+                      {activity.status === 'enrolled' ? <CheckCircle className="h-5 w-5" /> :
+                       activity.status === 'hot' ? <Star className="h-5 w-5" /> :
                        <Users className="h-5 w-5" />}
                     </div>
                     <div>
@@ -315,9 +316,11 @@ const CRMPipeline: React.FC = () => {
                   <div className="text-right">
                     <p className="text-sm text-gray-600">{activity.timestamp}</p>
                     <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                      activity.status === 'closed_won' ? 'bg-green-100 text-green-800' :
-                      activity.status === 'qualified' ? 'bg-orange-100 text-orange-800' :
-                      activity.status === 'new' ? 'bg-blue-100 text-blue-800' :
+                      activity.status === 'enrolled' ? 'bg-green-100 text-green-800' :
+                      activity.status === 'hot' ? 'bg-red-100 text-red-800' :
+                      activity.status === 'warm' ? 'bg-orange-100 text-orange-800' :
+                      activity.status === 'followup' ? 'bg-yellow-100 text-yellow-800' :
+                      activity.status === 'fresh' ? 'bg-blue-100 text-blue-800' :
                       'bg-gray-100 text-gray-800'
                     }`}>
                       {activity.status.replace('_', ' ')}
