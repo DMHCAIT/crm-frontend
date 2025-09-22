@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
+import { STATUS_OPTIONS, STATUS_COLORS, STATUS_MESSAGES } from '../constants/crmConstants';
 import { 
   Search, 
   Plus,
@@ -117,7 +118,7 @@ const LeadsManagement: React.FC = () => {
   const [bulkTransferReason, setBulkTransferReason] = useState('');
 
   // Dynamic Configuration States - From API
-  const [statusOptions, setStatusOptions] = useState(['hot', 'followup', 'warm', 'not interested', 'enrolled', 'fresh', 'junk']);
+  const [statusOptions, setStatusOptions] = useState(STATUS_OPTIONS);
   const [countryOptions, setCountryOptions] = useState([{code: 'IN', name: 'India'}, {code: 'US', name: 'United States'}]);
   const [qualificationOptions, setQualificationOptions] = useState(['MBBS', 'MD', 'MS', 'BDS', 'FMGS', 'AYUSH', 'Others']);
   const [assignableUsers, setAssignableUsers] = useState<AssignableUser[]>([]);

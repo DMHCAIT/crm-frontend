@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
+import { STATUS_OPTIONS, STATUS_COLORS } from '../constants/crmConstants';
 import { 
   Search, 
   Filter,
@@ -198,16 +199,7 @@ const LeadsMonitoring: React.FC = () => {
   };
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'hot': return 'bg-red-100 text-red-800 border-red-200';
-      case 'warm': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'followup': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'fresh': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'enrolled': return 'bg-green-100 text-green-800 border-green-200';
-      case 'not interested': return 'bg-gray-100 text-gray-800 border-gray-200';
-      case 'junk': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
+    return STATUS_COLORS[status as keyof typeof STATUS_COLORS] || STATUS_COLORS['not interested'];
   };
 
   const getPriorityIcon = (priority: string) => {
@@ -373,12 +365,11 @@ const LeadsMonitoring: React.FC = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="all">All Status</option>
-                <option value="new">New</option>
-                <option value="contacted">Contacted</option>
-                <option value="interested">Interested</option>
-                <option value="hot_lead">Hot Lead</option>
-                <option value="follow_up">Follow Up</option>
-                <option value="converted">Converted</option>
+                {STATUS_OPTIONS.map(status => (
+                  <option key={status} value={status}>
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </option>
+                ))}
               </select>
             </div>
             <div>
