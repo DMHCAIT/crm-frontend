@@ -368,6 +368,15 @@ class ProductionApiClient {
     });
   }
 
+  async bulkDeleteLeads(leadIds: string[]) {
+    return this.request('/leads-simple', {
+      method: 'DELETE',
+      body: JSON.stringify({
+        leadIds
+      })
+    });
+  }
+
   // Students API - New endpoints
   async getStudents() {
     return this.request('/students');

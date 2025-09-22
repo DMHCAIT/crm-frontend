@@ -119,8 +119,85 @@ const LeadsManagement: React.FC = () => {
 
   // Dynamic Configuration States - From API
   const [statusOptions, setStatusOptions] = useState(STATUS_OPTIONS);
-  const [countryOptions, setCountryOptions] = useState([{code: 'IN', name: 'India'}, {code: 'US', name: 'United States'}]);
-  const [qualificationOptions, setQualificationOptions] = useState(['MBBS', 'MD', 'MS', 'BDS', 'FMGS', 'AYUSH', 'Others']);
+  const [countryOptions, setCountryOptions] = useState([
+    // Asian Countries
+    {code: 'IN', name: 'India', phoneCode: '+91'},
+    {code: 'CN', name: 'China', phoneCode: '+86'},
+    {code: 'JP', name: 'Japan', phoneCode: '+81'},
+    {code: 'KR', name: 'South Korea', phoneCode: '+82'},
+    {code: 'ID', name: 'Indonesia', phoneCode: '+62'},
+    {code: 'PK', name: 'Pakistan', phoneCode: '+92'},
+    {code: 'BD', name: 'Bangladesh', phoneCode: '+880'},
+    {code: 'PH', name: 'Philippines', phoneCode: '+63'},
+    {code: 'VN', name: 'Vietnam', phoneCode: '+84'},
+    {code: 'TH', name: 'Thailand', phoneCode: '+66'},
+    {code: 'MY', name: 'Malaysia', phoneCode: '+60'},
+    {code: 'SG', name: 'Singapore', phoneCode: '+65'},
+    {code: 'LK', name: 'Sri Lanka', phoneCode: '+94'},
+    {code: 'NP', name: 'Nepal', phoneCode: '+977'},
+    {code: 'MM', name: 'Myanmar', phoneCode: '+95'},
+    {code: 'KH', name: 'Cambodia', phoneCode: '+855'},
+    {code: 'LA', name: 'Laos', phoneCode: '+856'},
+    {code: 'BN', name: 'Brunei', phoneCode: '+673'},
+    {code: 'TW', name: 'Taiwan', phoneCode: '+886'},
+    {code: 'HK', name: 'Hong Kong', phoneCode: '+852'},
+    {code: 'MO', name: 'Macau', phoneCode: '+853'},
+    {code: 'MN', name: 'Mongolia', phoneCode: '+976'},
+    {code: 'KZ', name: 'Kazakhstan', phoneCode: '+7'},
+    {code: 'UZ', name: 'Uzbekistan', phoneCode: '+998'},
+    {code: 'KG', name: 'Kyrgyzstan', phoneCode: '+996'},
+    {code: 'TJ', name: 'Tajikistan', phoneCode: '+992'},
+    {code: 'TM', name: 'Turkmenistan', phoneCode: '+993'},
+    {code: 'AF', name: 'Afghanistan', phoneCode: '+93'},
+    {code: 'BT', name: 'Bhutan', phoneCode: '+975'},
+    {code: 'MV', name: 'Maldives', phoneCode: '+960'},
+
+    // Middle East Countries
+    {code: 'AE', name: 'United Arab Emirates', phoneCode: '+971'},
+    {code: 'SA', name: 'Saudi Arabia', phoneCode: '+966'},
+    {code: 'QA', name: 'Qatar', phoneCode: '+974'},
+    {code: 'KW', name: 'Kuwait', phoneCode: '+965'},
+    {code: 'BH', name: 'Bahrain', phoneCode: '+973'},
+    {code: 'OM', name: 'Oman', phoneCode: '+968'},
+    {code: 'YE', name: 'Yemen', phoneCode: '+967'},
+    {code: 'IQ', name: 'Iraq', phoneCode: '+964'},
+    {code: 'IR', name: 'Iran', phoneCode: '+98'},
+    {code: 'SY', name: 'Syria', phoneCode: '+963'},
+    {code: 'LB', name: 'Lebanon', phoneCode: '+961'},
+    {code: 'JO', name: 'Jordan', phoneCode: '+962'},
+    {code: 'PS', name: 'Palestine', phoneCode: '+970'},
+    {code: 'IL', name: 'Israel', phoneCode: '+972'},
+    {code: 'TR', name: 'Turkey', phoneCode: '+90'},
+    {code: 'CY', name: 'Cyprus', phoneCode: '+357'},
+
+    // Other Popular Countries
+    {code: 'US', name: 'United States', phoneCode: '+1'},
+    {code: 'CA', name: 'Canada', phoneCode: '+1'},
+    {code: 'GB', name: 'United Kingdom', phoneCode: '+44'},
+    {code: 'AU', name: 'Australia', phoneCode: '+61'},
+    {code: 'NZ', name: 'New Zealand', phoneCode: '+64'},
+    {code: 'DE', name: 'Germany', phoneCode: '+49'},
+    {code: 'FR', name: 'France', phoneCode: '+33'},
+    {code: 'IT', name: 'Italy', phoneCode: '+39'},
+    {code: 'ES', name: 'Spain', phoneCode: '+34'},
+    {code: 'NL', name: 'Netherlands', phoneCode: '+31'},
+    {code: 'CH', name: 'Switzerland', phoneCode: '+41'},
+    {code: 'SE', name: 'Sweden', phoneCode: '+46'},
+    {code: 'NO', name: 'Norway', phoneCode: '+47'},
+    {code: 'DK', name: 'Denmark', phoneCode: '+45'},
+    {code: 'FI', name: 'Finland', phoneCode: '+358'},
+    {code: 'BE', name: 'Belgium', phoneCode: '+32'},
+    {code: 'AT', name: 'Austria', phoneCode: '+43'},
+    {code: 'IE', name: 'Ireland', phoneCode: '+353'},
+    {code: 'RU', name: 'Russia', phoneCode: '+7'},
+    {code: 'BR', name: 'Brazil', phoneCode: '+55'},
+    {code: 'ZA', name: 'South Africa', phoneCode: '+27'},
+    {code: 'EG', name: 'Egypt', phoneCode: '+20'},
+    {code: 'NG', name: 'Nigeria', phoneCode: '+234'},
+    {code: 'KE', name: 'Kenya', phoneCode: '+254'},
+    {code: 'ET', name: 'Ethiopia', phoneCode: '+251'}
+  ]);
+  const [qualificationOptions, setQualificationOptions] = useState(['MBBS', 'MD', 'BDS', 'AYUSH', 'MS', 'FMGS', 'Others']);
   const [assignableUsers, setAssignableUsers] = useState<AssignableUser[]>([]);
   const [courseOptions, setCourseOptions] = useState({ fellowship: [], pgDiploma: [], all: [] });
   
@@ -192,20 +269,20 @@ const LeadsManagement: React.FC = () => {
               setStatusOptions(apiResponse.config.statusOptions);
             }
             
-            // Update country options with proper structure
-            if (apiResponse.config.countries && Array.isArray(apiResponse.config.countries)) {
-              setCountryOptions(apiResponse.config.countries);
-            }
+            // Use comprehensive default country and qualification options instead of API overrides
+            // Note: We use complete lists defined in state initialization to show ALL options
+            // if (apiResponse.config.countries && Array.isArray(apiResponse.config.countries)) {
+            //   setCountryOptions(apiResponse.config.countries);
+            // }
+            // if (apiResponse.config.qualificationOptions) {
+            //   setQualificationOptions(apiResponse.config.qualificationOptions);
+            // }
             
-            // Update qualification options
-            if (apiResponse.config.qualificationOptions) {
-              setQualificationOptions(apiResponse.config.qualificationOptions);
-            }
-            
-            // Handle assignable users from hierarchy
-            if (apiResponse.config.assignableUsers) {
-              setAssignableUsers(apiResponse.config.assignableUsers);
-            }
+            // Handle assignable users from hierarchy - Skip this since we use all users
+            // Note: We populate assignableUsers from loadUsers() to include all users
+            // if (apiResponse.config.assignableUsers) {
+            //   setAssignableUsers(apiResponse.config.assignableUsers);
+            // }
             
             // Handle course options
             if (apiResponse.config.courseOptions) {
@@ -268,12 +345,21 @@ const LeadsManagement: React.FC = () => {
       
       if (dbUsers && Array.isArray(dbUsers)) {
         setUsers(dbUsers);
+        // Set all users as assignable users
+        setAssignableUsers(dbUsers.map(user => ({
+          id: user.id,
+          name: user.full_name || user.username || user.name,
+          email: user.email,
+          role: user.role || 'User'
+        })));
       } else {
         setUsers([]);
+        setAssignableUsers([]);
       }
     } catch (error) {
       console.error('❌ Error loading users:', error);
       setUsers([]);
+      setAssignableUsers([]);
     }
   };
 
@@ -776,21 +862,10 @@ const LeadsManagement: React.FC = () => {
       try {
         const apiClient = getApiClient();
         
-        // Make API call to delete leads
-        const response = await fetch(`${apiClient}/leads-simple`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          },
-          body: JSON.stringify({
-            leadIds: selectedLeads
-          })
-        });
+        // Use the proper API client method for bulk deletion
+        const result = await apiClient.bulkDeleteLeads(selectedLeads) as any;
 
-        const result = await response.json();
-
-        if (response.ok && result.success) {
+        if (result.success) {
           // Update local state only after successful deletion
           setLeads((prev: Lead[]) => prev.filter((lead: Lead) => !selectedLeads.includes(lead.id)));
           setSelectedLeads([]);
@@ -1602,8 +1677,8 @@ const LeadsManagement: React.FC = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="all">All Countries</option>
-                  {getUniqueValues('country').map(country => (
-                    <option key={country} value={country}>{country}</option>
+                  {countryOptions.map(country => (
+                    <option key={country.code} value={country.name}>{country.name} ({country.phoneCode})</option>
                   ))}
                 </select>
               </div>
@@ -2087,12 +2162,22 @@ const LeadsManagement: React.FC = () => {
                           {editingLead === selectedLead.id ? (
                             <select
                               value={editedLead.country || selectedLead.country}
-                              onChange={(e) => setEditedLead(prev => ({ ...prev, country: e.target.value }))}
+                              onChange={(e) => {
+                                const selectedCountryName = e.target.value;
+                                const selectedCountry = countryOptions.find(c => c.name === selectedCountryName);
+                                const phoneCode = selectedCountry?.phoneCode || '';
+                                
+                                setEditedLead(prev => ({ 
+                                  ...prev, 
+                                  country: selectedCountryName,
+                                  phone: phoneCode
+                                }));
+                              }}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
                               {countryOptions.map(country => (
                                 <option key={country.code} value={country.name}>
-                                  {country.name}
+                                  {country.name} ({country.phoneCode})
                                 </option>
                               ))}
                             </select>
@@ -2621,13 +2706,23 @@ const LeadsManagement: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Country</label>
                   <select
                     value={newLead.country || ''}
-                    onChange={(e) => setNewLead({...newLead, country: e.target.value})}
+                    onChange={(e) => {
+                      const selectedCountryName = e.target.value;
+                      const selectedCountry = countryOptions.find(c => c.name === selectedCountryName);
+                      const phoneCode = selectedCountry?.phoneCode || '';
+                      
+                      setNewLead({
+                        ...newLead, 
+                        country: selectedCountryName,
+                        phone: phoneCode
+                      });
+                    }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="">Select Country</option>
                     {countryOptions.map(country => (
                       <option key={country.code} value={country.name}>
-                        {country.name}
+                        {country.name} ({country.phoneCode})
                       </option>
                     ))}
                   </select>
