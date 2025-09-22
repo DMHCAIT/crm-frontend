@@ -1,4 +1,17 @@
-import { Request, Response } from 'express';
+// Define generic request/response types for frontend use
+interface WebhookRequest {
+  method: string;
+  body: any;
+  query: any;
+  headers: any;
+}
+
+interface WebhookResponse {
+  status: (code: number) => WebhookResponse;
+  json: (data: any) => void;
+  send: (data: any) => void;
+  sendStatus: (code: number) => void;
+}
 
 interface FacebookWebhookEntry {
   id: string;
@@ -28,7 +41,7 @@ export class FacebookWebhookHandler {
   /**
    * Verify Facebook webhook challenge
    */
-  static verifyWebhook(req: Request, res: Response): void {
+  static verifyWebhook(req: WebhookRequest, res: WebhookResponse): void {
     const mode = req.query['hub.mode'];
     const token = req.query['hub.verify_token'];
     const challenge = req.query['hub.challenge'];
@@ -45,9 +58,9 @@ export class FacebookWebhookHandler {
   /**
    * Handle incoming Facebook lead webhook
    */
-  static async handleWebhook(req: Request, res: Response): Promise<void> {
+  static async handleWebhook(req: WebhookRequest, res: WebhookResponse): Promise<void> {
     try {
-      const payload: FacebookWebhookPayload = req.body;
+      const payload: FacebookWebhookPayload = req.body as FacebookWebhookPayload;
       
       // Facebook webhook payload received
 
@@ -215,7 +228,7 @@ export class FacebookWebhookHandler {
   /**
    * Health check endpoint for webhook
    */
-  static healthCheck(req: Request, res: Response): void {
+  static healthCheck(_req: WebhookRequest, res: WebhookResponse): void {
     res.json({
       status: 'healthy',
       service: 'facebook-webhook-handler',

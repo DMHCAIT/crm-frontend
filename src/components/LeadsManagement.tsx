@@ -435,7 +435,7 @@ const LeadsManagement: React.FC = () => {
   const loadNotesForLead = async (leadId: string) => {
     try {
       const apiClient = getApiClient();
-      const response = await apiClient.getNotes(leadId, 'lead');
+      const response = await apiClient.getNotes(leadId, 'lead') as any;
       
       if (response.success && response.data) {
         // Transform backend notes to frontend format
