@@ -75,7 +75,7 @@ export interface DatabaseLead {
   email?: string;
   phone?: string;
   source: 'website' | 'social_media' | 'referral' | 'manual' | 'advertisement';
-  status: 'new' | 'contacted' | 'qualified' | 'proposal' | 'closed_won' | 'closed_lost';
+  status: 'hot' | 'followup' | 'warm' | 'not interested' | 'enrolled' | 'fresh' | 'junk';
   score: number;
   notes?: string;
   assigned_to?: string;

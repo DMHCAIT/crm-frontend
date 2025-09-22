@@ -117,7 +117,7 @@ const LeadsManagement: React.FC = () => {
   const [bulkTransferReason, setBulkTransferReason] = useState('');
 
   // Dynamic Configuration States - From API
-  const [statusOptions, setStatusOptions] = useState(['Hot', 'Warm', 'Follow Up', 'Not Interested', 'Enrolled', 'Fresh']);
+  const [statusOptions, setStatusOptions] = useState(['hot', 'followup', 'warm', 'not interested', 'enrolled', 'fresh', 'junk']);
   const [countryOptions, setCountryOptions] = useState([{code: 'IN', name: 'India'}, {code: 'US', name: 'United States'}]);
   const [qualificationOptions, setQualificationOptions] = useState(['MBBS', 'MD', 'MS', 'BDS', 'FMGS', 'AYUSH', 'Others']);
   const [assignableUsers, setAssignableUsers] = useState<AssignableUser[]>([]);
@@ -154,7 +154,7 @@ const LeadsManagement: React.FC = () => {
     qualification: '',
     source: '',
     course: '',
-    status: 'new',
+    status: 'fresh',
     assignedTo: '',
     followUp: ''
   });
@@ -232,7 +232,7 @@ const LeadsManagement: React.FC = () => {
           qualification: lead.qualification || 'Not specified',
           source: lead.source || 'manual',
           course: lead.course || 'MBBS',
-          status: lead.status || 'new',
+          status: lead.status || 'fresh',
           assignedTo: lead.assigned_to || lead.assignedTo || 'Unassigned',
           followUp: lead.follow_up || lead.followUp || '',
           createdAt: lead.created_at || lead.createdAt || new Date().toISOString(),
@@ -575,7 +575,7 @@ const LeadsManagement: React.FC = () => {
         qualification: newLead.qualification,
         source: (newLead.source || 'manual') as 'website' | 'social_media' | 'referral' | 'manual' | 'advertisement',
         course: newLead.course,
-        status: (newLead.status || 'new') as 'new' | 'contacted' | 'qualified' | 'proposal' | 'closed_won' | 'closed_lost',
+        status: (newLead.status || 'fresh') as 'hot' | 'followup' | 'warm' | 'not interested' | 'enrolled' | 'fresh' | 'junk',
         assignedTo: newLead.assignedTo || user?.name || 'Unassigned',
         assigned_to: newLead.assignedTo || user?.name || 'Unassigned', // For backend compatibility
         followUp: newLead.followUp,
@@ -599,7 +599,7 @@ const LeadsManagement: React.FC = () => {
         qualification: newLead.qualification || 'Not specified',
         source: createdLead.source || newLead.source || 'Manual Entry',
         course: newLead.course || 'MBBS',
-        status: createdLead.status || newLead.status || 'new',
+        status: createdLead.status || newLead.status || 'fresh',
         assignedTo: createdLead.assigned_to || newLead.assignedTo || user?.name || 'Unassigned',
         followUp: newLead.followUp || '',
         createdAt: createdLead.created_at || new Date().toISOString(),
@@ -629,7 +629,7 @@ const LeadsManagement: React.FC = () => {
         qualification: '',
         source: '',
         course: '',
-        status: 'new',
+        status: 'fresh',
         assignedTo: '',
         followUp: ''
       });
@@ -656,7 +656,7 @@ const LeadsManagement: React.FC = () => {
       qualification: '',
       source: '',
       course: '',
-      status: 'new',
+      status: 'fresh',
       assignedTo: '',
       followUp: ''
     });
@@ -738,7 +738,7 @@ const LeadsManagement: React.FC = () => {
           qualification: values[6] || '',
           source: values[7] || '',
           course: values[8] || '',
-          status: values[9] || 'New',
+          status: values[9] || 'fresh',
           assignedTo: values[10] || '',
           followUp: values[11] || '',
           createdAt: values[12] || new Date().toISOString(),
@@ -864,8 +864,8 @@ const LeadsManagement: React.FC = () => {
       total: leads.length,
       hot: leads.filter((lead: Lead) => lead.status === 'hot').length,
       warm: leads.filter((lead: Lead) => lead.status === 'warm').length,
-      followup: leads.filter((lead: Lead) => lead.status === 'Followup').length,
-      converted: leads.filter((lead: Lead) => lead.status === 'converted').length,
+      followup: leads.filter((lead: Lead) => lead.status === 'followup').length,
+      converted: leads.filter((lead: Lead) => lead.status === 'enrolled').length,
       thisMonth: leads.filter((lead: Lead) => {
         const leadDate = new Date(lead.createdAt);
         return leadDate.getMonth() === currentMonth && leadDate.getFullYear() === currentYear;
@@ -1400,9 +1400,9 @@ const LeadsManagement: React.FC = () => {
           🌡️ Warm
         </button>
         <button
-          onClick={() => quickStatusFilter('Followup')}
+          onClick={() => quickStatusFilter('followup')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-            statusFilter === 'Followup' 
+            statusFilter === 'followup' 
               ? 'bg-yellow-100 text-yellow-800 border-2 border-yellow-300 shadow-md' 
               : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
           }`}
@@ -1626,12 +1626,12 @@ const LeadsManagement: React.FC = () => {
                 >
                   <option value="all">All Courses</option>
                   <optgroup label="Fellowship Courses">
-                    {courseOptions.fellowship.map((course: string) => (
+                    {(courseOptions.fellowship || []).map((course: string) => (
                       <option key={`fellowship-${course}`} value={course}>{course}</option>
                     ))}
                   </optgroup>
                   <optgroup label="PG Diploma Courses">
-                    {courseOptions.pgDiploma.map((course: string) => (
+                    {(courseOptions.pgDiploma || []).map((course: string) => (
                       <option key={`pgdiploma-${course}`} value={course}>{course}</option>
                     ))}
                   </optgroup>
@@ -2101,12 +2101,12 @@ const LeadsManagement: React.FC = () => {
                             >
                               <option value="">Select Course</option>
                               <optgroup label="Fellowship Courses">
-                                {courseOptions.fellowship.map((course: string) => (
+                                {(courseOptions.fellowship || []).map((course: string) => (
                                   <option key={`fellowship-${course}`} value={course}>{course}</option>
                                 ))}
                               </optgroup>
                               <optgroup label="PG Diploma Courses">
-                                {courseOptions.pgDiploma.map((course: string) => (
+                                {(courseOptions.pgDiploma || []).map((course: string) => (
                                   <option key={`pgdiploma-${course}`} value={course}>{course}</option>
                                 ))}
                               </optgroup>

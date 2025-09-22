@@ -160,7 +160,7 @@ export class FacebookWebhookHandler {
 
     const mappedLead: any = {
       source: 'Facebook Lead Ads (Webhook)',
-      status: 'New',
+      status: 'fresh',
       priority: 'High', // Real-time leads get high priority
       fbLeadId: leadData.id,
       fbAdId: metadata.ad_id,
