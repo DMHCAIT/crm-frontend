@@ -504,9 +504,25 @@ const LeadsManagement: React.FC = () => {
 
   const handleSaveLead = async () => {
     try {
-      // In production, this would update the lead in Supabase
-      const currentDate = new Date().toISOString();
+      if (!editingLead || !editedLead) {
+        console.error('No lead being edited');
+        return;
+      }
+
+      console.log(`🔍 Saving lead ${editingLead} to backend...`);
       
+      // Save to backend API first
+      const apiClient = getApiClient();
+      const updateData = {
+        ...editedLead,
+        updatedAt: new Date().toISOString()
+      };
+      
+      await apiClient.updateLead(editingLead, updateData);
+      console.log('✅ Lead saved to backend successfully');
+      
+      // Update local state only after successful backend save
+      const currentDate = new Date().toISOString();
       setLeads((prev: Lead[]) => prev.map((lead: Lead) => 
         lead.id === editingLead 
           ? { ...lead, ...editedLead, updatedAt: currentDate }
@@ -521,8 +537,12 @@ const LeadsManagement: React.FC = () => {
       
       setEditingLead(null);
       setEditedLead({});
+      
+      console.log('✅ Lead update completed successfully');
     } catch (error) {
-      console.error('Error saving lead:', error);
+      console.error('❌ Error saving lead:', error);
+      // Show user-friendly error message
+      alert('Failed to save lead updates. Please try again.');
     }
   };
 
