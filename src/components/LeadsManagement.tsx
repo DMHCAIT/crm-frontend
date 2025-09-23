@@ -581,15 +581,24 @@ const LeadsManagement: React.FC = () => {
       const response = await apiClient.getNotes(leadId, 'lead') as any;
       
       console.log(`🔍 Raw API response for lead ${leadId}:`, response);
+      console.log(`🔍 Response success:`, response?.success);
+      console.log(`🔍 Response data:`, response?.data);
+      console.log(`🔍 Response data type:`, typeof response?.data);
+      console.log(`🔍 Response data length:`, response?.data?.length);
       
-      if (response.success && response.data) {
+      if (response && response.success && response.data && Array.isArray(response.data)) {
+        console.log(`✅ Processing ${response.data.length} notes for lead ${leadId}`);
+        
         // Transform backend notes to frontend format
-        const transformedNotes = response.data.map((note: any) => ({
-          id: note.id,
-          content: note.content,
-          timestamp: note.timestamp || note.created_at, // Fixed: use correct field name
-          author: note.author || 'User' // Use actual author from backend
-        }));
+        const transformedNotes = response.data.map((note: any) => {
+          console.log(`🔍 Processing note:`, note);
+          return {
+            id: note.id,
+            content: note.content,
+            timestamp: note.timestamp || note.created_at, // Fixed: use correct field name
+            author: note.author || 'User' // Use actual author from backend
+          };
+        });
         
         console.log(`🔍 About to update lead ${leadId} with ${transformedNotes.length} notes`);
         
@@ -612,7 +621,36 @@ const LeadsManagement: React.FC = () => {
         // Force a re-render by updating a timestamp to ensure UI reflects changes
         setLastUpdateTime(new Date());
       } else {
-        console.log(`⚠️ No notes response or data for lead ${leadId}:`, response);
+        console.log(`❌ Failed to process notes for lead ${leadId}`);
+        console.log(`❌ Response:`, response);
+        console.log(`❌ Reasons for failure:`);
+        console.log(`   - Response exists:`, !!response);
+        console.log(`   - Response.success:`, response?.success);
+        console.log(`   - Response.data exists:`, !!response?.data);
+        console.log(`   - Response.data is array:`, Array.isArray(response?.data));
+        
+        // Try to handle alternative response formats
+        if (response && response.success && response.notes && Array.isArray(response.notes)) {
+          console.log(`🔄 Trying alternative format with 'notes' field...`);
+          const transformedNotes = response.notes.map((note: any) => ({
+            id: note.id,
+            content: note.content,
+            timestamp: note.timestamp || note.created_at,
+            author: note.author || 'User'
+          }));
+          
+          setLeads((prev: Lead[]) => {
+            const updatedLeads = prev.map((lead: Lead) => 
+              lead.id === leadId 
+                ? { ...lead, notes: transformedNotes }
+                : lead
+            );
+            return updatedLeads;
+          });
+          
+          console.log(`✅ Successfully processed ${transformedNotes.length} notes using 'notes' field`);
+          setLastUpdateTime(new Date());
+        }
       }
     } catch (error) {
       console.error('❌ Error loading notes for lead:', error);
@@ -2518,7 +2556,17 @@ const LeadsManagement: React.FC = () => {
                       </h4>
                       <div className="space-y-3 max-h-60 overflow-y-auto">
                         {(() => {
-                          console.log(`🔍 Rendering notes for lead ${selectedLead.id}:`, selectedLead.notes);
+                          console.log(`🔍 === RENDERING DEBUG ===`);
+                          console.log(`🔍 Selected lead ID: ${selectedLead.id}`);
+                          console.log(`🔍 Selected lead notes:`, selectedLead.notes);
+                          console.log(`🔍 Notes type:`, typeof selectedLead.notes);
+                          console.log(`🔍 Notes is array:`, Array.isArray(selectedLead.notes));
+                          console.log(`🔍 Notes length:`, selectedLead.notes?.length);
+                          if (selectedLead.notes && selectedLead.notes.length > 0) {
+                            console.log(`🔍 First note:`, selectedLead.notes[0]);
+                            console.log(`🔍 First note content:`, selectedLead.notes[0]?.content);
+                          }
+                          console.log(`🔍 === END DEBUG ===`);
                           return null;
                         })()}
                         {(selectedLead.notes || []).map((note) => (
