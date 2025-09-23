@@ -596,8 +596,8 @@ const LeadsManagement: React.FC = () => {
     if (!noteContent?.trim()) return;
 
     try {
-      // Use the new simplified API to add note
-      const response = await fetch('/api/leads?action=addNote', {
+      // Use the emergency addNote endpoint to bypass routing issues
+      const response = await fetch('/api/leads-add-note', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
