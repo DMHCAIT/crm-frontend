@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
 import { TokenManager } from '../lib/productionAuth';
+import { useNotify } from './NotificationSystem';
 import { STATUS_OPTIONS, STATUS_COLORS } from '../constants/crmConstants';
 import { 
   Search, 
@@ -97,6 +98,7 @@ interface LeadStats {
 
 const LeadsManagement: React.FC = () => {
   const { user } = useAuth();
+  const notify = useNotify();
   
   // State Management
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -562,11 +564,14 @@ const LeadsManagement: React.FC = () => {
       setEditingLead(null);
       setEditedLead({});
       
+      // Show success notification
+      notify.success('Lead Updated', 'Lead information has been saved successfully');
+      
       console.log('✅ Lead update completed successfully');
     } catch (error) {
       console.error('❌ Error saving lead:', error);
-      // Show user-friendly error message
-      alert('Failed to save lead updates. Please try again.');
+      // Show error notification
+      notify.error('Save Failed', 'Unable to save lead updates. Please try again.');
     }
   };
 
@@ -630,6 +635,9 @@ const LeadsManagement: React.FC = () => {
 
       console.log('✅ Note saved successfully');
       
+      // Show success notification
+      notify.success('Note Saved', 'Your note has been added successfully');
+      
       // Update the lead in local state with the new notes
       setLeads((prev: Lead[]) => {
         return prev.map((lead: Lead) => 
@@ -654,7 +662,7 @@ const LeadsManagement: React.FC = () => {
       
     } catch (error) {
       console.error('❌ Error saving note:', error);
-      alert('Failed to save note. Please check your connection and try again.');
+      notify.error('Note Save Failed', 'Unable to save your note. Please check your connection and try again.');
     }
   };
 
@@ -804,7 +812,8 @@ const LeadsManagement: React.FC = () => {
       });
       setShowAddLeadModal(false);
 
-      alert(`Lead "${newLead.fullName}" added successfully!`);
+      // Show success notification
+      notify.leadCreated(newLead.fullName || 'New Lead');
       // Lead created successfully
       
     } catch (error: any) {
@@ -820,7 +829,8 @@ const LeadsManagement: React.FC = () => {
         errorMessage = error.details;
       }
       
-      alert(errorMessage);
+      // Show error notification
+      notify.error('Lead Creation Failed', errorMessage);
     } finally {
       setLoading(false);
     }
