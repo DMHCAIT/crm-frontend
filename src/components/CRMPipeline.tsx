@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
-import { STATUS_OPTIONS, STATUS_COLORS, STATUS_MESSAGES } from '../constants/crmConstants';
+import { STATUS_COLORS, STATUS_MESSAGES } from '../constants/crmConstants';
 import { 
   TrendingUp, 
   Users, 

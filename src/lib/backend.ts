@@ -634,8 +634,13 @@ class ProductionApiClient {
     });
   }
 
-  // Notes API
+  // Notes API - Lead-specific notes
   async getNotes(entityId?: string, entityType?: 'lead' | 'student') {
+    if (entityType === 'lead' && entityId) {
+      // Use the dedicated lead-notes API endpoint
+      return this.request(`/lead-notes/${entityId}`);
+    }
+    // Fallback to generic notes API for other cases
     const params = new URLSearchParams();
     if (entityId) params.append('entityId', entityId);
     if (entityType) params.append('entityType', entityType);
@@ -643,6 +648,14 @@ class ProductionApiClient {
   }
 
   async createNote(noteData: any) {
+    // If it's a lead note, use the dedicated lead-notes API
+    if (noteData.lead_id) {
+      return this.request(`/lead-notes/${noteData.lead_id}`, {
+        method: 'POST',
+        body: JSON.stringify(noteData)
+      });
+    }
+    // Fallback to generic notes API
     return this.request('/notes', {
       method: 'POST',
       body: JSON.stringify(noteData)
