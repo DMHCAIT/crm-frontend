@@ -23,6 +23,17 @@ interface ExportFilters {
   includeDocuments?: boolean;
 }
 
+interface ExportHistoryItem {
+  id: string;
+  date: string;
+  exports: string;
+  status: 'processing' | 'completed' | 'failed';
+  downloadUrl: string;
+  format: 'csv' | 'pdf' | 'xlsx';
+  fileCount: number;
+  jobIds?: string[];
+}
+
 const DataExport: React.FC = () => {
   const { user } = useAuth();
   const [selectedExports, setSelectedExports] = useState<string[]>([]);
@@ -33,7 +44,7 @@ const DataExport: React.FC = () => {
     includeDocuments: false
   });
   const [isExporting, setIsExporting] = useState(false);
-  const [exportHistory, setExportHistory] = useState<any[]>([]);
+  const [exportHistory, setExportHistory] = useState<ExportHistoryItem[]>([]);
 
   const exportOptions: ExportOption[] = [
     {
@@ -95,6 +106,25 @@ const DataExport: React.FC = () => {
     try {
       const apiClient = getApiClient();
       
+      // Prepare date filtering based on filters state
+      let dateFilter = '';
+      if (filters.dateRange === 'custom') {
+        if (!filters.customStartDate || !filters.customEndDate) {
+          alert('Please select both start and end dates for custom date range');
+          setIsExporting(false);
+          return;
+        }
+        dateFilter = 'custom';
+      } else {
+        // Convert UI date range to backend format
+        const dateRangeMap = {
+          'last_7_days': '7d',
+          'last_30_days': '30d',
+          'last_90_days': '90d'
+        };
+        dateFilter = dateRangeMap[filters.dateRange] || '30d';
+      }
+      
       // Export data based on selections
       const exportPromises = selectedExports.map(async (exportId) => {
         const exportOption = exportOptions.find(opt => opt.id === exportId);
@@ -102,49 +132,85 @@ const DataExport: React.FC = () => {
 
         let endpoint = '';
         let filename = '';
+        let exportData: any = {};
         
-        // Map export options to backend endpoints
+        // Map export options to backend endpoints and prepare export data
         if (exportId.includes('leads')) {
-          endpoint = '/leads';
+          endpoint = '/data-export/leads';
           filename = `leads_export_${new Date().toISOString().split('T')[0]}`;
+          exportData = {
+            format: selectedFormat,
+            date_range: dateFilter,
+            ...(filters.dateRange === 'custom' && {
+              start_date: filters.customStartDate,
+              end_date: filters.customEndDate
+            }),
+            include_communications: true
+          };
         } else if (exportId.includes('students')) {
-          endpoint = '/students';
+          endpoint = '/data-export/students';
           filename = `students_export_${new Date().toISOString().split('T')[0]}`;
+          exportData = {
+            format: selectedFormat,
+            date_range: dateFilter,
+            ...(filters.dateRange === 'custom' && {
+              start_date: filters.customStartDate,
+              end_date: filters.customEndDate
+            }),
+            include_payments: true,
+            include_documents: true
+          };
         } else if (exportId.includes('analytics')) {
-          endpoint = '/analytics/export';
+          endpoint = '/data-export/analytics';
           filename = `analytics_export_${new Date().toISOString().split('T')[0]}`;
+          exportData = {
+            format: selectedFormat,
+            date_range: dateFilter,
+            ...(filters.dateRange === 'custom' && {
+              start_date: filters.customStartDate,
+              end_date: filters.customEndDate
+            })
+          };
         } else if (exportId.includes('communications')) {
-          endpoint = '/communications';
+          endpoint = '/data-export/communications';
           filename = `communications_export_${new Date().toISOString().split('T')[0]}`;
+          exportData = {
+            format: selectedFormat,
+            date_range: dateFilter,
+            ...(filters.dateRange === 'custom' && {
+              start_date: filters.customStartDate,
+              end_date: filters.customEndDate
+            })
+          };
         }
 
         if (!endpoint) return null;
 
         try {
-          // Get data from API using the request method
-          const response = await (apiClient as any).request(endpoint);
-          
-          // Convert data to selected format and trigger download
-          const fileContent = convertDataToFormat(response, selectedFormat);
-          const blob = new Blob([fileContent], { 
-            type: getContentType(selectedFormat) 
+          // Start export job using POST request to the enhanced data export API
+          const response = await (apiClient as any).request(endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(exportData)
           });
-          
-          // Create download link
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', `${filename}.${selectedFormat}`);
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          window.URL.revokeObjectURL(url);
 
-          return {
-            name: exportOption.name,
-            filename: `${filename}.${selectedFormat}`,
-            size: blob.size
-          };
+          if (response.success) {
+            // Export job started successfully
+            console.log(`Export job started for ${exportOption.name}:`, response);
+            
+            return {
+              name: exportOption.name,
+              filename: `${filename}.${selectedFormat}`,
+              jobId: response.job_id,
+              estimatedTime: response.estimated_time,
+              status: 'processing'
+            };
+          } else {
+            console.error(`Failed to start export for ${exportOption.name}:`, response);
+            return null;
+          }
         } catch (error) {
           console.error(`Failed to export ${exportOption.name}:`, error);
           return null;
@@ -160,14 +226,20 @@ const DataExport: React.FC = () => {
           id: Date.now().toString(),
           date: new Date().toISOString(),
           exports: successfulExports.map(r => r.name).join(', '),
-          status: 'completed' as const,
-          downloadUrl: '#',
+          status: 'processing' as const,
+          downloadUrl: '#',  // Will be updated when job completes
           format: selectedFormat,
-          fileCount: successfulExports.length
+          fileCount: successfulExports.length,
+          jobIds: successfulExports.map(r => r.jobId).filter(Boolean)
         };
         
         setExportHistory(prev => [newExport, ...prev]);
         setSelectedExports([]);
+        
+        // Show success message
+        alert(`Export jobs started successfully! ${successfulExports.length} export(s) are being processed. Check the Export History section for updates.`);
+      } else {
+        alert('No exports could be started. Please check your selections and try again.');
       }
     } catch (error) {
       console.error('Export failed:', error);
@@ -184,56 +256,66 @@ const DataExport: React.FC = () => {
       };
       
       setExportHistory(prev => [failedExport, ...prev]);
+      alert('Export failed. Please try again or contact support if the issue persists.');
     } finally {
       setIsExporting(false);
     }
   };
 
-  // Helper functions for data conversion
-  const convertDataToFormat = (data: any, format: 'csv' | 'pdf' | 'xlsx'): string => {
-    if (format === 'csv') {
-      return convertToCSV(data);
-    } else if (format === 'xlsx') {
-      // For now, return CSV format - in production, use a library like xlsx
-      return convertToCSV(data);
-    } else if (format === 'pdf') {
-      // For now, return JSON format - in production, use a PDF library
-      return JSON.stringify(data, null, 2);
+  // Check export job status
+  const checkExportStatus = async (jobId: string, exportHistoryId: string) => {
+    try {
+      const apiClient = getApiClient();
+      const response = await (apiClient as any).request(`/data-export/status/${jobId}`);
+      
+      if (response.success) {
+        const job = response.job;
+        
+        // Update export history with current status
+        setExportHistory(prev => prev.map(export_ => 
+          export_.id === exportHistoryId 
+            ? {
+                ...export_,
+                status: job.status,
+                downloadUrl: job.status === 'completed' ? job.download_url : '#'
+              }
+            : export_
+        ));
+        
+        return job;
+      }
+    } catch (error) {
+      console.error('Failed to check export status:', error);
     }
-    return JSON.stringify(data, null, 2);
+    return null;
   };
 
-  const convertToCSV = (data: any): string => {
-    if (!data || !Array.isArray(data.data || data)) {
-      return 'No data available';
-    }
-    
-    const items = data.data || data;
-    if (items.length === 0) return 'No data available';
-    
-    // Get headers from first item
-    const headers = Object.keys(items[0]);
-    const csvHeaders = headers.join(',');
-    
-    // Convert data to CSV rows
-    const csvRows = items.map((item: any) => 
-      headers.map(header => {
-        const value = item[header];
-        // Escape quotes and wrap in quotes if contains comma
-        const stringValue = String(value || '');
-        return stringValue.includes(',') ? `"${stringValue.replace(/"/g, '""')}"` : stringValue;
-      }).join(',')
-    );
-    
-    return [csvHeaders, ...csvRows].join('\n');
-  };
-
-  const getContentType = (format: 'csv' | 'pdf' | 'xlsx'): string => {
-    switch (format) {
-      case 'csv': return 'text/csv';
-      case 'pdf': return 'application/pdf';
-      case 'xlsx': return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-      default: return 'text/plain';
+  // Download completed export
+  const downloadExport = async (jobId: string, filename: string) => {
+    try {
+      const apiClient = getApiClient();
+      const response = await (apiClient as any).request(`/data-export/download/${jobId}`, {
+        method: 'GET'
+      });
+      
+      if (response && response.data) {
+        // Create blob and download
+        const blob = new Blob([response.data], { 
+          type: response.contentType || 'application/octet-stream'
+        });
+        
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error('Failed to download export:', error);
+      alert('Failed to download export. Please try again.');
     }
   };
 
@@ -356,12 +438,35 @@ const DataExport: React.FC = () => {
                       </p>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded">
+                      <span className={`px-2 py-1 text-xs rounded ${
+                        exportItem.status === 'completed' ? 'bg-green-100 text-green-800' :
+                        exportItem.status === 'processing' ? 'bg-yellow-100 text-yellow-800' :
+                        exportItem.status === 'failed' ? 'bg-red-100 text-red-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
                         {exportItem.status}
                       </span>
-                      <button className="text-blue-600 hover:text-blue-700 text-sm">
-                        Download
-                      </button>
+                      {exportItem.status === 'completed' && exportItem.downloadUrl !== '#' && (
+                        <button 
+                          onClick={() => downloadExport(exportItem.jobIds?.[0] || '', exportItem.exports.replace(/[^a-zA-Z0-9]/g, '_') + '.' + exportItem.format)}
+                          className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                        >
+                          Download
+                        </button>
+                      )}
+                      {exportItem.status === 'processing' && exportItem.jobIds?.[0] && (
+                        <button 
+                          onClick={() => exportItem.jobIds?.[0] && checkExportStatus(exportItem.jobIds[0], exportItem.id)}
+                          className="text-orange-600 hover:text-orange-700 text-sm font-medium"
+                        >
+                          Check Status
+                        </button>
+                      )}
+                      {exportItem.status === 'failed' && (
+                        <span className="text-red-600 text-sm">
+                          Failed
+                        </span>
+                      )}
                     </div>
                   </div>
                 ))}
