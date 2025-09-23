@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
+import { useNotify } from './NotificationSystem';
 import { 
   TrendingUp, 
   GraduationCap, 
@@ -14,6 +15,7 @@ import {
 
 const Analytics: React.FC = () => {
   const { user } = useAuth();
+  const notify = useNotify();
   const [timeframe, setTimeframe] = useState('month');
   const [loading, setLoading] = useState(true);
   const [kpiMetrics, setKpiMetrics] = useState<any[]>([]);
@@ -148,9 +150,17 @@ const Analytics: React.FC = () => {
       setChannelPerformance(channelData);
       setCourseAnalytics(courseData);
       setLastUpdated(new Date());
+      
+      // Show success notification only on first load, not auto-refresh
+      if (kpiMetrics.length === 0) {
+        notify.info('Analytics Loaded', 'Dashboard data has been updated with the latest information');
+      }
 
     } catch (error) {
       console.error('Error loading analytics data:', error);
+      // Show error notification
+      notify.error('Analytics Data Error', 'Unable to load analytics data. Please check your connection and try again.');
+      
       // Set empty/default data on error with meaningful error handling
       setKpiMetrics([
         {
