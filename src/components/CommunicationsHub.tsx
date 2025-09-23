@@ -73,22 +73,23 @@ const CommunicationsHub: React.FC = () => {
       
       // Get real data from backend API (proper architecture)
       const apiClient = getApiClient();
-      const communicationsData: any = await apiClient.getCommunications();
+      const response: any = await apiClient.getCommunications();
       
       // Convert API communications to frontend format
+      const communicationsData = response?.communications || [];
       const formattedCommunications: Communication[] = Array.isArray(communicationsData) ? 
         communicationsData.map((comm: any) => ({
           id: comm.id,
-          leadId: comm.lead_id || comm.leadId || '',
-          leadName: comm.lead_name || comm.leadName || 'Unknown Lead',
-          channel: comm.type || comm.channel || 'email',
+          leadId: comm.leadId || '',
+          leadName: comm.leadName || 'Unknown Lead',
+          channel: comm.channel || comm.type || 'email',
           direction: comm.direction || 'outbound',
           subject: comm.subject || '',
           content: comm.content || '',
-          status: comm.status || 'sent',
-          timestamp: comm.created_at || comm.timestamp || new Date().toISOString(),
-          counselor: comm.sender || comm.counselor || 'System',
-          campaignId: comm.campaign_id || comm.campaignId
+          status: comm.status === 'unread' ? 'pending' : 'delivered',
+          timestamp: comm.timestamp || comm.created_at || new Date().toISOString(),
+          counselor: comm.direction === 'inbound' ? comm.leadName : 'Counselor',
+          campaignId: comm.campaignId
         })) : [];
 
       // Initialize empty campaigns array - will be populated when campaign features are implemented
@@ -171,7 +172,14 @@ const CommunicationsHub: React.FC = () => {
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Communications Hub</h1>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Communications Hub</h1>
+            <div className="mt-1">
+              <div className="bg-blue-50 border border-blue-200 px-2 py-1 rounded-md text-xs text-blue-600 font-medium inline-flex items-center">
+                🔍 <span className="ml-1">Hierarchical Communications</span>
+              </div>
+            </div>
+          </div>
           <div className="flex items-center space-x-4">
             <button 
               onClick={() => {/* New Campaign functionality coming soon */}}

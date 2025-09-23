@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { getApiClient } from '../lib/backend';
 import { 
   MessageSquare, 
   Mail, 
@@ -16,102 +18,86 @@ import {
 } from 'lucide-react';
 
 const MultiChannelInbox: React.FC = () => {
+  const { user } = useAuth();
   const [selectedConversation, setSelectedConversation] = useState<any>(null);
   const [activeFilter, setActiveFilter] = useState('all');
+  const [conversations, setConversations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const conversations = [
-    {
-      id: 1,
-      studentName: 'Rahul Sharma',
-      studentId: 'LEAD-2024-001',
-      channel: 'whatsapp',
-      subject: 'MBBS Admission Inquiry',
-      preview: 'Hi, I want to know about MBBS admission process and fees...',
-      timestamp: '2 mins ago',
-      status: 'unread',
-      priority: 'high',
-      course: 'MBBS',
-      messages: [
-        {
-          id: 1,
-          sender: 'student',
-          content: 'Hi, I want to know about MBBS admission process and fees',
-          timestamp: '10:30 AM',
-          channel: 'whatsapp'
-        },
-        {
-          id: 2,
-          sender: 'counselor',
-          content: 'Hello Rahul! Thank you for your interest in our MBBS program. I\'ll be happy to help you with the admission process.',
-          timestamp: '10:32 AM',
-          channel: 'whatsapp'
-        }
-      ]
-    },
-    {
-      id: 2,
-      studentName: 'Priya Patel',
-      studentId: 'LEAD-2024-002',
-      channel: 'email',
-      subject: 'MD Cardiology Specialization',
-      preview: 'I have completed my MBBS and looking for MD Cardiology...',
-      timestamp: '15 mins ago',
-      status: 'read',
-      priority: 'medium',
-      course: 'MD Cardiology',
-      messages: [
-        {
-          id: 1,
-          sender: 'student',
-          content: 'I have completed my MBBS and looking for MD Cardiology specialization. Can you provide details about eligibility and fees?',
-          timestamp: '9:45 AM',
-          channel: 'email'
-        }
-      ]
-    },
-    {
-      id: 3,
-      studentName: 'Amit Kumar',
-      studentId: 'LEAD-2024-003',
-      channel: 'sms',
-      subject: 'Fee Payment Query',
-      preview: 'Can I pay fees in installments for MBBS?',
-      timestamp: '1 hour ago',
-      status: 'read',
-      priority: 'low',
-      course: 'MBBS',
-      messages: [
-        {
-          id: 1,
-          sender: 'student',
-          content: 'Can I pay fees in installments for MBBS?',
-          timestamp: '8:30 AM',
-          channel: 'sms'
-        }
-      ]
-    },
-    {
-      id: 4,
-      studentName: 'Sarah Ali',
-      studentId: 'STU-2024-004',
-      channel: 'phone',
-      subject: 'Document Verification Status',
-      preview: 'Missed call - Regarding document verification',
-      timestamp: '2 hours ago',
-      status: 'unread',
-      priority: 'high',
-      course: 'MD Pediatrics',
-      messages: [
-        {
-          id: 1,
-          sender: 'system',
-          content: 'Missed call from +91 9876543213 at 7:30 AM - Student inquired about document verification status',
-          timestamp: '7:30 AM',
-          channel: 'phone'
-        }
-      ]
+  // Load real communications data from API
+  useEffect(() => {
+    loadCommunications();
+  }, [user]);
+
+  const loadCommunications = async () => {
+    try {
+      setLoading(true);
+      const apiClient = getApiClient();
+      const response: any = await apiClient.getCommunications();
+      
+      if (response?.communications) {
+        // Transform API data to component format
+        const transformedConversations = response.communications.map((comm: any) => ({
+          id: comm.id,
+          studentName: comm.leadName || 'Unknown Lead',
+          studentId: `LEAD-${comm.leadId}`,
+          channel: comm.channel || comm.type,
+          subject: comm.subject || `${comm.type.charAt(0).toUpperCase() + comm.type.slice(1)} Communication`,
+          preview: comm.content?.substring(0, 60) + '...' || 'No preview available',
+          timestamp: formatTimestamp(comm.timestamp || comm.created_at),
+          status: comm.status || 'read',
+          priority: comm.priority || 'medium',
+          course: comm.leadStatus === 'hot' ? 'High Priority' : 'Standard',
+          messages: [
+            {
+              id: 1,
+              sender: comm.direction === 'inbound' ? 'student' : 'counselor',
+              content: comm.content || 'No content available',
+              timestamp: formatTime(comm.timestamp || comm.created_at),
+              channel: comm.channel || comm.type
+            }
+          ],
+          // Additional context from leads
+          leadStatus: comm.leadStatus,
+          leadSource: comm.leadSource,
+          assignedTo: comm.assignedTo,
+          phone: comm.phone
+        }));
+        
+        setConversations(transformedConversations);
+      } else {
+        setConversations([]);
+      }
+    } catch (error) {
+      console.error('❌ Failed to load communications:', error);
+      setConversations([]);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins} mins ago`;
+    if (diffHours < 24) return `${diffHours} hours ago`;
+    if (diffDays < 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString();
+  };
+
+  const formatTime = (timestamp: string) => {
+    return new Date(timestamp).toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: true 
+    });
+  };
 
   const getChannelIcon = (channel: string) => {
     switch (channel) {
@@ -162,7 +148,14 @@ const MultiChannelInbox: React.FC = () => {
     <div className="p-6">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-gray-900">DMHCA Multi-Channel Inbox</h1>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">DMHCA Multi-Channel Inbox</h1>
+            <div className="mt-1">
+              <div className="bg-blue-50 border border-blue-200 px-2 py-1 rounded-md text-xs text-blue-600 font-medium inline-flex items-center">
+                🔍 <span className="ml-1">Hierarchical Communications</span>
+              </div>
+            </div>
+          </div>
           <div className="flex items-center space-x-3">
             <div className="relative">
               <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
@@ -210,7 +203,19 @@ const MultiChannelInbox: React.FC = () => {
             <h2 className="font-semibold text-gray-900">Conversations ({filteredConversations.length})</h2>
           </div>
           <div className="overflow-y-auto h-full">
-            {filteredConversations.map((conversation) => (
+            {loading ? (
+              <div className="p-8 text-center">
+                <div className="animate-spin h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+                <p className="text-gray-500">Loading communications...</p>
+              </div>
+            ) : filteredConversations.length === 0 ? (
+              <div className="p-8 text-center">
+                <MessageSquare className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500">No communications found</p>
+                <p className="text-sm text-gray-400 mt-1">Communications from your leads will appear here</p>
+              </div>
+            ) : (
+              filteredConversations.map((conversation) => (
               <div
                 key={conversation.id}
                 onClick={() => setSelectedConversation(conversation)}
@@ -244,7 +249,8 @@ const MultiChannelInbox: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
 
