@@ -1114,13 +1114,16 @@ const UserModal: React.FC<UserModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Reports To (Supervisor)</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Reports To (Supervisor) <span className="text-red-500">*</span>
+            </label>
             <select
               value={formData.reports_to}
               onChange={(e) => setFormData({...formData, reports_to: e.target.value})}
               className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+              required
             >
-              <option value="">Select Supervisor (Optional)</option>
+              <option value="">Select Supervisor (Required)</option>
               {users
                 .filter(u => u.id !== user?.id && u.status === 'active') // Don't show current user and only active users
                 .filter(u => {
