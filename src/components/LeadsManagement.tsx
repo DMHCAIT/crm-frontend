@@ -574,87 +574,21 @@ const LeadsManagement: React.FC = () => {
     setEditedLead({});
   };
 
-  // Load notes for a specific lead from backend
+  // Load notes for a specific lead (simplified - notes now come with leads data)
   const loadNotesForLead = async (leadId: string) => {
-    try {
-      const apiClient = getApiClient();
-      const response = await apiClient.getNotes(leadId, 'lead') as any;
-      
-      console.log(`🔍 Raw API response for lead ${leadId}:`, response);
-      console.log(`🔍 Response success:`, response?.success);
-      console.log(`🔍 Response data:`, response?.data);
-      console.log(`🔍 Response data type:`, typeof response?.data);
-      console.log(`🔍 Response data length:`, response?.data?.length);
-      
-      if (response && response.success && response.data && Array.isArray(response.data)) {
-        console.log(`✅ Processing ${response.data.length} notes for lead ${leadId}`);
-        
-        // Transform backend notes to frontend format
-        const transformedNotes = response.data.map((note: any) => {
-          console.log(`🔍 Processing note:`, note);
-          return {
-            id: note.id,
-            content: note.content,
-            timestamp: note.timestamp || note.created_at, // Fixed: use correct field name
-            author: note.author || 'User' // Use actual author from backend
-          };
-        });
-        
-        console.log(`🔍 About to update lead ${leadId} with ${transformedNotes.length} notes`);
-        
-        // Update the specific lead with the loaded notes
-        setLeads((prev: Lead[]) => {
-          const updatedLeads = prev.map((lead: Lead) => 
-            lead.id === leadId 
-              ? { ...lead, notes: transformedNotes }
-              : lead
-          );
-          
-          console.log(`🔍 Updated leads array, lead ${leadId} now has notes:`, 
-            updatedLeads.find(l => l.id === leadId)?.notes?.length || 0);
-          
-          return updatedLeads;
-        });
-        
-        console.log(`✅ Loaded ${transformedNotes.length} notes for lead ${leadId}`);
-        
-        // Force a re-render by updating a timestamp to ensure UI reflects changes
-        setLastUpdateTime(new Date());
-      } else {
-        console.log(`❌ Failed to process notes for lead ${leadId}`);
-        console.log(`❌ Response:`, response);
-        console.log(`❌ Reasons for failure:`);
-        console.log(`   - Response exists:`, !!response);
-        console.log(`   - Response.success:`, response?.success);
-        console.log(`   - Response.data exists:`, !!response?.data);
-        console.log(`   - Response.data is array:`, Array.isArray(response?.data));
-        
-        // Try to handle alternative response formats
-        if (response && response.success && response.notes && Array.isArray(response.notes)) {
-          console.log(`🔄 Trying alternative format with 'notes' field...`);
-          const transformedNotes = response.notes.map((note: any) => ({
-            id: note.id,
-            content: note.content,
-            timestamp: note.timestamp || note.created_at,
-            author: note.author || 'User'
-          }));
-          
-          setLeads((prev: Lead[]) => {
-            const updatedLeads = prev.map((lead: Lead) => 
-              lead.id === leadId 
-                ? { ...lead, notes: transformedNotes }
-                : lead
-            );
-            return updatedLeads;
-          });
-          
-          console.log(`✅ Successfully processed ${transformedNotes.length} notes using 'notes' field`);
-          setLastUpdateTime(new Date());
-        }
-      }
-    } catch (error) {
-      console.error('❌ Error loading notes for lead:', error);
+    console.log(`� Loading notes for lead: ${leadId} (using simplified architecture)`);
+    
+    // Notes are now loaded with the leads data automatically
+    const currentLead = leads.find(l => l.id === leadId);
+    if (currentLead && currentLead.notes) {
+      console.log(`✅ Found ${currentLead.notes.length} notes for lead ${leadId} in current data`);
+      setLastUpdateTime(new Date()); // Force re-render
+      return;
     }
+    
+    // If notes aren't loaded yet, refresh the entire leads list
+    console.log(`🔄 Refreshing leads data to get notes for lead ${leadId}`);
+    await loadLeads();
   };
 
   const handleAddNote = async (leadId: string) => {
@@ -662,31 +596,44 @@ const LeadsManagement: React.FC = () => {
     if (!noteContent?.trim()) return;
 
     try {
-      // Save to backend API first with correct field names
-      const apiClient = getApiClient();
-      const noteData = {
-        content: noteContent,
-        lead_id: leadId,  // Use snake_case for backend
-        user_id: user?.id,
-        author_id: user?.id,
-        note_type: 'general',
-        priority: 'normal',
-        is_private: false,
-        tags: []
-      };
+      // Use the new simplified API to add note
+      const response = await fetch('/api/leads?action=addNote', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          leadId: leadId,
+          content: noteContent,
+          noteType: 'general'
+        })
+      });
+
+      const result = await response.json();
       
-      await apiClient.createNote(noteData);
-      console.log('✅ Note saved to backend successfully');
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Failed to add note');
+      }
+
+      console.log('✅ Note saved successfully');
       
-      // Reload notes from backend to ensure consistency
-      await loadNotesForLead(leadId);
+      // Update the lead in local state with the new notes
+      setLeads((prev: Lead[]) => {
+        return prev.map((lead: Lead) => 
+          lead.id === leadId 
+            ? { ...lead, notes: result.data || result.notes || [] }
+            : lead
+        );
+      });
       
-      // Track this lead as updated today when note is added with persistence
+      // Track this lead as updated today when note is added
       if (!leadsUpdatedToday.includes(leadId)) {
         const newUpdatedList = [...leadsUpdatedToday, leadId];
         setLeadsUpdatedToday(newUpdatedList);
         localStorage.setItem('crm-leads-updated-today', JSON.stringify(newUpdatedList));
       }
+      
       const newUpdateTime = new Date();
       setLastUpdateTime(newUpdateTime);
       localStorage.setItem('crm-last-update-time', newUpdateTime.toISOString());
@@ -694,8 +641,7 @@ const LeadsManagement: React.FC = () => {
       setNewNote((prev: {[key: string]: string}) => ({ ...prev, [leadId]: '' }));
       
     } catch (error) {
-      console.error('❌ Error saving note to backend:', error);
-      // Show user-friendly error message
+      console.error('❌ Error saving note:', error);
       alert('Failed to save note. Please check your connection and try again.');
     }
   };
