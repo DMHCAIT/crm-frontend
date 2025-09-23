@@ -1289,15 +1289,15 @@ const LeadsManagement: React.FC = () => {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Lead Management</h1>
             <p className="text-gray-600 mt-1">Manage and track all your leads in one place</p>
-            {/* Hierarchical Access Indicator */}
-            <div className="mt-2 flex items-center space-x-2">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-1 flex items-center space-x-2">
-                <UserCheck className="w-4 h-4 text-blue-600" />
-                <span className="text-sm text-blue-700">
-                  <strong>Access Level:</strong> Viewing your leads & subordinates' leads
+            {/* Hierarchical Access Indicator - Compact */}
+            <div className="mt-1 flex items-center">
+              <div className="bg-blue-50 border border-blue-200 rounded-md px-2 py-1 flex items-center space-x-1">
+                <UserCheck className="w-3 h-3 text-blue-600" />
+                <span className="text-xs text-blue-600 font-medium">
+                  Hierarchical View
                   {user?.role === 'super_admin' && (
-                    <span className="ml-1 px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs">
-                      Super Admin - All Leads
+                    <span className="ml-1 px-1 py-0.5 bg-purple-100 text-purple-600 rounded text-xs">
+                      All Access
                     </span>
                   )}
                 </span>
