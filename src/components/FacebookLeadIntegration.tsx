@@ -238,7 +238,7 @@ const FacebookLeadIntegration: React.FC = () => {
 
   const submitLeadToCRM = async (leadData: any) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('crm_auth_token');
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/leads`, {
         method: 'POST',
         headers: {

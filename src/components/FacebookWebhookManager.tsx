@@ -39,7 +39,7 @@ const FacebookWebhookManager: React.FC = () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/facebook/webhook/status`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('crm_auth_token')}`
         }
       });
 
@@ -58,7 +58,7 @@ const FacebookWebhookManager: React.FC = () => {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/facebook/webhook/test`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('crm_auth_token')}`
         }
       });
 

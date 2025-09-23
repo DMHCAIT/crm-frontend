@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
+import { TokenManager } from '../lib/productionAuth';
 import { STATUS_OPTIONS, STATUS_COLORS } from '../constants/crmConstants';
 import { 
   Search, 
@@ -601,7 +602,7 @@ const LeadsManagement: React.FC = () => {
       const response = await fetch(`${backendUrl}/api/leads?action=addNote`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${TokenManager.getToken()}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
