@@ -249,8 +249,8 @@ const MultiChannelInbox: React.FC = () => {
                   </div>
                 </div>
               </div>
-              ))
-            )}
+            ))
+          )}
           </div>
         </div>
 
