@@ -596,8 +596,8 @@ const LeadsManagement: React.FC = () => {
     if (!noteContent?.trim()) return;
 
     try {
-      // Use the emergency addNote endpoint to bypass routing issues
-      const response = await fetch('/api/leads-add-note', {
+      // Use the ultimate emergency addNote endpoint (defined before all middleware)
+      const response = await fetch('/api/emergency-add-note', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -610,9 +610,19 @@ const LeadsManagement: React.FC = () => {
         })
       });
 
-      const result = await response.json();
+      console.log('🔍 Response status:', response.status, response.statusText);
+      console.log('🔍 Response headers:', Object.fromEntries(response.headers.entries()));
       
-      if (!response.ok || !result.success) {
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Response not OK:', response.status, errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+      
+      const result = await response.json();
+      console.log('✅ Response JSON:', result);
+      
+      if (!result.success) {
         throw new Error(result.error || 'Failed to add note');
       }
 
