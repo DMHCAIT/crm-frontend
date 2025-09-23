@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
-import { STATUS_OPTIONS } from '../constants/crmConstants';
+import { STATUS_OPTIONS, STATUS_COLORS } from '../constants/crmConstants';
 import { 
   Search, 
   Plus,
@@ -1107,14 +1107,14 @@ const LeadsManagement: React.FC = () => {
     });
     
     // Conversion metrics
-    const convertedLeads = leads.filter((lead: Lead) => lead.status === 'converted');
+    const convertedLeads = leads.filter((lead: Lead) => lead.status === 'enrolled');
     const conversionRate = leads.length > 0 ? (convertedLeads.length / leads.length * 100) : 0;
     
     // Response time metrics
     const followupDueLeads = leads.filter((lead: Lead) => {
       if (!lead.followUp) return false;
       const followupDate = new Date(lead.followUp);
-      return followupDate <= now && lead.status !== 'converted';
+      return followupDate <= now && lead.status !== 'enrolled';
     });
     
     // Assignment distribution
@@ -1131,7 +1131,7 @@ const LeadsManagement: React.FC = () => {
         acc[source] = { total: 0, converted: 0 };
       }
       acc[source].total++;
-      if (lead.status === 'converted') {
+      if (lead.status === 'enrolled') {
         acc[source].converted++;
       }
       return acc;
@@ -1991,12 +1991,7 @@ const LeadsManagement: React.FC = () => {
                           <p className="text-xs text-gray-500">#{lead.id}</p>
                           <div className="flex items-center space-x-1">
                             <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
-                              lead.status === 'hot' ? 'bg-red-100 text-red-800' :
-                              lead.status === 'warm' ? 'bg-orange-100 text-orange-800' :
-                              lead.status === 'Followup' ? 'bg-yellow-100 text-yellow-800' :
-                              lead.status === 'will enroll later' ? 'bg-blue-100 text-blue-800' :
-                              lead.status === 'Not interested' ? 'bg-gray-100 text-gray-800' :
-                              'bg-green-100 text-green-800'
+                              STATUS_COLORS[lead.status as keyof typeof STATUS_COLORS] || STATUS_COLORS['fresh']
                             }`}>
                               {lead.status}
                             </span>
