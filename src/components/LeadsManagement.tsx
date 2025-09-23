@@ -892,11 +892,20 @@ const LeadsManagement: React.FC = () => {
 
   // Handle lead selection for detail view
   const handleLeadClick = async (leadId: string) => {
+    console.log(`🔄 Lead clicked: ${leadId}`);
+    
+    // First set the selected lead and show panel
     setSelectedLeadId(leadId);
     setShowDetailPanel(true);
     
-    // Load notes for the selected lead
+    console.log(`🔄 Loading notes for lead: ${leadId}`);
+    // Load notes for the selected lead and wait for completion
     await loadNotesForLead(leadId);
+    
+    console.log(`🔄 Notes loading completed for lead: ${leadId}`);
+    
+    // Force a state update to ensure the UI re-renders with the updated notes
+    setLastUpdateTime(new Date());
   };
 
   // Handle lead transfer (using bulk transfer modal for individual leads)
@@ -2198,6 +2207,12 @@ const LeadsManagement: React.FC = () => {
           <div className="w-1/3 bg-white rounded-xl shadow-lg border border-gray-200 h-fit overflow-hidden">
             {(() => {
               const selectedLead = leads.find(l => l.id === selectedLeadId);
+              
+              console.log(`🎯 Lead details render - Lead ID: ${selectedLeadId}`);
+              console.log(`🎯 Found selectedLead:`, !!selectedLead);
+              console.log(`🎯 Selected lead notes:`, selectedLead?.notes?.length || 0);
+              console.log(`🎯 Last update time:`, lastUpdateTime?.getTime());
+              
               if (!selectedLead) return null;
               
               return (
@@ -2549,7 +2564,7 @@ const LeadsManagement: React.FC = () => {
                     )}
 
                     {/* Notes Section */}
-                    <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="bg-gray-50 rounded-lg p-4" key={`notes-${selectedLead.id}-${lastUpdateTime?.getTime()}`}>
                       <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
                         <MessageSquare className="w-5 h-5 mr-2 text-orange-600" />
                         Notes & Communication ({selectedLead.notes?.length || 0})
