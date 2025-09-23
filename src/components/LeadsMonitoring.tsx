@@ -249,7 +249,14 @@ const LeadsMonitoring: React.FC = () => {
       {/* Header with monitoring stats */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Lead Monitoring Dashboard</h1>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Lead Monitoring Dashboard</h1>
+            <div className="mt-2">
+              <div className="bg-blue-50 border border-blue-200 px-3 py-1 rounded-full text-xs text-blue-700 font-medium inline-flex items-center">
+                🔍 <span className="ml-2">Hierarchical View: Your leads + team reporting to you</span>
+              </div>
+            </div>
+          </div>
           <div className="flex items-center space-x-4">
             <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
               <BarChart3 className="w-4 h-4" />

@@ -219,6 +219,13 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         </h1>
         <p className="text-gray-600">Here's what's happening with your CRM today.</p>
         
+        {/* Hierarchical Access Indicator */}
+        <div className="mt-3 mb-2">
+          <div className="bg-blue-50 border border-blue-200 px-4 py-2 rounded-lg text-sm text-blue-700 font-medium inline-flex items-center">
+            🔍 <span className="ml-2">Hierarchical Dashboard: Showing your data + team members reporting to you</span>
+          </div>
+        </div>
+        
         {/* Debug info for better UI visibility */}
         <div className="mt-2 text-xs text-gray-400">
           Last updated: {new Date().toLocaleTimeString()} | Connected: ✅

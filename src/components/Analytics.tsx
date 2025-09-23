@@ -195,6 +195,20 @@ const Analytics: React.FC = () => {
               Live data • Last updated: {lastUpdated.toLocaleString()}
             </span>
           </div>
+          {/* Hierarchical Access Indicator */}
+          <div className="mt-2 flex items-center space-x-2">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-1 flex items-center space-x-2">
+              <Target className="w-4 h-4 text-blue-600" />
+              <span className="text-sm text-blue-700">
+                <strong>Analytics Scope:</strong> Your data & subordinates' data
+                {user?.role === 'super_admin' && (
+                  <span className="ml-1 px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs">
+                    Super Admin - Organization-wide
+                  </span>
+                )}
+              </span>
+            </div>
+          </div>
         </div>
         <div className="flex items-center space-x-3">
           <select 

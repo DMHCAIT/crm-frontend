@@ -195,6 +195,11 @@ const CRMPipeline: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">CRM Pipeline</h1>
           <p className="text-gray-600 mt-2">Monitor leads, track conversions, and manage your sales pipeline</p>
+          <div className="mt-3">
+            <div className="bg-blue-50 border border-blue-200 px-3 py-1 rounded-full text-xs text-blue-700 font-medium inline-flex items-center">
+              🔍 <span className="ml-2">Hierarchical View: Your leads + team reporting to you</span>
+            </div>
+          </div>
         </div>
         
         <div className="flex items-center space-x-4">
