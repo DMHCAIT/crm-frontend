@@ -596,9 +596,9 @@ const LeadsManagement: React.FC = () => {
     if (!noteContent?.trim()) return;
 
     try {
-      // Use the ultimate emergency addNote endpoint with full backend URL
+      // Use the proper leads API addNote endpoint with real user authentication
       const backendUrl = import.meta.env.VITE_API_BASE_URL || 'https://crm-backend-fh34.onrender.com';
-      const response = await fetch(`${backendUrl}/api/emergency-add-note`, {
+      const response = await fetch(`${backendUrl}/api/leads?action=addNote`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
