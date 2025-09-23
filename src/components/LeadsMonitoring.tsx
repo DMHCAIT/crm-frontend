@@ -111,7 +111,7 @@ const LeadsMonitoring: React.FC = () => {
         location: lead.location || 'Not specified',
         notes: lead.notes || '',
         createdAt: lead.created_at || lead.createdAt || new Date().toISOString(),
-        assignedCounselor: lead.assigned_to || lead.assignedCounselor || 'Unassigned',
+        assignedCounselor: lead.assignedTo || lead.assignedCounselor || lead.assigned_to || 'Unassigned',
         createdBy: lead.created_by || lead.createdBy || 'System',
         score: lead.score || 0,
         lastContact: lead.last_contact || lead.lastContact || lead.updated_at || lead.updatedAt || new Date().toISOString(),

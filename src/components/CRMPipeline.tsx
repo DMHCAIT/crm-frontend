@@ -161,7 +161,7 @@ const CRMPipeline: React.FC = () => {
           activity: getActivityMessage(lead.status),
           timestamp: getRelativeTime(lead.lastContact || lead.last_contact || lead.updatedAt || lead.updated_at || lead.createdAt || lead.created_at),
           status: lead.status || 'fresh',
-          counselor: lead.assigned_to || lead.assignedCounselor || 'Unassigned'
+          counselor: lead.assignedTo || lead.assignedCounselor || lead.assigned_to || 'Unassigned'
         }));
 
       setPipelineStats(realStats);
