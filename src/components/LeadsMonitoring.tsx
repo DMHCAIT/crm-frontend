@@ -81,11 +81,23 @@ const LeadsMonitoring: React.FC = () => {
       setLoading(true);
       
       // Get real data from backend API (proper architecture)
+      console.log('🔍 LeadsMonitoring: Fetching leads data...');
       const apiClient = getApiClient();
       const leadsData: any = await apiClient.getLeads();
+      console.log('🔍 LeadsMonitoring: Raw API response:', leadsData);
       
-      // Convert API data to frontend format - handle both array and object responses
-      const leadsArray = Array.isArray(leadsData) ? leadsData : (leadsData?.data || []);
+      // Convert API data to frontend format - handle new response format
+      let leadsArray = [];
+      if (leadsData && leadsData.success && leadsData.leads) {
+        leadsArray = leadsData.leads;
+        console.log('✅ LeadsMonitoring: Using leadsData.leads format:', leadsArray.length, 'leads');
+      } else if (Array.isArray(leadsData)) {
+        leadsArray = leadsData;
+        console.log('✅ LeadsMonitoring: Using array format:', leadsArray.length, 'leads');
+      } else {
+        leadsArray = leadsData?.data || [];
+        console.log('✅ LeadsMonitoring: Using leadsData.data format:', leadsArray.length, 'leads');
+      }
       const formattedLeads: Lead[] = (leadsArray || []).map((lead: any) => ({
         id: lead.id || `LEAD-${Date.now()}-${Math.random().toString(36).substr(2, 3)}`,
         name: lead.fullName || lead.name || 'Unknown Lead',

@@ -108,10 +108,22 @@ const CRMPipeline: React.FC = () => {
       const apiClient = getApiClient();
       
       // Fetch leads data from API
+      console.log('🔍 CRMPipeline: Fetching leads data...');
       const leadsData: any = await apiClient.getLeads();
+      console.log('🔍 CRMPipeline: Raw API response:', leadsData);
 
-      // Calculate real pipeline stats
-      const leads = Array.isArray(leadsData) ? leadsData : (leadsData?.data || []);
+      // Calculate real pipeline stats - handle new response format
+      let leads = [];
+      if (leadsData && leadsData.success && leadsData.leads) {
+        leads = leadsData.leads;
+        console.log('✅ CRMPipeline: Using leadsData.leads format:', leads.length, 'leads');
+      } else if (Array.isArray(leadsData)) {
+        leads = leadsData;
+        console.log('✅ CRMPipeline: Using array format:', leads.length, 'leads');
+      } else {
+        leads = leadsData?.data || [];
+        console.log('✅ CRMPipeline: Using leadsData.data format:', leads.length, 'leads');
+      }
       
       const totalLeads = (leads || []).length;
       const newLeads = (leads || []).filter((lead: any) => {
