@@ -33,6 +33,14 @@ export const useAuth = (): UseAuthReturn => {
         const token = TokenManager.getToken();
         const storedUser = authService.getCurrentUser();
         
+        // Check for malformed tokens first
+        if (TokenManager.isTokenMalformed()) {
+          console.log('🚨 Detected malformed JWT token during init, clearing all auth data');
+          TokenManager.clearAuthData();
+          setUser(null);
+          return;
+        }
+        
         if (token && storedUser && !TokenManager.isTokenExpired()) {
           // Only verify token if we have a valid, non-expired token
           try {
@@ -47,7 +55,13 @@ export const useAuth = (): UseAuthReturn => {
           } catch (verifyError) {
             // If verification fails, clear tokens and continue as unauthenticated
             console.warn('Token verification failed, clearing session:', verifyError);
-            TokenManager.removeToken();
+            const errorMessage = verifyError instanceof Error ? verifyError.message : String(verifyError);
+            if (errorMessage.includes('jwt malformed')) {
+              console.log('🚨 JWT malformed error detected, clearing all auth data');
+              TokenManager.clearAuthData();
+            } else {
+              TokenManager.removeToken();
+            }
             setUser(null);
           }
         } else {

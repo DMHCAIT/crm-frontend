@@ -75,11 +75,40 @@ export class TokenManager {
       return true;
     }
   }
+
+  static clearAuthData(): void {
+    console.log('🧹 Clearing old authentication data due to JWT consistency issues');
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+  }
+
+  static isTokenMalformed(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    try {
+      // Try to decode the token structure
+      const parts = token.split('.');
+      if (parts.length !== 3) return true;
+      
+      // Try to parse the payload
+      JSON.parse(atob(parts[1]));
+      return false;
+    } catch {
+      return true;
+    }
+  }
 }
 
-// Production Authentication Service - Version 2.0 (Sep 19, 2025)
+// Production Authentication Service - Version 2.1 (Sep 23, 2025) - JWT Fix
 export class ProductionAuthService {
   private apiConfig = getApiConfig();
+
+  // Force clear all auth data and require fresh login
+  forceLogout(): void {
+    console.log('🚨 Force logout - clearing all authentication data');
+    TokenManager.clearAuthData();
+  }
 
   async signIn(username: string, password: string): Promise<User> {
     try {
@@ -268,11 +297,26 @@ export class ProductionAuthService {
   }
 
   getCurrentUser(): User | null {
+    // Check for malformed tokens and clear them
+    if (TokenManager.isTokenMalformed()) {
+      console.log('🚨 Detected malformed JWT token, clearing auth data');
+      TokenManager.clearAuthData();
+      return null;
+    }
+    
     return TokenManager.getStoredUser();
   }
 
   isAuthenticated(): boolean {
     const token = TokenManager.getToken();
+    
+    // Check for malformed tokens
+    if (TokenManager.isTokenMalformed()) {
+      console.log('🚨 Detected malformed JWT token during auth check, clearing auth data');
+      TokenManager.clearAuthData();
+      return false;
+    }
+    
     return !!(token && !TokenManager.isTokenExpired());
   }
 }
