@@ -17,7 +17,13 @@ import {
   Edit3,
   Eye,
   Settings,
-  Trash2
+  Trash2,
+  BarChart3,
+  Grid,
+  List,
+  TrendingUp,
+  Award,
+  Filter
 } from 'lucide-react';
 
 const UserManagement: React.FC = () => {
@@ -31,6 +37,9 @@ const UserManagement: React.FC = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<DatabaseUser | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'list' | 'teams'>('teams');
+  const [selectedTeam, setSelectedTeam] = useState('all');
+  const [showTeamComparison, setShowTeamComparison] = useState(false);
 
   useEffect(() => {
     loadUsers();
@@ -101,6 +110,76 @@ const UserManagement: React.FC = () => {
     }
   };
 
+  // Get teams (departments) available to current user
+  const getAccessibleTeams = () => {
+    if (!Array.isArray(users)) return [];
+    
+    const currentUserRole = currentUser?.role || 'counselor';
+    const currentUserLevel = roleHierarchy[currentUserRole as keyof typeof roleHierarchy]?.level || 1;
+    
+    // Get unique departments from users that current user can access
+    const accessibleUsers = users.filter(user => {
+      const userLevel = roleHierarchy[user.role as keyof typeof roleHierarchy]?.level || 1;
+      return userLevel <= currentUserLevel;
+    });
+    
+    const teams = Array.from(new Set(accessibleUsers.map(u => u.department).filter(Boolean)));
+    return teams.sort();
+  };
+
+  // Get team statistics and comparisons
+  const getTeamAnalytics = () => {
+    if (!Array.isArray(users)) return {};
+    
+    const currentUserRole = currentUser?.role || 'counselor';
+    const currentUserLevel = roleHierarchy[currentUserRole as keyof typeof roleHierarchy]?.level || 1;
+    
+    const accessibleUsers = users.filter(user => {
+      const userLevel = roleHierarchy[user.role as keyof typeof roleHierarchy]?.level || 1;
+      return userLevel <= currentUserLevel;
+    });
+    
+    const teamStats: any = {};
+    
+    accessibleUsers.forEach(user => {
+      const team = user.department || 'Unassigned';
+      if (!teamStats[team]) {
+        teamStats[team] = {
+          total: 0,
+          active: 0,
+          inactive: 0,
+          roles: {},
+          avgLevel: 0,
+          members: []
+        };
+      }
+      
+      teamStats[team].total++;
+      teamStats[team].members.push(user);
+      
+      if (user.status === 'active') {
+        teamStats[team].active++;
+      } else {
+        teamStats[team].inactive++;
+      }
+      
+      const userLevel = roleHierarchy[user.role as keyof typeof roleHierarchy]?.level || 1;
+      teamStats[team].avgLevel += userLevel;
+      
+      if (!teamStats[team].roles[user.role]) {
+        teamStats[team].roles[user.role] = 0;
+      }
+      teamStats[team].roles[user.role]++;
+    });
+    
+    // Calculate average levels
+    Object.keys(teamStats).forEach(team => {
+      teamStats[team].avgLevel = teamStats[team].avgLevel / teamStats[team].total;
+    });
+    
+    return teamStats;
+  };
+
   const getFilteredUsers = () => {
     // Ensure users is always an array before filtering
     if (!Array.isArray(users)) {
@@ -123,9 +202,10 @@ const UserManagement: React.FC = () => {
       const canSeeUser = userLevel <= currentUserLevel;
       
       const matchesRole = selectedRole === 'all' || user.role === selectedRole;
+      const matchesTeam = selectedTeam === 'all' || user.department === selectedTeam;
       const matchesSearch = (user.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                            (user.email || '').toLowerCase().includes(searchTerm.toLowerCase());
-      return canSeeUser && matchesRole && matchesSearch;
+      return canSeeUser && matchesRole && matchesTeam && matchesSearch;
     });
   };
 
@@ -282,32 +362,188 @@ const UserManagement: React.FC = () => {
     );
   }
 
+  // Get data for components
   const filteredUsers = getFilteredUsers();
   const visibleRoles = getVisibleRoles();
   const permissions = getCurrentUserPermissions();
+  const accessibleTeams = getAccessibleTeams();
+  const teamAnalytics = getTeamAnalytics();
 
   return (
     <div className="space-y-6">
-      {/* Header with Role Info */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-600">
-            Manage team members and their roles 
-            <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-              {roleHierarchy[permissions.role as keyof typeof roleHierarchy]?.label || 'User'} View
-            </span>
-          </p>
+      {/* Enhanced Header with Team View Toggle */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
+            <p className="text-gray-600">
+              Manage team members with hierarchical access control
+              <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                {roleHierarchy[permissions.role as keyof typeof roleHierarchy]?.label || 'User'} View (Level {permissions.level})
+              </span>
+            </p>
+          </div>
+          <div className="flex items-center space-x-3">
+            {/* View Mode Toggle */}
+            <div className="flex bg-gray-100 rounded-lg p-1">
+              <button
+                onClick={() => setViewMode('teams')}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  viewMode === 'teams' 
+                    ? 'bg-white text-gray-900 shadow-sm' 
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <Grid className="w-4 h-4 mr-1.5 inline" />
+                Team View
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  viewMode === 'list' 
+                    ? 'bg-white text-gray-900 shadow-sm' 
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <List className="w-4 h-4 mr-1.5 inline" />
+                List View
+              </button>
+            </div>
+            
+            {/* Team Comparison Toggle */}
+            <button
+              onClick={() => setShowTeamComparison(!showTeamComparison)}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                showTeamComparison 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              <BarChart3 className="w-4 h-4 mr-1.5 inline" />
+              Team Comparison
+            </button>
+            
+            {permissions.canAddUsers && (
+              <button 
+                onClick={handleAddUser}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add User</span>
+              </button>
+            )}
+          </div>
         </div>
-        {permissions.canAddUsers && (
-          <button 
-            onClick={handleAddUser}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add User</span>
-          </button>
-        )}
+
+        {/* Access Control Information */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-center space-x-2">
+            <Shield className="w-4 h-4 text-blue-600" />
+            <p className="text-sm text-blue-700">
+              <strong>Hierarchical Access:</strong> You can view and manage users at Level {permissions.level} and below. 
+              Total accessible users: <strong>{filteredUsers.length}</strong> across <strong>{accessibleTeams.length}</strong> teams.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Team Comparison Panel */}
+      {showTeamComparison && (
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <BarChart3 className="w-5 h-5 mr-2 text-blue-600" />
+            Team Performance Comparison
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Object.entries(teamAnalytics).map(([teamName, stats]: [string, any]) => (
+              <div key={teamName} className="border border-gray-200 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-medium text-gray-900">{teamName}</h4>
+                  <Award className="w-4 h-4 text-yellow-500" />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Total Members:</span>
+                    <span className="font-medium">{stats.total}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Active:</span>
+                    <span className="font-medium text-green-600">{stats.active}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Inactive:</span>
+                    <span className="font-medium text-red-600">{stats.inactive}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Avg Level:</span>
+                    <span className="font-medium text-blue-600">{stats.avgLevel.toFixed(1)}</span>
+                  </div>
+                  <div className="mt-2 pt-2 border-t border-gray-100">
+                    <p className="text-xs text-gray-500 mb-1">Role Distribution:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {Object.entries(stats.roles).map(([role, count]: [string, any]) => (
+                        <span key={role} className={`px-2 py-1 text-xs rounded-full ${getRoleColor(role)} text-white`}>
+                          {roleHierarchy[role as keyof typeof roleHierarchy]?.label || role}: {count}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Enhanced Filters */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center space-x-2">
+            <Search className="w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search users by name or email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-80"
+            />
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Filter className="w-4 h-4 text-gray-400" />
+            <select
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="all">All Roles</option>
+              {visibleRoles.map(([key, role]) => (
+                <option key={key} value={key}>{role.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Users className="w-4 h-4 text-gray-400" />
+            <select
+              value={selectedTeam}
+              onChange={(e) => setSelectedTeam(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="all">All Teams</option>
+              {accessibleTeams.map(team => (
+                <option key={team} value={team}>{team}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="ml-auto text-sm text-gray-600">
+            Showing {filteredUsers.length} of {users.filter(u => {
+              const userLevel = roleHierarchy[u.role as keyof typeof roleHierarchy]?.level || 1;
+              return userLevel <= permissions.level;
+            }).length} accessible users
+          </div>
+        </div>
       </div>
 
       {/* Statistics - Only show roles visible to current user */}
@@ -369,54 +605,137 @@ const UserManagement: React.FC = () => {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-          {/* Search */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search users..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
-            />
+
+
+      {/* Users Display - Team View or List View */}
+      {viewMode === 'teams' ? (
+        // Team-wise view
+        <div className="space-y-6">
+          {accessibleTeams.length === 0 ? (
+            <div className="bg-white rounded-lg shadow p-8 text-center">
+              <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">No teams found</p>
+            </div>
+          ) : (
+            accessibleTeams.map(team => {
+              const teamUsers = filteredUsers.filter(u => u.department === team);
+              if (teamUsers.length === 0) return null;
+              
+              return (
+                <div key={team} className="bg-white rounded-lg shadow">
+                  <div className="px-6 py-4 border-b border-gray-200">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-medium text-gray-900 flex items-center">
+                        <Users className="w-5 h-5 mr-2 text-blue-600" />
+                        {team} Team ({teamUsers.length} members)
+                      </h3>
+                      <div className="flex items-center space-x-4 text-sm text-gray-600">
+                        <span className="flex items-center">
+                          <TrendingUp className="w-4 h-4 mr-1 text-green-500" />
+                          Avg Level: {(teamAnalytics[team as string]?.avgLevel || 0).toFixed(1)}
+                        </span>
+                        <span className="text-green-600">
+                          {teamAnalytics[team as string]?.active || 0} Active
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="divide-y divide-gray-200">
+                    {teamUsers.map((user) => (
+                      <div key={user.id} className="p-6 hover:bg-gray-50">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-4">
+                            {/* Avatar */}
+                            <div className={`w-12 h-12 rounded-full ${getRoleColor(user.role)} flex items-center justify-center text-white`}>
+                              {getRoleIcon(user.role)}
+                            </div>
+                            
+                            {/* User Info */}
+                            <div>
+                              <h4 className="text-lg font-medium text-gray-900">{user.name}</h4>
+                              <p className="text-sm text-gray-600">{user.designation || roleHierarchy[user.role as keyof typeof roleHierarchy]?.label}</p>
+                              <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500">
+                                <span className="flex items-center">
+                                  <Mail className="w-4 h-4 mr-1" />
+                                  {user.email}
+                                </span>
+                                {user.phone && (
+                                  <span className="flex items-center">
+                                    <Phone className="w-4 h-4 mr-1" />
+                                    {user.phone}
+                                  </span>
+                                )}
+                                {user.location && (
+                                  <span className="flex items-center">
+                                    <MapPin className="w-4 h-4 mr-1" />
+                                    {user.location}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Actions and Status */}
+                          <div className="flex items-center space-x-2">
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              user.status === 'active' 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-red-100 text-red-800'
+                            }`}>
+                              {user.status}
+                            </span>
+                            
+                            <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                              Level {roleHierarchy[user.role as keyof typeof roleHierarchy]?.level || 1}
+                            </span>
+                            
+                            <button 
+                              onClick={() => handleViewUser(user)}
+                              className="p-2 text-gray-400 hover:text-gray-600"
+                              title="View User"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </button>
+                            
+                            {permissions.canEditUsers && (
+                              <button 
+                                onClick={() => handleEditUser(user)}
+                                className="p-2 text-gray-400 hover:text-gray-600"
+                                title="Edit User"
+                              >
+                                <Edit3 className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            })
+          )}
+        </div>
+      ) : (
+        // Traditional list view
+        <div className="bg-white rounded-lg shadow">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h3 className="text-lg font-medium text-gray-900">
+              Team Members ({filteredUsers.length})
+            </h3>
           </div>
 
-          {/* Role Filter - Only show roles visible to current user */}
-          <select
-            value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="all">All Roles</option>
-            {visibleRoles.map(([key, role]) => (
-              <option key={key} value={key}>{role.label}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Users List */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">
-            Team Members ({filteredUsers.length})
-          </h3>
-        </div>
-
-        {filteredUsers.length === 0 ? (
-          <div className="p-8 text-center">
-            <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600">No users found</p>
-            {searchTerm && (
-              <p className="text-sm text-gray-500 mt-2">
-                Try adjusting your search criteria
-              </p>
-            )}
-          </div>
-        ) : (
+          {filteredUsers.length === 0 ? (
+            <div className="p-8 text-center">
+              <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">No users found</p>
+              {searchTerm && (
+                <p className="text-sm text-gray-500 mt-2">
+                  Try adjusting your search criteria
+                </p>
+              )}
+            </div>
+          ) : (
           <div className="divide-y divide-gray-200">
             {filteredUsers.map((user) => (
               <div key={user.id} className="p-6 hover:bg-gray-50">
@@ -532,7 +851,8 @@ const UserManagement: React.FC = () => {
             ))}
           </div>
         )}
-      </div>
+        </div>
+      )}
 
       {/* Add User Modal */}
       {showAddModal && (
