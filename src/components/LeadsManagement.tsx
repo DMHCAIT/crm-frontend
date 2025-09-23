@@ -580,13 +580,15 @@ const LeadsManagement: React.FC = () => {
       const apiClient = getApiClient();
       const response = await apiClient.getNotes(leadId, 'lead') as any;
       
+      console.log(`🔍 Raw API response for lead ${leadId}:`, response);
+      
       if (response.success && response.data) {
         // Transform backend notes to frontend format
         const transformedNotes = response.data.map((note: any) => ({
           id: note.id,
           content: note.content,
-          timestamp: note.created_at,
-          author: 'User' // We'll need to fetch user names later
+          timestamp: note.timestamp || note.created_at, // Fixed: use correct field name
+          author: note.author || 'User' // Use actual author from backend
         }));
         
         console.log(`🔍 About to update lead ${leadId} with ${transformedNotes.length} notes`);
