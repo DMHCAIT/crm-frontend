@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
-import { STATUS_OPTIONS, STATUS_COLORS, STATUS_MESSAGES } from '../constants/crmConstants';
+import { STATUS_OPTIONS } from '../constants/crmConstants';
 import { 
   Search, 
   Plus,
@@ -119,7 +119,7 @@ const LeadsManagement: React.FC = () => {
 
   // Dynamic Configuration States - From API
   const [statusOptions, setStatusOptions] = useState(STATUS_OPTIONS);
-  const [countryOptions, setCountryOptions] = useState([
+  const [countryOptions] = useState([
     // Asian Countries
     {code: 'IN', name: 'India', phoneCode: '+91'},
     {code: 'CN', name: 'China', phoneCode: '+86'},
@@ -197,7 +197,7 @@ const LeadsManagement: React.FC = () => {
     {code: 'KE', name: 'Kenya', phoneCode: '+254'},
     {code: 'ET', name: 'Ethiopia', phoneCode: '+251'}
   ]);
-  const [qualificationOptions, setQualificationOptions] = useState(['MBBS', 'MD', 'BDS', 'AYUSH', 'MS', 'FMGS', 'Others']);
+  const [qualificationOptions] = useState(['MBBS', 'MD', 'BDS', 'AYUSH', 'MS', 'FMGS', 'Others']);
   const [assignableUsers, setAssignableUsers] = useState<AssignableUser[]>([]);
   const [courseOptions, setCourseOptions] = useState({ fellowship: [], pgDiploma: [], all: [] });
   
@@ -730,7 +730,7 @@ const LeadsManagement: React.FC = () => {
       // Prepare lead data for database insertion - include ALL fields
       const leadData = {
         fullName: newLead.fullName,
-        name: newLead.fullName, // For backend compatibility
+        // 'name' field removed - doesn't exist in database schema
         email: newLead.email,
         phone: newLead.phone,
         country: newLead.country,
@@ -749,12 +749,15 @@ const LeadsManagement: React.FC = () => {
 
       // Create via backend API (proper architecture)
       const apiClient = getApiClient();
-      const createdLead: any = await apiClient.createLead(leadData);
+      const response: any = await apiClient.createLead(leadData);
+      
+      // Extract lead data from response (backend returns { success: true, data: {...} })
+      const createdLead = response.data || response;
       
       // Transform API response to component format
       const leadToAdd: Lead = {
         id: createdLead.id || Date.now().toString(),
-        fullName: createdLead.name || newLead.fullName || '',
+        fullName: createdLead.fullName || newLead.fullName || '',
         email: createdLead.email || newLead.email || '',
         phone: createdLead.phone || newLead.phone || '',
         country: newLead.country || 'India',
@@ -763,10 +766,10 @@ const LeadsManagement: React.FC = () => {
         source: createdLead.source || newLead.source || 'Manual Entry',
         course: newLead.course || 'MBBS',
         status: createdLead.status || newLead.status || 'fresh',
-        assignedTo: createdLead.assigned_to || newLead.assignedTo || user?.name || 'Unassigned',
+        assignedTo: createdLead.assignedTo || newLead.assignedTo || user?.name || 'Unassigned',
         followUp: newLead.followUp || '',
-        createdAt: createdLead.created_at || new Date().toISOString(),
-        updatedAt: createdLead.updated_at || new Date().toISOString(),
+        createdAt: createdLead.createdAt || new Date().toISOString(),
+        updatedAt: createdLead.updatedAt || new Date().toISOString(),
         notes: [{
           id: `note-${Date.now()}`,
           content: `Lead created via manual entry by ${user?.name || 'System'}`,
@@ -806,9 +809,20 @@ const LeadsManagement: React.FC = () => {
       alert(`Lead "${newLead.fullName}" added successfully!`);
       // Lead created successfully
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Error adding lead:', error);
-      alert('Unable to create lead. Please check your internet connection and try again.');
+      
+      // Show specific error message if available
+      let errorMessage = 'Unable to create lead. Please try again.';
+      if (error?.message) {
+        errorMessage = error.message;
+      } else if (error?.error) {
+        errorMessage = error.error;
+      } else if (error?.details) {
+        errorMessage = error.details;
+      }
+      
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
