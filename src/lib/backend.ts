@@ -407,6 +407,11 @@ class ProductionApiClient {
     return this.request('/users');
   }
 
+  // Get users that current user can assign leads to (hierarchical filtering)
+  async getAssignableUsers() {
+    return this.request('/assignable-users');
+  }
+
   async createUser(userData: any) {
     return this.request('/users', {
       method: 'POST',

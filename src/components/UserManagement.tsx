@@ -40,6 +40,15 @@ const UserManagement: React.FC = () => {
   const [viewMode, setViewMode] = useState<'list' | 'teams'>('teams');
   const [selectedTeam, setSelectedTeam] = useState('all');
   const [showTeamComparison, setShowTeamComparison] = useState(false);
+  const [selectedBranch, setSelectedBranch] = useState('all');
+
+  // Branch options
+  const branches = [
+    { id: 'all', name: 'All Branches', icon: '🌐' },
+    { id: 'delhi', name: 'Delhi', icon: '🏛️' },
+    { id: 'hyderabad', name: 'Hyderabad', icon: '🌆' },
+    { id: 'kashmir', name: 'Kashmir', icon: '🏔️' }
+  ];
 
   useEffect(() => {
     loadUsers();
@@ -187,9 +196,7 @@ const UserManagement: React.FC = () => {
       return [];
     }
 
-    // Get current user's role level for hierarchy filtering
-    const currentUserRole = currentUser?.role || 'counselor';
-    const currentUserLevel = roleHierarchy[currentUserRole as keyof typeof roleHierarchy]?.level || 1;
+
     
     return users.filter(user => {
       // Ensure user object has required properties
@@ -197,17 +204,49 @@ const UserManagement: React.FC = () => {
         return false;
       }
 
-      // Role hierarchy: users can only see users at their level or below
-      const userLevel = roleHierarchy[user.role as keyof typeof roleHierarchy]?.level || 1;
-      const canSeeUser = userLevel <= currentUserLevel;
+      // Hierarchical filtering: users can see themselves and users who report to them (directly or indirectly)
+      const canSeeUser = canAccessUser(user, currentUser?.id);
       
       const matchesRole = selectedRole === 'all' || user.role === selectedRole;
       const matchesTeam = selectedTeam === 'all' || user.department === selectedTeam;
+      const matchesBranch = selectedBranch === 'all' || 
+                           (user.branch && user.branch.toLowerCase() === selectedBranch.toLowerCase()) ||
+                           (user.location && user.location.toLowerCase().includes(selectedBranch.toLowerCase()));
       const matchesSearch = (user.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           (user.email || '').toLowerCase().includes(searchTerm.toLowerCase());
-      return canSeeUser && matchesRole && matchesTeam && matchesSearch;
+                           (user.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           (user.username || '').toLowerCase().includes(searchTerm.toLowerCase());
+      
+      return canSeeUser && matchesRole && matchesTeam && matchesBranch && matchesSearch;
     });
   };
+
+  // Check if current user can access/see another user based on hierarchy
+  const canAccessUser = (targetUser: DatabaseUser, currentUserId?: string) => {
+    if (!currentUserId || !targetUser) return false;
+    
+    // Super admins can see everyone
+    if (currentUser?.role === 'super_admin') return true;
+    
+    // Users can always see themselves
+    if (targetUser.id === currentUserId) return true;
+    
+    // Check if targetUser reports to currentUser (directly or indirectly)
+    return isSubordinate(targetUser.id, currentUserId);
+  };
+
+  // Check if userId is a subordinate of supervisorId (direct or indirect)
+  const isSubordinate = (userId: string, supervisorId: string): boolean => {
+    const user = users.find(u => u.id === userId);
+    if (!user || !user.reports_to) return false;
+    
+    // Direct report
+    if (user.reports_to === supervisorId) return true;
+    
+    // Indirect report - check recursively
+    return isSubordinate(user.reports_to, supervisorId);
+  };
+
+
 
   const getVisibleRoles = () => {
     // Get current user's role level to filter available role options
@@ -537,6 +576,27 @@ const UserManagement: React.FC = () => {
             </select>
           </div>
 
+          {/* Branch Filter Buttons */}
+          <div className="flex items-center space-x-2">
+            <MapPin className="w-4 h-4 text-gray-400" />
+            <div className="flex space-x-1">
+              {branches.map(branch => (
+                <button
+                  key={branch.id}
+                  onClick={() => setSelectedBranch(branch.id)}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1 ${
+                    selectedBranch === branch.id
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  <span>{branch.icon}</span>
+                  <span>{branch.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="ml-auto text-sm text-gray-600">
             Showing {filteredUsers.length} of {users.filter(u => {
               const userLevel = roleHierarchy[u.role as keyof typeof roleHierarchy]?.level || 1;
@@ -671,7 +731,27 @@ const UserManagement: React.FC = () => {
                                     {user.location}
                                   </span>
                                 )}
+                                {user.branch && (
+                                  <span className="flex items-center">
+                                    <span className="w-4 h-4 mr-1 text-lg">🏢</span>
+                                    {user.branch}
+                                  </span>
+                                )}
                               </div>
+                              {/* Hierarchy Information */}
+                              {user.reports_to && (
+                                <div className="mt-2 text-sm text-gray-600">
+                                  <span className="flex items-center">
+                                    <UserCheck className="w-4 h-4 mr-1 text-blue-500" />
+                                    Reports to: <strong className="ml-1">
+                                      {users.find(u => u.id === user.reports_to)?.name || 'Unknown'}
+                                    </strong> 
+                                    <span className="ml-1 text-gray-400">
+                                      ({roleHierarchy[users.find(u => u.id === user.reports_to)?.role as keyof typeof roleHierarchy]?.label || 'Unknown Role'})
+                                    </span>
+                                  </span>
+                                </div>
+                              )}
                             </div>
                           </div>
 
@@ -915,6 +995,7 @@ const UserModal: React.FC<UserModalProps> = ({
     designation: user?.designation || '',
     department: user?.department || '',
     location: user?.location || '',
+    branch: user?.branch || '', // Branch field for filtering
     status: user?.status || 'active',
     reports_to: user?.reports_to || '', // Fixed: Use correct field name
     password: '', // Password field for new users
@@ -951,8 +1032,16 @@ const UserModal: React.FC<UserModalProps> = ({
       return;
     }
 
-    // Prepare user data - exclude password confirmation
-    const { confirmPassword, ...userData } = formData;
+    // Prepare user data - exclude password confirmation and fix types
+    const { confirmPassword, ...rawUserData } = formData;
+    
+    // Fix branch type - convert empty string to undefined and cast to proper type
+    const userData = {
+      ...rawUserData,
+      branch: (rawUserData.branch && ['Delhi', 'Hyderabad', 'Kashmir'].includes(rawUserData.branch)) 
+        ? rawUserData.branch as DatabaseUser['branch'] 
+        : undefined
+    };
     
     // For existing users, don't send password if it's empty
     if (user && !formData.password) {
@@ -1114,6 +1203,20 @@ const UserModal: React.FC<UserModalProps> = ({
           </div>
 
           <div>
+            <label className="block text-sm font-medium text-gray-700">Branch</label>
+            <select
+              value={formData.branch}
+              onChange={(e) => setFormData({...formData, branch: e.target.value || ''})}
+              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+            >
+              <option value="">Select Branch</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Hyderabad">Hyderabad</option>
+              <option value="Kashmir">Kashmir</option>
+            </select>
+          </div>
+
+          <div>
             <label className="block text-sm font-medium text-gray-700">
               Reports To (Supervisor) <span className="text-red-500">*</span>
             </label>
@@ -1127,10 +1230,10 @@ const UserModal: React.FC<UserModalProps> = ({
               {users
                 .filter(u => u.id !== user?.id && u.status === 'active') // Don't show current user and only active users
                 .filter(u => {
-                  // Only show users with higher or equal role hierarchy
-                  const currentUserLevel = roleHierarchy[user?.role || 'counselor']?.level || 1;
+                  // Only show users with HIGHER role hierarchy (must report to someone above their level)
+                  const currentUserLevel = roleHierarchy[formData.role as keyof typeof roleHierarchy]?.level || 1;
                   const supervisorLevel = roleHierarchy[u.role as keyof typeof roleHierarchy]?.level || 1;
-                  return supervisorLevel >= currentUserLevel;
+                  return supervisorLevel > currentUserLevel; // Changed from >= to > for proper hierarchy
                 })
                 .map(u => (
                   <option key={u.id} value={u.id}>

@@ -363,36 +363,39 @@ const LeadsManagement: React.FC = () => {
   const loadUsers = async () => {
     try {
       const apiClient = getApiClient();
-      const dbUsers = await apiClient.getUsers();
+      // Use hierarchical assignable users API instead of all users
+      const assignableUsersResponse = await apiClient.getAssignableUsers();
       
-      console.log(`🔍 Loaded users from API:`, dbUsers);
+      console.log(`🔍 Loaded assignable users from API:`, assignableUsersResponse);
       
-      // Handle both direct array and {success: true, users: [...]} format
+      // Handle response format
       let usersArray: any[] = [];
-      if (Array.isArray(dbUsers)) {
-        usersArray = dbUsers;
-      } else if (dbUsers && (dbUsers as any).success && Array.isArray((dbUsers as any).users)) {
-        usersArray = (dbUsers as any).users;
+      if (Array.isArray(assignableUsersResponse)) {
+        usersArray = assignableUsersResponse;
+      } else if (assignableUsersResponse && (assignableUsersResponse as any).success && Array.isArray((assignableUsersResponse as any).users)) {
+        usersArray = (assignableUsersResponse as any).users;
       }
       
       if (usersArray.length > 0) {
         setUsers(usersArray);
-        // Set all users as assignable users
+        // Format assignable users with proper hierarchy filtering
         const assignableUsersList = usersArray.map((user: any) => ({
           id: user.id,
-          name: user.full_name || user.username || user.name,
+          name: user.name || user.username,
+          username: user.username,
           email: user.email,
-          role: user.role || 'User'
+          role: user.role || 'User',
+          display_name: user.display_name || `${user.name || user.username} (${user.role})`
         }));
         setAssignableUsers(assignableUsersList);
-        console.log(`✅ Set ${assignableUsersList.length} assignable users:`, assignableUsersList);
+        console.log(`✅ Set ${assignableUsersList.length} assignable users based on hierarchy:`, assignableUsersList);
       } else {
         setUsers([]);
         setAssignableUsers([]);
-        console.log(`⚠️ No users loaded or invalid format:`, dbUsers);
+        console.log(`⚠️ No assignable users loaded or invalid format:`, assignableUsersResponse);
       }
     } catch (error) {
-      console.error('❌ Error loading users:', error);
+      console.error('❌ Error loading assignable users:', error);
       setUsers([]);
       setAssignableUsers([]);
     }

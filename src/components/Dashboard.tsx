@@ -57,7 +57,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         });
         
         setCrmStats({
-          hotLeads: dashboardData.activeLeads || 0,
+          hotLeads: 0, // Will be calculated correctly in loadRecentActivities
           avgResponseTime: parseFloat(dashboardData.responseTime) || 0,
           pipelineValue: (dashboardData.activeLeads || 0) * 250000,
           monthlyConversions: Math.round((dashboardData.totalLeads || 0) * ((dashboardData.conversionRate || 0) / 100)),
@@ -85,6 +85,15 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       const apiClient = getApiClient();
       const leadsData = await apiClient.getLeads();
       const leads = Array.isArray(leadsData) ? leadsData : [];
+      
+      // Calculate actual hot leads count from real data
+      const actualHotLeads = leads.filter((lead: any) => lead.status === 'hot').length;
+      
+      // Update CRM stats with correct hot leads count
+      setCrmStats(prevStats => ({
+        ...prevStats,
+        hotLeads: actualHotLeads
+      }));
       
       // Create activity entries from recent leads data
       const activities = leads.slice(0, 4).map((lead: any, index: number) => ({
