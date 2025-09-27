@@ -13,6 +13,7 @@ import {
   Clock,
   CheckCircle,
   Edit3,
+  Edit2,
   Target,
   Calendar,
   Activity,
@@ -64,6 +65,8 @@ interface AssignableUser {
   name: string;
   email: string;
   role: string;
+  username?: string;
+  display_name?: string;
 }
 
 interface NewLeadForm {
@@ -119,6 +122,12 @@ const LeadsManagement: React.FC = () => {
   const [showBulkTransferModal, setShowBulkTransferModal] = useState(false);
   const [bulkTransferCounselor, setBulkTransferCounselor] = useState('');
   const [bulkTransferReason, setBulkTransferReason] = useState('');
+  
+  // Team Workload Distribution states
+  const [selectedTeamMember, setSelectedTeamMember] = useState<any | null>(null);
+  const [teamMemberLeads, setTeamMemberLeads] = useState<Lead[]>([]);
+  const [showTeamMemberModal, setShowTeamMemberModal] = useState(false);
+  const [loadingTeamMemberLeads, setLoadingTeamMemberLeads] = useState(false);
 
   // Dynamic Configuration States - From API
   const [statusOptions, setStatusOptions] = useState(STATUS_OPTIONS);
@@ -398,6 +407,80 @@ const LeadsManagement: React.FC = () => {
       console.error('❌ Error loading assignable users:', error);
       setUsers([]);
       setAssignableUsers([]);
+    }
+  };
+
+  // Team Member Functions
+  const handleTeamMemberClick = async (teamMember: any) => {
+    setSelectedTeamMember(teamMember);
+    setShowTeamMemberModal(true);
+    setLoadingTeamMemberLeads(true);
+    
+    try {
+      const apiClient = getApiClient();
+      // Get leads for this specific user and their team
+      const response = await apiClient.getUserLeads(teamMember.id, true);
+      
+      const leadsData = (response as any)?.leads || [];
+      const transformedLeads = leadsData.map((lead: any) => ({
+        id: lead.id || lead._id || String(Math.random()),
+        fullName: lead.name || lead.fullName || 'Unknown',
+        email: lead.email || '',
+        phone: lead.phone || '',
+        country: lead.country || 'Unknown',
+        branch: lead.branch || 'Main',
+        qualification: lead.qualification || 'Not specified',
+        source: lead.source || 'manual',
+        course: lead.course || 'MBBS',
+        status: lead.status || 'fresh',
+        assignedTo: lead.assigned_to || lead.assignedTo || 'Unassigned',
+        followUp: lead.follow_up || lead.followUp || '',
+        createdAt: lead.created_at || lead.createdAt || new Date().toISOString(),
+        updatedAt: lead.updated_at || lead.updatedAt || new Date().toISOString(),
+        notes: Array.isArray(lead.notes) ? lead.notes : []
+      }));
+      
+      setTeamMemberLeads(transformedLeads);
+      console.log(`📊 Loaded ${transformedLeads.length} leads for ${teamMember.name}`);
+      
+    } catch (error) {
+      console.error('❌ Error loading team member leads:', error);
+      setTeamMemberLeads([]);
+    } finally {
+      setLoadingTeamMemberLeads(false);
+    }
+  };
+
+  const handleTransferTeamMemberLead = async (leadId: string, targetUserId: string) => {
+    try {
+      const apiClient = getApiClient();
+      const targetUser = assignableUsers.find(u => u.id === targetUserId);
+      
+      if (!targetUser) {
+        alert('Target user not found');
+        return;
+      }
+      
+      // Update the lead assignment
+      await apiClient.updateLead(leadId, {
+        assignedTo: targetUser.username,
+        assigned_to: targetUser.username,
+        assignedcounselor: targetUser.username
+      });
+      
+      // Refresh the team member leads
+      if (selectedTeamMember) {
+        await handleTeamMemberClick(selectedTeamMember);
+      }
+      
+      // Refresh main leads list
+      await loadLeads();
+      
+      notify.success('Lead Transferred', `Lead transferred to ${targetUser.name} successfully`);
+      
+    } catch (error) {
+      console.error('❌ Error transferring lead:', error);
+      notify.error('Transfer Failed', 'Failed to transfer lead');
     }
   };
 
@@ -1594,7 +1677,7 @@ const LeadsManagement: React.FC = () => {
           </div>
         </div>
 
-        {/* Assignment Distribution Chart */}
+        {/* Team Workload Distribution - Enhanced with User Management Integration */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
             <Users className="w-5 h-5 mr-2 text-indigo-500" />
@@ -1602,18 +1685,39 @@ const LeadsManagement: React.FC = () => {
           </h3>
           
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {Object.entries(advancedMetrics.assignmentDistribution).map(([counselor, count]) => (
-              <div key={counselor} className="text-center">
-                <div className="bg-indigo-100 rounded-lg p-4 mb-2">
-                  <User className="w-8 h-8 text-indigo-600 mx-auto mb-2" />
-                  <span className="text-2xl font-bold text-indigo-800">{count}</span>
+            {assignableUsers.map((user) => {
+              const userLeadCount = leads.filter(lead => 
+                lead.assignedTo === user.username || lead.assignedTo === user.name
+              ).length;
+              
+              return (
+                <div 
+                  key={user.id} 
+                  className="text-center cursor-pointer hover:bg-gray-50 rounded-lg p-2 transition-colors duration-200"
+                  onClick={() => handleTeamMemberClick(user)}
+                  title={`Click to view ${user.name}'s leads`}
+                >
+                  <div className="bg-indigo-100 rounded-lg p-4 mb-2 hover:bg-indigo-200 transition-colors">
+                    <User className="w-8 h-8 text-indigo-600 mx-auto mb-2" />
+                    <span className="text-2xl font-bold text-indigo-800">{userLeadCount}</span>
+                  </div>
+                  <p className="text-xs text-gray-600 truncate" title={user.name}>
+                    {user.name}
+                  </p>
+                  <p className="text-xs text-gray-400 truncate" title={user.role}>
+                    {user.role}
+                  </p>
                 </div>
-                <p className="text-xs text-gray-600 truncate" title={counselor}>
-                  {counselor}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
+          
+          {assignableUsers.length === 0 && (
+            <div className="text-center py-8">
+              <Users className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+              <p className="text-sm text-gray-600">No team members found</p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -3057,6 +3161,147 @@ const LeadsManagement: React.FC = () => {
           >
             Add Your First Lead
           </button>
+        </div>
+      )}
+
+      {/* Team Member Modal */}
+      {showTeamMemberModal && selectedTeamMember && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-6xl max-h-[90vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                  <User className="w-5 h-5 text-indigo-600" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    {selectedTeamMember.name}'s Leads
+                  </h2>
+                  <p className="text-sm text-gray-600">
+                    {selectedTeamMember.role} • {teamMemberLeads.length} leads
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setShowTeamMemberModal(false);
+                  setSelectedTeamMember(null);
+                  setTeamMemberLeads([]);
+                }}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="flex-1 overflow-hidden">
+              {loadingTeamMemberLeads ? (
+                <div className="flex items-center justify-center h-64">
+                  <div className="flex flex-col items-center space-y-4">
+                    <RefreshCw className="w-8 h-8 text-blue-500 animate-spin" />
+                    <p className="text-gray-600">Loading {selectedTeamMember.name}'s leads...</p>
+                  </div>
+                </div>
+              ) : teamMemberLeads.length === 0 ? (
+                <div className="flex items-center justify-center h-64">
+                  <div className="text-center">
+                    <Target className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No leads found</h3>
+                    <p className="text-gray-500">
+                      {selectedTeamMember.name} doesn't have any leads assigned yet.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="overflow-auto h-full">
+                  <div className="grid gap-4 p-6">
+                    {teamMemberLeads.map((lead) => (
+                      <div key={lead.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-3 mb-2">
+                              <h4 className="text-lg font-semibold text-gray-900">{lead.fullName}</h4>
+                              <span className={`px-2 py-1 text-xs rounded-full ${
+                                lead.status === 'converted' ? 'bg-green-100 text-green-800' :
+                                lead.status === 'hot' ? 'bg-red-100 text-red-800' :
+                                lead.status === 'warm' ? 'bg-yellow-100 text-yellow-800' :
+                                lead.status === 'cold' ? 'bg-blue-100 text-blue-800' :
+                                'bg-gray-100 text-gray-800'
+                              }`}>
+                                {lead.status}
+                              </span>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
+                              <div>
+                                <p className="text-xs text-gray-500">Email</p>
+                                <p className="text-sm text-gray-900">{lead.email || 'N/A'}</p>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">Phone</p>
+                                <p className="text-sm text-gray-900">{lead.phone || 'N/A'}</p>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">Course</p>
+                                <p className="text-sm text-gray-900">{lead.course}</p>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">Source</p>
+                                <p className="text-sm text-gray-900 capitalize">{lead.source}</p>
+                              </div>
+                            </div>
+                            
+                            {lead.followUp && (
+                              <div className="mb-3">
+                                <p className="text-xs text-gray-500">Follow-up Date</p>
+                                <p className="text-sm text-gray-900">{new Date(lead.followUp).toLocaleDateString()}</p>
+                              </div>
+                            )}
+                          </div>
+                          
+                          <div className="flex flex-col space-y-2 ml-4">
+                            <button
+                              onClick={() => {
+                                // Edit functionality - you can implement this later
+                                console.log('Edit lead:', lead.id);
+                              }}
+                              className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
+                            >
+                              <Edit2 className="w-3 h-3 inline mr-1" />
+                              Edit
+                            </button>
+                            
+                            <select
+                              className="text-xs px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              onChange={(e) => {
+                                if (e.target.value) {
+                                  handleTransferTeamMemberLead(lead.id, e.target.value);
+                                  e.target.value = ''; // Reset selection
+                                }
+                              }}
+                              defaultValue=""
+                            >
+                              <option value="">Transfer to...</option>
+                              {assignableUsers
+                                .filter(user => user.id !== selectedTeamMember.id)
+                                .map(user => (
+                                  <option key={user.id} value={user.id}>
+                                    {user.name}
+                                  </option>
+                                ))
+                              }
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>
