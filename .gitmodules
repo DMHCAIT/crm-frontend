@@ -1,0 +1,6 @@
+[submodule "crm-frontend-main"]
+	path = crm-frontend-main
+	url = https://github.com/DMHCAIT/crm-frontend.git
+[submodule "crm-backend-main"]
+	path = crm-backend-main
+	url = https://github.com/DMHCAIT/crm-backend.git
