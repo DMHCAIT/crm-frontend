@@ -41,6 +41,18 @@ const UserManagement: React.FC = () => {
   const [selectedTeam, setSelectedTeam] = useState('all');
   const [showTeamComparison, setShowTeamComparison] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState('all');
+  const [showUserDetailModal, setShowUserDetailModal] = useState(false);
+  const [userDetailData, setUserDetailData] = useState<{
+    user: DatabaseUser | null;
+    subordinates: any[];
+    leads: any[];
+    loading: boolean;
+  }>({
+    user: null,
+    subordinates: [],
+    leads: [],
+    loading: false
+  });
 
   // Branch options
   const branches = [
@@ -280,10 +292,44 @@ const UserManagement: React.FC = () => {
     setShowEditModal(true);
   };
 
-  const handleViewUser = (user: DatabaseUser) => {
+  const handleViewUser = async (user: DatabaseUser) => {
     setSelectedUser(user);
-    // Could open a view modal or navigate to user detail page
-    alert(`Viewing user: ${user.name}\nEmail: ${user.email}\nRole: ${user.role}`);
+    setUserDetailData({
+      user,
+      subordinates: [],
+      leads: [],
+      loading: true
+    });
+    setShowUserDetailModal(true);
+
+    try {
+      const apiClient = getApiClient();
+      
+      // Load subordinates and leads in parallel
+      const [subordinatesResponse, leadsResponse] = await Promise.all([
+        apiClient.getUserSubordinates(user.id).catch(() => ({ subordinates: [] })),
+        apiClient.getUserLeads(user.id, true).catch(() => ({ leads: [] }))
+      ]);
+
+      const subordinates = (subordinatesResponse as any)?.subordinates || [];
+      const leads = (leadsResponse as any)?.leads || [];
+
+      setUserDetailData({
+        user,
+        subordinates,
+        leads,
+        loading: false
+      });
+      
+      console.log(`📊 Loaded ${subordinates.length} subordinates and ${leads.length} leads for ${user.name}`);
+      
+    } catch (error) {
+      console.error('❌ Error loading user details:', error);
+      setUserDetailData(prev => ({
+        ...prev,
+        loading: false
+      }));
+    }
   };
 
   const handleUserSettings = async (user: DatabaseUser) => {
@@ -1114,6 +1160,21 @@ const UserManagement: React.FC = () => {
           roleHierarchy={roleHierarchy}
         />
       )}
+
+      {/* User Detail Modal */}
+      {showUserDetailModal && userDetailData.user && (
+        <UserDetailModal
+          isOpen={showUserDetailModal}
+          onClose={() => setShowUserDetailModal(false)}
+          userData={userDetailData}
+          onTransferLead={(leadId: string, targetUserId: string) => {
+            // Handle lead transfer
+            console.log(`Transferring lead ${leadId} to user ${targetUserId}`);
+          }}
+          users={users}
+          roleHierarchy={roleHierarchy}
+        />
+      )}
     </div>
   );
 };
@@ -1427,6 +1488,279 @@ const UserModal: React.FC<UserModalProps> = ({
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  );
+};
+
+// User Detail Modal Component
+interface UserDetailModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  userData: {
+    user: DatabaseUser | null;
+    subordinates: any[];
+    leads: any[];
+    loading: boolean;
+  };
+  onTransferLead: (leadId: string, targetUserId: string) => void;
+  users: DatabaseUser[];
+  roleHierarchy: any;
+}
+
+const UserDetailModal: React.FC<UserDetailModalProps> = ({
+  isOpen,
+  onClose,
+  userData,
+  onTransferLead,
+  users,
+  roleHierarchy
+}) => {
+  const [activeTab, setActiveTab] = useState<'overview' | 'subordinates' | 'leads'>('overview');
+  const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
+
+  if (!isOpen || !userData.user) return null;
+
+  const { user, subordinates, leads, loading } = userData;
+
+  const handleTransferSelectedLeads = (targetUserId: string) => {
+    selectedLeads.forEach(leadId => {
+      onTransferLead(leadId, targetUserId);
+    });
+    setSelectedLeads([]);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+          <div className="absolute inset-0 bg-gray-500 opacity-75" onClick={onClose}></div>
+        </div>
+
+        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+          {/* Header */}
+          <div className="bg-white px-4 pt-5 pb-4 sm:p-6">
+            <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+              <div className="flex items-center">
+                <div className="flex-shrink-0 mr-4">
+                  <div className="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xl">
+                    {user.name.charAt(0)}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900">{user.name}</h3>
+                  <p className="text-sm text-gray-600">{user.email}</p>
+                  <p className="text-sm text-blue-600 font-medium">
+                    {roleHierarchy[user.role]?.label || user.role}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Tabs */}
+            <div className="mt-4">
+              <nav className="flex space-x-8">
+                <button
+                  onClick={() => setActiveTab('overview')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'overview'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Overview
+                </button>
+                <button
+                  onClick={() => setActiveTab('subordinates')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'subordinates'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Team ({subordinates.length})
+                </button>
+                <button
+                  onClick={() => setActiveTab('leads')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'leads'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Leads ({leads.length})
+                </button>
+              </nav>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="bg-gray-50 px-4 py-5 sm:p-6 max-h-96 overflow-y-auto">
+            {loading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <span className="ml-2 text-gray-600">Loading...</span>
+              </div>
+            ) : (
+              <>
+                {activeTab === 'overview' && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-white p-4 rounded-lg border">
+                        <h4 className="font-medium text-gray-900">Contact Information</h4>
+                        <div className="mt-2 space-y-2 text-sm text-gray-600">
+                          <p><span className="font-medium">Email:</span> {user.email}</p>
+                          <p><span className="font-medium">Phone:</span> {user.phone || 'Not provided'}</p>
+                          <p><span className="font-medium">Department:</span> {user.department || 'Not specified'}</p>
+                          <p><span className="font-medium">Location:</span> {user.location || 'Not specified'}</p>
+                        </div>
+                      </div>
+                      <div className="bg-white p-4 rounded-lg border">
+                        <h4 className="font-medium text-gray-900">Role & Hierarchy</h4>
+                        <div className="mt-2 space-y-2 text-sm text-gray-600">
+                          <p><span className="font-medium">Role:</span> {roleHierarchy[user.role]?.label || user.role}</p>
+                          <p><span className="font-medium">Status:</span> 
+                            <span className={`ml-1 px-2 py-1 rounded-full text-xs ${
+                              user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                            }`}>
+                              {user.status}
+                            </span>
+                          </p>
+                          <p><span className="font-medium">Team Size:</span> {subordinates.length} direct reports</p>
+                          <p><span className="font-medium">Total Leads:</span> {leads.length}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'subordinates' && (
+                  <div className="space-y-3">
+                    {subordinates.length === 0 ? (
+                      <p className="text-gray-500 text-center py-8">No direct reports</p>
+                    ) : (
+                      subordinates.map((subordinate: any) => (
+                        <div key={subordinate.id} className="bg-white p-4 rounded-lg border flex items-center justify-between">
+                          <div className="flex items-center">
+                            <div className="w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center text-white font-medium mr-3">
+                              {subordinate.name.charAt(0)}
+                            </div>
+                            <div>
+                              <h5 className="font-medium text-gray-900">{subordinate.name}</h5>
+                              <p className="text-sm text-gray-600">{subordinate.email}</p>
+                              <p className="text-xs text-blue-600">{roleHierarchy[subordinate.role]?.label || subordinate.role}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              subordinate.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                            }`}>
+                              {subordinate.status}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
+
+                {activeTab === 'leads' && (
+                  <div className="space-y-3">
+                    {leads.length === 0 ? (
+                      <p className="text-gray-500 text-center py-8">No leads assigned</p>
+                    ) : (
+                      <div>
+                        <div className="mb-4 flex items-center justify-between">
+                          <p className="text-sm text-gray-600">
+                            {selectedLeads.length > 0 && (
+                              <span className="font-medium text-blue-600">
+                                {selectedLeads.length} selected
+                              </span>
+                            )}
+                          </p>
+                          {selectedLeads.length > 0 && (
+                            <select
+                              onChange={(e) => {
+                                if (e.target.value) {
+                                  handleTransferSelectedLeads(e.target.value);
+                                }
+                              }}
+                              className="text-sm border rounded px-2 py-1"
+                            >
+                              <option value="">Transfer selected to...</option>
+                              {subordinates.map((sub: any) => (
+                                <option key={sub.id} value={sub.id}>
+                                  {sub.name} ({sub.role})
+                                </option>
+                              ))}
+                            </select>
+                          )}
+                        </div>
+                        
+                        {leads.map((lead: any) => (
+                          <div key={lead.id} className="bg-white p-4 rounded-lg border">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center">
+                                <input
+                                  type="checkbox"
+                                  checked={selectedLeads.includes(lead.id)}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      setSelectedLeads([...selectedLeads, lead.id]);
+                                    } else {
+                                      setSelectedLeads(selectedLeads.filter(id => id !== lead.id));
+                                    }
+                                  }}
+                                  className="mr-3"
+                                />
+                                <div>
+                                  <h5 className="font-medium text-gray-900">{lead.fullName}</h5>
+                                  <p className="text-sm text-gray-600">{lead.email}</p>
+                                  <p className="text-xs text-gray-500">
+                                    Status: <span className="font-medium">{lead.status}</span> | 
+                                    Course: {lead.course} | 
+                                    Updated: {new Date(lead.updated_at).toLocaleDateString()}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                  lead.status === 'hot' ? 'bg-red-100 text-red-800' :
+                                  lead.status === 'warm' ? 'bg-yellow-100 text-yellow-800' :
+                                  lead.status === 'cold' ? 'bg-blue-100 text-blue-800' :
+                                  'bg-gray-100 text-gray-800'
+                                }`}>
+                                  {lead.status}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <button
+              type="button"
+              className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+              onClick={onClose}
+            >
+              Close
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -413,6 +413,16 @@ class ProductionApiClient {
     return this.request('/assignable-users');
   }
 
+  // Get subordinates for a specific user (reporting hierarchy)
+  async getUserSubordinates(userId: string) {
+    return this.request(`/users/${userId}/subordinates`);
+  }
+
+  // Get leads for a specific user and their team
+  async getUserLeads(userId: string, includeTeam: boolean = true) {
+    return this.request(`/users/${userId}/leads?includeTeam=${includeTeam}`);
+  }
+
   async createUser(userData: any) {
     return this.request('/users', {
       method: 'POST',
