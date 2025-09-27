@@ -1,9 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd crm-frontend-main && npm ci && npm run build",
-  "devCommand": "cd crm-frontend-main && npm run dev",
-  "installCommand": "cd crm-frontend-main && npm ci",
-  "outputDirectory": "crm-frontend-main/dist",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm ci",
+  "outputDirectory": "dist",
   "framework": "vite",
 
   "rewrites": [
