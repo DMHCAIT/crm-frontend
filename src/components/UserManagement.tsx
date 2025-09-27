@@ -37,7 +37,7 @@ const UserManagement: React.FC = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<DatabaseUser | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'list' | 'teams'>('teams');
+  const [viewMode, setViewMode] = useState<'list' | 'teams' | 'hierarchy'>('teams');
   const [selectedTeam, setSelectedTeam] = useState('all');
   const [showTeamComparison, setShowTeamComparison] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState('all');
@@ -437,6 +437,17 @@ const UserManagement: React.FC = () => {
                 Team View
               </button>
               <button
+                onClick={() => setViewMode('hierarchy')}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  viewMode === 'hierarchy' 
+                    ? 'bg-white text-gray-900 shadow-sm' 
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <BarChart3 className="w-4 h-4 mr-1.5 inline" />
+                Org Chart
+              </button>
+              <button
                 onClick={() => setViewMode('list')}
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                   viewMode === 'list' 
@@ -752,6 +763,27 @@ const UserManagement: React.FC = () => {
                                   </span>
                                 </div>
                               )}
+                              
+                              {/* Show Direct Reports */}
+                              {(() => {
+                                const directReports = users.filter(u => u.reports_to === user.id);
+                                if (directReports.length > 0) {
+                                  return (
+                                    <div className="mt-2 text-sm text-gray-600">
+                                      <span className="flex items-center">
+                                        <Users className="w-4 h-4 mr-1 text-green-500" />
+                                        Team: <span className="ml-1 font-medium text-green-700">
+                                          {directReports.length} direct report{directReports.length > 1 ? 's' : ''}
+                                        </span>
+                                      </span>
+                                      <div className="ml-5 mt-1 text-xs text-gray-500">
+                                        {directReports.map(report => report.name).join(', ')}
+                                      </div>
+                                    </div>
+                                  );
+                                }
+                                return null;
+                              })()}
                             </div>
                           </div>
 
@@ -795,6 +827,128 @@ const UserManagement: React.FC = () => {
               )
             })
           )}
+        </div>
+      ) : viewMode === 'hierarchy' ? (
+        // Organizational Hierarchy View
+        <div className="bg-white rounded-lg shadow">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h3 className="text-lg font-medium text-gray-900 flex items-center">
+              <BarChart3 className="w-5 h-5 mr-2 text-blue-600" />
+              Organizational Hierarchy
+            </h3>
+            <p className="text-sm text-gray-600 mt-1">Complete reporting structure and team relationships</p>
+          </div>
+
+          <div className="p-6">
+            {(() => {
+              // Build hierarchy tree
+              const buildHierarchyTree = () => {
+                const userMap = new Map();
+                filteredUsers.forEach(user => userMap.set(user.id, { ...user, children: [] }));
+                
+                const roots: any[] = [];
+                filteredUsers.forEach(user => {
+                  if (user.reports_to && userMap.has(user.reports_to)) {
+                    userMap.get(user.reports_to).children.push(userMap.get(user.id));
+                  } else {
+                    roots.push(userMap.get(user.id));
+                  }
+                });
+                
+                return roots;
+              };
+
+              const renderHierarchyNode = (user: any, level = 0) => {
+                const directReports = user.children || [];
+                const hasReports = directReports.length > 0;
+                
+                return (
+                  <div key={user.id} className={`${level > 0 ? 'ml-8 border-l-2 border-gray-200 pl-4' : ''} mb-4`}>
+                    <div className="flex items-center p-3 bg-gray-50 rounded-lg border">
+                      <div className="flex-shrink-0 mr-3">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                          level === 0 ? 'bg-purple-500' : 
+                          level === 1 ? 'bg-blue-500' : 
+                          level === 2 ? 'bg-green-500' : 
+                          level === 3 ? 'bg-yellow-500' : 'bg-gray-500'
+                        } text-white font-semibold`}>
+                          {user.name?.charAt(0) || 'U'}
+                        </div>
+                      </div>
+                      
+                      <div className="flex-grow">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-semibold text-gray-900">{user.name}</h4>
+                            <p className="text-sm text-gray-600">
+                              {roleHierarchy[user.role as keyof typeof roleHierarchy]?.label || user.role}
+                            </p>
+                            <p className="text-xs text-gray-500">{user.email}</p>
+                          </div>
+                          
+                          <div className="text-right">
+                            <div className="flex items-center space-x-2">
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                user.status === 'active' 
+                                  ? 'bg-green-100 text-green-800' 
+                                  : 'bg-red-100 text-red-800'
+                              }`}>
+                                {user.status}
+                              </span>
+                              
+                              {hasReports && (
+                                <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
+                                  {directReports.length} report{directReports.length > 1 ? 's' : ''}
+                                </span>
+                              )}
+                            </div>
+                            
+                            <div className="mt-1 flex space-x-1">
+                              <button 
+                                onClick={() => handleViewUser(user)}
+                                className="p-1 text-gray-400 hover:text-gray-600"
+                                title="View User"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              
+                              {permissions.canEditUsers && (
+                                <button 
+                                  onClick={() => handleEditUser(user)}
+                                  className="p-1 text-gray-400 hover:text-gray-600"
+                                  title="Edit User"
+                                >
+                                  <Edit3 className="w-4 h-4" />
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Render children */}
+                    {directReports.map((child: any) => renderHierarchyNode(child, level + 1))}
+                  </div>
+                );
+              };
+
+              const hierarchyTree = buildHierarchyTree();
+              
+              return (
+                <div className="space-y-4">
+                  {hierarchyTree.length === 0 ? (
+                    <div className="text-center py-8">
+                      <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-600">No hierarchy data available</p>
+                    </div>
+                  ) : (
+                    hierarchyTree.map(root => renderHierarchyNode(root))
+                  )}
+                </div>
+              );
+            })()}
+          </div>
         </div>
       ) : (
         // Traditional list view
