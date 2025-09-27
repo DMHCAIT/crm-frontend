@@ -82,12 +82,23 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
   const loadRecentActivities = async () => {
     try {
+      console.log(`🔍 Dashboard: Loading leads for user: ${user?.username} (${user?.email})`);
+      
       const apiClient = getApiClient();
       const leadsData = await apiClient.getLeads();
       const leads = Array.isArray(leadsData) ? leadsData : [];
       
+      console.log(`📋 Dashboard: Received ${leads.length} leads from API`);
+      console.log('📋 Dashboard: Sample leads:', leads.slice(0, 3).map(lead => ({
+        name: lead.fullName || lead.name,
+        assignedTo: lead.assigned_to || lead.assignedTo || lead.assignedcounselor,
+        status: lead.status
+      })));
+      
       // Calculate actual hot leads count from real data
       const actualHotLeads = leads.filter((lead: any) => lead.status === 'hot').length;
+      
+      console.log(`🔥 Dashboard: Found ${actualHotLeads} hot leads out of ${leads.length} total leads`);
       
       // Update CRM stats with correct hot leads count
       setCrmStats(prevStats => ({
@@ -110,9 +121,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         color: 'text-blue-600'
       }));
       
+      console.log(`📋 Dashboard: Created ${activities.length} activity entries`);
       setRecentActivities(activities);
     } catch (error) {
-      console.warn('⚠️ Failed to load recent activities:', error);
+      console.error('❌ Dashboard: Failed to load recent activities:', error);
       setRecentActivities([]);
     }
   };

@@ -91,7 +91,7 @@ const UserProfile: React.FC = () => {
       
       try {
         console.log('🔍 Fetching real user profile from API...');
-        const response = await apiClient.getCurrentUser();
+        const response: any = await apiClient.getCurrentUser();
         
         if (response && response.user) {
           console.log('✅ Real user profile loaded:', response.user.name);
