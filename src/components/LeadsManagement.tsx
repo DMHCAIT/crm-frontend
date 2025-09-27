@@ -2567,8 +2567,8 @@ const LeadsManagement: React.FC = () => {
                             >
                               <option value="">Unassigned</option>
                               {assignableUsers.map(user => (
-                                <option key={user.id} value={user.name || user.email}>
-                                  {user.name || user.email} ({user.role})
+                                <option key={user.id} value={user.username || user.name || user.email}>
+                                  {user.name} ({user.role})
                                 </option>
                               ))}
                             </select>
@@ -2735,8 +2735,10 @@ const LeadsManagement: React.FC = () => {
                 </label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                   <option value="">Select Counselor</option>
-                  {users.map((user: any) => (
-                    <option key={user.id} value={user.email}>{user.name}</option>
+                  {assignableUsers.map((user) => (
+                    <option key={user.id} value={user.username || user.name || user.email}>
+                      {user.name} ({user.role})
+                    </option>
                   ))}
                 </select>
               </div>
@@ -2843,8 +2845,10 @@ const LeadsManagement: React.FC = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">Select Counselor</option>
-                  {users.map((user: any) => (
-                    <option key={user.id} value={user.email}>{user.name}</option>
+                  {assignableUsers.map((user) => (
+                    <option key={user.id} value={user.username || user.name || user.email}>
+                      {user.name} ({user.role})
+                    </option>
                   ))}
                 </select>
               </div>
@@ -3093,8 +3097,8 @@ const LeadsManagement: React.FC = () => {
                   >
                     <option value="">Auto-assign to me</option>
                     {assignableUsers.map(user => (
-                      <option key={user.id} value={user.name || user.email}>
-                        {user.name || user.email} ({user.role})
+                      <option key={user.id} value={user.username || user.name || user.email}>
+                        {user.name} ({user.role})
                       </option>
                     ))}
                   </select>
