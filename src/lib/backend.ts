@@ -271,11 +271,11 @@ class ProductionApiClient {
   // Dashboard stats - Use correct endpoint
   async getDashboardStats() {
     try {
-      // Use the dashboard stats endpoint that now exists
-      const response = await this.request('/dashboard/stats') as { data: any };
+      // Use the simpler dashboard endpoint that we fixed
+      const response = await this.request('/dashboard') as any;
       return response;
     } catch (error) {
-      console.warn('Dashboard stats endpoint not available, using analytics fallback');
+      console.warn('Dashboard endpoint not available, using analytics fallback');
       try {
         // Fallback to analytics endpoint
         const response = await this.request('/analytics/realtime') as {
