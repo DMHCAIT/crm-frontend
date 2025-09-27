@@ -1,0 +1,26 @@
+{
+  "buildCommand": "cd crm-frontend-main && npm run build",
+  "outputDirectory": "crm-frontend-main/dist",
+  "installCommand": "cd crm-frontend-main && npm install",
+  "framework": "vite",
+  "rootDirectory": "crm-frontend-main",
+  "env": {
+    "VITE_SUPABASE_URL": "https://sbvgmunzrdcbvngiodvy.supabase.co",
+    "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNidmdtdW56cmRjYnZuZ2lvZHZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU2OTY0NDcsImV4cCI6MjA1MTI3MjQ0N30.LKEGsJ_4XLG0PQv3bGLKP3AGOWGoDUrWxWVQ-lJ_Jhg",
+    "VITE_API_BASE_URL": "https://crm-backend-fh34.onrender.com",
+    "VITE_API_BACKEND_URL": "https://crm-backend-fh34.onrender.com/api",
+    "VITE_APP_NAME": "DMHCA CRM",
+    "VITE_APP_VERSION": "2.1.0",
+    "VITE_ENVIRONMENT": "production",
+    "VITE_ENABLE_REAL_TIME": "true",
+    "VITE_ENABLE_NOTIFICATIONS": "true",
+    "VITE_DEBUG_MODE": "false",
+    "NODE_ENV": "production"
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
