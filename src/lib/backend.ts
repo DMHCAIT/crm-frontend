@@ -273,7 +273,8 @@ class ProductionApiClient {
     try {
       // Use the simpler dashboard endpoint that we fixed
       const response = await this.request('/dashboard') as any;
-      return response;
+      // The backend returns data directly, but frontend expects { data: ... }
+      return { data: response };
     } catch (error) {
       console.warn('Dashboard endpoint not available, using analytics fallback');
       try {
