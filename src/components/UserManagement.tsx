@@ -381,11 +381,13 @@ const UserManagement: React.FC = () => {
       const apiClient = getApiClient();
       
       console.log('💾 Saving user data:', userData);
+      console.log('🔍 Reports to field specifically:', userData.reports_to);
       
       if (selectedUser) {
         // Update existing user using proper backend API
         const result = await apiClient.updateUser(selectedUser.id, userData);
         console.log('✅ User updated successfully:', result);
+        console.log('🔍 Updated user reports_to:', result?.user?.reports_to);
       } else {
         // Create new user using proper backend API 
         const result = await apiClient.createUser(userData);
