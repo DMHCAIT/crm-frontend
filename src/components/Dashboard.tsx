@@ -25,7 +25,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     totalLeads: 0,
     activeStudents: 0,
     revenue: 0,
-    conversionRate: 0
+    conversionRate: 0,
+    leadsUpdatedToday: 0
   });
   const [crmStats, setCrmStats] = useState({
     hotLeads: 0,
@@ -53,7 +54,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           totalLeads: dashboardData.totalLeads || 0,
           activeStudents: dashboardData.activeStudents || 0,
           revenue: (dashboardData.activeStudents || 0) * 250000,
-          conversionRate: dashboardData.conversionRate || 0
+          conversionRate: dashboardData.conversionRate || 0,
+          leadsUpdatedToday: dashboardData.leadsUpdatedToday || 0
         });
         
         setCrmStats({
@@ -253,15 +255,28 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Main Stats Grid - Enhanced Visibility */}
+      {/* Main Stats Grid - User-Specific Data */}
+      <div className="mb-4">
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <Activity className="w-4 h-4" />
+          <span>Showing data for: <strong>{user?.username || 'Your Account'}</strong></span>
+          {user?.role !== 'super_admin' && (
+            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">User-Specific View</span>
+          )}
+          {user?.role === 'super_admin' && (
+            <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">System-Wide View</span>
+          )}
+        </div>
+      </div>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Leads</p>
+              <p className="text-sm font-medium text-gray-600">My Leads</p>
               <p className="text-3xl font-bold text-blue-600">{stats.totalLeads}</p>
               <p className="text-sm text-gray-500 mt-1">
-                {stats.totalLeads === 0 ? 'No leads yet - start adding!' : 'Total leads in system'}
+                {stats.totalLeads === 0 ? 'No leads assigned yet' : `${user?.role === 'super_admin' ? 'Total system leads' : 'Assigned to you'}`}
               </p>
             </div>
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -273,14 +288,14 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Active Students</p>
-              <p className="text-3xl font-bold text-green-600">{stats.activeStudents}</p>
+              <p className="text-sm font-medium text-gray-600">Updated Today</p>
+              <p className="text-3xl font-bold text-green-600">{stats.leadsUpdatedToday}</p>
               <p className="text-sm text-gray-500 mt-1">
-                {stats.activeStudents === 0 ? 'Ready for enrollment' : 'Currently enrolled'}
+                {stats.leadsUpdatedToday === 0 ? 'No updates today' : `${user?.role === 'super_admin' ? 'System updates' : 'Your updates'}`}
               </p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <GraduationCap className="w-6 h-6 text-green-600" />
+              <Activity className="w-6 h-6 text-green-600" />
             </div>
           </div>
         </div>
@@ -288,14 +303,14 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Revenue</p>
-              <p className="text-3xl font-bold text-yellow-600">₹{(stats.revenue / 1000).toFixed(0)}K</p>
+              <p className="text-sm font-medium text-gray-600">Active Students</p>
+              <p className="text-3xl font-bold text-yellow-600">{stats.activeStudents}</p>
               <p className="text-sm text-gray-500 mt-1">
-                {stats.revenue === 0 ? 'Start generating revenue' : 'Estimated revenue'}
+                {stats.activeStudents === 0 ? 'Ready for enrollment' : `${user?.role === 'super_admin' ? 'Total enrolled' : 'Your enrollments'}`}
               </p>
             </div>
             <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <DollarSign className="w-6 h-6 text-yellow-600" />
+              <GraduationCap className="w-6 h-6 text-yellow-600" />
             </div>
           </div>
         </div>
@@ -306,7 +321,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
               <p className="text-sm font-medium text-gray-600">Conversion Rate</p>
               <p className="text-3xl font-bold text-purple-600">{stats.conversionRate}%</p>
               <p className="text-sm text-gray-500 mt-1">
-                {stats.conversionRate === 0 ? 'Track your progress' : 'Leads to students'}
+                {stats.conversionRate === 0 ? 'Track your progress' : `${user?.role === 'super_admin' ? 'System average' : 'Your performance'}`}
               </p>
             </div>
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
