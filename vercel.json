@@ -1,8 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd crm-frontend-main && npm ci && npm run build",
+  "buildCommand": "cd crm-frontend-main && rm -rf node_modules package-lock.json && npm install --include=optional && npm run build",
   "devCommand": "cd crm-frontend-main && npm run dev",
-  "installCommand": "cd crm-frontend-main && npm ci",
+  "installCommand": "cd crm-frontend-main && rm -rf node_modules package-lock.json && npm install --include=optional",
   "outputDirectory": "crm-frontend-main/dist",
   "framework": "vite",
 
