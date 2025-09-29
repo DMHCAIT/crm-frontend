@@ -212,24 +212,55 @@ const LeadsManagement: React.FC = () => {
   const [qualificationOptions] = useState(['MBBS', 'MD', 'BDS', 'AYUSH', 'MS', 'FMGS', 'Others']);
   const [assignableUsers, setAssignableUsers] = useState<AssignableUser[]>([]);
   
-  // Default course options with proper prefixes
+  // Default course options with proper prefixes - comprehensive list
   const defaultCourseOptions = {
     fellowship: [
       'Fellowship in Emergency Medicine',
-      'Fellowship in Cardiology', 
-      'Fellowship in Dermatology',
-      'Fellowship in Critical Care',
-      'Fellowship in Internal Medicine',
-      'Fellowship in Pediatrics',
+      'Fellowship in Aesthetic Medicine',
       'Fellowship in Anesthesiology',
-      'Fellowship in Family Medicine'
+      'Fellowship in Cardiology',
+      'Fellowship in Critical Care Medicine',
+      'Fellowship in Dermatology',
+      'Fellowship in Endocrinology',
+      'Fellowship in Family Medicine',
+      'Fellowship in Gastroenterology',
+      'Fellowship in General Surgery',
+      'Fellowship in Geriatrics',
+      'Fellowship in Hematology',
+      'Fellowship in Infectious Diseases',
+      'Fellowship in Internal Medicine',
+      'Fellowship in Nephrology',
+      'Fellowship in Neurology',
+      'Fellowship in Obstetrics and Gynecology',
+      'Fellowship in Oncology',
+      'Fellowship in Ophthalmology',
+      'Fellowship in Orthopedics',
+      'Fellowship in Otolaryngology',
+      'Fellowship in Pathology',
+      'Fellowship in Pediatrics',
+      'Fellowship in Psychiatry',
+      'Fellowship in Pulmonology',
+      'Fellowship in Radiology'
     ],
     pgDiploma: [
       'PG Diploma in Emergency Medicine',
+      'PG Diploma in Aesthetic Medicine',
       'PG Diploma in Clinical Cardiology',
+      'PG Diploma in Critical Care Medicine',
+      'PG Diploma in Dermatology',
+      'PG Diploma in Endocrinology',
+      'PG Diploma in Family Medicine',
+      'PG Diploma in Geriatrics',
       'PG Diploma in Hospital Administration',
       'PG Diploma in Internal Medicine',
-      'PG Diploma in Dermatology'
+      'PG Diploma in Nephrology',
+      'PG Diploma in Neurology',
+      'PG Diploma in Obstetrics and Gynecology',
+      'PG Diploma in Orthopedics',
+      'PG Diploma in Pediatrics',
+      'PG Diploma in Psychiatry',
+      'PG Diploma in Pulmonology',
+      'PG Diploma in Radiology'
     ],
     all: [] as string[]
   };
@@ -342,22 +373,24 @@ const LeadsManagement: React.FC = () => {
             //   setAssignableUsers(apiResponse.config.assignableUsers);
             // }
             
-            // Handle course options - always ensure we have proper course options with prefixes
-            if (apiResponse.config.courseOptions && apiResponse.config.courseOptions.fellowship && apiResponse.config.courseOptions.pgDiploma) {
-              const processedOptions = {
-                fellowship: apiResponse.config.courseOptions.fellowship,
-                pgDiploma: apiResponse.config.courseOptions.pgDiploma,
-                all: [...apiResponse.config.courseOptions.fellowship, ...apiResponse.config.courseOptions.pgDiploma]
-              };
-              setCourseOptions(processedOptions);
-            } else {
-              // Use default course options with proper prefixes instead of database fallback
-              const processedDefault = {
-                ...defaultCourseOptions,
-                all: [...defaultCourseOptions.fellowship, ...defaultCourseOptions.pgDiploma]
-              };
-              setCourseOptions(processedDefault);
-            }
+            // Always use default course options with proper prefixes (temporarily override API)
+            // This ensures we always show proper prefixed course names
+            console.log('Setting course options with proper prefixes');
+            const processedDefault = {
+              ...defaultCourseOptions,
+              all: [...defaultCourseOptions.fellowship, ...defaultCourseOptions.pgDiploma]
+            };
+            setCourseOptions(processedDefault);
+            
+            // TODO: Re-enable API course options once backend is properly deployed
+            // if (apiResponse.config.courseOptions && apiResponse.config.courseOptions.fellowship && apiResponse.config.courseOptions.pgDiploma) {
+            //   const processedOptions = {
+            //     fellowship: apiResponse.config.courseOptions.fellowship,
+            //     pgDiploma: apiResponse.config.courseOptions.pgDiploma,
+            //     all: [...apiResponse.config.courseOptions.fellowship, ...apiResponse.config.courseOptions.pgDiploma]
+            //   };
+            //   setCourseOptions(processedOptions);
+            // }
           }
         }
         // Legacy format - direct array
