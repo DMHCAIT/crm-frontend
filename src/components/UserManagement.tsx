@@ -1435,19 +1435,24 @@ const UserModal: React.FC<UserModalProps> = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Reports To (Supervisor) <span className="text-red-500">*</span>
+              Reports To (Supervisor) {formData.role !== 'super_admin' && <span className="text-red-500">*</span>}
             </label>
             <select
               value={formData.reports_to}
               onChange={(e) => setFormData({...formData, reports_to: e.target.value})}
               className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-              required
+              required={formData.role !== 'super_admin'}
             >
-              <option value="">Select Supervisor (Required)</option>
+              <option value="">{formData.role === 'super_admin' ? 'No Supervisor (Optional)' : 'Select Supervisor (Required)'}</option>
               {users
                 .filter(u => u.id !== user?.id && u.status === 'active') // Don't show current user and only active users
                 .filter(u => {
-                  // Only show users with HIGHER role hierarchy (must report to someone above their level)
+                  // For super_admin, they can either have no supervisor or report to other super_admins
+                  if (formData.role === 'super_admin') {
+                    return u.role === 'super_admin'; // Super admins can only report to other super admins
+                  }
+                  
+                  // For other roles, only show users with HIGHER role hierarchy (must report to someone above their level)
                   const currentUserLevel = roleHierarchy[formData.role as keyof typeof roleHierarchy]?.level || 1;
                   const supervisorLevel = roleHierarchy[u.role as keyof typeof roleHierarchy]?.level || 1;
                   return supervisorLevel > currentUserLevel; // Changed from >= to > for proper hierarchy
@@ -1458,6 +1463,16 @@ const UserModal: React.FC<UserModalProps> = ({
                   </option>
                 ))}
             </select>
+            {formData.role === 'super_admin' && (
+              <p className="mt-1 text-sm text-gray-500">
+                Super Admins can work independently without a supervisor, or report to other Super Admins if needed.
+              </p>
+            )}
+            {formData.role !== 'super_admin' && (
+              <p className="mt-1 text-sm text-gray-500">
+                All users must report to a supervisor with a higher role level.
+              </p>
+            )}
           </div>
           
           <div>
