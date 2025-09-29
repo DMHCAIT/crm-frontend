@@ -1219,7 +1219,36 @@ const UserModal: React.FC<UserModalProps> = ({
     confirmPassword: '' // Confirm password field
   });
 
+  // DEBUG: Log the user role and form data role
+  console.log('🔍 UserForm Debug:', {
+    userRole: user?.role,
+    formDataRole: formData.role,
+    userName: user?.name,
+    isSupeAdmin: formData.role === 'super_admin'
+  });
+
   const [passwordError, setPasswordError] = useState('');
+
+  // Update form data when user prop changes (important for edit mode)
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        username: user.username || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        role: user.role || 'counselor',
+        designation: user.designation || '',
+        department: user.department || '',
+        location: user.location || '',
+        branch: user.branch || '',
+        status: user.status || 'active',
+        reports_to: user.reports_to || '',
+        password: '',
+        confirmPassword: ''
+      });
+    }
+  }, [user]);
 
   if (!isOpen) return null;
 
@@ -1435,7 +1464,9 @@ const UserModal: React.FC<UserModalProps> = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Reports To (Supervisor) {formData.role !== 'super_admin' && <span className="text-red-500">*</span>}
+              Reports To (Supervisor) 
+              {formData.role !== 'super_admin' ? <span className="text-red-500">*</span> : null}
+              {/* DEBUG: Role = {formData.role}, isSuperAdmin = {formData.role === 'super_admin'} */}
             </label>
             <select
               value={formData.reports_to}
@@ -1443,7 +1474,9 @@ const UserModal: React.FC<UserModalProps> = ({
               className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
               required={formData.role !== 'super_admin'}
             >
-              <option value="">{formData.role === 'super_admin' ? 'No Supervisor (Optional)' : 'Select Supervisor (Required)'}</option>
+              <option value="">
+                {formData.role === 'super_admin' ? 'No Supervisor (Optional)' : 'Select Supervisor (Required)'}
+              </option>
               {users
                 .filter(u => u.id !== user?.id && u.status === 'active') // Don't show current user and only active users
                 .filter(u => {
