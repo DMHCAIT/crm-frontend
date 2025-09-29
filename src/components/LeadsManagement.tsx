@@ -263,7 +263,7 @@ const LeadsManagement: React.FC = () => {
     qualification: '',
     source: '',
     course: '',
-    status: 'fresh',
+    status: 'Fresh',
     assignedTo: '',
     followUp: ''
   });
@@ -295,10 +295,9 @@ const LeadsManagement: React.FC = () => {
         if (apiResponse.leads && Array.isArray(apiResponse.leads)) {
           leadsArray = apiResponse.leads;
           if (apiResponse.config) {
-            // Update status options
-            if (apiResponse.config.statusOptions) {
-              setStatusOptions(apiResponse.config.statusOptions);
-            }
+            // Always use standardized status options from constants instead of backend
+            // This ensures consistent status options regardless of backend response
+            setStatusOptions(STATUS_OPTIONS);
             
             // Use comprehensive default country and qualification options instead of API overrides
             // Note: We use complete lists defined in state initialization to show ALL options
@@ -341,7 +340,7 @@ const LeadsManagement: React.FC = () => {
           qualification: lead.qualification || 'Not specified',
           source: lead.source || 'manual',
           course: lead.course || 'MBBS',
-          status: lead.status || 'fresh',
+          status: lead.status || 'Fresh',
           assignedTo: lead.assigned_to || lead.assignedTo || 'Unassigned',
           followUp: lead.follow_up || lead.followUp || '',
           createdAt: lead.created_at || lead.createdAt || new Date().toISOString(),
@@ -433,7 +432,7 @@ const LeadsManagement: React.FC = () => {
         qualification: lead.qualification || 'Not specified',
         source: lead.source || 'manual',
         course: lead.course || 'MBBS',
-        status: lead.status || 'fresh',
+        status: lead.status || 'Fresh',
         assignedTo: lead.assigned_to || lead.assignedTo || 'Unassigned',
         followUp: lead.follow_up || lead.followUp || '',
         createdAt: lead.created_at || lead.createdAt || new Date().toISOString(),
@@ -840,7 +839,7 @@ const LeadsManagement: React.FC = () => {
         qualification: newLead.qualification,
         source: (newLead.source || 'manual') as 'website' | 'social_media' | 'referral' | 'manual' | 'advertisement',
         course: newLead.course,
-        status: (newLead.status || 'fresh') as 'hot' | 'followup' | 'warm' | 'not interested' | 'enrolled' | 'fresh' | 'junk',
+        status: (newLead.status || 'Fresh') as 'Hot' | 'Follow Up' | 'Warm' | 'Not Interested' | 'Enrolled' | 'Fresh' | 'Junk',
         assignedTo: newLead.assignedTo || user?.username || user?.name || 'Unassigned',
         assigned_to: newLead.assignedTo || user?.username || user?.name || 'Unassigned', // For backend compatibility
         followUp: newLead.followUp,
@@ -867,7 +866,7 @@ const LeadsManagement: React.FC = () => {
         qualification: newLead.qualification || 'Not specified',
         source: createdLead.source || newLead.source || 'Manual Entry',
         course: newLead.course || 'MBBS',
-        status: createdLead.status || newLead.status || 'fresh',
+        status: createdLead.status || newLead.status || 'Fresh',
         assignedTo: createdLead.assignedTo || newLead.assignedTo || user?.username || user?.name || 'Unassigned',
         followUp: newLead.followUp || '',
         createdAt: createdLead.createdAt || new Date().toISOString(),
@@ -902,7 +901,7 @@ const LeadsManagement: React.FC = () => {
         qualification: '',
         source: '',
         course: '',
-        status: 'fresh',
+        status: 'Fresh',
         assignedTo: '',
         followUp: ''
       });
@@ -942,7 +941,7 @@ const LeadsManagement: React.FC = () => {
       qualification: '',
       source: '',
       course: '',
-      status: 'fresh',
+      status: 'Fresh',
       assignedTo: '',
       followUp: ''
     });
@@ -1033,7 +1032,7 @@ const LeadsManagement: React.FC = () => {
           qualification: values[6] || '',
           source: values[7] || '',
           course: values[8] || '',
-          status: values[9] || 'fresh',
+          status: values[9] || 'Fresh',
           assignedTo: values[10] || '',
           followUp: values[11] || '',
           createdAt: values[12] || new Date().toISOString(),
@@ -1181,10 +1180,10 @@ const LeadsManagement: React.FC = () => {
 
     return {
       total: (leads || []).length,
-      hot: (leads || []).filter((lead: Lead) => lead.status === 'hot').length,
-      warm: (leads || []).filter((lead: Lead) => lead.status === 'warm').length,
-      followup: (leads || []).filter((lead: Lead) => lead.status === 'followup').length,
-      converted: (leads || []).filter((lead: Lead) => lead.status === 'enrolled').length,
+      hot: (leads || []).filter((lead: Lead) => lead.status === 'Hot').length,
+      warm: (leads || []).filter((lead: Lead) => lead.status === 'Warm').length,
+      followup: (leads || []).filter((lead: Lead) => lead.status === 'Follow Up').length,
+      converted: (leads || []).filter((lead: Lead) => lead.status === 'Enrolled').length,
       thisMonth: (leads || []).filter((lead: Lead) => {
         const leadDate = new Date(lead.createdAt);
         return leadDate.getMonth() === currentMonth && leadDate.getFullYear() === currentYear;
@@ -1220,14 +1219,14 @@ const LeadsManagement: React.FC = () => {
     });
     
     // Conversion metrics
-    const convertedLeads = leads.filter((lead: Lead) => lead.status === 'enrolled');
+    const convertedLeads = leads.filter((lead: Lead) => lead.status === 'Enrolled');
     const conversionRate = leads.length > 0 ? (convertedLeads.length / leads.length * 100) : 0;
     
     // Response time metrics
     const followupDueLeads = leads.filter((lead: Lead) => {
       if (!lead.followUp) return false;
       const followupDate = new Date(lead.followUp);
-      return followupDate <= now && lead.status !== 'enrolled';
+      return followupDate <= now && lead.status !== 'Enrolled';
     });
     
     // Assignment distribution
@@ -2139,7 +2138,7 @@ const LeadsManagement: React.FC = () => {
                           <p className="text-xs text-gray-500">#{lead.id}</p>
                           <div className="flex items-center space-x-1">
                             <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
-                              STATUS_COLORS[lead.status as keyof typeof STATUS_COLORS] || STATUS_COLORS['fresh']
+                              STATUS_COLORS[lead.status as keyof typeof STATUS_COLORS] || STATUS_COLORS['Fresh']
                             }`}>
                               {lead.status}
                             </span>
@@ -2554,13 +2553,13 @@ const LeadsManagement: React.FC = () => {
                           >
                             {(statusOptions || []).map(status => (
                               <option key={status} value={status}>
-                                {status === 'hot' && '🔥 '}
-                                {status === 'warm' && '🌡️ '}
-                                {status === 'followup' && '📞 '}
-                                {status === 'not interested' && '❌ '}
-                                {status === 'enrolled' && '✅ '}
-                                {status === 'fresh' && '🆕 '}
-                                {status === 'junk' && '🗑️ '}
+                                {status === 'Hot' && '🔥 '}
+                                {status === 'Warm' && '🌡️ '}
+                                {status === 'Follow Up' && '📞 '}
+                                {status === 'Not Interested' && '❌ '}
+                                {status === 'Enrolled' && '✅ '}
+                                {status === 'Fresh' && '🆕 '}
+                                {status === 'Junk' && '🗑️ '}
                                 {status}
                               </option>
                             ))}
