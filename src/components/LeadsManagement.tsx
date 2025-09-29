@@ -209,7 +209,7 @@ const LeadsManagement: React.FC = () => {
     {code: 'KE', name: 'Kenya', phoneCode: '+254'},
     {code: 'ET', name: 'Ethiopia', phoneCode: '+251'}
   ]);
-  const [qualificationOptions] = useState(['MBBS', 'MD', 'BDS', 'AYUSH', 'MS', 'FMGS', 'Others']);
+  const [qualificationOptions] = useState(['MBBS/ FMG', 'MD/MS/DNB', 'Mch/ DM/ DNB-SS', 'BDS/MDS', 'AYUSH', 'Others']);
   const [assignableUsers, setAssignableUsers] = useState<AssignableUser[]>([]);
   
   // Default course options with proper prefixes - comprehensive list
