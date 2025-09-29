@@ -211,7 +211,35 @@ const LeadsManagement: React.FC = () => {
   ]);
   const [qualificationOptions] = useState(['MBBS', 'MD', 'BDS', 'AYUSH', 'MS', 'FMGS', 'Others']);
   const [assignableUsers, setAssignableUsers] = useState<AssignableUser[]>([]);
-  const [courseOptions, setCourseOptions] = useState({ fellowship: [], pgDiploma: [], all: [] });
+  
+  // Default course options with proper prefixes
+  const defaultCourseOptions = {
+    fellowship: [
+      'Fellowship in Emergency Medicine',
+      'Fellowship in Cardiology', 
+      'Fellowship in Dermatology',
+      'Fellowship in Critical Care',
+      'Fellowship in Internal Medicine',
+      'Fellowship in Pediatrics',
+      'Fellowship in Anesthesiology',
+      'Fellowship in Family Medicine'
+    ],
+    pgDiploma: [
+      'PG Diploma in Emergency Medicine',
+      'PG Diploma in Clinical Cardiology',
+      'PG Diploma in Hospital Administration',
+      'PG Diploma in Internal Medicine',
+      'PG Diploma in Dermatology'
+    ],
+    all: [] as string[]
+  };
+  
+  const [courseOptions, setCourseOptions] = useState<{fellowship: string[], pgDiploma: string[], all: string[]}>(
+    {
+      ...defaultCourseOptions,
+      all: [...defaultCourseOptions.fellowship, ...defaultCourseOptions.pgDiploma]
+    }
+  );
   
   // Filter States
   const [dateFilter, setDateFilter] = useState('all');
@@ -314,9 +342,21 @@ const LeadsManagement: React.FC = () => {
             //   setAssignableUsers(apiResponse.config.assignableUsers);
             // }
             
-            // Handle course options
-            if (apiResponse.config.courseOptions) {
-              setCourseOptions(apiResponse.config.courseOptions);
+            // Handle course options - always ensure we have proper course options with prefixes
+            if (apiResponse.config.courseOptions && apiResponse.config.courseOptions.fellowship && apiResponse.config.courseOptions.pgDiploma) {
+              const processedOptions = {
+                fellowship: apiResponse.config.courseOptions.fellowship,
+                pgDiploma: apiResponse.config.courseOptions.pgDiploma,
+                all: [...apiResponse.config.courseOptions.fellowship, ...apiResponse.config.courseOptions.pgDiploma]
+              };
+              setCourseOptions(processedOptions);
+            } else {
+              // Use default course options with proper prefixes instead of database fallback
+              const processedDefault = {
+                ...defaultCourseOptions,
+                all: [...defaultCourseOptions.fellowship, ...defaultCourseOptions.pgDiploma]
+              };
+              setCourseOptions(processedDefault);
             }
           }
         }
@@ -2006,10 +2046,7 @@ const LeadsManagement: React.FC = () => {
                       <option key={`pgdiploma-${course}`} value={course}>{course}</option>
                     ))}
                   </optgroup>
-                  {/* Fallback to existing courses if no API data */}
-                  {(courseOptions.all || []).length === 0 && getUniqueValues('course').map(course => (
-                    <option key={course} value={course}>{course}</option>
-                  ))}
+                  {/* No fallback to database values - always use proper course options */}
                 </select>
               </div>
             </div>
@@ -2492,14 +2529,7 @@ const LeadsManagement: React.FC = () => {
                                   <option key={`pgdiploma-${course}`} value={course}>{course}</option>
                                 ))}
                               </optgroup>
-                              {/* Fallback to existing courses if no API data */}
-                              {(courseOptions.all || []).length === 0 && (
-                                <optgroup label="Available Courses">
-                                  {getUniqueValues('course').map(course => (
-                                    <option key={course} value={course}>{course}</option>
-                                  ))}
-                                </optgroup>
-                              )}
+                              {/* No fallback to database values - always use proper course options */}
                             </select>
                           ) : (
                             <span className="text-gray-700">{selectedLead.course}</span>
