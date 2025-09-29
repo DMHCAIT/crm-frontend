@@ -376,6 +376,7 @@ const LeadsManagement: React.FC = () => {
       const assignableUsersResponse = await apiClient.getAssignableUsers();
       
       console.log(`🔍 Loaded assignable users from API:`, assignableUsersResponse);
+      console.log(`🔍 Current user for assignable users context:`, user);
       
       // Handle response format
       let usersArray: any[] = [];
@@ -796,6 +797,15 @@ const LeadsManagement: React.FC = () => {
   };
 
   const handleSaveNewLead = async () => {
+    // 🚨 DEBUG: Log current user information
+    console.log('🔍 Current user during lead creation:', {
+      user: user,
+      username: user?.username,
+      name: user?.name,
+      email: user?.email,
+      role: user?.role
+    });
+    console.log('🔍 Assignment value (newLead.assignedTo):', newLead.assignedTo);
     try {
       // Validate required fields
       if (!newLead.fullName || !newLead.email || !newLead.phone) {
@@ -831,8 +841,8 @@ const LeadsManagement: React.FC = () => {
         source: (newLead.source || 'manual') as 'website' | 'social_media' | 'referral' | 'manual' | 'advertisement',
         course: newLead.course,
         status: (newLead.status || 'fresh') as 'hot' | 'followup' | 'warm' | 'not interested' | 'enrolled' | 'fresh' | 'junk',
-        assignedTo: newLead.assignedTo || user?.name || 'Unassigned',
-        assigned_to: newLead.assignedTo || user?.name || 'Unassigned', // For backend compatibility
+        assignedTo: newLead.assignedTo || user?.username || user?.name || 'Unassigned',
+        assigned_to: newLead.assignedTo || user?.username || user?.name || 'Unassigned', // For backend compatibility
         followUp: newLead.followUp,
         priority: 'medium',
         score: 50, // Default score for new leads
@@ -858,7 +868,7 @@ const LeadsManagement: React.FC = () => {
         source: createdLead.source || newLead.source || 'Manual Entry',
         course: newLead.course || 'MBBS',
         status: createdLead.status || newLead.status || 'fresh',
-        assignedTo: createdLead.assignedTo || newLead.assignedTo || user?.name || 'Unassigned',
+        assignedTo: createdLead.assignedTo || newLead.assignedTo || user?.username || user?.name || 'Unassigned',
         followUp: newLead.followUp || '',
         createdAt: createdLead.createdAt || new Date().toISOString(),
         updatedAt: createdLead.updatedAt || new Date().toISOString(),
@@ -3097,7 +3107,7 @@ const LeadsManagement: React.FC = () => {
                   >
                     <option value="">Auto-assign to me</option>
                     {assignableUsers.map(user => (
-                      <option key={user.id} value={user.username || user.name || user.email}>
+                      <option key={user.id} value={user.username}>
                         {user.name} ({user.role})
                       </option>
                     ))}
