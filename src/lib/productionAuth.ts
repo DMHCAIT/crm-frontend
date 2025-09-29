@@ -26,7 +26,7 @@ export interface User {
   email: string;
   name: string;
   role: string;
-  username?: string;
+  username: string;
   permissions?: string[];
 }
 
@@ -130,11 +130,21 @@ export class ProductionAuthService {
 
         const { token, user } = await response.json();
         
+        // Ensure user has all required fields for frontend compatibility
+        const compatibleUser = {
+          id: user.id || 'admin-1',
+          email: user.email || 'admin@dmhca.com',
+          name: user.name || user.username || 'Admin User',
+          role: user.role || 'super_admin',
+          username: user.username || 'admin',
+          permissions: user.permissions || []
+        };
+        
         // Store token and user data
         TokenManager.setToken(token);
-        TokenManager.setStoredUser(user);
+        TokenManager.setStoredUser(compatibleUser);
         
-        return user;
+        return compatibleUser;
       }
 
       // � STANDARD AUTH: Use standard auth endpoint (Frontend expects this)
@@ -159,6 +169,7 @@ export class ProductionAuthService {
         email: user.email || 'admin@dmhca.com',
         name: user.name || user.username || 'Admin User',
         role: user.role,
+        username: user.username || user.email,
         permissions: user.permissions || []
       };
 
@@ -195,11 +206,21 @@ export class ProductionAuthService {
 
       const { token, user } = await response.json();
 
+      // Ensure user has all required fields for frontend compatibility
+      const compatibleUser = {
+        id: user.id,
+        email: user.email || username,
+        name: user.name || name || username,
+        role: user.role || 'user',
+        username: user.username || username,
+        permissions: user.permissions || []
+      };
+
       // Store token and user data
       TokenManager.setToken(token);
-      TokenManager.setStoredUser(user);
+      TokenManager.setStoredUser(compatibleUser);
 
-      return user;
+      return compatibleUser;
     } catch (error) {
       console.error('Registration error:', error);
       throw error;
@@ -242,15 +263,16 @@ export class ProductionAuthService {
     }
 
     try {
-      // 🚨 EMERGENCY FIX: Use simple token validation for now
+      // 🚨 FIXED: Use actual JWT payload data instead of hardcoded values
       // Try to decode the JWT to get user info
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         const user: User = {
-          id: payload.userId || 'admin-1',
-          email: 'admin@dmhca.com',
-          name: 'Administrator',
-          role: payload.role || 'super_admin'
+          id: payload.userId || payload.id || 'unknown-id',
+          email: payload.email || 'unknown@example.com',
+          name: payload.name || payload.fullName || payload.username || 'Unknown User',
+          role: payload.role || 'user',
+          username: payload.username || payload.email
         };
         TokenManager.setStoredUser(user);
         return user;
