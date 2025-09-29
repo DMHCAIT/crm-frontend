@@ -1,5 +1,5 @@
 -- IBMP Leads Import SQL Script
--- Generated on: 2025-09-29T11:21:02.626Z
+-- Generated on: 2025-09-29T12:30:57.905Z
 -- Total leads: 1156
 
 INSERT INTO leads (
@@ -19,12 +19,12 @@ INSERT INTO leads (
     'abdullahemad028@gmail.com',
     NULL,
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'EG',
     'Follow Up',
     'details sent on wtsapp will close soon',
     'IBMP',
-    '2025-09-29T11:21:02.594Z',
+    '2025-09-29T12:30:57.872Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -44,12 +44,12 @@ INSERT INTO leads (
     'ab3950436@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'Dr answer and disconneted the call text in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.602Z',
+    '2025-09-29T12:30:57.879Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -65,7 +65,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Anoop vithayathil',
+    'Anoop vithayath',
     'anoopjaine4sik@gmail.com',
     '+918000000000',
     'Others',
@@ -74,7 +74,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not connect',
     'IBMP',
-    '2025-09-29T11:21:02.602Z',
+    '2025-09-29T12:30:57.879Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -90,16 +90,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    '𝙰𝙽𝚄𝚁𝙰𝙳𝙷𝙰',
+    '𝙰𝙽𝚄𝚁𝙰𝙳𝙷�',
     'anuradhasngh815@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.602Z',
+    '2025-09-29T12:30:57.879Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -119,12 +119,12 @@ INSERT INTO leads (
     'arshadalifrnd@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.602Z',
+    '2025-09-29T12:30:57.880Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -144,12 +144,12 @@ INSERT INTO leads (
     'it@cncmail.com',
     '+918000000000',
     'Others',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.602Z',
+    '2025-09-29T12:30:57.880Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -165,16 +165,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Baidyanath Ghosh D',
+    'Baidyanath Ghos',
     'truegood001@gmail.com',
     '+450000000000',
     'MD/MS/DNB',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'GB',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // line busy',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.880Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -194,12 +194,12 @@ INSERT INTO leads (
     'belghait.elhajjaj@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     'dce',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.880Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -219,12 +219,12 @@ INSERT INTO leads (
     'bibek_ag@yahoo.co.in',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'No Answer',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.880Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -244,12 +244,12 @@ INSERT INTO leads (
     'abduallali44@gmail.com',
     '+213000000000',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'MO',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.880Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -269,12 +269,12 @@ INSERT INTO leads (
     'ckasmi70@gmail.com',
     '+213000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     'Call disconectiong',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.880Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -290,16 +290,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dares Ahmed Shams ',
+    'Dares Ahmed Sha',
     'www.d.daresaldee@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.880Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -319,12 +319,12 @@ INSERT INTO leads (
     'kcdipen007@gmail.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.880Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -340,16 +340,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Santosh Shetty',
+    'Dr Santosh Shet',
     'dr.santosh111964@gmail.com',
     '+918000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'No incoiming Call',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.880Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -369,12 +369,12 @@ INSERT INTO leads (
     'Dr Syed Arif',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.880Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -390,16 +390,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr.Ambedkar kumar ',
+    'Dr.Ambedkar kum',
     'yadavambedkarkumar@gmail.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -419,12 +419,12 @@ INSERT INTO leads (
     'hemantgupta04@yahoo.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Not Interested',
     'He will call you',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -444,12 +444,12 @@ INSERT INTO leads (
     'dr.ismailkamalismail@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'DE',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -469,12 +469,12 @@ INSERT INTO leads (
     'dr.dutta051284@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Not connect',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -494,12 +494,12 @@ INSERT INTO leads (
     'kerolusk@hotmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -519,12 +519,12 @@ INSERT INTO leads (
     'Adreno82@yahoo.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'Not Ans',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -540,16 +540,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mahmoud Elazouny',
+    'Mahmoud Elazoun',
     'dr.azounycardio@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'Not Ready for admisson',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -569,12 +569,12 @@ INSERT INTO leads (
     'Dr.mahmoudmaher1@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'EG',
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -599,7 +599,7 @@ INSERT INTO leads (
     'Not Interested',
     'Dr answered and discconnected the call // RNR ( called Dr more then 5 times ) // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -619,12 +619,12 @@ INSERT INTO leads (
     'mallaphanindr5a@gmail.com',
     '+9494694015',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Brochures send call back on 06 Sep',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -644,12 +644,12 @@ INSERT INTO leads (
     'manojrazdan899990@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -669,12 +669,12 @@ INSERT INTO leads (
     'mansiagarwal185@gmail.com',
     '+919000000000',
     'Others',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -690,16 +690,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mansoorali Kappach',
+    'Mansoorali Kapp',
     'mansooralipulmo@gmail.com',
     '+917000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'switch off',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -715,16 +715,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Marina Medhat Mila',
+    'Marina Medhat M',
     'Marina_mm96@yahoo.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -740,16 +740,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mariya-Rose-John-k',
+    'Mariya-Rose-Joh',
     'rosemariya803@gmail.com',
     '+919000000000',
     'Others',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'US',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // rnr',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -769,12 +769,12 @@ INSERT INTO leads (
     'mayankzzzzz@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Not Ans',
     'IBMP',
-    '2025-09-29T11:21:02.603Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -794,12 +794,12 @@ INSERT INTO leads (
     'lamiaa52@gmail.com',
     '+213000000000',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'MO',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -815,16 +815,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed Gaballah',
+    'Mohamed Gaballa',
     'maagaballah@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -844,12 +844,12 @@ INSERT INTO leads (
     'mohamedmerekab@gmail.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'SA',
     'Not Interested',
     'Line busy // RNR ( called Dr more then 5 times ) // line busy',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -865,7 +865,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammad Moustafa',
+    'Mohammad Mousta',
     'petrogulfgroup@yahoo.com',
     '+201000000000',
     'Others',
@@ -874,7 +874,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -894,12 +894,12 @@ INSERT INTO leads (
     'drbarhmi@gmail.com',
     '+213000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -915,7 +915,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed Khalid Sa',
+    'Mohammed Khalid',
     'mk5159861@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
@@ -924,7 +924,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -944,12 +944,12 @@ INSERT INTO leads (
     'mohyganab@gmail.com',
     '+967000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Not Interested',
     'connect on whataap brcohures send',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -969,12 +969,12 @@ INSERT INTO leads (
     'obaselm53@hotmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'He is student of MBBS 3 years',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -994,12 +994,12 @@ INSERT INTO leads (
     'osamaalaqel2@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'No connect',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -1019,12 +1019,12 @@ INSERT INTO leads (
     'pallavdube09@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -1044,12 +1044,12 @@ INSERT INTO leads (
     'Psycapconsultancy@gmail.com',
     '+601000000000',
     'Others',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'MY',
     'Not Interested',
     'Mail drop for Dr',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -1065,16 +1065,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Pragati sherchan',
+    'Pragati shercha',
     'pragati.sherchan@gmail.com',
     '+222000000000',
     'MD/MS/DNB',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'SN',
     'Not Interested',
     'voice mail // voice mail ( called Dr more then 5 times ) // voice mail',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -1094,12 +1094,12 @@ INSERT INTO leads (
     'rajubasnet2052@gmail.com',
     '+9780000000000',
     'Others',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'NP',
     'Not Interested',
     'Said not intrested in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -1119,12 +1119,12 @@ INSERT INTO leads (
     'dr.ramymagdysh@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // LINE BUSY',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -1144,12 +1144,12 @@ INSERT INTO leads (
     'rinjiviswam@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1165,16 +1165,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ritendra Talapatra',
+    'Ritendra Talapa',
     'rit.5mar@gmail.com',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -1194,12 +1194,12 @@ INSERT INTO leads (
     'rohit_kapoor_rohit@yahoo.co.in',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Hot',
     'Called to Dr asked to Call back again after 6 pm // Dr text in whaatsup said will enrol details shared in whats up // Wating for Dr response as he said he will going to enrol for 2 members // said he will enrol if we arrage him to talk with Dr ravi shanke',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -1224,7 +1224,7 @@ INSERT INTO leads (
     'Follow Up',
     'Brochures send He is MD 30 years of Exp',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -1240,16 +1240,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Roshan Kumar Jha',
+    'Roshan Kumar Jh',
     'dr.rkjha@yahoo.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Fresh',
     'asked for references',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1269,12 +1269,12 @@ INSERT INTO leads (
     'sudarshanshridas@gmail.coma',
     '+919000000000',
     'Others',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -1299,7 +1299,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1315,7 +1315,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Samiera Ibrahim Ha',
+    'Samiera Ibrahim',
     'samiera61@gmail.com',
     '+967000000000',
     'MBBS/ FMG',
@@ -1324,7 +1324,7 @@ INSERT INTO leads (
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -1344,12 +1344,12 @@ INSERT INTO leads (
     'saramohamed.s2000@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'Line busy // RNR ( called Dr more then 5 times ) // line busy',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -1369,12 +1369,12 @@ INSERT INTO leads (
     'drsiraj0017@gmail.com',
     '+918000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -1390,16 +1390,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Uthumalebbe Sarafd',
+    'Uthumalebbe Sar',
     'sarafdeenul@gmail.com',
     '+94773418234',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'lk',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1415,16 +1415,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'VARRUCHI JAISWAL',
+    'VARRUCHI JAISWA',
     'varruchij@rediffmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1444,12 +1444,12 @@ INSERT INTO leads (
     'Walabady@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1465,16 +1465,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Zouhair Issouani',
+    'Zouhair Issouan',
     'zouhairissouani@gmail.com',
     '+213000000000',
     'Others',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'MO',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1499,7 +1499,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR // Line busy ( called Dr more then 5 times ) // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -1515,16 +1515,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'حسين DR. SK HUSSAI',
+    'حسين DR. SK HUS',
     'shaikhussainvali467@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1540,7 +1540,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'د.عبدالسلام أحمد ا',
+    'د.عبدالسلام أحم',
     'a10313207@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
@@ -1549,7 +1549,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not valid No',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -1569,12 +1569,12 @@ INSERT INTO leads (
     'tahersaleh31@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1594,12 +1594,12 @@ INSERT INTO leads (
     'alshabaniaref@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -1619,12 +1619,12 @@ INSERT INTO leads (
     'alialhabashi13@yahoo.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -1644,12 +1644,12 @@ INSERT INTO leads (
     'd.taheralali@gmail.com',
     '+964000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'CD',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1669,12 +1669,12 @@ INSERT INTO leads (
     'dipinmijar@gmail.com',
     '+9780000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1690,16 +1690,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'N.Sheik Mohamed Th',
+    'N.Sheik Mohamed',
     'thansilcardio@gmail.com',
     '+919080339356916385943391',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'after 7 months he is busy with his internship',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1715,16 +1715,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Srikanth Nayar',
+    'Dr Srikanth Nay',
     'drsrikanthcardio@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'fellowship course asking in 80 k or 90 k',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1740,16 +1740,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Anas El Kholty',
+    'Dr. Anas El Kho',
     'elkholty.anas@gmail.com',
     '+79881760746',
     'Others',
-    'Interventional car',
+    'Interventional',
     'RU',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.607Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1769,12 +1769,12 @@ INSERT INTO leads (
     'drjagdishchandramd@gmail.com',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'out of net cov area',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1794,12 +1794,12 @@ INSERT INTO leads (
     'Dr_salehamer@yahoo.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1815,16 +1815,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Kapil Suryawanshi',
+    'Kapil Suryawans',
     'sdkapil143@gmail.com',
     '+918000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'not connecting the call',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1840,16 +1840,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Nashmi sadeq abdu ',
+    'Nashmi sadeq ab',
     'nashmialshraay@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1869,12 +1869,12 @@ INSERT INTO leads (
     'wnalinperera2@gmail.com',
     '+94714352912',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'LK',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1890,16 +1890,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Moula Bux Soomro',
+    'Moula Bux Soomr',
     'moulasoomro@yahoo.com',
     '+967000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1919,12 +1919,12 @@ INSERT INTO leads (
     'issamatidi3@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1940,16 +1940,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ali Awad Habtoor',
+    'Ali Awad Habtoo',
     'aliawadhabtoor618@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.884Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1969,12 +1969,12 @@ INSERT INTO leads (
     'dawasswaheeb@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -1994,12 +1994,12 @@ INSERT INTO leads (
     'alimujalli@1gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -2019,12 +2019,12 @@ INSERT INTO leads (
     'razi.ahamed9@gmail.com',
     '+972000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2040,16 +2040,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ariyaratnam Hariga',
+    'Ariyaratnam Har',
     'Drharigajan@gmail.com',
     '+94777573306',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'LK',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2065,16 +2065,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed Abdullah ',
+    'Mohammed Abdull',
     'mohamdrox@yahoo.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2094,12 +2094,12 @@ INSERT INTO leads (
     'med.kamalhaless@gmail.com',
     '+33605897596',
     'Others',
-    'Interventional car',
+    'Interventional',
     'FR',
     'Follow Up',
     'Not coneecting',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2119,12 +2119,12 @@ INSERT INTO leads (
     'meriam.amri@umba.ac.ma',
     '+213000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Not Interested',
     'Brochures Send',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2144,12 +2144,12 @@ INSERT INTO leads (
     'javid211@hotmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2169,12 +2169,12 @@ INSERT INTO leads (
     'olga734151449@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not connecting',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2194,12 +2194,12 @@ INSERT INTO leads (
     'randomtech195@gmail.com',
     '+918000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'He is preparing for FMG exam and brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2219,12 +2219,12 @@ INSERT INTO leads (
     'rhitikktre141@gmail.com',
     '+920000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Brochures send He is busy',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2244,12 +2244,12 @@ INSERT INTO leads (
     'itsankur26@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not connecting',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2269,12 +2269,12 @@ INSERT INTO leads (
     'DRNARESHSEN1@Gmail.com',
     '+917000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2290,16 +2290,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Islam Abdelfatah',
+    'Islam Abdelfata',
     'drislamaboelenin@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2319,12 +2319,12 @@ INSERT INTO leads (
     'gmanouar@outlook.fr',
     '+213000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'not connecting',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2344,12 +2344,12 @@ INSERT INTO leads (
     'Salmane.zekri1@etu.uae.ac.ma',
     '+213000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     'not connecting',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2369,12 +2369,12 @@ INSERT INTO leads (
     'hafssafiak@gmail.com',
     '+213000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     'brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2390,16 +2390,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Elsayed Abdelkder',
+    'Elsayed Abdelkd',
     'abdelkadermohamed598@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'US',
     'Not Interested',
     'brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2415,16 +2415,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'محمدعلي عبدالله حس',
+    'محمدعلي عبدالله',
     'mohammedaliahmedzaid@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2444,12 +2444,12 @@ INSERT INTO leads (
     'mirjalolomonov971@gmail.com',
     '+999000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Not Interested',
     'Interested details send call me at Sep 8 next week',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2469,12 +2469,12 @@ INSERT INTO leads (
     'hossam.zahra1980@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Line Busy Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2490,16 +2490,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Alhassan Alzandani',
+    'Alhassan Alzand',
     'alhassnf@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2519,12 +2519,12 @@ INSERT INTO leads (
     'navdeepsharma1985@yahoo.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Warm',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.608Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2544,12 +2544,12 @@ INSERT INTO leads (
     'veenarj28smarty@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Brochures send she is looking for 50,000/ course',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2569,12 +2569,12 @@ INSERT INTO leads (
     'huonglanbt1306@gmail.com',
     '+84963000732',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'VN',
     'Not Interested',
     'mail drop from nakshtra phone',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2594,12 +2594,12 @@ INSERT INTO leads (
     'std.rabiprasadrimal@pahs.edu.np',
     '+9780000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Not Interested',
     'Not Ans',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2619,12 +2619,12 @@ INSERT INTO leads (
     'abteolu@gmail.com',
     '+84354669398',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'VN',
     'Follow Up',
     'not connecting',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2644,12 +2644,12 @@ INSERT INTO leads (
     'as26400567@yahoo.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2665,16 +2665,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Rajeeve Kumar R',
+    'Dr Rajeeve Kuma',
     'rajeevekumar64@gmail.com',
     '+920000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'US',
     'Not Interested',
     'Call back request',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2694,12 +2694,12 @@ INSERT INTO leads (
     'a_elhakeem100160@alexmed.edu.eg',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.885Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -2715,16 +2715,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Aashaq Hussain Kha',
+    'Aashaq Hussain ',
     'aashaqhussain2011@gmail.com',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Dr answered and disconnected the call // Dr answered and disconnected the call speaking other language // busy tone',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -2744,12 +2744,12 @@ INSERT INTO leads (
     'drhassansadi@gmail.com',
     '+253000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -2769,12 +2769,12 @@ INSERT INTO leads (
     'maxamudcabdiqadir0@gmail.com',
     '+249000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'SD',
     'Not Interested',
     'SWITCH OFF // SWITCH OFF ( called Dr more then 5 times ) // SWITCH OFF //RNR',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -2794,12 +2794,12 @@ INSERT INTO leads (
     'pqbangkg@gmail.com',
     '+84945770009',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'VN',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -2819,12 +2819,12 @@ INSERT INTO leads (
     'mman731731@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -2840,16 +2840,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'عبدالكريم الحماطي',
+    'عبدالكريم الحما',
     'alhamty2021@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -2869,12 +2869,12 @@ INSERT INTO leads (
     'wis.shady@hotmail.fr',
     '+213000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Not Interested',
     'RNR // Voice mail ( called Dr more then 5 times ) // Voice mail // Voice mail',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -2894,12 +2894,12 @@ INSERT INTO leads (
     'ahlamalghaili1@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'Busy tone // Busy tone ( called Dr more then 5 times ) // Busy tone // Busy tone',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -2919,12 +2919,12 @@ INSERT INTO leads (
     'nagad3322@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'Line busy // Line busy ( called Dr more then 5 times ) // Line busy // Line busy // Line busy // Line busy',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -2940,16 +2940,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Shoxruxbek Axmadal',
+    'Shoxruxbek Axma',
     'akhmadalievshokhrukh04@gmail.com',
     '+999000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -2969,12 +2969,12 @@ INSERT INTO leads (
     'waseemmijali@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'Call answered and no response // RNR ( called Dr more then 5 times ) // RNR // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -2990,16 +2990,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'د.عبدالرحمن الحاذق',
+    'د.عبدالرحمن الح',
     'alhadhqbdalrhmn4@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3015,16 +3015,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Sundarapal Prasada',
+    'Sundarapal Pras',
     'drpalprasad.sundara@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'No response // Call answer and disconnected the call ( called Dr more then 5 times ) // Said not intrested in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3040,16 +3040,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Bikramaditya Deb',
+    'Bikramaditya De',
     'bikramadityadeb@gmail.com',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Not reachabel // RNR ( called Dr more then 5 times ) // Busy tone // Busy tone // Busy tone // Busy tone',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3069,12 +3069,12 @@ INSERT INTO leads (
     'mohsin.azad28@gmail.com',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Busy tone // said already he is middel of a course once it ends in month of november he will come back for the course',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3094,12 +3094,12 @@ INSERT INTO leads (
     'sanjaynepa@yahoo.con',
     '+9843270598',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Not Interested',
     'Line busy // Line busy ( called Dr more then 5 times ) // Line busy // Line busy // Line busy // likely fraud // likely fraud',
     'IBMP',
-    '2025-09-29T11:21:02.609Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3119,12 +3119,12 @@ INSERT INTO leads (
     'skj207@hotmail.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Not Interested',
     'said condition in there county is not good will plan later on',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3144,12 +3144,12 @@ INSERT INTO leads (
     'brach4sanjay@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3169,12 +3169,12 @@ INSERT INTO leads (
     'alaaessa10@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Not Interested',
     'Line busy // Line busy ( called Dr more then 5 times ) // No response // RNR // Dr answer and disconnected the call',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3194,12 +3194,12 @@ INSERT INTO leads (
     'bishokhaled1999@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3219,12 +3219,12 @@ INSERT INTO leads (
     'riyazsufyan9@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.886Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3244,12 +3244,12 @@ INSERT INTO leads (
     'gopalsuwal@gmail.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Not Interested',
     'Said he will check later as he is from np he will enrol later',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3269,12 +3269,12 @@ INSERT INTO leads (
     'leducsy2002@yahoo.com',
     '+841000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'CN',
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3294,12 +3294,12 @@ INSERT INTO leads (
     'dr.fikrisalem@hotmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR // Busy tone // RNR // DR answer and disconnected the call',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3319,12 +3319,12 @@ INSERT INTO leads (
     'siddharthgumber2199@gmail.com',
     '+918000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3344,12 +3344,12 @@ INSERT INTO leads (
     'alrjhlasalm@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'CA',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // Line busy // RNR // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3369,12 +3369,12 @@ INSERT INTO leads (
     'ronak_smartmodi39@yahoo.com',
     '+918000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3394,12 +3394,12 @@ INSERT INTO leads (
     'Mariamadar19@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3419,12 +3419,12 @@ INSERT INTO leads (
     'naushad000786@yahoo.co.in',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Voice mail // Voice mail ( called Dr more then 5 times ) // Dr is intrested in Fellowship in Interventional Cardiology want fully online amount said 2500 usd having isuue in fees // Having issue in fees // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -3444,12 +3444,12 @@ INSERT INTO leads (
     'aboellil2040@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -3469,12 +3469,12 @@ INSERT INTO leads (
     'Tuyendhy1993@gmail.com',
     '+84962886689',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'VN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -3494,12 +3494,12 @@ INSERT INTO leads (
     'yiwis.n.mohamed@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -3519,12 +3519,12 @@ INSERT INTO leads (
     'drsureshs90@gmail.com',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'after 6 months he is busy with other course',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -3544,12 +3544,12 @@ INSERT INTO leads (
     'obiedaobeidat93@hotmail.com',
     '+213000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -3569,12 +3569,12 @@ INSERT INTO leads (
     'alialnifro20191986@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'LY',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -3590,16 +3590,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdullah Alshadadi',
+    'Abdullah Alshad',
     'alshadadia6@gmail.com',
     '+202000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -3615,16 +3615,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'اكرم رزاز العسالي',
+    'اكرم رزاز العسا',
     'akrmmrazzz@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -3644,12 +3644,12 @@ INSERT INTO leads (
     'prathikshabharath0806@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -3665,16 +3665,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Anne Katherine Bar',
+    'Anne Katherine ',
     'akatherinebarros@gmail.com',
     '+5590000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'BR',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -3694,12 +3694,12 @@ INSERT INTO leads (
     'dr_asheraf_h@hotmail.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -3719,12 +3719,12 @@ INSERT INTO leads (
     'adnan737825541@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -3744,12 +3744,12 @@ INSERT INTO leads (
     'drashyamal@gmail.com',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -3769,12 +3769,12 @@ INSERT INTO leads (
     'duykhuetv@gmail.com',
     '+84973209326',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'VN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -3794,12 +3794,12 @@ INSERT INTO leads (
     'dastutan92@gmail.com',
     '+920000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Warm',
     'brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -3819,12 +3819,12 @@ INSERT INTO leads (
     'amanidoctormaster@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -3844,12 +3844,12 @@ INSERT INTO leads (
     'raaajpandya@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Warm',
     'Not Ans',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -3869,12 +3869,12 @@ INSERT INTO leads (
     'asrasaed80@gmail.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'Brochures send on whataap',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -3894,12 +3894,12 @@ INSERT INTO leads (
     'salahzaghloul57@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -3919,12 +3919,12 @@ INSERT INTO leads (
     'drzuhaid61@gmail.com',
     '+447000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'GB',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -3940,16 +3940,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'ramy mohamed atlm',
+    'ramy mohamed at',
     'ramy.atlm@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'No Ans',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -3965,16 +3965,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed Ibrahim',
+    'Mohammed Ibrahi',
     'azharmahmed70@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'no answere text in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -3994,12 +3994,12 @@ INSERT INTO leads (
     'dr.murali1983@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.610Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4019,12 +4019,12 @@ INSERT INTO leads (
     'dr.mahmoudsaed3838@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.611Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4044,12 +4044,12 @@ INSERT INTO leads (
     'Magdy.cardio@gmail.com',
     '+967000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.611Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4069,12 +4069,12 @@ INSERT INTO leads (
     'ssoni20n@gmail.com',
     '+917000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.611Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4094,12 +4094,12 @@ INSERT INTO leads (
     'mohammadreffat5@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.611Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4115,16 +4115,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mahmoud Sayed Baio',
+    'Mahmoud Sayed B',
     'mahmoudbemox@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.611Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4144,12 +4144,12 @@ INSERT INTO leads (
     'dr.mhamid@hotmail.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'SY',
     'Not Interested',
     'Brochures send call back',
     'IBMP',
-    '2025-09-29T11:21:02.611Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4169,12 +4169,12 @@ INSERT INTO leads (
     'doc.ahmed_salama@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.611Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4194,12 +4194,12 @@ INSERT INTO leads (
     'seifkhaled1234@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'no answere text in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.611Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4219,12 +4219,12 @@ INSERT INTO leads (
     'waelnujaim@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.611Z',
+    '2025-09-29T12:30:57.887Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4240,16 +4240,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Yassine Benslimane',
+    'Yassine Benslim',
     'ybenslimane98@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.611Z',
+    '2025-09-29T12:30:57.888Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4269,12 +4269,12 @@ INSERT INTO leads (
     'rizwana1816ali@gmail.com',
     '+97455576651',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.611Z',
+    '2025-09-29T12:30:57.888Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4290,16 +4290,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Molakala Pavan Kum',
+    'Molakala Pavan ',
     'srirampawan@yahoo.co.in',
     '+917000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'no answere text in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.888Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4319,12 +4319,12 @@ INSERT INTO leads (
     'dr.dutta051284@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.888Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4344,12 +4344,12 @@ INSERT INTO leads (
     'arshadalifrnd@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Brochurres send',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.888Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4369,12 +4369,12 @@ INSERT INTO leads (
     'mayankzzzzz@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Brochurres send',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.888Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4394,12 +4394,12 @@ INSERT INTO leads (
     'Adreno82@yahoo.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Brochurres send',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.888Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4419,12 +4419,12 @@ INSERT INTO leads (
     'osamaalaqel2@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'No what aap no',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.888Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -4444,12 +4444,12 @@ INSERT INTO leads (
     'kcdipen007@gmail.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR // RNR // RNR /// Busy tone',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.888Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4465,16 +4465,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'عبدالواحد عبدالغني',
+    'عبدالواحد عبدال',
     'Abdon0587@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'Yemen',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR // RNR // RNR /// switch off',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.888Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4494,12 +4494,12 @@ INSERT INTO leads (
     'drroshankhadka@gmail.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Not Interested',
     'Line busy // Busy tone ( called Dr more then 5 times ) // Busy tone // Line busy // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.888Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4519,12 +4519,12 @@ INSERT INTO leads (
     'alshabaniaref@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // Dr answer and disconnected the call // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.888Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4544,12 +4544,12 @@ INSERT INTO leads (
     'kerolusk@hotmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) RNR // RNR // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.888Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4569,12 +4569,12 @@ INSERT INTO leads (
     'saramohamed.s2000@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'Line busy // RNR ( called Dr more then 5 times ) // RNR // line busy // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.888Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4594,12 +4594,12 @@ INSERT INTO leads (
     'mohamedmerekab@gmail.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'SA',
     'Not Interested',
     'RNR // Line busy ( called Dr more then 5 times ) // RNR // RNR / Line busy / Line busy / Line busy',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4619,12 +4619,12 @@ INSERT INTO leads (
     'ab3950436@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'US',
     'Not Interested',
     'RNR // Line busy ( called Dr more then 5 times ) // RNR // RNR // RNR // RNR // Line busy',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4640,16 +4640,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed Gaballah',
+    'Mohamed Gaballa',
     'maagaballah@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR // RNR // line busy',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4665,16 +4665,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr.Ambedkar kumar ',
+    'Dr.Ambedkar kum',
     'yadavambedkarkumar@gmail.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4694,12 +4694,12 @@ INSERT INTO leads (
     'alialhabashi13@yahoo.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // likely fraud // RNR // Voice mail // likely fraud // likely fraud',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4715,16 +4715,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mahmoud Elazouny',
+    'Mahmoud Elazoun',
     'dr.azounycardio@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4744,12 +4744,12 @@ INSERT INTO leads (
     'dr.ramymagdysh@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4765,16 +4765,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dares Ahmed Shams ',
+    'Dares Ahmed Sha',
     'www.d.daresaldee@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4790,16 +4790,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Payodh Chaudhary',
+    'Payodh Chaudhar',
     'drpayodhchaudhary@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'US',
     'Not Interested',
     'Said not intrested in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4819,12 +4819,12 @@ INSERT INTO leads (
     'drsibalvarun@gmail.com',
     '+918000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4849,7 +4849,7 @@ INSERT INTO leads (
     'Not Interested',
     'Voice mail // Voice mail ( called Dr more then 5 times ) // Voice mail // Voice mail / Voice mail // busy tone',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4874,7 +4874,7 @@ INSERT INTO leads (
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.613Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4890,7 +4890,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr.Binish Cheulkar',
+    'Dr.Binish Cheul',
     'binish.cheulkar@gmail.com',
     '+920000000000',
     'Others',
@@ -4899,7 +4899,7 @@ INSERT INTO leads (
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4924,7 +4924,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR // Busy tone ( called Dr more then 5 times ) // No response // rnr // rnr // No response // Busy tone',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4949,7 +4949,7 @@ INSERT INTO leads (
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4974,7 +4974,7 @@ INSERT INTO leads (
     'Not Interested',
     'Busy tone // RNR ( called Dr more then 5 times ) // Called to Dr said want super speciality course // dr said she is looking for looking for child and adult Psychiatry',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -4990,7 +4990,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Pratikshya Pokhare',
+    'Pratikshya Pokh',
     'pratikchya.pokharel@gmail.com',
     '+9780000000000',
     'Others',
@@ -4999,7 +4999,7 @@ INSERT INTO leads (
     'Not Interested',
     'Said not intrested in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -5024,7 +5024,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR / RNR ( called Dr more then 5 times ) // RNR // RNR // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -5040,7 +5040,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Danish Hussain',
+    'Dr. Danish Huss',
     'sirsayedfoundation@gmail.com',
     '+920000000000',
     'AYUSH',
@@ -5049,7 +5049,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not reachabel // RNR ( called Dr more then 5 times ) // line busy // RNR // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -5074,7 +5074,7 @@ INSERT INTO leads (
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -5099,7 +5099,7 @@ INSERT INTO leads (
     'Not Interested',
     'Line busy // Line busy ( called Dr more then 5 times ) // Line busy // Line busy // Line busy // Line busy // No response',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -5124,7 +5124,7 @@ INSERT INTO leads (
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -5140,7 +5140,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mayakrishnan Arasa',
+    'Mayakrishnan Ar',
     'drmayakrish@gmail.com',
     '+919000000000',
     'Others',
@@ -5149,7 +5149,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5165,7 +5165,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr.Georgy Joseph',
+    'Dr.Georgy Josep',
     'josephg123123@gmail.com',
     '+9447365252',
     'AYUSH',
@@ -5174,7 +5174,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5199,7 +5199,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5215,7 +5215,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'drp k srivastava',
+    'drp k srivastav',
     'praveencsrivastva@gmail.com',
     '+9897509785',
     'Others',
@@ -5224,7 +5224,7 @@ INSERT INTO leads (
     'Warm',
     'he is looking for someone she is bds',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5249,7 +5249,7 @@ INSERT INTO leads (
     'Warm',
     'price and hospital list shared',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5265,7 +5265,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Deboki Chattopadhy',
+    'Deboki Chattopa',
     'deboki123@gmail.com',
     '+918000000000',
     'MD/MS/DNB',
@@ -5274,7 +5274,7 @@ INSERT INTO leads (
     'Not Interested',
     'after 18 months next batch she will plan she dont have any interest',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5299,7 +5299,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5324,7 +5324,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5349,7 +5349,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5374,7 +5374,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5399,7 +5399,7 @@ INSERT INTO leads (
     'Not Interested',
     'icna',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5424,7 +5424,7 @@ INSERT INTO leads (
     'Not Interested',
     'call hanguped',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5449,7 +5449,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5465,7 +5465,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'santhanabharathi',
+    'santhanabharath',
     'santhanamgowthamar@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
@@ -5474,7 +5474,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.889Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5490,7 +5490,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Darshani Waikhom',
+    'Darshani Waikho',
     'darshaniwaikhom97@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
@@ -5499,7 +5499,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5524,7 +5524,7 @@ INSERT INTO leads (
     'Not Interested',
     'he said not interested in call',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5540,7 +5540,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ravindra Kumar Kar',
+    'Ravindra Kumar ',
     'karn.ravindra1210@gmail.com',
     '+9780000000000',
     'Others',
@@ -5549,7 +5549,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5574,7 +5574,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5599,7 +5599,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5624,7 +5624,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5649,7 +5649,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -5674,7 +5674,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -5690,7 +5690,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'H.M.S Tharushi Her',
+    'H.M.S Tharushi ',
     'tharushiherath91@gmail.com',
     '+94712181333',
     'Others',
@@ -5699,7 +5699,7 @@ INSERT INTO leads (
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -5724,7 +5724,7 @@ INSERT INTO leads (
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -5749,7 +5749,7 @@ INSERT INTO leads (
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -5765,7 +5765,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mahmoud Abo Elazay',
+    'Mahmoud Abo Ela',
     'abou-elazayem@hotmail.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -5774,7 +5774,7 @@ INSERT INTO leads (
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -5799,7 +5799,7 @@ INSERT INTO leads (
     'Not Interested',
     'Brpchures send',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -5815,7 +5815,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Rajan Ramamoorthy',
+    'Rajan Ramamoort',
     'profraj.sugi2006@gmail.com',
     '+920000000000',
     'Others',
@@ -5824,7 +5824,7 @@ INSERT INTO leads (
     'Junk',
     'He is not a Dr',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -5840,7 +5840,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mahmoud Abd-Elrahe',
+    'Mahmoud Abd-Elr',
     'mahmoudhegab495@gmail.com',
     '+201000000000',
     'Others',
@@ -5849,7 +5849,7 @@ INSERT INTO leads (
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -5865,7 +5865,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Sakshi Anand',
+    'Dr. Sakshi Anan',
     'sakshi_anand@hotmail.com',
     '+919000000000',
     'MD/MS/DNB',
@@ -5874,7 +5874,7 @@ INSERT INTO leads (
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.614Z',
+    '2025-09-29T12:30:57.890Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -5899,7 +5899,7 @@ INSERT INTO leads (
     'Junk',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.890Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -5924,7 +5924,7 @@ INSERT INTO leads (
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.890Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -5940,7 +5940,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Nitin K. Solanki',
+    'Nitin K. Solank',
     'kumarsolankinitin@gmail.com',
     '+9928040876',
     'AYUSH',
@@ -5949,7 +5949,7 @@ INSERT INTO leads (
     'Junk',
     'He is student og 2 Years BYNS',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.890Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -5965,7 +5965,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Dipankar Patra',
+    'Dr. Dipankar Pa',
     'dipankarpatra@gmail.com',
     '+920000000000',
     'Others',
@@ -5974,7 +5974,7 @@ INSERT INTO leads (
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.890Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -5990,7 +5990,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'عبده عباس ناصر اله',
+    'عبده عباس ناصر ',
     'salh5577813@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
@@ -5999,7 +5999,7 @@ INSERT INTO leads (
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.890Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -6024,7 +6024,7 @@ INSERT INTO leads (
     'Follow Up',
     'he is speaking arabic he said to share me in wtsapp with mam number',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.890Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6040,7 +6040,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'عبدالصمد أحمد علي ',
+    'عبدالصمد أحمد ع',
     'ly2956139@gmail.comn',
     '+968000000000',
     'MBBS/ FMG',
@@ -6049,7 +6049,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.890Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6065,7 +6065,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'DrBam Bahadur Sing',
+    'DrBam Bahadur S',
     'drbambahadursingh123@gmail.com',
     '+9780000000000',
     'AYUSH',
@@ -6074,7 +6074,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.890Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6090,7 +6090,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Parami Gunaseka',
+    'Dr Parami Gunas',
     'spgunasekera@gmail.com',
     '+94777908117',
     'MD/MS/DNB',
@@ -6099,7 +6099,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.890Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6124,7 +6124,7 @@ INSERT INTO leads (
     'Junk',
     'she is not a doctor',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.890Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6140,7 +6140,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Gurdarshan Sin',
+    'Dr. Gurdarshan ',
     'dr_bhambra@yahoo.co.in',
     '+920000000000',
     'Others',
@@ -6149,7 +6149,7 @@ INSERT INTO leads (
     'Not Interested',
     'around july he will enroll next year',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6174,7 +6174,7 @@ INSERT INTO leads (
     'Not Interested',
     'call hanguping every time',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6199,7 +6199,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6224,7 +6224,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6240,7 +6240,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'RAHUL KEWAL KUMAR',
+    'RAHUL KEWAL KUM',
     'drrahulkkg@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
@@ -6249,7 +6249,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6274,7 +6274,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6299,7 +6299,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6315,7 +6315,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr.Mohamed Mahrous',
+    'Dr.Mohamed Mahr',
     'mhmmahrous@yahoo.co.uk',
     '+201069917089+13435525172',
     'MD/MS/DNB',
@@ -6324,7 +6324,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6340,7 +6340,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'DrBhagwat Rajput',
+    'DrBhagwat Rajpu',
     'dr.bhagwat.cordinator@gmail.com',
     '+917000000000',
     'MD/MS/DNB',
@@ -6349,7 +6349,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not Interested dont want to do patients is near to me call hanguped',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6374,7 +6374,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6390,7 +6390,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Narendra kumar Sha',
+    'Narendra kumar ',
     'narendrashah107@gmail.com',
     '+9780000000000',
     'MBBS/ FMG',
@@ -6399,7 +6399,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6424,7 +6424,7 @@ INSERT INTO leads (
     'Not Interested',
     'Said not intrested said not a Dr',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -6440,7 +6440,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Jitendra Kumar Sin',
+    'Jitendra Kumar ',
     'jsingdj@gmail.com',
     '+9780000000000',
     'Others',
@@ -6449,7 +6449,7 @@ INSERT INTO leads (
     'Not Interested',
     'Said not intrested in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -6474,7 +6474,7 @@ INSERT INTO leads (
     'Not Interested',
     '-',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -6490,7 +6490,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Puang Achock Mataj',
+    'Puang Achock Ma',
     'azlee8588@gmail.com',
     '+60175535813',
     'Others',
@@ -6499,7 +6499,7 @@ INSERT INTO leads (
     'Not Interested',
     'Busy tone // RNR ( called Dr more then 5 times ) // RNR // RNR // Busy tone / Tried to connect many times no answer / RNR',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -6524,7 +6524,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not reachabel // Called answer by 3 rd person Dr not there // RNR // Line busy // Tried to connect many times no answer likely farud // Tried to connect many times no answer likely farud',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -6549,7 +6549,7 @@ INSERT INTO leads (
     'Not Interested',
     'Said not intrested in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -6574,7 +6574,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR // RNR // Tried to connect many times no answer // Not available',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -6590,7 +6590,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Rakesh Chaurasiya',
+    'Rakesh Chaurasi',
     'rocky_themalefactor@yahoo.com',
     '+9780000000000',
     'MBBS/ FMG',
@@ -6599,7 +6599,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // Busy tone // RNR // Call answer and disconnected // Tried to connect many times no answer // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.891Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -6615,7 +6615,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'സൂപ്പർ ഈഗോ സൈക്കോള',
+    'സൂപ്പർ ഈഗോ സൈക്',
     'jithink4u@gmail.com',
     '+919000000000',
     'AYUSH',
@@ -6624,7 +6624,7 @@ INSERT INTO leads (
     'Not Interested',
     'Voice mail // Voice mail ( called Dr more then 5 times ) // Voice mail // Voice mail // Call answer and disconnected the call // Tried to connect many times no answer // not available // Voice mail',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.892Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -6640,7 +6640,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Bhupendra Gurung',
+    'Bhupendra Gurun',
     'bhupendrapahachyu@yahoo.com',
     '+9780000000000',
     'Others',
@@ -6649,7 +6649,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR // Busy line ( called Dr more then 5 times ) // Busy line // RNR // RNR // Tried to connect many times no answer // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.892Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -6674,7 +6674,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR // Dr called back and disconnected the call // Busy tone ( called Dr more then 5 times ) // Busy tone // RNR // Busy tone // rnr // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.892Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -6699,7 +6699,7 @@ INSERT INTO leads (
     'Not Interested',
     'Dr answred and said he will only call and disconnected the call // Call answered and disconnected the call // RNR // Busy in other call // DR Answer the said not intrested for the course',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.892Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -6724,7 +6724,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not reachabel // Line busy ( called Dr more then 5 times ) // Not reachabel // Not reachabel // line busy',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.892Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -6749,7 +6749,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not reachabel // Not reachabel ( called Dr more then 5 times ) // Not reachabel // Not reachabel // Not reachabel // Not reachabel',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.892Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -6774,7 +6774,7 @@ INSERT INTO leads (
     'Follow Up',
     'he is speaking arabic he said to share me in wtsapp with mam number',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.892Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6790,7 +6790,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Anoop vithayathil',
+    'Anoop vithayath',
     'anoopjaine4sik@gmail.com',
     '+918000000000',
     'Others',
@@ -6799,7 +6799,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.892Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6824,7 +6824,7 @@ INSERT INTO leads (
     'Not Interested',
     'icna',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.892Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6840,7 +6840,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Venkata Ramana Red',
+    'Venkata Ramana ',
     'grreddy13@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
@@ -6849,7 +6849,7 @@ INSERT INTO leads (
     'Warm',
     'family medicine fellowship',
     'IBMP',
-    '2025-09-29T11:21:02.615Z',
+    '2025-09-29T12:30:57.892Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6874,7 +6874,7 @@ INSERT INTO leads (
     'Follow Up',
     'after a week he will come back to his country',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6890,7 +6890,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Samiera Ibrahim Ha',
+    'Samiera Ibrahim',
     'samiera61@gmail.com',
     '+967000000000',
     'MBBS/ FMG',
@@ -6899,7 +6899,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -6915,16 +6915,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abhishek W Evans',
+    'Abhishek W Evan',
     'abhishekwevans1994@gmail.com',
     '+920000000000',
     'Others',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -6944,12 +6944,12 @@ INSERT INTO leads (
     'princebollam1@gmail.com',
     NULL,
     'Others',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -6965,16 +6965,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Choudhary Asad Ahm',
+    'Choudhary Asad ',
     'imasmadkhan@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Not Interested',
     'Bhms He did genral inquries',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -6990,16 +6990,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr-Abdullah Yusef',
+    'Dr-Abdullah Yus',
     'Abdullah2016yusef@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7015,16 +7015,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Jyoti Jogdand',
+    'Dr. Jyoti Jogda',
     'yogitajogdand88@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7044,12 +7044,12 @@ INSERT INTO leads (
     'mchalla3113@gmail.com',
     '+918106367631+916304145314',
     'Others',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Follow Up',
     'Not connecting',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7065,16 +7065,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Prekshya Khatiwada',
+    'Prekshya Khatiw',
     'prekshya055@gmail.com',
     '+9780000000000',
     'Others',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'NP',
     'Junk',
     'She is not a Dr nurse',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7090,16 +7090,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Randika K. Hannadi',
+    'Randika K. Hann',
     'krshannadige@gmail.com',
     '+94776629699',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'LK',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7115,16 +7115,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Rupendra Kumar Pat',
+    'Rupendra Kumar ',
     'roopendrakumarr@gmail.com',
     '+918000000000',
     'MD/MS/DNB',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7140,16 +7140,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Syed Kashif Ur Rah',
+    'Syed Kashif Ur ',
     'syedkashifurrahman622@gmail.com',
     '+923000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'MY',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7174,7 +7174,7 @@ INSERT INTO leads (
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7199,7 +7199,7 @@ INSERT INTO leads (
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7224,7 +7224,7 @@ INSERT INTO leads (
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7249,7 +7249,7 @@ INSERT INTO leads (
     'Follow Up',
     'call hanguped',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -7265,7 +7265,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'PERAMUNE Arachchil',
+    'PERAMUNE Arachc',
     'bbpa7@yahoo.com',
     '+94710105834',
     'Others',
@@ -7274,7 +7274,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -7290,7 +7290,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    '𝘿𝙧.𝙇𝙖𝙫𝙞𝙨𝙝',
+    '𝘿𝙧.𝙇𝙖𝙫𝙞𝙨',
     'lavish.wonderboy@gmail.com',
     '+918000000000',
     'Others',
@@ -7299,7 +7299,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -7324,7 +7324,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -7340,7 +7340,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Krithika | premium',
+    'Krithika | prem',
     'krithikavaradharaj06@gmail.com',
     '+920000000000',
     'Others',
@@ -7349,7 +7349,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -7374,7 +7374,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -7394,12 +7394,12 @@ INSERT INTO leads (
     'jatinsonkar48@gmail.com',
     '+918000000000',
     'Others',
-    'Critical care ads',
+    'Critical care a',
     'IN',
     'Junk',
     'He is not a Dr',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7415,16 +7415,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    '×͜× Rɪᴛᴜ Mᴇɢʜʀᴀᴊ ×',
+    '×͜× Rɪᴛᴜ Mᴇɢʜʀᴀ',
     'sarvanmeghwanshi33@gmail.com',
     '+919000000000',
     'Others',
-    'Critical care ads',
+    'Critical care a',
     'IN',
     'Junk',
     'He is not a Dr',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7440,16 +7440,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ebrahem M. Elbassu',
+    'Ebrahem M. Elba',
     'bassunyebrahem@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Critical care ads',
+    'Critical care a',
     'EG',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.616Z',
+    '2025-09-29T12:30:57.892Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7469,12 +7469,12 @@ INSERT INTO leads (
     'chaymaekhaldon@gmail.com',
     '+213000000000',
     'Others',
-    'Critical care ads',
+    'Critical care a',
     'US',
     'Junk',
     'Call hang up',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.893Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7494,12 +7494,12 @@ INSERT INTO leads (
     'rupendrakanjar2@gmail.com',
     '+920000000000',
     'Others',
-    'Critical care ads',
+    'Critical care a',
     'US',
     'Junk',
     'He is not a Dr',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.893Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7519,12 +7519,12 @@ INSERT INTO leads (
     'cha3454@gmail.com',
     '+60143384549',
     'Others',
-    'Critical care ads',
+    'Critical care a',
     'MY',
     'Follow Up',
     'Not connect',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.893Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7549,7 +7549,7 @@ INSERT INTO leads (
     'Follow Up',
     'No Ans And No what aap',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.894Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7574,7 +7574,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR // Busy tone // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.894Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -7590,7 +7590,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'dr Priyanka plr th',
+    'dr Priyanka plr',
     'selfsoulascesion201@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
@@ -7599,7 +7599,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.894Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -7615,7 +7615,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Rasika Samyak Kira',
+    'Rasika Samyak K',
     'rasikasamyakkirat555@gmail.com',
     '+9765064666',
     'Others',
@@ -7624,7 +7624,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR showing likely fraud // RNR showing likely fraud ( called Dr more then 5 times ) // RNR showing likely fraud // RNR showing likely fraud // likily fraud',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.894Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -7649,7 +7649,7 @@ INSERT INTO leads (
     'Not Interested',
     'Called to Dr said busy and ask to call back tomorrow again at 3 pm and ask to send the details in whats up hence shared the details // Voice mail // Called to Dr she is intrested in fellowship Psychiatric informed with the fees and the hospitals availabel',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.894Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -7674,7 +7674,7 @@ INSERT INTO leads (
     'Not Interested',
     'Called to Dr he ask to share with the course which we provide in fellowship and was busy in hospital Dr text in whats to share the details for fellowship in Diabetology and Endocrinologydetails shared // rnr // Said not intrested and disconnected the call',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.894Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -7690,7 +7690,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Jihan Raafat Souri',
+    'Jihan Raafat So',
     'mandj75@hotmail.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -7699,7 +7699,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR // RNR ( called Dr more then 5 times ) // RNR // RNR // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.894Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -7724,7 +7724,7 @@ INSERT INTO leads (
     'Follow Up',
     'switch off // Called to Dr said he is bmys and looking for the course said him he is eligibel for pgd course Dr ask to share the details in whats up // Dr answer and disconnected the call msg Dr in whats up // Line busy // SWITCH OFF // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.894Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -7740,16 +7740,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr.Mst Mostary Zan',
+    'Dr.Mst Mostary ',
     'drmstzannath@gmail.com',
     '+8800000000000',
     'Others',
-    'head and neck onco',
+    'head and neck o',
     'Bangladesh',
     'Warm',
     'details sent awaiting for dr response',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.894Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -7769,12 +7769,12 @@ INSERT INTO leads (
     NULL,
     '+9067850823',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.894Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -7790,16 +7790,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Aziza Tavakkal',
+    'Dr. Aziza Tavak',
     NULL,
     '+999000000000',
     'Others',
-    'fetal echocardiogr',
+    'fetal echocardi',
     NULL,
     'Not Interested',
     'Number given by nikhil sir not reachabel // Line busy // Dr is asking for fetal echocardiography course // Line busy // dr is asking for fetal echocardiographyand said he will enrol later',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.894Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -7815,7 +7815,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'NAERTERHTE1084231N',
+    'NAERTERHTE10842',
     'gwjglsog@wildbmail.com',
     '+26200000000000',
     'Others',
@@ -7824,7 +7824,7 @@ INSERT INTO leads (
     'Follow Up',
     'mail shared awaiting for response',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.894Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -7840,7 +7840,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Suvonov Shoxrux Sh',
+    'Suvonov Shoxrux',
     'shoxruxuzb99@gmail.com',
     '+999000000000',
     'MD/MS/DNB',
@@ -7849,7 +7849,7 @@ INSERT INTO leads (
     'Warm',
     'resharing the details int phone',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -7874,7 +7874,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -7890,7 +7890,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Medicopolis Counci',
+    'Medicopolis Cou',
     'drmdsalmankhanwarsi@gmail.com',
     '+918000000000',
     'AYUSH',
@@ -7899,7 +7899,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -7915,7 +7915,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mostafa Abdelghany',
+    'Mostafa Abdelgh',
     'mostafa_maadi@yahoo.com',
     NULL,
     'MBBS/ FMG',
@@ -7924,7 +7924,7 @@ INSERT INTO leads (
     'Follow Up',
     'mail sent awaiting for number',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -7949,7 +7949,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -7974,7 +7974,7 @@ INSERT INTO leads (
     'Follow Up',
     'mail sent',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -7999,7 +7999,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -8019,12 +8019,12 @@ INSERT INTO leads (
     'jatinsonkar48@gmail.com',
     '+918000000000',
     'Others',
-    'Critical care ads',
+    'Critical care a',
     'IN',
     'Junk',
     'he said wrong number call hanguped',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -8049,7 +8049,7 @@ INSERT INTO leads (
     'Follow Up',
     'Line busy no whats up // Line busy // not reachabel // line busy // Line busy',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -8074,7 +8074,7 @@ INSERT INTO leads (
     'Follow Up',
     'Called to Dr said the voice is not clear and ask to text in whats up // RNR // LINE BUSY // not answering // not answering',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -8090,7 +8090,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Elenga Gift Owhond',
+    'Elenga Gift Owh',
     'egoflex360@gmail.com',
     '+17863548221',
     'MBBS/ FMG',
@@ -8099,7 +8099,7 @@ INSERT INTO leads (
     'Not Interested',
     'voice mail text Dr in whats up // Dr text in whats up said he is intrested in fellowship in Psychiatry but was having the doubt on the accredition which we are providing hence dealing by akshay bhiya // Said will enrol later not this time',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -8115,7 +8115,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Melca Victoria Fer',
+    'Melca Victoria ',
     'melcavicto@gmail.com',
     '+448000000000',
     'Others',
@@ -8124,7 +8124,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR // RNR // Said not intrested for course',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -8149,7 +8149,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not reacheabel no whats // RNR // RNR // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -8165,7 +8165,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'اެنَـاެ اެݪـحِـاެڪ',
+    'اެنَـاެ اެݪـحِـ',
     'alzwqrysami@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
@@ -8174,7 +8174,7 @@ INSERT INTO leads (
     'Follow Up',
     'RNR // Not reacheabel no whats // no response // no response // no response',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -8190,16 +8190,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Ritesh Kashyap',
+    'Dr Ritesh Kashy',
     'riteshk2004@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'IN',
     'Follow Up',
     'no incoming services // no incoming services // no incoming services // no incoming services // no incoming services',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -8215,16 +8215,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Kiran | Gynaeco',
+    'Dr Kiran | Gyna',
     'kiranbarhe715@icloud.com',
     '+918000000000',
     'AYUSH',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'IN',
     'Not Interested',
     'voice mail text Dr in whats up // Called to Dr he asked to call back after 1 hr // Dr is not eligibel for the course',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -8240,16 +8240,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammad Nahel Sor',
+    'Mohammad Nahel ',
     'nahelnahel@gmail.com',
     '+1021544424',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'Line busy no whats up // line busy // line busy // line busy',
     'IBMP',
-    '2025-09-29T11:21:02.617Z',
+    '2025-09-29T12:30:57.895Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -8269,12 +8269,12 @@ INSERT INTO leads (
     'bdeepu.2603@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Reprodcutive medic',
+    'Reprodcutive me',
     'IN',
     'Follow Up',
     'Switch off text Dr in whats up // Switch off // busy tone // Switch off // busy tone // busy tone',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -8294,12 +8294,12 @@ INSERT INTO leads (
     'Mona_m_khalil72@yahoo.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Reprodcutive medic',
+    'Reprodcutive me',
     'EG',
     'Follow Up',
     'Brochres send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8319,12 +8319,12 @@ INSERT INTO leads (
     'waseema.syed@yahoo.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Reprodcutive medic',
+    'Reprodcutive me',
     'US',
     'Not Interested',
     'brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8344,12 +8344,12 @@ INSERT INTO leads (
     'gopikaivtvm@gmail.com',
     '+918000000000',
     'MD/MS/DNB',
-    'Reprodcutive medic',
+    'Reprodcutive me',
     'IN',
     'Not Interested',
     'Brochres send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8365,16 +8365,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdelali Kallali',
+    'Abdelali Kallal',
     'abdogyn84@gmail.com',
     '+213000000000',
     'MBBS/ FMG',
-    'Reprodcutive medic',
+    'Reprodcutive me',
     'FI',
     'Follow Up',
     'Not Connecting',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8394,12 +8394,12 @@ INSERT INTO leads (
     'mena1101987@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Reprodcutive medic',
+    'Reprodcutive me',
     'EG',
     'Follow Up',
     'Brochres send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8419,12 +8419,12 @@ INSERT INTO leads (
     'renukas12@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Reprodcutive medic',
+    'Reprodcutive me',
     'IN',
     'Follow Up',
     'No Answer',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8444,12 +8444,12 @@ INSERT INTO leads (
     'sunilshawcmc2007@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Reprodcutive medic',
+    'Reprodcutive me',
     'IN',
     'Follow Up',
     'No Ans',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8469,12 +8469,12 @@ INSERT INTO leads (
     'Shradha.vohra@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Reprodcutive medic',
+    'Reprodcutive me',
     'IN',
     'Hot',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8494,12 +8494,12 @@ INSERT INTO leads (
     'poladhruvi195@gmail.com',
     '+919000000000',
     'MD/MS/DNB',
-    'Reprodcutive medic',
+    'Reprodcutive me',
     'IN',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8519,12 +8519,12 @@ INSERT INTO leads (
     'bismaahmed31@gmail.com',
     '+7353729999',
     'MD/MS/DNB',
-    'Reprodcutive medic',
+    'Reprodcutive me',
     'IN',
     'Follow Up',
     'Call not connect',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8544,12 +8544,12 @@ INSERT INTO leads (
     'amelalbert93@gamil.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Reprodcutive medic',
+    'Reprodcutive me',
     'EG',
     'Follow Up',
     'Not Ans',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8565,16 +8565,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'DR ASHISH SHARMA',
+    'DR ASHISH SHARM',
     'dr.ashishsharma1136@gmail.com',
     '+916000000000',
     'AYUSH',
-    'Reprodcutive medic',
+    'Reprodcutive me',
     'IN',
     'Not Interested',
     'Not Answer',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8594,12 +8594,12 @@ INSERT INTO leads (
     'ashwinmini008@gmail.com',
     '+917000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -8615,16 +8615,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Vijay Chauhan',
+    'Dr Vijay Chauha',
     'chauhanvijay872@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -8644,12 +8644,12 @@ INSERT INTO leads (
     'antoniousrafaat91@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -8665,16 +8665,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'د. نايل احمد سيد ر',
+    'د. نايل احمد سي',
     'drnayelradwan@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -8690,16 +8690,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'AYAH J. A. ABUIYAD',
+    'AYAH J. A. ABUI',
     'ayah.j.a.abuiyada@hotmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'PS',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -8719,12 +8719,12 @@ INSERT INTO leads (
     'tarekcardio@live.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -8744,12 +8744,12 @@ INSERT INTO leads (
     'sharaby85@yahoo.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -8769,12 +8769,12 @@ INSERT INTO leads (
     'salahalhashme@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -8794,12 +8794,12 @@ INSERT INTO leads (
     'abohashimkamal@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'FORWARDED VOICE MAIL',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8819,12 +8819,12 @@ INSERT INTO leads (
     'karim.hatab87@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8840,16 +8840,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Muhammad Wajahat t',
+    'Muhammad Wajaha',
     'muhammadwajahatjan@gmail.com',
     '+923000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'PK',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8869,12 +8869,12 @@ INSERT INTO leads (
     'sumitchoudhary975462@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8894,12 +8894,12 @@ INSERT INTO leads (
     'dr.kentkho@gmail.com',
     '+60127303779',
     'Others',
-    'Interventional car',
+    'Interventional',
     'MY',
     'Warm',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8915,16 +8915,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Yogiraj Shillewad',
+    'Yogiraj Shillew',
     'yogeshwarshilewad@gmail.com',
     '+917000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.895Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8940,16 +8940,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'عبد الوهاب محمه كر',
+    'عبد الوهاب محمه',
     'krybbdalwhab359@gmail.com',
     '+968000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not connecting',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -8969,12 +8969,12 @@ INSERT INTO leads (
     'jellos66@gmail.com',
     '+5510000000000',
     'MBBS/ FMG',
-    'Critical care ads',
+    'Critical care a',
     'BR',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -8994,12 +8994,12 @@ INSERT INTO leads (
     'dr.awadbasheer1@gmail.com',
     '+967000000000',
     'MBBS/ FMG',
-    'Critical care ads',
+    'Critical care a',
     'SA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9019,12 +9019,12 @@ INSERT INTO leads (
     'mostafaaladli915@gmail.com',
     '+201000000000',
     'Others',
-    'Critical care ads',
+    'Critical care a',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9044,12 +9044,12 @@ INSERT INTO leads (
     'drwajih29@gmail.com',
     '+967000000000',
     'MBBS/ FMG',
-    'Critical care ads',
+    'Critical care a',
     'SA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9069,12 +9069,12 @@ INSERT INTO leads (
     'kalatheran10@yahoo.com',
     '+60125331284',
     'MD/MS/DNB',
-    'Critical care ads',
+    'Critical care a',
     'MY',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9090,16 +9090,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'احمد عادل محمد زاي',
+    'احمد عادل محمد ',
     'ahmednemnem84@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Critical care ads',
+    'Critical care a',
     'EG',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9119,12 +9119,12 @@ INSERT INTO leads (
     'medo16125578@gmail.com',
     '+201000000000',
     'Others',
-    'Critical care ads',
+    'Critical care a',
     'EG',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9144,12 +9144,12 @@ INSERT INTO leads (
     'dr.bishalsubedi1@gmail.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Critical care ads',
+    'Critical care a',
     'NP',
     'Warm',
     'Connect on whataap',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9169,12 +9169,12 @@ INSERT INTO leads (
     'sksarip9083046@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Critical care ads',
+    'Critical care a',
     'US',
     'Junk',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9194,12 +9194,12 @@ INSERT INTO leads (
     'drkaledzimmo@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Reproductive medic',
+    'Reproductive me',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9219,12 +9219,12 @@ INSERT INTO leads (
     'deepapatel5843@gmail.com',
     '+916000000000',
     'Others',
-    'Reproductive medic',
+    'Reproductive me',
     'IN',
     'Not Interested',
     'he is not interested he is looking for his cousin',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9244,12 +9244,12 @@ INSERT INTO leads (
     'dr.athwari@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Reproductive medic',
+    'Reproductive me',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9269,12 +9269,12 @@ INSERT INTO leads (
     'ayasralzzy@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Reproductive medic',
+    'Reproductive me',
     'US',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9294,12 +9294,12 @@ INSERT INTO leads (
     'worldpacificsportsfederation@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Reproductive medic',
+    'Reproductive me',
     'US',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9315,7 +9315,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed Abd El Az',
+    'Mohammed Abd El',
     'surzezo86@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -9324,7 +9324,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9340,7 +9340,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed Abdelmohse',
+    'Mohamed Abdelmo',
     'mohsenroom@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -9349,7 +9349,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9365,7 +9365,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Tigran Byuzandyan',
+    'Tigran Byuzandy',
     'byuzandyantigran@gmail.com',
     '+37498080704',
     'MD/MS/DNB',
@@ -9374,7 +9374,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9399,7 +9399,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9424,7 +9424,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9449,7 +9449,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9465,7 +9465,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdel Hamid Hussei',
+    'Abdel Hamid Hus',
     'hamidezzat@hotmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -9474,7 +9474,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9499,7 +9499,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.618Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9515,7 +9515,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Helmy Mohad',
+    'Ahmed Helmy Moh',
     'ahelmy1411@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -9524,7 +9524,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9549,7 +9549,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9574,7 +9574,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9590,7 +9590,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Anicet NSENGIYUMVA',
+    'Anicet NSENGIYU',
     'nsenganicet8@gmail.com',
     '+25779645170',
     'MD/MS/DNB',
@@ -9599,7 +9599,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9615,7 +9615,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Tawfik Zarif Boulo',
+    'Tawfik Zarif Bo',
     'abou_teffa@hotmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -9624,7 +9624,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9649,7 +9649,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9674,7 +9674,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9699,7 +9699,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9724,7 +9724,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -9749,7 +9749,7 @@ INSERT INTO leads (
     'Warm',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9774,7 +9774,7 @@ INSERT INTO leads (
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9799,7 +9799,7 @@ INSERT INTO leads (
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9824,7 +9824,7 @@ INSERT INTO leads (
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9840,7 +9840,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed Sobhy Mahm',
+    'Mohamed Sobhy M',
     'dr_mohamedsobhysurgery@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -9849,7 +9849,7 @@ INSERT INTO leads (
     'Not Interested',
     'Connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9874,7 +9874,7 @@ INSERT INTO leads (
     'Not Interested',
     'Brochure send',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9890,7 +9890,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Мухаммад Али Карши',
+    'Мухаммад Али Ка',
     'rabbimovm2003@gmail.com',
     '+999000000000',
     'Others',
@@ -9899,7 +9899,7 @@ INSERT INTO leads (
     'Warm',
     'Bochures send',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9924,7 +9924,7 @@ INSERT INTO leads (
     'Not Interested',
     'Bochures send',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9940,7 +9940,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr YAAKOUBI Mohamm',
+    'Dr YAAKOUBI Moh',
     'yaakoubimohammed06@yahoo.fr',
     '+213000000000',
     'MD/MS/DNB',
@@ -9949,7 +9949,7 @@ INSERT INTO leads (
     'Follow Up',
     'Bochures send',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9974,7 +9974,7 @@ INSERT INTO leads (
     'Follow Up',
     'Bochures send',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -9990,16 +9990,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ijaz UL Haq Muhamm',
+    'Ijaz UL Haq Muh',
     'ijazulhaqbjr007@gmail.com',
     '+923000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'PK',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10015,16 +10015,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Purushoth Kumaran',
+    'Purushoth Kumar',
     'purushothkumaran@gmail.com',
     '+918000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'icna',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10044,12 +10044,12 @@ INSERT INTO leads (
     'jaimin0305@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10069,12 +10069,12 @@ INSERT INTO leads (
     'hamodamahmouda315@gmail.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'SA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10090,16 +10090,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'global_business_ma',
+    'global_business',
     'halhably@gmail.com',
     '+97455549694',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'QA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.896Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10119,12 +10119,12 @@ INSERT INTO leads (
     'alsoultanhassan@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'sent with int number',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.897Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10144,12 +10144,12 @@ INSERT INTO leads (
     'fayznjr2001@gmail.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Warm',
     'Call answer and disconnected the call text Dr in whats up Dr said no calling only he will talk in whats up Dr text in whats up and said he is intrested in fellowship in Cardiology hence details shared // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.897Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -10165,16 +10165,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mario Ashraf Farid',
+    'Mario Ashraf Fa',
     'mashf71@hotmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'No response and No whats up // line busy // rnr',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.897Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -10190,16 +10190,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Arbaj Ali Nawab',
+    'Dr Arbaj Ali Na',
     'arbajnawab33@gmail.com',
     '+917000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'US',
     'Not Interested',
     'RNR text Dr in whats up dr responding in whats up // As per the qulification Dr is not eligible for the fellowship course.',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.897Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -10219,12 +10219,12 @@ INSERT INTO leads (
     'irumfaizan89@gmail.com',
     '+923000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'PK',
     'Follow Up',
     'RNR Text Dr in whats up Dr responding in whats up // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.897Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -10240,16 +10240,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'أسامه عبدالله الحب',
+    'أسامه عبدالله ا',
     'asawerabdlah2019@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'switch off text dr in whats up // dr text in arabic and said dont know english // only he can speak arabic',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.897Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -10269,12 +10269,12 @@ INSERT INTO leads (
     'akashguheriya5700@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Warm',
     'RNR Text Dr in whats up // RNR // Dr said he is busy and ask to share with the deatils in whats up // Line busy // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.897Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -10290,16 +10290,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr.Laxman Kundale',
+    'Dr.Laxman Kunda',
     'kundalelaxman@gmail.com',
     '+918000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Bochures send',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.897Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -10315,16 +10315,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'mohamed abd almoiz',
+    'mohamed abd alm',
     'mhmdga3far@gmail.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.897Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -10344,12 +10344,12 @@ INSERT INTO leads (
     'czechali85@gmail.com',
     '+219000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'LY',
     'Not Interested',
     'Bochures send',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.897Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -10369,12 +10369,12 @@ INSERT INTO leads (
     'doctorravi93@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'US',
     'Not Interested',
     'BHMS He is looking for Next Months short terms course',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.898Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -10390,16 +10390,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Bharat Kumar Gupta',
+    'Bharat Kumar Gu',
     'bharatkumargupta517@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Bochures send',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.898Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -10415,7 +10415,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Kelum Rajakaruna',
+    'Kelum Rajakarun',
     'kelumrajakarunamf@gmail.com',
     '+94774589278',
     'MD/MS/DNB',
@@ -10424,7 +10424,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10449,7 +10449,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10474,7 +10474,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.619Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10490,7 +10490,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'وليد خلف!9uysbyiiy',
+    'وليد خلف!9uysby',
     'waleed.khalaf1980@yahoo.com',
     '+967000000000',
     'MD/MS/DNB',
@@ -10499,7 +10499,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10515,7 +10515,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdelrahman Elfeky',
+    'Abdelrahman Elf',
     'Nanomohammed2776@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -10524,7 +10524,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10540,7 +10540,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Hashan Chamalka Pa',
+    'Hashan Chamalka',
     'chamalka.pathirana@gmail.com',
     '+94716937360',
     'MBBS/ FMG',
@@ -10549,7 +10549,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10565,7 +10565,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed Nabil Dar',
+    'Mohammed Nabil ',
     'mohammed_darweesh@yahoo.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -10574,7 +10574,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10599,7 +10599,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10624,7 +10624,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10649,7 +10649,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10665,7 +10665,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Amr El Shalakany',
+    'Amr El Shalakan',
     'amrelshalakany27@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -10674,7 +10674,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10699,7 +10699,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10724,7 +10724,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10740,7 +10740,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Arsany Talaat Sabe',
+    'Arsany Talaat S',
     'arsanytalaat@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -10749,7 +10749,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10774,7 +10774,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10799,7 +10799,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10824,7 +10824,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -10849,7 +10849,7 @@ INSERT INTO leads (
     'Follow Up',
     'no response in whats up // Line busy // LIne busy',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -10874,7 +10874,7 @@ INSERT INTO leads (
     'Hot',
     'Called to DR he ask to share the details in whats up said busy // RNR// DR replied in internatinol whts up',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -10899,7 +10899,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR Text Dr in whats up / said he notintrested and disconnected the call',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -10915,7 +10915,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Karem Shahin Zewar',
+    'Karem Shahin Ze',
     'Karem_zewar@ymail.com',
     '30',
     'MD/MS/DNB',
@@ -10924,7 +10924,7 @@ INSERT INTO leads (
     'Not Interested',
     'RNR Text Dr in whats up Dr text back in whats and said intrested in Robotic surgery and wants hands on training hence details shared . want hands on for just 30 days // line busy // RNR // saaid he will enrol in UK not intrested to visist india',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -10949,7 +10949,7 @@ INSERT INTO leads (
     'Follow Up',
     'RNR Text Dr in whats up // RNR // Dr answer and disconnected the cal',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -10965,7 +10965,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. João Pedro Pin',
+    'Dr. João Pedro ',
     'jpedropinheiro@hotmail.com',
     '+5590000000000',
     'MD/MS/DNB',
@@ -10974,7 +10974,7 @@ INSERT INTO leads (
     'Follow Up',
     'RNR Text Dr in whats up // voice mail // voice mail // RNR // voice mail // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -10999,7 +10999,7 @@ INSERT INTO leads (
     'Warm',
     'Called to Dr said he is intrested in Robotic surgery but was busy ask to call back and share the details in whats up said he want Fee for hybrid 11 and 1 hence shared through whats up // No response // line busy // rnr',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.898Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11024,7 +11024,7 @@ INSERT INTO leads (
     'Warm',
     'Called to Dr said he is busy and ask to share the details in whats up // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11040,7 +11040,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Shaban Toham',
+    'Ahmed Shaban To',
     'ahmedshaban37@yahoo.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -11049,7 +11049,7 @@ INSERT INTO leads (
     'Follow Up',
     'switch off text in whats up // RNR // no response // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11074,7 +11074,7 @@ INSERT INTO leads (
     'Warm',
     'No response text Dr in whats up Dr is responding in whats up // Line busy // Line busy',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11099,7 +11099,7 @@ INSERT INTO leads (
     'Warm',
     'No response text Dr in whats up Dr text in whats up and said he is intrested in Robotic Surgery hence details shared through whats up // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11115,7 +11115,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ibrahim El Kashef',
+    'Ibrahim El Kash',
     'ibrahim.kashef@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -11124,7 +11124,7 @@ INSERT INTO leads (
     'Not Interested',
     'NO answer said he will consider the course in the future trying to reach Dr no answer // Dr said he cant afford now if we provide him in 300 usd he will enrol the course',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11140,7 +11140,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Hamidou Guillaume ',
+    'Hamidou Guillau',
     'hguillaumeturpin23@gmail.com',
     '+213000000000',
     'Others',
@@ -11149,7 +11149,7 @@ INSERT INTO leads (
     'Follow Up',
     'No response text Dr in whats up // no response // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11174,7 +11174,7 @@ INSERT INTO leads (
     'Follow Up',
     'Bochures send',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11190,7 +11190,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdellah Bellefkih',
+    'Abdellah Bellef',
     'abdellahbellefkih72@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
@@ -11199,7 +11199,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not ANS',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11224,7 +11224,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not ANS',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11249,7 +11249,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not ANS',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11265,7 +11265,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'ALexander Shulyak',
+    'ALexander Shuly',
     'avshulyak@hotmail.com',
     '+381000000000',
     'Others',
@@ -11274,7 +11274,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not ANS',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11290,7 +11290,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Noureldeen Ashraf',
+    'Noureldeen Ashr',
     'nour_1949@gmail.com',
     '+201000000000',
     'Others',
@@ -11299,7 +11299,7 @@ INSERT INTO leads (
     'Warm',
     'Not ANS',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11324,7 +11324,7 @@ INSERT INTO leads (
     'Follow Up',
     'Bochures send',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11340,7 +11340,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Yehia Sayed Elahl',
+    'Yehia Sayed Ela',
     'yehiasayedelahl@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -11349,7 +11349,7 @@ INSERT INTO leads (
     'Follow Up',
     'Bochures send',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11365,7 +11365,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Randima Nanayakkar',
+    'Randima Nanayak',
     'prnanayakkara@gmail.com',
     '+94777845528',
     'MD/MS/DNB',
@@ -11374,7 +11374,7 @@ INSERT INTO leads (
     'Not Interested',
     'Bochures send',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11399,7 +11399,7 @@ INSERT INTO leads (
     'Follow Up',
     'No what aap',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11415,7 +11415,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed Abd El-Ma',
+    'Mohammed Abd El',
     'dr.mohammed.abdelmaugood@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -11424,7 +11424,7 @@ INSERT INTO leads (
     'Warm',
     'Not ANS',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11449,7 +11449,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not ANS',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11474,7 +11474,7 @@ INSERT INTO leads (
     'Follow Up',
     'Line busy text Dr in whats up // RNR // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11499,7 +11499,7 @@ INSERT INTO leads (
     'Warm',
     'Dr answer and disconnected the call text Dr in whats up // RNR // RNR // Called to Dr ask to share the details of the course // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11524,7 +11524,7 @@ INSERT INTO leads (
     'Not Interested',
     'Not reacheabel text Dr in whtsup // rnr . DR respond in whats up and said due to Private causes he cant enrol this time',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11549,7 +11549,7 @@ INSERT INTO leads (
     'Warm',
     'Not reacheabel text Dr in whtsup . Dr respond in whats up for details // no Response // line busy // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11574,7 +11574,7 @@ INSERT INTO leads (
     'Follow Up',
     'RNR Text in whats up // Switch off // Not answering // Not answering // Not reacabl // Not reacabl',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11599,7 +11599,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not Answer',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11615,7 +11615,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Kithsiri Senanayak',
+    'Kithsiri Senana',
     'kithsirijanakantha@gmail.com',
     '+447000000000',
     'MD/MS/DNB',
@@ -11624,7 +11624,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not connecting',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11640,7 +11640,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed Abdelkhale',
+    'Mohamed Abdelkh',
     'drmabdelkhalek@hotmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -11649,7 +11649,7 @@ INSERT INTO leads (
     'Follow Up',
     'No Answer',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11674,7 +11674,7 @@ INSERT INTO leads (
     'Not Interested',
     'She is speakin in arabic',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11699,7 +11699,7 @@ INSERT INTO leads (
     'Follow Up',
     'No Answer connect on whataap',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -11724,7 +11724,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -11749,7 +11749,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -11774,7 +11774,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -11799,7 +11799,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -11815,7 +11815,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Osama Hegazy Abdel',
+    'Osama Hegazy Ab',
     'oshegazy2002@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -11824,7 +11824,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -11849,7 +11849,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -11874,7 +11874,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -11899,7 +11899,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -11915,7 +11915,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Nada Sherif Diesel',
+    'Nada Sherif Die',
     'nana.sherif.diesel@hotmail.com',
     '+201000000000',
     'Others',
@@ -11924,7 +11924,7 @@ INSERT INTO leads (
     'Follow Up',
     'RNR and no whats up // line busy // line busy // line busy // line busy',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11949,7 +11949,7 @@ INSERT INTO leads (
     'Not Interested',
     'Called to Dr said he is not understanding and ask to send a mail hence text in whats and mail // RNR // Dr is interested in robotic surgery in Urology',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11965,7 +11965,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Andranik Poghosyan',
+    'Andranik Poghos',
     'andpog.1989@gmail.com',
     '+37477039435',
     'MD/MS/DNB',
@@ -11974,7 +11974,7 @@ INSERT INTO leads (
     'Follow Up',
     'No response texrt in whats up // line busy // line busy / line busy / line busy',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -11999,7 +11999,7 @@ INSERT INTO leads (
     'Follow Up',
     'RNR Text in whats up rnr // / rnr / rnr',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -12024,7 +12024,7 @@ INSERT INTO leads (
     'Follow Up',
     'RNR Text in whats up // no response // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -12049,7 +12049,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -12065,7 +12065,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Anvarbek Kurbanov',
+    'Anvarbek Kurban',
     '2835949@gmail.com',
     '+999000000000',
     'MD/MS/DNB',
@@ -12074,7 +12074,7 @@ INSERT INTO leads (
     'Follow Up',
     'Getting Busy brochure send',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -12099,7 +12099,7 @@ INSERT INTO leads (
     'Warm',
     'Not answering brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -12115,7 +12115,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Sampath Gnanarathn',
+    'Sampath Gnanara',
     'gnanarathnes@gmail.com',
     '+94777520088',
     'MD/MS/DNB',
@@ -12124,7 +12124,7 @@ INSERT INTO leads (
     'Warm',
     'Instrested details send 4200 usd',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -12140,7 +12140,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Sameh AbdulRahman',
+    'Sameh AbdulRahm',
     'ssadek_md@yahoo.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -12149,7 +12149,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -12174,7 +12174,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12190,7 +12190,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed Riad Warda',
+    'Mohamed Riad Wa',
     'santafe28.12mm@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -12199,7 +12199,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12215,7 +12215,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Nada Tarek Abrahem',
+    'Nada Tarek Abra',
     'nadatarekibrahem@gmail.com',
     '+201000000000',
     'Others',
@@ -12224,7 +12224,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12249,7 +12249,7 @@ INSERT INTO leads (
     'Not Interested',
     'after 4 months no reason he is having exams',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12265,7 +12265,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'د.ايهاب ناثان الفي',
+    'د.ايهاب ناثان ا',
     'dr.ehabnathanalfy@gmail.com',
     '+441000000000',
     'MBBS/ FMG',
@@ -12274,7 +12274,7 @@ INSERT INTO leads (
     'Follow Up',
     'text in mail for whats up // RNR // rnr // rnr',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -12294,12 +12294,12 @@ INSERT INTO leads (
     'lifeofbatool@gmail.com',
     '+916000000000',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12315,7 +12315,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Madhuka Piyumal Da',
+    'Madhuka Piyumal',
     'madhuka1991sl@gmail.xom',
     '+94711441467',
     'MBBS/ FMG',
@@ -12324,7 +12324,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12349,7 +12349,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12365,7 +12365,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Khairy Makle',
+    'Ahmed Khairy Ma',
     'drahmedmakled@live.com',
     '+201000000000',
     'AYUSH',
@@ -12374,7 +12374,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12390,7 +12390,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Kelum Rajakaruna',
+    'Kelum Rajakarun',
     'kelumrajakarunamf@gmail.com',
     '+94774589278',
     'MD/MS/DNB',
@@ -12399,7 +12399,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12419,12 +12419,12 @@ INSERT INTO leads (
     'aiswaryamsureesh@gmail.com',
     '+916000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'India',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12440,16 +12440,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Gyan kumar sonik',
+    'Gyan kumar soni',
     'gyankumarverma120@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Normal enquiry',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -12469,12 +12469,12 @@ INSERT INTO leads (
     'geraro00623@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Echocardiography',
+    'Echocardiograph',
     'EG',
     'Warm',
     'RNR Text in whats up . Dr respond in whats up // rnr// rnr // rnr',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -12494,12 +12494,12 @@ INSERT INTO leads (
     'ghadaalahdal@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'RNR Text in whats up // line busy // line busy // line busy // line busy',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -12519,12 +12519,12 @@ INSERT INTO leads (
     'manalalqershih.s@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'RNR Text in whats up // no response // no response // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -12544,12 +12544,12 @@ INSERT INTO leads (
     'dr_abm@hotmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Warm',
     'No response call disconnected text in whats up .Dr respond in whats up // RNR // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -12565,16 +12565,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Akshay Ishwar Hawl',
+    'Akshay Ishwar H',
     'akshayhawle20@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Warm',
     'Not Ans brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -12594,12 +12594,12 @@ INSERT INTO leads (
     'nahedfarouq778@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -12619,12 +12619,12 @@ INSERT INTO leads (
     'pariyapradip007@gmail.com',
     '+916000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Not Ans connect on whataap',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -12644,12 +12644,12 @@ INSERT INTO leads (
     'www.osimo00o44@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -12665,16 +12665,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'عدنان عمره باعبيد',
+    'عدنان عمره باعب',
     'adnan20111992@hotmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not Ans connect on whataap',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -12690,16 +12690,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abd Alazeem Tareg',
+    'Abd Alazeem Tar',
     'abodetareg@gmail.com',
     '+249000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12719,12 +12719,12 @@ INSERT INTO leads (
     'aya.oufrid@usmba.ac.ma',
     '+213000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12744,12 +12744,12 @@ INSERT INTO leads (
     'azza_omran@hotmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12765,16 +12765,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Faris Mohammad Alh',
+    'Faris Mohammad ',
     'dr.falhajami86@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12794,12 +12794,12 @@ INSERT INTO leads (
     'medico_ravi2000@yahoo.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'out of ser',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12815,16 +12815,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammad Alhariri',
+    'Mohammad Alhari',
     'malhariri481@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -12844,12 +12844,12 @@ INSERT INTO leads (
     'mahaenissi@gmail.con',
     '+213000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'Maroc',
     'Not Interested',
     'RNR mail sent // voice mail // voice mail // voice mail // voice mail',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -12865,16 +12865,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed Hammad Ja',
+    'Mohammed Hammad',
     'moehjbmrcs@outlook.com',
     '+250000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'SD',
     'Follow Up',
     'RNR Text in whats up // switch off // Line busy // switch off // Line busy',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -12890,16 +12890,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Tuhin Kanti Das',
+    'Dr Tuhin Kanti ',
     'tuhinkantidas1965@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Dr answering the cal and disconnect the call // rnr // rnr // Busy tone',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -12919,12 +12919,12 @@ INSERT INTO leads (
     'naoufal9519@gmail.com',
     '+213000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Not Interested',
     'RNR Text in whats up // Line busy // line busy // line busy // line busy',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -12940,16 +12940,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Yahya abdumalek mo',
+    'Yahya abdumalek',
     'yahyaabdualmalek@gamil.com',
     '+968000000000',
     'MBBS/ FMG',
-    'emergency course',
+    'emergency cours',
     'YE',
     'Not Interested',
     'RNR Text in whats up // RNR // Dr text in whats up he is intrested in emergency course for fully online // Said he thought this course is for free so thought to enrol for the course',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -12965,16 +12965,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr.Kavita Priyanka',
+    'Dr.Kavita Priya',
     'dr.kavitapriyanka@gmail.com',
     '+920000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -12994,12 +12994,12 @@ INSERT INTO leads (
     'drkaditya24@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -13019,12 +13019,12 @@ INSERT INTO leads (
     'dohaderboul22@gmail.com',
     '+213000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Not Interested',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -13040,16 +13040,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Major (Dr) Vikas r',
+    'Major (Dr) Vika',
     'Dr.vikasmannem@gmail.com',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -13069,12 +13069,12 @@ INSERT INTO leads (
     'sufi1010hashmi@gmail.com',
     '+920000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'She is student not complete MBBS',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -13090,16 +13090,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Abdelrahim M',
+    'Ahmed Abdelrahi',
     'ahmedashmeg@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not Connecting',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -13115,16 +13115,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Nalapatla ShankDr ',
+    'Nalapatla Shank',
     'drnsgoud1960@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'he said he will visit hyd ofc not answering the calls',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13144,12 +13144,12 @@ INSERT INTO leads (
     'shivuhanchagi2001@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13165,16 +13165,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Vaidya Abhishek mi',
+    'Vaidya Abhishek',
     'haanjikahiye@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13194,12 +13194,12 @@ INSERT INTO leads (
     'abirmerghich@gmail.com',
     '+2124009740',
     'Others',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'no whats app',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -13219,12 +13219,12 @@ INSERT INTO leads (
     'mohamedhelal121091@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13244,12 +13244,12 @@ INSERT INTO leads (
     'iphonejasur721@icloud.com',
     '+999000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13269,12 +13269,12 @@ INSERT INTO leads (
     'johnbady1993@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13294,12 +13294,12 @@ INSERT INTO leads (
     'tejinder5551555@gmail.com',
     '+918000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13319,12 +13319,12 @@ INSERT INTO leads (
     'sachin89shinde89@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13340,7 +13340,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Abdul Hameed',
+    'Ahmed Abdul Ham',
     'Abboaysam@gmail.com',
     NULL,
     'Others',
@@ -13349,7 +13349,7 @@ INSERT INTO leads (
     'Follow Up',
     'proper email sent, waiting for number// no reply till date',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -13365,7 +13365,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Ezzat Elghar',
+    'Ahmed Ezzat Elg',
     'Dr.ahmedezzat77@gmail.com',
     '+201000000000',
     'Others',
@@ -13374,7 +13374,7 @@ INSERT INTO leads (
     'Warm',
     'sent whats app msg',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.899Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -13390,7 +13390,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Fawzy Ahmed',
+    'Ahmed Fawzy Ahm',
     'ahmedfawzy2409137@gmail.com',
     NULL,
     'Others',
@@ -13399,7 +13399,7 @@ INSERT INTO leads (
     'Follow Up',
     'proper email sent, waiting for number// no reply till date',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -13415,16 +13415,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'مصطفى محمود الكحصة',
+    'مصطفى محمود الك',
     'alkahsah.mostafa@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13444,12 +13444,12 @@ INSERT INTO leads (
     'hninalansi@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13469,12 +13469,12 @@ INSERT INTO leads (
     'zozobashir180@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'SD',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13494,12 +13494,12 @@ INSERT INTO leads (
     'drtausique@gmail.com',
     '+917000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'call hanguped',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13515,16 +13515,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Arafaa Ismae',
+    'Ahmed Arafaa Is',
     'mekawyahmed717@gmail.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13540,16 +13540,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Asqarali Kurbonkul',
+    'Asqarali Kurbon',
     'kurbonkulovasqarali@gmail.com',
     '+999000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13569,12 +13569,12 @@ INSERT INTO leads (
     'prashantsharma5333@gmail.com',
     '+916000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13594,12 +13594,12 @@ INSERT INTO leads (
     'louayhammoud@yahoo.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'SY',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13615,16 +13615,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    '★⃝ ꇙ𝐡𝕒ใ𝗂ƞ𝗂★⃝',
+    '★⃝ ꇙ𝐡𝕒ใ𝗂ƞ𝗂★',
     'mshalini453@gmail.com',
     '+918000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13644,12 +13644,12 @@ INSERT INTO leads (
     'navyakunnool2004@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.620Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13669,12 +13669,12 @@ INSERT INTO leads (
     'somaeissa260@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13690,16 +13690,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Naga Kowshik Reddy',
+    'Naga Kowshik Re',
     'nagakowshik.14@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13719,12 +13719,12 @@ INSERT INTO leads (
     'almohtareef10@hotmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'SA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13744,12 +13744,12 @@ INSERT INTO leads (
     'm05848929@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13765,16 +13765,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Prof Dr Premanidhi',
+    'Prof Dr Premani',
     'pandadrpremanidhi@gmail.com',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13794,12 +13794,12 @@ INSERT INTO leads (
     'hnano89@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13815,16 +13815,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Pravalika Guda',
+    'Dr. Pravalika G',
     'gudapatipravalika21@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'busy in other call',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13844,12 +13844,12 @@ INSERT INTO leads (
     'Dr.borji@outlook.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13869,12 +13869,12 @@ INSERT INTO leads (
     'abdullekawthar@gmail.com',
     '+253000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'SO',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13894,12 +13894,12 @@ INSERT INTO leads (
     'narangdrajay@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'busy in other call',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13919,12 +13919,12 @@ INSERT INTO leads (
     'narayangeh@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'busy in other call',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13940,16 +13940,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Pvramana Pvramana',
+    'Pvramana Pvrama',
     'venkataramanpidugu@gmail.com',
     '+9059127203',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'out of cov area',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13965,16 +13965,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Dhananjay Kuma',
+    'Dr. Dhananjay K',
     'dhananjaykumarsingh67@yahoo.com',
     '+918000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -13990,16 +13990,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Dhamodharapraka',
+    'Dr Dhamodharapr',
     'dhamuamdb18012002@gmail.com',
     '+918000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -14015,16 +14015,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Akeeb Musani',
+    'Dr. Akeeb Musan',
     'musaniakeeb@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -14044,12 +14044,12 @@ INSERT INTO leads (
     'praveenkoki12345@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Junk',
     'not a dr',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -14069,12 +14069,12 @@ INSERT INTO leads (
     'osamaamee2025@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -14094,12 +14094,12 @@ INSERT INTO leads (
     'fhdshomies2020@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not Ans Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14119,12 +14119,12 @@ INSERT INTO leads (
     'nasreldintag@gmail.com',
     '+972000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'SD',
     'Not Interested',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14144,12 +14144,12 @@ INSERT INTO leads (
     'husam_ha@hotmail.com',
     '+972000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not connecting',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14165,16 +14165,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Shawqi Al-Ha',
+    'Ahmed Shawqi Al',
     'ah771sh737@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not Ans',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14194,12 +14194,12 @@ INSERT INTO leads (
     'nikhil.agrawal2107@icloud.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14215,16 +14215,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'DrAhmed H Alyousef',
+    'DrAhmed H Alyou',
     'ahmed2014alyousefi@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not connecting',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14240,16 +14240,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'دعمادالدين علي الو',
+    'دعمادالدين علي ',
     'alwaeeqdrem99ad@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not connecting',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14269,12 +14269,12 @@ INSERT INTO leads (
     'prembaidya@hotmail.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Not Interested',
     'she done genarl inquies',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14294,12 +14294,12 @@ INSERT INTO leads (
     'mdnureaalm9829470573@gmail.com',
     '+9780000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14319,12 +14319,12 @@ INSERT INTO leads (
     'tushpatil11111@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Warm',
     'Detials Send',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14344,12 +14344,12 @@ INSERT INTO leads (
     'tareksenosy@yahoo.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'Detials Send',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14365,16 +14365,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Future doctor onco',
+    'Future doctor o',
     'tatevunus@mail.ru',
     '+37494467470',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'AM',
     'Follow Up',
     'Call Hang up',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14390,16 +14390,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Ashutosh Rana',
+    'Dr Ashutosh Ran',
     'aashurana654@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not Connecting',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14419,12 +14419,12 @@ INSERT INTO leads (
     'Amanymounir@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not Connecting',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14444,12 +14444,12 @@ INSERT INTO leads (
     'aliabbasi7865@gmail.com',
     '+918000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -14465,16 +14465,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr.Ravindra Kamble',
+    'Dr.Ravindra Kam',
     'drravik86@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Hot',
     'Busy in other call text in whats up // Called to dr said he is intrested in Pgd course for 4 course also want for wife stays in mumbai // Said he will confirm',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14494,12 +14494,12 @@ INSERT INTO leads (
     'manjeetrao200@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Hot',
     'Called to Dr said he is busy and ask to call back text him in whats up // DR is intrested for pgdip in clinical cardiology but asking for the clincical pratice he is pharm D // DR Said he will enrol if he get clinical training',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14519,12 +14519,12 @@ INSERT INTO leads (
     'ikramhdidi995@gmail.com',
     '+213000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Warm',
     'Line busy text in whats up . Dr response in whats up // line busy',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14544,12 +14544,12 @@ INSERT INTO leads (
     'hs315239@gmail.com',
     '+918000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Hot',
     'Called to dr ask to text in whats up said he will share with qulification said he have 10 years of exprince in latoscopy . intrested in Clinical cardiology waiting for payment application form sent // SAID HE WILL DO IN CATH lab // Waiting for response',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14569,12 +14569,12 @@ INSERT INTO leads (
     'rohansarki1232002@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not reachable no whats up // No incoming service // No incoming service',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14594,12 +14594,12 @@ INSERT INTO leads (
     'kumarvinod841235@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Dr answer and disconnected the call text in whats up //Dr answer and disconnected the call text in whats up // Call Answer and disconnected the call',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14619,12 +14619,12 @@ INSERT INTO leads (
     'bsravani660@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Dr is not eligbel for fellowship course she is bhms',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14644,12 +14644,12 @@ INSERT INTO leads (
     'layebaanaaz@gamil.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'called to Dr said she is undergraduate in hor.in biotechnology and looking for the course hence pitch for the certificate course share the details in wats up // Said not intrested also want clinical trying but not eligebel // Dr is not intrested due to fi',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14669,12 +14669,12 @@ INSERT INTO leads (
     'the.zaffar117@gmail.com',
     '+9780000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Warm',
     'Called to Dr said he is busy and ask to call back again . Deatils shared in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14694,12 +14694,12 @@ INSERT INTO leads (
     'rajivikki5091@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'CN',
     'Not Interested',
     'Called to DR said he is Md [ongoing MD 2nd yr in MD Physiology ]and ask to share with the details in whats up whatsup for Interventional cardilogy course informed Dr he is not eligbel for Interventional cardilogy . Dr said he is ongoing MD 2nd yr in MD Ph',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14719,12 +14719,12 @@ INSERT INTO leads (
     'memishaddad@gmail.com',
     '779337156',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Likely fraud no whats up // Likely fraud no whats up',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14744,12 +14744,12 @@ INSERT INTO leads (
     'ghita288@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     'line busy text in whats up // line busy // line busy',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14769,12 +14769,12 @@ INSERT INTO leads (
     'doctorahmedsamy3@gmail.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'line busy text in whats up // line busy',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14794,12 +14794,12 @@ INSERT INTO leads (
     'hlajouad6@gmail.com',
     '+213000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     'line busy //rnr //line busy',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14815,16 +14815,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mansour Mortatha',
+    'Mansour Mortath',
     'mansossssss433@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'RNR text Dr in whats up // RNR //call answer no response // said in whats up he apply for the American Board of Clinical Pharmacy,',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14840,16 +14840,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abd Alhamid Hamdi',
+    'Abd Alhamid Ham',
     'abdalhamidsihimi98@gmail.com',
     '+1063575467',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'busy tone no whats up RNR //RNR',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14869,12 +14869,12 @@ INSERT INTO leads (
     'sayyadshahid25@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'line busy no whats up // Busy tone // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14894,12 +14894,12 @@ INSERT INTO leads (
     'shajieabbas58@gmail.com',
     '+916000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'line busy text in whats up Dr text back in whats up and said notintrested',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -14919,12 +14919,12 @@ INSERT INTO leads (
     'rashadalariky.2018@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'Call Hang up/ hang up//',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -14944,12 +14944,12 @@ INSERT INTO leads (
     'ayat83x@gmail.com',
     '+250000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'not connectiong//not connecting, email sent//',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -14969,12 +14969,12 @@ INSERT INTO leads (
     'rajtank2001@yahoo.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Not Interested',
     'called, mbbs not done intership, details sent/ clinical cardiology//called not attended//not connecting',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -14994,12 +14994,12 @@ INSERT INTO leads (
     'sdyqaljrany@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Warm',
     'texting in arbic, radiologist//voice msg did',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15015,16 +15015,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Alhanof aref alsha',
+    'Alhanof aref al',
     'sahrnzly@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'texted , gave details',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15044,12 +15044,12 @@ INSERT INTO leads (
     'likithagundan@gmail.com',
     '+916000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'called busy , later have to call//not getting connected//whats app done//not answering',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15065,16 +15065,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr.Ahefaz sheikh..',
+    'Dr.Ahefaz sheik',
     'ahefaz.sheikh5@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'not connected//not connected//whats app kiya//not answering',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15094,12 +15094,12 @@ INSERT INTO leads (
     'ziyodabekmuratovna@gmail.com',
     '+999000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Follow Up',
     'no whats app , email sent//',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15119,12 +15119,12 @@ INSERT INTO leads (
     'keerthikeerthi0205@gmail.com',
     '+916000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'call ended',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15144,12 +15144,12 @@ INSERT INTO leads (
     'ammarclub04@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'asked to call later// not attending//NOT ATTENDING',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15169,12 +15169,12 @@ INSERT INTO leads (
     'darshankusanal1008@gmail.com',
     '+916000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'call kiya , cut kardera//',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15194,12 +15194,12 @@ INSERT INTO leads (
     'ghadeern639@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Not Interested',
     'not connected//whats app kiya',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15219,12 +15219,12 @@ INSERT INTO leads (
     'aa.azamxonov@gmail.com',
     '+999000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Follow Up',
     'no whats app , email sent',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15240,16 +15240,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Salem Almahrooqi',
+    'Salem Almahrooq',
     'salmos@live.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'whats app sent// plastic surgery',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15269,12 +15269,12 @@ INSERT INTO leads (
     'alidfallah12@gmail.com',
     '+967000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'SD',
     'Follow Up',
     'not attending call.// whats app sent//arabic chatting//stiill not replied',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15294,12 +15294,12 @@ INSERT INTO leads (
     'wankarmegharaj608@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     '50,000 asking for pg diploma',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.900Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15319,12 +15319,12 @@ INSERT INTO leads (
     'prajapatisahil9817@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15344,12 +15344,12 @@ INSERT INTO leads (
     'shashankdkacha@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'not answered 2 times //ayush final year',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15369,12 +15369,12 @@ INSERT INTO leads (
     'amoon1999da@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'not connecting///3 times did//arabic sent//not answering //not replied in whts ap',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15394,12 +15394,12 @@ INSERT INTO leads (
     'atharavsawant@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'not connecting///2 times did',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15419,12 +15419,12 @@ INSERT INTO leads (
     'pavi23102003@gmail.com',
     '+920000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     '4 times called, not answered// droppped voice message//not answering',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15440,16 +15440,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'RDGRIN Daluwaththa',
+    'RDGRIN Daluwath',
     'rdgrindaluwaththa@gmail.com',
     '+94763176593',
     'Others',
-    'Interventional car',
+    'Interventional',
     'LK',
     'Follow Up',
     'call attend nahi kiya//whats app done//ot attending',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15465,16 +15465,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'William Tyndale No',
+    'William Tyndale',
     'tyndale16@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'call kiya 3 times',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15494,12 +15494,12 @@ INSERT INTO leads (
     'ramadanaly2011966@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'speaking in other language whats app kiya',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15519,12 +15519,12 @@ INSERT INTO leads (
     'upadhyaysuresh511@gmail.com',
     '+9780000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Follow Up',
     'called asked to text//not answering, text kiya//call not attending',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15544,12 +15544,12 @@ INSERT INTO leads (
     'saleh.salehll2088@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'whats app done in arabic/clinical pharma//whats app done',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15569,12 +15569,12 @@ INSERT INTO leads (
     'swoord46@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Warm',
     'call done, sounds good, sent details.//6 mins call done, sounds good',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15594,12 +15594,12 @@ INSERT INTO leads (
     'wessamshmsan@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15619,12 +15619,12 @@ INSERT INTO leads (
     'gorgeousdoctor@yandex.ru',
     '+999000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Follow Up',
     'No whats app.......',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15640,16 +15640,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdul Rasheed Moha',
+    'Abdul Rasheed M',
     'inthikaf17087@gmail.com',
     '+375000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'LK',
     'Follow Up',
     'wts app done//not replied so did in germany language',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -15669,12 +15669,12 @@ INSERT INTO leads (
     'ashharahamed1@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Switch off text in whats up // Switch off // Switch off // rnr',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -15694,12 +15694,12 @@ INSERT INTO leads (
     'sreehari295@gmail.com',
     '+917000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'Dr said he is busy ask to text in whats up // CALL ANSWER AND DISCONNECTED // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -15715,16 +15715,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdulrahman Mostaf',
+    'Abdulrahman Mos',
     'Dr_abd1982@yahoo.com',
     '+97433091750',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'QA',
     'Not Interested',
     'RNR text Dr in whats up Dr text back in whats said he is busy and ask yto share with the details . Clinical cardiology for 9 months First option details shared in whats up waiting for response // Payment link sent waiting for applicatuion form and payment',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -15744,12 +15744,12 @@ INSERT INTO leads (
     'rayanadamson1980@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'RNR text Dr in whats up // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -15765,16 +15765,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Logeshkumar Ravich',
+    'Logeshkumar Rav',
     'ravichandranlogeshkumar@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Warm',
     'Said Dr is FMG ask to share the cv in whats up waiting infromed Dr he is eligibel for online course not in offline . Dr is intrested in fellowship in cretical care hence details and demo class details hsare in whats up // said not intrested for the course',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -15794,12 +15794,12 @@ INSERT INTO leads (
     'altaeib5@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'RNR text in whats up // Dr answer and disconnected the call //RNR',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -15815,16 +15815,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'DrNagsen Shobha Di',
+    'DrNagsen Shobha',
     'lokhandenagsen458@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Called to Dr he answered and disconnected the call text in whats up // Busy tone // Busy tone',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -15844,12 +15844,12 @@ INSERT INTO leads (
     'wesam.aqel.77@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Warm',
     'Called to Dr said she is not understanding with me and ask to text in whats up // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -15869,12 +15869,12 @@ INSERT INTO leads (
     'Aashishthakur234@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Warm',
     '(9877543917 ) Called to Dr said he is looking for pgd in cardiology and ask to share the details in whats up . shared details for PG Diploma clinical cardiology in whats waiting for response // said he is busy now will text back in whats up // RNR',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -15890,16 +15890,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr.Aamir Abdul Maj',
+    'Dr.Aamir Abdul ',
     'aamiram1766@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Dr said not intrested due to finacial issue',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -15919,12 +15919,12 @@ INSERT INTO leads (
     'shrivasaadi1004@gmail.com',
     '+916000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Call hang up connect on whataap',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -15944,12 +15944,12 @@ INSERT INTO leads (
     'vivekprasaddas123@gmail.com',
     '+918000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Warm',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -15965,16 +15965,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Nagwa Yousef Moro',
+    'Nagwa Yousef Mo',
     'dr.mohamedelsherbiny64@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -15990,16 +15990,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Awad Abdelrazig el',
+    'Awad Abdelrazig',
     'awad5aammasub@gmail.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'SD',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -16019,12 +16019,12 @@ INSERT INTO leads (
     'superziad2000@hotmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'KW',
     'Follow Up',
     'Connect on whataap',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -16044,12 +16044,12 @@ INSERT INTO leads (
     'mohdmuqayad@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'Connect on whataap',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -16065,16 +16065,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Sobirjon Tursunov',
+    'Sobirjon Tursun',
     'di.206b.tursunovsobirjon04@gmail.uz',
     '+999000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Follow Up',
     'Connect on what Aap',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -16094,12 +16094,12 @@ INSERT INTO leads (
     'hagermostafa0865@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Connect on what Aap',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -16119,12 +16119,12 @@ INSERT INTO leads (
     'drlamphan@gmail.com',
     '+84973551211',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'VN',
     'Follow Up',
     'Call Hang Up No Whataap to connect',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -16140,16 +16140,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdullah Radi Moha',
+    'Abdullah Radi M',
     'abdallaradi4@gmail.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Not Interested',
     'Brochurtes send he is speaking Arabic',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -16169,12 +16169,12 @@ INSERT INTO leads (
     'fuada2652@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -16194,12 +16194,12 @@ INSERT INTO leads (
     'saruxingh@gmail.com',
     '+9780000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Follow Up',
     'Connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -16219,12 +16219,12 @@ INSERT INTO leads (
     'aj.ki2010@rediffmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -16244,12 +16244,12 @@ INSERT INTO leads (
     'Halalawi84@gmail.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'US',
     'Not Interested',
     'whats app doing',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16274,7 +16274,7 @@ INSERT INTO leads (
     'Warm',
     'text kiya//text kiya',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16290,7 +16290,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed-Amine Malk',
+    'Mohamed-Amine M',
     'aminemalki14@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
@@ -16299,7 +16299,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16315,7 +16315,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Luiz Gustavo Bueno',
+    'Luiz Gustavo Bu',
     'Lgobueno@hotmail.com',
     '+5520000000000',
     'MD/MS/DNB',
@@ -16324,7 +16324,7 @@ INSERT INTO leads (
     'Not Interested',
     'call attended but cut kiya',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16349,7 +16349,7 @@ INSERT INTO leads (
     'Follow Up',
     'whats app done',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16365,7 +16365,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed Ahmed Zed',
+    'Mohammed Ahmed ',
     'Drzeezooo3@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -16374,7 +16374,7 @@ INSERT INTO leads (
     'Follow Up',
     'whats app kiya//text kiya// in arabic',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16399,7 +16399,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16424,7 +16424,7 @@ INSERT INTO leads (
     'Not Interested',
     'need details, gyeno, laproscop',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16440,7 +16440,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdelrahman Lotfy',
+    'Abdelrahman Lot',
     'abdelrahman.s.ahmed@kasralainy.edu.eg',
     '+201000000000',
     'MD/MS/DNB',
@@ -16449,7 +16449,7 @@ INSERT INTO leads (
     'Follow Up',
     'details gave',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16474,7 +16474,7 @@ INSERT INTO leads (
     'Follow Up',
     'busy , said to call back// whats app call kiya,',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16499,7 +16499,7 @@ INSERT INTO leads (
     'Fresh',
     'Mail sent for whats up number',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -16519,12 +16519,12 @@ INSERT INTO leads (
     'arunshahmanipal08@gmail.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16549,7 +16549,7 @@ INSERT INTO leads (
     'Not Interested',
     'Called //intrested in pg diploma asthetic and cosmetology',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16569,12 +16569,12 @@ INSERT INTO leads (
     'waseemahmad69@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Follow Up',
     'call done, sent details',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16590,16 +16590,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Poonam Prajapa',
+    'Dr. Poonam Praj',
     'drpoonamrprajapati@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Follow Up',
     'whats app done',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16615,16 +16615,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Shehab Ahmed',
+    'Dr. Shehab Ahme',
     'shehabalmahdi1998@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'whats app done',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16640,16 +16640,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr.Ajay Nagzarkar',
+    'Dr.Ajay Nagzark',
     'drajaynagzarkar@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Not Interested',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16669,12 +16669,12 @@ INSERT INTO leads (
     'sagarnandini5@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Follow Up',
     'sent whats app',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16694,12 +16694,12 @@ INSERT INTO leads (
     'tesita.sherry623@gmail.com',
     '+917000000000',
     'MD/MS/DNB',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Follow Up',
     'sent whats app',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16719,12 +16719,12 @@ INSERT INTO leads (
     'eyadmohamedrc@gmail.com',
     '+201558735633',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'sent whats app',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16744,12 +16744,12 @@ INSERT INTO leads (
     'ghadoosh.m.1996@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'EG',
     'Follow Up',
     'whats app done',
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16769,12 +16769,12 @@ INSERT INTO leads (
     'hossamfarid@hotmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16794,12 +16794,12 @@ INSERT INTO leads (
     'hossamawad2020@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16819,12 +16819,12 @@ INSERT INTO leads (
     'jayalaxmiroja999@gmail.com',
     '+61450700369',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'AU',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16840,16 +16840,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Khalid Mohamed Aly',
+    'Khalid Mohamed ',
     'khalid_eltamawey@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16869,12 +16869,12 @@ INSERT INTO leads (
     'ghalebmazen44@gmail.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.621Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16894,12 +16894,12 @@ INSERT INTO leads (
     'drmam1978@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16924,7 +16924,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16940,16 +16940,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mssadek Abderrahim',
+    'Mssadek Abderra',
     'amssadek2006@yahoo.fr',
     '+213000000000',
     'Others',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'MA',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16969,12 +16969,12 @@ INSERT INTO leads (
     'pradeep_sant1@hotmail.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'NP',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -16994,12 +16994,12 @@ INSERT INTO leads (
     'pdlpranyata2@gmail.com',
     '+9780000000000',
     'MBBS/ FMG',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'NP',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17019,12 +17019,12 @@ INSERT INTO leads (
     'dr.shirsendughosh@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Fellowship Psychia',
+    'Fellowship Psyc',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17044,12 +17044,12 @@ INSERT INTO leads (
     'hariomharihar9099@gmail.com',
     '+917000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17069,12 +17069,12 @@ INSERT INTO leads (
     'mehdi.tamir@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17094,12 +17094,12 @@ INSERT INTO leads (
     'daldal700mujahed@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17119,12 +17119,12 @@ INSERT INTO leads (
     'walaafawzi841@gmail.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17144,12 +17144,12 @@ INSERT INTO leads (
     'nafilmuhammed1999@gmail.com',
     '+918000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17165,16 +17165,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Dinesh Chandra ',
+    'Dr Dinesh Chand',
     'd8126048547@gmsil.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17194,12 +17194,12 @@ INSERT INTO leads (
     'fahmialisarhan@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17219,12 +17219,12 @@ INSERT INTO leads (
     'kolikerisabeer97@gmail.com',
     '+918000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17244,12 +17244,12 @@ INSERT INTO leads (
     'alshawam@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17269,12 +17269,12 @@ INSERT INTO leads (
     'eschaminda@gmail.com',
     '+94763826832',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'LK',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17294,12 +17294,12 @@ INSERT INTO leads (
     'farmonov.79@mail.ru',
     '+999000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17319,12 +17319,12 @@ INSERT INTO leads (
     'heshamtalhan@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17344,12 +17344,12 @@ INSERT INTO leads (
     'bouroyene@hotmail.fr',
     '+213000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17365,16 +17365,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdelrahman_vvgs',
+    'Abdelrahman_vvg',
     'bedo_debaky@yahoo.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17390,16 +17390,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'حسين محمد علي علوا',
+    'حسين محمد علي ع',
     'hussainalzazai@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17419,12 +17419,12 @@ INSERT INTO leads (
     'drtapikoma@gmail.com',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17440,16 +17440,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Khawaja Ehtesham A',
+    'Khawaja Ehtesha',
     'drsham786@gmail.com',
     '+967000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'SA',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17465,16 +17465,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed Amin Khima',
+    'Mohamed Amin Kh',
     'dr.ma.cardio@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17494,12 +17494,12 @@ INSERT INTO leads (
     'adilbagwan6149@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17515,16 +17515,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Nitesh Bhandarkar',
+    'Nitesh Bhandark',
     'drnitesh91@gmail.com',
     '+918000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17544,12 +17544,12 @@ INSERT INTO leads (
     'drnavarajdm@gmail.com',
     '+9780000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17565,16 +17565,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Islam Abdelwahid',
+    'Islam Abdelwahi',
     'ahmedislam043@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17590,16 +17590,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr BHAMIDIPATI VEN',
+    'Dr BHAMIDIPATI ',
     'venkat_bh@live.com',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17615,16 +17615,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    '𝑫𝒉𝒂𝒓𝒔𝒉𝒊𝒏𝒊',
+    '𝑫𝒉𝒂𝒓𝒔𝒉𝒊�',
     'dharshini7804@gmail.com',
     '+916000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17644,12 +17644,12 @@ INSERT INTO leads (
     'rohanhlk@gmail.com',
     '+94777922264',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'LK',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17669,12 +17669,12 @@ INSERT INTO leads (
     'mohaned.doman.eg@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17694,12 +17694,12 @@ INSERT INTO leads (
     'drmurali75@gmail.com',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17719,12 +17719,12 @@ INSERT INTO leads (
     'enosh.k7777@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17744,12 +17744,12 @@ INSERT INTO leads (
     'mh2610158292@gmail.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17769,12 +17769,12 @@ INSERT INTO leads (
     'drjainsm@hotmail.com',
     '+918000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -17799,7 +17799,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -17815,7 +17815,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Bady Hagir Osman',
+    'Bady Hagir Osma',
     'osmanbady2014@gmail.com',
     '+967000000000',
     'MBBS/ FMG',
@@ -17824,7 +17824,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -17849,7 +17849,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -17874,7 +17874,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -17899,7 +17899,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -17915,7 +17915,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'عبدالرحمن محمد غال',
+    'عبدالرحمن محمد ',
     'abd7700ww9@gmail.com',
     '+968000000000',
     'Others',
@@ -17924,7 +17924,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -17940,7 +17940,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Satya Narayan Yada',
+    'Satya Narayan Y',
     'drsnyadav372@gmail.com',
     '+97333181183',
     'MBBS/ FMG',
@@ -17949,7 +17949,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -17974,7 +17974,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -17999,7 +17999,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18024,7 +18024,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18049,7 +18049,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18065,7 +18065,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Kattel Vivek Katte',
+    'Kattel Vivek Ka',
     'vivekkattel@yahoo.com',
     '+9780000000000',
     'MD/MS/DNB',
@@ -18074,7 +18074,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18090,7 +18090,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'dr.nishant kumar j',
+    'dr.nishant kuma',
     'onlyforunishant2011@gmail.com',
     '+920000000000',
     'Others',
@@ -18099,7 +18099,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18124,7 +18124,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18140,7 +18140,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Ayush Aggarwal',
+    'Dr Ayush Aggarw',
     'ayushmohan02@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
@@ -18149,7 +18149,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18174,7 +18174,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18199,7 +18199,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18224,7 +18224,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18249,7 +18249,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18265,7 +18265,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Sushil Chaudha',
+    'Dr. Sushil Chau',
     'aman.sushil@rocketmail.com',
     '+920000000000',
     'AYUSH',
@@ -18274,7 +18274,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18299,7 +18299,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18324,7 +18324,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18340,7 +18340,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'د.عبدالسلام أحمد ا',
+    'د.عبدالسلام أحم',
     'a10313207@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
@@ -18349,7 +18349,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18365,7 +18365,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed Khalid Sa',
+    'Mohammed Khalid',
     'mk5159861@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
@@ -18374,7 +18374,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18399,7 +18399,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18424,7 +18424,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18440,7 +18440,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammedaasif Ansa',
+    'Mohammedaasif A',
     'dr_msansari92@yahoo.in',
     '+920000000000',
     'MBBS/ FMG',
@@ -18449,7 +18449,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18465,7 +18465,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Permeshwar Tandel',
+    'Permeshwar Tand',
     'manntandel240729@gmail.com',
     '+920000000000',
     'Others',
@@ -18474,7 +18474,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18499,7 +18499,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18515,16 +18515,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed Abdelshak',
+    'Mohammed Abdels',
     'dr_mohammedabdelshakour@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Critical care ads',
+    'Critical care a',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18540,7 +18540,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Shweta Mourya',
+    'Dr Shweta Moury',
     'shwetamaurya9916@gmail.com',
     '+9916607724',
     'Others',
@@ -18549,7 +18549,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18574,7 +18574,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18599,7 +18599,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18619,12 +18619,12 @@ INSERT INTO leads (
     'sksarip9083046@gmail.com',
     '+919000000000',
     'Others',
-    'Critical care ads',
+    'Critical care a',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18640,16 +18640,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed Abdelshak',
+    'Mohammed Abdels',
     'dr_mohammedabdelshakour@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Critical care ads',
+    'Critical care a',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18669,12 +18669,12 @@ INSERT INTO leads (
     'sunilmbbs2016@gmail.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18694,12 +18694,12 @@ INSERT INTO leads (
     'khojievsarvar@gmail.com',
     '+999000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18719,12 +18719,12 @@ INSERT INTO leads (
     'Ahmad909.ai@gmail.com',
     '+202000000000',
     'MBBS/ FMG',
-    'Critical care ads',
+    'Critical care a',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18744,12 +18744,12 @@ INSERT INTO leads (
     'saademad3377@gmail.com',
     '+201000000000',
     'Others',
-    'Critical care ads',
+    'Critical care a',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18769,12 +18769,12 @@ INSERT INTO leads (
     'abhianand55358@gmail.com',
     '+917000000000',
     'Others',
-    'Reproductive medic',
+    'Reproductive me',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18799,7 +18799,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18815,7 +18815,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'DR/ Malak (◕ᴗ◕✿)',
+    'DR/ Malak (◕ᴗ◕✿',
     'malakzidan206@gmail.com',
     '+201000000000',
     'Others',
@@ -18824,7 +18824,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18840,16 +18840,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammad Zain Khan',
+    'Mohammad Zain K',
     'Zainkhn55576@gmail.com',
     '+917000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18865,7 +18865,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Shiamaa Aboelfath',
+    'Shiamaa Aboelfa',
     'Shymoo2013@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -18874,7 +18874,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18890,7 +18890,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdou Mahmoud Abdo',
+    'Abdou Mahmoud A',
     'dr.abdoumahmoudsurgeon1986@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -18899,7 +18899,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18924,7 +18924,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18940,7 +18940,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'DrSatyabrat Gadana',
+    'DrSatyabrat Gad',
     'drgadanayak@gmail.com',
     '+972000000000',
     'MD/MS/DNB',
@@ -18949,7 +18949,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18974,7 +18974,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -18994,12 +18994,12 @@ INSERT INTO leads (
     'Gerguis_besmark@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19019,12 +19019,12 @@ INSERT INTO leads (
     'hishamalkamali@hotmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19040,16 +19040,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Majed Abdulmajed',
+    'Majed Abdulmaje',
     'phmajed2017@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19065,16 +19065,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    '𝓓𝓡.𝓜𝓤𝓡𝓐𝓓 𝓞',
+    '𝓓𝓡.𝓜𝓤𝓡𝓐𝓓',
     'murad.badhdh@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19090,16 +19090,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ashwa Poorva Priya',
+    'Ashwa Poorva Pr',
     'ashuag372@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'AM',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19119,12 +19119,12 @@ INSERT INTO leads (
     'bmanohar2502@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19140,7 +19140,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed Abd El-Reh',
+    'Mohamed Abd El-',
     'Mohammed.sadek1991@gmail.com',
     '+201000000000',
     'Others',
@@ -19149,7 +19149,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19165,7 +19165,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Biloliddin Sharobi',
+    'Biloliddin Shar',
     'sharobidinovb2021@gmail.com',
     NULL,
     'Others',
@@ -19174,7 +19174,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19199,7 +19199,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19215,16 +19215,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Chandrabhan Patel',
+    'Chandrabhan Pat',
     'chandrabhanpatel12@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Getting busy',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -19244,12 +19244,12 @@ INSERT INTO leads (
     'mekoo.amer@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Call hang up',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -19269,12 +19269,12 @@ INSERT INTO leads (
     'ashish.gupta428@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -19290,16 +19290,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Elizabeth Cherian',
+    'Elizabeth Cheri',
     'echerian309@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Not Interested',
     'She make an genaral inqirey',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -19319,12 +19319,12 @@ INSERT INTO leads (
     'majidkarim370@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'Call Back After 1/2 Not Ans',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -19340,16 +19340,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Vishwajit Prak',
+    'Dr. Vishwajit P',
     'vishwajitpatil300300@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -19369,12 +19369,12 @@ INSERT INTO leads (
     'rncoolguy@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not Ans',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -19390,16 +19390,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Azizbek Chorshanbi',
+    'Azizbek Chorsha',
     'lion49518@gmail.com',
     '+999000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Follow Up',
     'Not Connecting',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -19419,12 +19419,12 @@ INSERT INTO leads (
     'nirajsagar2006@yahoo.co.in',
     '+916000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Not Interested',
     'MBBS 3 Years Exp',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -19444,12 +19444,12 @@ INSERT INTO leads (
     'edurivictoria1011@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -19469,12 +19469,12 @@ INSERT INTO leads (
     'pinkalrana882@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'call done need details',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -19490,16 +19490,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdelrahman ELGEND',
+    'Abdelrahman ELG',
     'pedoelgendy@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'whats app done',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -19515,16 +19515,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Bahar Liza Fred',
+    'Dr Bahar Liza F',
     'silynmili@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'said to call back',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -19544,12 +19544,12 @@ INSERT INTO leads (
     'lokesh.123456@gmail.com',
     '+917000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'whats app did replied please check',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -19569,12 +19569,12 @@ INSERT INTO leads (
     'urinboevnodirbek1998@gmail.com',
     '+999000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Follow Up',
     'texted in german',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -19594,12 +19594,12 @@ INSERT INTO leads (
     'bhuvanarc7@gmail.com',
     '+918000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     'done on 27 sept 2025 3700 usd',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -19619,12 +19619,12 @@ INSERT INTO leads (
     'gayadav0021@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'general medicine doing',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -19640,16 +19640,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr sania muzaffar',
+    'Dr sania muzaff',
     'drsaniamuzaffar68@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'no whats app',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -19665,16 +19665,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Sairab Alam But',
+    'Dr Sairab Alam ',
     'shababalam885@gmail.com',
     '+918000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Hot',
     'mbbs done from jammu, 2 yrs exp after mbbs, needs interventional',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -19694,12 +19694,12 @@ INSERT INTO leads (
     'salahqadery1@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'arabic texting',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -19715,16 +19715,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'S.A. Hafeez Khan',
+    'S.A. Hafeez Kha',
     'mdhafeezk99@gmail.com',
     '+920000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19740,16 +19740,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohai Eddine Hadit',
+    'Mohai Eddine Ha',
     'mohihadit77@gmail.com',
     '+213000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19765,16 +19765,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'NADA NAZEH SHARYAN',
+    'NADA NAZEH SHAR',
     'nadanazeh89@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19790,16 +19790,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mahmood Alshaari',
+    'Mahmood Alshaar',
     'alshamash1000@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19815,16 +19815,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'مصطفى محمود الكحصة',
+    'مصطفى محمود الك',
     'alkahsah.mostafa@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19844,12 +19844,12 @@ INSERT INTO leads (
     'hamadanoory37@gmail.com',
     '+967000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'SA',
     'Follow Up',
     'speaking arabic',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19865,16 +19865,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Rupesh Rathod',
+    'Dr Rupesh Ratho',
     'sonofpadmavati@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19894,12 +19894,12 @@ INSERT INTO leads (
     'shah_119@hotmail.com',
     '+972000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'ZA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19915,16 +19915,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Chaitanya Pardeshi',
+    'Chaitanya Parde',
     'chaitanyapardeshi20@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19940,16 +19940,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'عبد الرحمن محمود',
+    'عبد الرحمن محمو',
     'hnurse400@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19969,12 +19969,12 @@ INSERT INTO leads (
     'hninalansi@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -19994,12 +19994,12 @@ INSERT INTO leads (
     'sisitor@yahoo.com',
     '+967000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'NG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20019,12 +20019,12 @@ INSERT INTO leads (
     'vandanapdave139@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20044,12 +20044,12 @@ INSERT INTO leads (
     'asmaaaleasi@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.901Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20069,12 +20069,12 @@ INSERT INTO leads (
     'hassabatool@yahoo.com',
     '+972000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'AE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20090,16 +20090,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Moataz Abouelnour',
+    'Moataz Abouelno',
     'motazaboelnour@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'call not answered , text kiya tha',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -20115,16 +20115,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Rafael Fernandes d',
+    'Rafael Fernande',
     'rafaelfernandes_7@hotmail.com',
     '+5540000000000',
     'Others',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'BR',
     'Follow Up',
     'evening call karo//whats napp did',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -20140,16 +20140,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Shankar Gunarasa',
+    'Shankar Gunaras',
     'drshanks72@gmail.com',
     '+60192226976',
     'Others',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'MY',
     'Follow Up',
     'malysia , answer kiya, whats app karo bola',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -20169,12 +20169,12 @@ INSERT INTO leads (
     'roberto.avolio1@yahoo.com.br',
     '+5520000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'BR',
     'Follow Up',
     'evening call karo//whats napp did',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -20190,16 +20190,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Rodolfo Rodrigues ',
+    'Rodolfo Rodrigu',
     'rodolfo_toniasso@hotmail.com',
     '+5570000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'BR',
     'Follow Up',
     'evening call karo//whats napp did',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -20219,12 +20219,12 @@ INSERT INTO leads (
     'junhan_lai@yahoo.com',
     '+60162635267',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'MY',
     'Follow Up',
     'malysia , answer kiya, whats app karo bola',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -20240,16 +20240,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed Sabry Elsh',
+    'Mohamed Sabry E',
     'drvelocity2010@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -20269,12 +20269,12 @@ INSERT INTO leads (
     'nouriabdellah28@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'MA',
     'Follow Up',
     'texted that cant talk',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -20290,16 +20290,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Haritha Jayawardan',
+    'Haritha Jayawar',
     'mharithadj55@gmail.com',
     '+94717668933',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'LK',
     'Follow Up',
     'text kiya',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -20319,12 +20319,12 @@ INSERT INTO leads (
     'ahmedkamal5555@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Hot',
     'text kiya',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -20340,16 +20340,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Kamel Bakry',
+    'Ahmed Kamel Bak',
     'drahmedkamelbakry@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Warm',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -20369,12 +20369,12 @@ INSERT INTO leads (
     'nouratarek97@gmail.com',
     '+201000000000',
     'Others',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'Line Busy',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -20390,16 +20390,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed El Mehdi B',
+    'Mohamed El Mehd',
     'Mohamed.el.mehdi.bensouda@hotmail.fr',
     '+213000000000',
     'MBBS/ FMG',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'MA',
     'Follow Up',
     'Not Ans',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -20419,12 +20419,12 @@ INSERT INTO leads (
     'drspp92@yahoo.com',
     '+60174525512',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'MY',
     'Follow Up',
     'connect on whataap',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -20444,12 +20444,12 @@ INSERT INTO leads (
     'yasser.okasha22@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -20465,16 +20465,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Nimantha Wijerathn',
+    'Nimantha Wijera',
     'niwije@gmail.com',
     '+94777664558',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'LK',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -20494,12 +20494,12 @@ INSERT INTO leads (
     'said.negm@outlook.com',
     '+94777664558',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -20519,12 +20519,12 @@ INSERT INTO leads (
     'seroge777@yahoo.com',
     '+37491417941',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'AM',
     'Follow Up',
     'Text on whataap',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -20540,16 +20540,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed Mahmoud',
+    'Mohammed Mahmou',
     'mohammedmahmoud244@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Junk',
     'He is not a Doctor',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -20565,16 +20565,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'محمد عصام عبدالباس',
+    'محمد عصام عبدال',
     'mohamadsharaan@yahoo.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -20590,16 +20590,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamad Baraa Amir',
+    'Mohamad Baraa A',
     'baraakassis@gmail.com',
     '+972000000000',
     'Others',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'SY',
     'Warm',
     'details sent on wtsapp on mam number',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20619,12 +20619,12 @@ INSERT INTO leads (
     'dr_ahmedraafat@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20640,16 +20640,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Alan Patrick Bombo',
+    'Alan Patrick Bo',
     'bombonatto2@gmail.com',
     '+5550000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'BR',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20665,16 +20665,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed M. Ghorap',
+    'Mohamed M. Ghor',
     'm_ghorap@yahoo.com',
     '+201000000000',
     'Others',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20694,12 +20694,12 @@ INSERT INTO leads (
     'midaltro@terra.com.br',
     '+5570000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'BR',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.622Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20719,12 +20719,12 @@ INSERT INTO leads (
     'rawanhajjar200@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20740,16 +20740,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Amro Elhoussieny',
+    'Amro Elhoussien',
     'amroelhoussieny@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20765,16 +20765,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ismail Abougendy',
+    'Ismail Abougend',
     'Iabogendy@hotmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20790,16 +20790,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mostafa El Ayoubi',
+    'Mostafa El Ayou',
     'moselayoubi@hotmail.fr',
     '+213000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'MA',
     'Not Interested',
     'I am already registered for a laparoscopy course this year next year he will enroll',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20815,16 +20815,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Alexandre R. Sá | ',
+    'Alexandre R. Sá',
     'alexandremedcg69@gmail.com',
     '+5580000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'BR',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20844,12 +20844,12 @@ INSERT INTO leads (
     'assofi001@hotmail.fr',
     '+213000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'MA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20869,12 +20869,12 @@ INSERT INTO leads (
     'prof_pepsi@yahoo.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20894,12 +20894,12 @@ INSERT INTO leads (
     'Ahmedtantawy474@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20919,12 +20919,12 @@ INSERT INTO leads (
     'msheta464@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20940,16 +20940,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mostafa Mohamdy El',
+    'Mostafa Mohamdy',
     'mostafalis2022@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -20969,12 +20969,12 @@ INSERT INTO leads (
     'jpcalheiros@yahoo.com.br',
     '+5520000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'BR',
     'Follow Up',
     'wtsapp msgs sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -20994,12 +20994,12 @@ INSERT INTO leads (
     'maha.394027140@gmail.com',
     '+201000000000',
     'Others',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'wtsapp msgs sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -21015,16 +21015,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dahlia Moharam ElG',
+    'Dahlia Moharam ',
     'dalia.hussein@students.kasralainy.edu.eg',
     '+201000000000',
     'MBBS/ FMG',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'wtsapp msgs sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -21040,16 +21040,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Rahman Ghaffar',
+    'Dr. Rahman Ghaf',
     'dr.rahman.ghaffarzadegan@gmail.com',
     '+999000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'Uzbekistan',
     'Hot',
     'wtsapp msgs sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -21065,16 +21065,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ashraf Al-HusAن٦٦ز',
+    'Ashraf Al-HusAن',
     'ashrafka2@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'no whats app please share mail',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -21094,12 +21094,12 @@ INSERT INTO leads (
     'drfelipe@hotmail.com',
     '+5510000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'BR',
     'Follow Up',
     'wtsapp msgs sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -21119,12 +21119,12 @@ INSERT INTO leads (
     'diany.maha@gmail.com',
     '+213000000000',
     'Others',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'MA',
     'Follow Up',
     'wtsapp msgs sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -21140,16 +21140,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Khalid EL Mortaji',
+    'Khalid EL Morta',
     'elmortajikhalid@hotmail.fr',
     '+213000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'MA',
     'Follow Up',
     'wtsapp msgs sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -21169,12 +21169,12 @@ INSERT INTO leads (
     'abaharthur@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'NL',
     'Follow Up',
     'wtsapp msgs sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -21190,16 +21190,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Abbas Elkhou',
+    'Ahmed Abbas Elk',
     'aabaselkhouli@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'wtsapp msgs sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -21219,12 +21219,12 @@ INSERT INTO leads (
     'bam220522@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'US',
     'Follow Up',
     'connect on whataap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21244,12 +21244,12 @@ INSERT INTO leads (
     'drahmedalshawy1@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21265,16 +21265,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Hăssăn Ǯtiă',
+    'Ahmed Hăssăn Ǯt',
     'ahmedhassan3tia@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21294,12 +21294,12 @@ INSERT INTO leads (
     'emad.most@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'connect on what ap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21319,12 +21319,12 @@ INSERT INTO leads (
     'rim.mernissi17@gmail.com',
     '+213000000000',
     'Others',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'MA',
     'Follow Up',
     'call hang up',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21340,16 +21340,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Ben EL Ouafi',
+    'Ahmed Ben EL Ou',
     'ahmed.emsi@icloud.com',
     '+213000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'US',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21365,16 +21365,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Esam Mohamed Rasha',
+    'Esam Mohamed Ra',
     '3samrashad@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'Text on whataap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21390,16 +21390,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed Ashraf Ewe',
+    'Mohamed Ashraf ',
     'eweda558@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'Text on whataap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21419,12 +21419,12 @@ INSERT INTO leads (
     'drpedropinheironeto@gmail.com',
     '+5560000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'US',
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21440,16 +21440,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Zainul Ariffin Moh',
+    'Zainul Ariffin ',
     'zainulipin@yahoo.com',
     '+60134148756',
     'MBBS/ FMG',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'MY',
     'Follow Up',
     'Text on whataap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21469,12 +21469,12 @@ INSERT INTO leads (
     'salmahelmy002@gmail.com',
     '+201000000000',
     'Others',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21490,16 +21490,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Houssam-Eddine Ber',
+    'Houssam-Eddine ',
     'hossamsum@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'MA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21519,12 +21519,12 @@ INSERT INTO leads (
     'kalii.ihor27@gmail.com',
     '+381000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'UA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21540,16 +21540,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Doc Mohammed Amine',
+    'Doc Mohammed Am',
     'hard.amine@gmail.com',
     '+213000000000',
     'Others',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'MA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21569,12 +21569,12 @@ INSERT INTO leads (
     'lucfm_1@hotmail.com',
     '+5530000000000',
     'MD/MS/DNB',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'BR',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21590,16 +21590,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'DrDhaneesh Karuppu',
+    'DrDhaneesh Karu',
     'drdhaneeshk@gmail.com',
     '+37455415301',
     'MBBS/ FMG',
-    'Robotic Surgery ad',
+    'Robotic Surgery',
     'AM',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21619,12 +21619,12 @@ INSERT INTO leads (
     'najmhuda560@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'Not Connect',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21644,12 +21644,12 @@ INSERT INTO leads (
     'ayhamshehabi639@gmail.com',
     '+964000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21669,12 +21669,12 @@ INSERT INTO leads (
     'hamedgaber31@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not Connect',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21694,12 +21694,12 @@ INSERT INTO leads (
     'suviricha@gmail.com',
     '+920000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21715,16 +21715,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'وفى أنفسكم أفلا تب',
+    'وفى أنفسكم أفلا',
     'fox054899@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21744,12 +21744,12 @@ INSERT INTO leads (
     'satyamgolu001@gmail.com',
     '+918000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Brochures send',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -21765,16 +21765,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'elrashid eltayeb',
+    'elrashid eltaye',
     'elawadrashid@gmail.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'US',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21794,12 +21794,12 @@ INSERT INTO leads (
     'abhinav.pandey2307@gmail.com',
     '+920000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'today details sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21815,16 +21815,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdalsalam Algamal',
+    'Abdalsalam Alga',
     'abdo75gamal@gmail.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'SA',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21844,12 +21844,12 @@ INSERT INTO leads (
     'bassam.sheryan@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21869,12 +21869,12 @@ INSERT INTO leads (
     'drezhilarasi@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21894,12 +21894,12 @@ INSERT INTO leads (
     'alsareeah@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21919,12 +21919,12 @@ INSERT INTO leads (
     'faroukabdul737@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Follow Up',
     'Call Back after 1 year',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21944,12 +21944,12 @@ INSERT INTO leads (
     'uba57569@gmail.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21965,16 +21965,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Yahya Elssam',
+    'Ahmed Yahya Els',
     'ay996539@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -21990,16 +21990,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed Wafik El G',
+    'Mohamed Wafik E',
     'm.wafik2@gmail.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Warm',
     'call back , whats app sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -22019,12 +22019,12 @@ INSERT INTO leads (
     'maftuna1504@gmail.com',
     '+999000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Follow Up',
     'no whats app, call didnt connect',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -22044,12 +22044,12 @@ INSERT INTO leads (
     'drravimeshram@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Follow Up',
     'call cut kiya',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -22065,7 +22065,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mostafa Youssef LO',
+    'Mostafa Youssef',
     'mostafayosof356@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -22074,7 +22074,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22090,7 +22090,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Zahraa General',
+    'Dr. Zahraa Gene',
     'zahraa_futooh@hotmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -22099,7 +22099,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22124,7 +22124,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22149,7 +22149,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22165,7 +22165,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Sujanthe Wickramas',
+    'Sujanthe Wickra',
     'sujanthe@yahoo.com',
     '+94772094500',
     'MD/MS/DNB',
@@ -22174,7 +22174,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22199,7 +22199,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22224,7 +22224,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22249,7 +22249,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22265,7 +22265,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'محمد ابراهيم درويش',
+    'محمد ابراهيم در',
     'mdarwesh37@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -22274,7 +22274,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22290,7 +22290,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Андрей Москаленко',
+    'Андрей Москален',
     'prime108@ukr.net',
     '+381000000000',
     'MD/MS/DNB',
@@ -22299,7 +22299,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22315,7 +22315,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Kugadas Sutharshan',
+    'Kugadas Suthars',
     'ksuthathshann@gmail.com',
     '+94773986156',
     'MD/MS/DNB',
@@ -22324,7 +22324,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22340,7 +22340,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'DrHisham Ibrahim',
+    'DrHisham Ibrahi',
     'drhisham55@hotmail.com',
     '+201000000000',
     'Others',
@@ -22349,7 +22349,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22374,7 +22374,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22399,7 +22399,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22415,7 +22415,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ihab Ragab Alaqtas',
+    'Ihab Ragab Alaq',
     'cts.ihabragab@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -22424,7 +22424,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22449,7 +22449,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22474,7 +22474,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22499,7 +22499,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22524,7 +22524,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22540,7 +22540,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Natalya Baghumyan',
+    'Natalya Baghumy',
     'nataliebaghumyan@gmail.com',
     '+37494866468',
     'MD/MS/DNB',
@@ -22549,7 +22549,7 @@ INSERT INTO leads (
     'Follow Up',
     'rubeena mam number',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -22574,7 +22574,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22599,7 +22599,7 @@ INSERT INTO leads (
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22624,7 +22624,7 @@ INSERT INTO leads (
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22649,7 +22649,7 @@ INSERT INTO leads (
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22665,7 +22665,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Shawky Moham',
+    'Ahmed Shawky Mo',
     'ahmedelsherif1959@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -22674,7 +22674,7 @@ INSERT INTO leads (
     'Hot',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22699,7 +22699,7 @@ INSERT INTO leads (
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22715,7 +22715,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdelrahman gamal ',
+    'Abdelrahman gam',
     'Abdelrahmansaleh90@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -22724,7 +22724,7 @@ INSERT INTO leads (
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22749,7 +22749,7 @@ INSERT INTO leads (
     'Follow Up',
     'He is student',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22765,7 +22765,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Christian Wabene',
+    'Christian Waben',
     'chr.wabenn@gmail.com',
     '+244000000000',
     'MD/MS/DNB',
@@ -22774,7 +22774,7 @@ INSERT INTO leads (
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22790,7 +22790,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Reda Abdelfattah S',
+    'Reda Abdelfatta',
     'redashahin@hotmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -22799,7 +22799,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22815,7 +22815,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Bhishman Thevaraja',
+    'Bhishman Thevar',
     'bhishmant@yahoo.com',
     '+94777738017',
     'MD/MS/DNB',
@@ -22824,7 +22824,7 @@ INSERT INTO leads (
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22840,7 +22840,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Ismail Hassa',
+    'Ahmed Ismail Ha',
     'ahmed_ihi@hotmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -22849,7 +22849,7 @@ INSERT INTO leads (
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22874,7 +22874,7 @@ INSERT INTO leads (
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22899,7 +22899,7 @@ INSERT INTO leads (
     'Not Interested',
     'Next Year looking for',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22924,7 +22924,7 @@ INSERT INTO leads (
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22940,7 +22940,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Younes Benazzou',
+    'Dr Younes Benaz',
     'younesbenazzouz88@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
@@ -22949,7 +22949,7 @@ INSERT INTO leads (
     'Follow Up',
     'connect on what aap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.902Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22974,7 +22974,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -22990,7 +22990,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Rozana T Eltahan',
+    'Rozana T Eltaha',
     'rozanatalat5102005@gmail.com',
     '+201000000000',
     'Others',
@@ -22999,7 +22999,7 @@ INSERT INTO leads (
     'Junk',
     'He is a student',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -23015,7 +23015,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed El Lakkany',
+    'Ahmed El Lakkan',
     'leko_barca@hotmail.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -23024,7 +23024,7 @@ INSERT INTO leads (
     'Follow Up',
     'Line busy Text in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23049,7 +23049,7 @@ INSERT INTO leads (
     'Follow Up',
     'RNR text in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23065,7 +23065,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'ОНКОЛОГ•ПРОКТОЛОГ•',
+    'ОНКОЛОГ•ПРОКТОЛ',
     'boikor@yahoo.com',
     '+381000000000',
     'MD/MS/DNB',
@@ -23074,7 +23074,7 @@ INSERT INTO leads (
     'Follow Up',
     'Called to Dr Answer and disconnected the call .DR responsed in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23090,7 +23090,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdelrahman Zaki A',
+    'Abdelrahman Zak',
     'abdelrahmanraslan20@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -23099,7 +23099,7 @@ INSERT INTO leads (
     'Follow Up',
     'RNR text in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23115,7 +23115,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Viknesh Subramania',
+    'Viknesh Subrama',
     'vickrg470@gmail.com',
     '+60172600499',
     'MD/MS/DNB',
@@ -23124,7 +23124,7 @@ INSERT INTO leads (
     'Follow Up',
     'RNR text in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23149,7 +23149,7 @@ INSERT INTO leads (
     'Follow Up',
     'Called to Dr Answer and disconnected the call .DR responsed in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23165,7 +23165,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mostafa Ezzat Abd ',
+    'Mostafa Ezzat A',
     'sasazezo_17@hotmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -23174,7 +23174,7 @@ INSERT INTO leads (
     'Warm',
     'Dr respond in whats up regarding the fee for robotic surgery',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23190,7 +23190,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Mamdouh Elsh',
+    'Ahmed Mamdouh E',
     'ahmedelshawarby23@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -23199,7 +23199,7 @@ INSERT INTO leads (
     'Follow Up',
     'RNR text in whats up // Called to Dr Answer and disconnected the call text in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23224,7 +23224,7 @@ INSERT INTO leads (
     'Follow Up',
     'Called to Dr Answer and disconnected the call //Called to Dr Answer and disconnected the call text in whats up',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23240,7 +23240,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'واتس فقط ممنوع الا',
+    'واتس فقط ممنوع ',
     'dr.muhammadfffathy@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -23249,7 +23249,7 @@ INSERT INTO leads (
     'Follow Up',
     'Line busy Text in whats up //Line busy',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23265,7 +23265,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Mohamed Yehya',
+    'Dr Mohamed Yehy',
     'dryahya1681979@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -23274,7 +23274,7 @@ INSERT INTO leads (
     'Follow Up',
     'RNR text in whats up // line busy',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23299,7 +23299,7 @@ INSERT INTO leads (
     'Warm',
     'Dr text back in whats up Dr looking for robotic surgery ask regarding the fee // Text dr in whats up waiting for resposne',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23315,7 +23315,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Alexandre Borghere',
+    'Alexandre Borgh',
     'alexandreborgheresi@hotmail.com',
     '+5510000000000',
     'MD/MS/DNB',
@@ -23324,7 +23324,7 @@ INSERT INTO leads (
     'Follow Up',
     'Voice mail text in whats up // Voice mail',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23340,7 +23340,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed Al Borgi',
+    'Mohammed Al Bor',
     'mohammedalborgi@gmail.com',
     '+213000000000',
     'Others',
@@ -23349,7 +23349,7 @@ INSERT INTO leads (
     'Follow Up',
     'Line busy Text in whats up // line busy',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23374,7 +23374,7 @@ INSERT INTO leads (
     'Follow Up',
     'Tried to call the Dr but not reacheabel T // switch off',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23390,7 +23390,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Essam Atef Ahmed R',
+    'Essam Atef Ahme',
     'drshabrawy29@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -23399,7 +23399,7 @@ INSERT INTO leads (
     'Follow Up',
     'Whats app kiya//',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -23424,7 +23424,7 @@ INSERT INTO leads (
     'Warm',
     'whats app msg done//',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -23440,7 +23440,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Abd El Naser',
+    'Ahmed Abd El Na',
     'ahmed_naserdrea3@outlook.com',
     '+201000000000',
     'Others',
@@ -23449,7 +23449,7 @@ INSERT INTO leads (
     'Follow Up',
     'call back , whats app sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -23465,7 +23465,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Islam Mahmoud Aser',
+    'Islam Mahmoud A',
     'eslam.asery86@gmail.com.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -23474,7 +23474,7 @@ INSERT INTO leads (
     'Follow Up',
     'call back , whats app sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -23499,7 +23499,7 @@ INSERT INTO leads (
     'Follow Up',
     'call back , whats app sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -23515,7 +23515,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ervand Kirakosyan',
+    'Ervand Kirakosy',
     'yervandkirakosyan001@gmail.com',
     '+37441655355',
     'MD/MS/DNB',
@@ -23524,7 +23524,7 @@ INSERT INTO leads (
     'Follow Up',
     'call back , whats app sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -23540,7 +23540,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Nirodha Abeywardha',
+    'Nirodha Abeywar',
     'niroabey@yahoo.com',
     '+94771926707',
     'MD/MS/DNB',
@@ -23549,7 +23549,7 @@ INSERT INTO leads (
     'Follow Up',
     'call back , whats app sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -23565,7 +23565,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Sirojiddin Ziyevud',
+    'Sirojiddin Ziye',
     'esz070790@mail.ru',
     '+999000000000',
     'Others',
@@ -23574,7 +23574,7 @@ INSERT INTO leads (
     'Follow Up',
     'call back , whats app sent',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -23599,7 +23599,7 @@ INSERT INTO leads (
     'Follow Up',
     'Not answering',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23624,7 +23624,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23640,7 +23640,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Raphael de Oli',
+    'Dr. Raphael de ',
     'rapha_tkd@yahoo.com.br',
     '+5550000000000',
     'Others',
@@ -23649,7 +23649,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23674,7 +23674,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23699,7 +23699,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23715,7 +23715,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Hosam AlamE''dien',
+    'Hosam AlamE''die',
     'dr_h_alamedien@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -23724,7 +23724,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23740,7 +23740,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ghizlane El aabdou',
+    'Ghizlane El aab',
     'Gabdouni95@gmail.com',
     '+213000000000',
     'Others',
@@ -23749,7 +23749,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23765,7 +23765,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Thoufeek Sarjoon',
+    'Thoufeek Sarjoo',
     'sarjoon221@gmail.com',
     '+94775383221',
     'MBBS/ FMG',
@@ -23774,7 +23774,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23799,7 +23799,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23815,7 +23815,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Paulo Teixeira Jr.',
+    'Paulo Teixeira ',
     'paulotx@uol.com.br',
     '+5520000000000',
     'MD/MS/DNB',
@@ -23824,7 +23824,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23840,7 +23840,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Muhammed Salah Wer',
+    'Muhammed Salah ',
     'm.wereda@gmail.com',
     '+967000000000',
     'MD/MS/DNB',
@@ -23849,7 +23849,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23874,7 +23874,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23899,7 +23899,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23924,7 +23924,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23940,7 +23940,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdelmjid Khaddadi',
+    'Abdelmjid Khadd',
     'abdelmjidkhaddadi723@gmail.com',
     '+213000000000',
     'Others',
@@ -23949,7 +23949,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -23974,7 +23974,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -23999,7 +23999,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -24024,7 +24024,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -24049,7 +24049,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -24065,7 +24065,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Elhaj Hamid Radall',
+    'Elhaj Hamid Rad',
     'hradallah@gmail.com',
     '+250000000000',
     'MBBS/ FMG',
@@ -24074,7 +24074,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -24090,7 +24090,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Sudhanshu Ranjan',
+    'Sudhanshu Ranja',
     'ranjan.sudhanshu5@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
@@ -24099,7 +24099,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -24124,7 +24124,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -24149,7 +24149,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -24165,7 +24165,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Haitham Abdel Waha',
+    'Haitham Abdel W',
     'Dr_haytham89@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -24174,7 +24174,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -24199,7 +24199,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -24224,7 +24224,7 @@ INSERT INTO leads (
     'Follow Up',
     'text on what',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -24249,7 +24249,7 @@ INSERT INTO leads (
     'Follow Up',
     'Line Busy',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -24274,7 +24274,7 @@ INSERT INTO leads (
     'Follow Up',
     'No whataap',
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -24299,7 +24299,7 @@ INSERT INTO leads (
     'Follow Up',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -24324,7 +24324,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -24340,7 +24340,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Reuben Abraham Tho',
+    'Reuben Abraham ',
     'reubencrm@gmail.com',
     '+60177721985',
     'MD/MS/DNB',
@@ -24349,7 +24349,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -24365,7 +24365,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed AbdAlla Ab',
+    'Mohamed AbdAlla',
     'Orthomaster@icloud.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -24374,7 +24374,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -24390,7 +24390,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed Elseddik M',
+    'Mohamed Elseddi',
     'memo3mosa@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -24399,7 +24399,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -24424,7 +24424,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -24449,7 +24449,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -24474,7 +24474,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -24490,7 +24490,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Omar Ahmed AbdElWa',
+    'Omar Ahmed AbdE',
     'Surgeon0339@hotmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -24499,7 +24499,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -24515,7 +24515,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamad Fouad Elna',
+    'Mohamad Fouad E',
     'drmohamadfouad26@gmail.com',
     '+201000000000',
     'Others',
@@ -24524,7 +24524,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -24540,7 +24540,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Kasun Wijesingha',
+    'Kasun Wijesingh',
     'kasunwijesingha1971@gmail.com',
     '+94778879303',
     'MD/MS/DNB',
@@ -24549,7 +24549,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -24565,7 +24565,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Georgejohn K Thoma',
+    'Georgejohn K Th',
     'georgejohn007@hotmail.com',
     '+60193810652',
     'MD/MS/DNB',
@@ -24574,7 +24574,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -24599,7 +24599,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -24615,7 +24615,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed Elghonemy',
+    'Mohamed Elghone',
     'Mohamed.alghonemy@yahoo.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -24624,7 +24624,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -24640,7 +24640,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Hossam Abdelaziz',
+    'Hossam Abdelazi',
     'Semsemnhnh@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -24649,7 +24649,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -24674,7 +24674,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -24690,7 +24690,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Wilson Eustaquio',
+    'Wilson Eustaqui',
     'wilsoneustaquio@yahoo.com.br',
     '+5530000000000',
     'MD/MS/DNB',
@@ -24699,7 +24699,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -24715,7 +24715,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ahmed Ben Mosa Ela',
+    'Ahmed Ben Mosa ',
     'am2961136@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -24724,7 +24724,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -24740,7 +24740,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Alla Khatim Awad',
+    'Alla Khatim Awa',
     'drallakhatim@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -24749,7 +24749,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -24774,7 +24774,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -24799,7 +24799,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -24824,7 +24824,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -24849,7 +24849,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -24865,7 +24865,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdelrahman Samir',
+    'Abdelrahman Sam',
     'coolb2002y@hotmail.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -24874,7 +24874,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -24890,7 +24890,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Islam Abdelrhman',
+    'Islam Abdelrhma',
     'dr.islam_abdelrhman@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -24899,7 +24899,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -24915,7 +24915,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'د.محمد عبد الحكيم ',
+    'د.محمد عبد الحك',
     'mo.surg10@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -24924,7 +24924,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -24940,7 +24940,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Shanawaz alam',
+    'Dr Shanawaz ala',
     'drshanawazalam00119@gmail.com',
     '+972000000000',
     'MD/MS/DNB',
@@ -24949,7 +24949,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -24974,7 +24974,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -24990,7 +24990,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ibrahem Issac Gaie',
+    'Ibrahem Issac G',
     'ibrahimishak9070@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
@@ -24999,7 +24999,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -25024,7 +25024,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -25040,7 +25040,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdelrahman El Mal',
+    'Abdelrahman El ',
     'obegyna@yahoo.com',
     '+201000000000',
     'MBBS/ FMG',
@@ -25049,7 +25049,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -25074,7 +25074,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -25099,7 +25099,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -25124,7 +25124,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -25149,7 +25149,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -25174,7 +25174,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -25190,7 +25190,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'abdessalam elmouss',
+    'abdessalam elmo',
     'elmosati.abdessalam@usmba.ac.ma',
     '+213000000000',
     'Others',
@@ -25199,7 +25199,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -25224,7 +25224,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -25240,7 +25240,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Demian | Gener',
+    'Dr. Demian | Ge',
     'drdemyanpetrov@gmail.com',
     '+7970000000000',
     'MD/MS/DNB',
@@ -25249,7 +25249,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.623Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -25265,7 +25265,7 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Humera Bint Raees',
+    'Humera Bint Rae',
     'drhumera_raees@yahoo.com',
     '+972000000000',
     'MD/MS/DNB',
@@ -25274,7 +25274,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -25299,7 +25299,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -25324,7 +25324,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -25349,7 +25349,7 @@ INSERT INTO leads (
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -25369,12 +25369,12 @@ INSERT INTO leads (
     'karim.mounaouir@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -25394,12 +25394,12 @@ INSERT INTO leads (
     'haydarovilyosbek1@gmail.com',
     '+999000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -25419,12 +25419,12 @@ INSERT INTO leads (
     'hiralyadav636@gmail.com',
     '+917000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -25440,16 +25440,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Sharath Shanmugam',
+    'Sharath Shanmug',
     'sharathshan8@gmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -25469,12 +25469,12 @@ INSERT INTO leads (
     'drrajanrajput8418@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -25494,12 +25494,12 @@ INSERT INTO leads (
     'azharuddinkhn2@gmail.com',
     '+917000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -25519,12 +25519,12 @@ INSERT INTO leads (
     'minhazaid16@gmail.com',
     '+94755788961',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'LK',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -25544,12 +25544,12 @@ INSERT INTO leads (
     'gautamgupta2896@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -25569,12 +25569,12 @@ INSERT INTO leads (
     'Ashraf.yassa@ymail.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -25594,12 +25594,12 @@ INSERT INTO leads (
     '8740riya@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -25619,12 +25619,12 @@ INSERT INTO leads (
     'drbamussali@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -25644,12 +25644,12 @@ INSERT INTO leads (
     'purumadan@ovi.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -25665,16 +25665,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Raghul Rock Star',
+    'Raghul Rock Sta',
     'raghulrockstar077@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -25694,12 +25694,12 @@ INSERT INTO leads (
     'paramuparameshwari290@gmail.com',
     '+918000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -25719,12 +25719,12 @@ INSERT INTO leads (
     'drmikhan512@gmail.com',
     '+918000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -25744,12 +25744,12 @@ INSERT INTO leads (
     'neelakandan531970@gmail.com',
     '+919000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -25769,12 +25769,12 @@ INSERT INTO leads (
     'abdeltawabtahawy@gmail.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -25794,12 +25794,12 @@ INSERT INTO leads (
     'darshannakum1704@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -25819,12 +25819,12 @@ INSERT INTO leads (
     'ousmanyahya1997@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -25840,16 +25840,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Vishal Kesarwani',
+    'Vishal Kesarwan',
     'vishal.iitr.ar@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -25869,12 +25869,12 @@ INSERT INTO leads (
     'sadusanketh89@gmail.com',
     '+918000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -25894,12 +25894,12 @@ INSERT INTO leads (
     'ahmedsalahdr@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -25919,12 +25919,12 @@ INSERT INTO leads (
     'ibnalmass17@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -25944,12 +25944,12 @@ INSERT INTO leads (
     'dr.sabri55@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -25969,12 +25969,12 @@ INSERT INTO leads (
     'abbud45@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -25994,12 +25994,12 @@ INSERT INTO leads (
     'assasa151078@gmail.com',
     '+96565621070',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26019,12 +26019,12 @@ INSERT INTO leads (
     'sunnybvanarse@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26044,12 +26044,12 @@ INSERT INTO leads (
     'dr.shroukmagdy@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26069,12 +26069,12 @@ INSERT INTO leads (
     'youssefayoub321@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26090,16 +26090,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    '𝓗𝓪𝓻𝓲𝓱𝓪𝓻𝓪 �',
+    '𝓗𝓪𝓻𝓲𝓱𝓪𝓻�',
     'harisudhan070602@gmail.com',
     '+917000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26115,16 +26115,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Gulibonu Sadillaye',
+    'Gulibonu Sadill',
     'gulibonu3012@gmail.com',
     '+999000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26140,16 +26140,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'lissom yette Dieud',
+    'lissom yette Di',
     'Somyede@yahoo.co.uk',
     '+448000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'GB',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26169,12 +26169,12 @@ INSERT INTO leads (
     'mosohilsohil52@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26194,12 +26194,12 @@ INSERT INTO leads (
     'hemanthakur9927@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26219,12 +26219,12 @@ INSERT INTO leads (
     'kerolos.ayman@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26240,16 +26240,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Adel Abo Elfotouh',
+    'Adel Abo Elfoto',
     'doctoradel4@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26269,12 +26269,12 @@ INSERT INTO leads (
     'arzikulodilov@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26294,12 +26294,12 @@ INSERT INTO leads (
     'ugshasitha@gmail.com',
     '+94714414026',
     'Others',
-    'Interventional car',
+    'Interventional',
     'LK',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26319,12 +26319,12 @@ INSERT INTO leads (
     'menatallaehab@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26344,12 +26344,12 @@ INSERT INTO leads (
     'sulthanboss.ss@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26365,16 +26365,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'عبد المجيد البشري',
+    'عبد المجيد البش',
     'hefdhallahalisaleh@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26394,12 +26394,12 @@ INSERT INTO leads (
     'Thapaliya_s@yahoo.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26419,12 +26419,12 @@ INSERT INTO leads (
     'yalseragi@gmail.com',
     '+12367882155',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'CA',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26444,12 +26444,12 @@ INSERT INTO leads (
     'thanhsonjk98@gmail.com',
     '+84344799900',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'VN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -26469,12 +26469,12 @@ INSERT INTO leads (
     'tytmhmd595@gmail.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26490,16 +26490,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr Rajesh Rajeev',
+    'Dr Rajesh Rajee',
     'aiimsneurosurgery17@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26515,16 +26515,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'pushpendra thakur',
+    'pushpendra thak',
     'pushpendrasingh4368@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26544,12 +26544,12 @@ INSERT INTO leads (
     'adeladham01116452263@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26569,12 +26569,12 @@ INSERT INTO leads (
     'nikjainnj011@gmail.com',
     '+917000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26590,16 +26590,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Khawla Alshara''abi',
+    'Khawla Alshara''',
     'khawla_alsharaabi44@icloud.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26619,12 +26619,12 @@ INSERT INTO leads (
     'sujatasm9@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26644,12 +26644,12 @@ INSERT INTO leads (
     'Aasthapalikhe@gmail.com',
     '+9780000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26665,16 +26665,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Muhammad Atif Shah',
+    'Muhammad Atif S',
     'muhammadatifshahzad1@gmail.com',
     '+972000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'AE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26690,16 +26690,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dranil kumar Soni',
+    'Dranil kumar So',
     'dranilsoni135@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26719,12 +26719,12 @@ INSERT INTO leads (
     'al5630792@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26744,12 +26744,12 @@ INSERT INTO leads (
     'vimijain90@gmail.com',
     '+918000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26769,12 +26769,12 @@ INSERT INTO leads (
     'saquibdr876@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26790,16 +26790,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohamed Elshahat',
+    'Mohamed Elshaha',
     'mohamed.tekoo25@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26819,12 +26819,12 @@ INSERT INTO leads (
     'bannya7101@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -26840,16 +26840,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdralrahman Eltah',
+    'Abdralrahman El',
     'neeel5536@gmail.com',
     '+967000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'SD',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -26869,12 +26869,12 @@ INSERT INTO leads (
     'Panemjuhisuren@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -26894,12 +26894,12 @@ INSERT INTO leads (
     'saedata2004@gmail.com',
     '+971000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -26919,12 +26919,12 @@ INSERT INTO leads (
     'alharbiy2007@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -26940,16 +26940,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'nguyễn quốc việt',
+    'nguyễn quốc việ',
     'nqviet.hth@gmail.com',
     '+84378475122',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'VN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -26969,12 +26969,12 @@ INSERT INTO leads (
     'rahuldevraghuram@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -26994,12 +26994,12 @@ INSERT INTO leads (
     'emaraa866@gmail.com',
     '+202000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -27019,12 +27019,12 @@ INSERT INTO leads (
     'Thute.karthik97@gmail.com',
     '+97470231396',
     'Others',
-    'Interventional car',
+    'Interventional',
     'QA',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -27044,12 +27044,12 @@ INSERT INTO leads (
     'opshahin@gmail.com',
     '+9780000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -27069,12 +27069,12 @@ INSERT INTO leads (
     'abhisavita6394@gmail.com',
     '+916000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -27090,16 +27090,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    '𝑨𝒃𝒅𝒖𝒌𝒂𝒓𝒊𝒎',
+    '𝑨𝒃𝒅𝒖𝒌𝒂𝒓�',
     'abdukarimovjavlon368@gmail.com',
     '+999000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'UZ',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -27119,12 +27119,12 @@ INSERT INTO leads (
     'amansaifi5656@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -27144,12 +27144,12 @@ INSERT INTO leads (
     'drgufrankhan@hotmail.com',
     '+920000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -27169,12 +27169,12 @@ INSERT INTO leads (
     'mohannadyemen15@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -27194,12 +27194,12 @@ INSERT INTO leads (
     'khaled81976.kf@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -27219,12 +27219,12 @@ INSERT INTO leads (
     'boogeyman2705@gmail.com',
     '+917000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27244,12 +27244,12 @@ INSERT INTO leads (
     'trehman2410@gmail.com',
     '+917000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27269,12 +27269,12 @@ INSERT INTO leads (
     'rajpootpinku2001@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27294,12 +27294,12 @@ INSERT INTO leads (
     'sanjaysg940@gmail.com',
     '+9780000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27319,12 +27319,12 @@ INSERT INTO leads (
     'quangtri3003@gmail.com',
     '+84979984320',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'VN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27344,12 +27344,12 @@ INSERT INTO leads (
     'dy2020yd@gmail.com',
     '771089866',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27365,16 +27365,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed AlGamra',
+    'Mohammed AlGamr',
     'moqhalgamra@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27394,12 +27394,12 @@ INSERT INTO leads (
     'loza.22001166@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'SD',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27419,12 +27419,12 @@ INSERT INTO leads (
     'dr.mahmoudebrahem@Gmail.com',
     '+967000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'SA',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27440,16 +27440,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ibrahim Abdelsalam',
+    'Ibrahim Abdelsa',
     'dr_ibrahim333@yahoo.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27465,16 +27465,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdelmajid Bouzerd',
+    'Abdelmajid Bouz',
     'abdelmaji73@gmail.fr',
     '+213000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27490,16 +27490,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'محمد احمد محمد عبد',
+    'محمد احمد محمد ',
     'wasly1233@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27519,12 +27519,12 @@ INSERT INTO leads (
     'alaswadyaseen2@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27544,12 +27544,12 @@ INSERT INTO leads (
     'adelygh7@yahoo.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27569,12 +27569,12 @@ INSERT INTO leads (
     '5751198y@gmail.com',
     '+967000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'SA',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -27594,12 +27594,12 @@ INSERT INTO leads (
     'Mohabameen.ma.ma99@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -27619,12 +27619,12 @@ INSERT INTO leads (
     'ousssid@icloud.com',
     '+972000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -27644,12 +27644,12 @@ INSERT INTO leads (
     'drmerynagary@gmail.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -27665,16 +27665,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Elkennassi fayssal',
+    'Elkennassi fays',
     'elkennassi@gmail.com',
     '+213000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -27690,16 +27690,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    '𝙳𝚛.𝚙𝚛𝚒𝚝𝚊𝚖 ',
+    '𝙳𝚛.𝚙𝚛𝚒𝚝𝚊',
     'sawantpritam422000@gmail.com',
     '+917000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -27715,16 +27715,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Imali Wijerathne',
+    'Imali Wijerathn',
     'imalimw@gmail.com',
     '+94714440465',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'LK',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -27740,16 +27740,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr sandeep walia',
+    'Dr sandeep wali',
     'sandeepwalia1919@icloud.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -27769,12 +27769,12 @@ INSERT INTO leads (
     'am1905820@gmail.com',
     '+202000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -27794,12 +27794,12 @@ INSERT INTO leads (
     'panwarmridul1998@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -27815,16 +27815,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Marah Arsalan AL-t',
+    'Marah Arsalan A',
     'maraharsalanaltayp@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -27840,16 +27840,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'இராமசாமி பாலசுப்பி',
+    'இராமசாமி பாலசுப',
     'bramasamy880@gmail.com',
     '+919000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -27869,12 +27869,12 @@ INSERT INTO leads (
     'darioush7777@gmail.com',
     '+37495645905',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'IR',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -27894,12 +27894,12 @@ INSERT INTO leads (
     'nisarg431001@gmail.com',
     '+919000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -27915,16 +27915,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Soliman Elshahat',
+    'Soliman Elshaha',
     'sulaiman.elshahat@gmail.com',
     '+967000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'SA',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Nakshatra'
 );
 INSERT INTO leads (
@@ -27940,16 +27940,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Taha Mohammed Muhs',
+    'Taha Mohammed M',
     'taha55860@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -27965,16 +27965,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Ashraff izzathul M',
+    'Ashraff izzathu',
     'ashraffmuneera678@gmail.com',
     '+94761024009',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'LK',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -27994,12 +27994,12 @@ INSERT INTO leads (
     'smartboytushar2020@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -28019,12 +28019,12 @@ INSERT INTO leads (
     'kholodmonir7@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -28040,16 +28040,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr.Gufran Chaudhar',
+    'Dr.Gufran Chaud',
     'gufrankhan96340@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -28069,12 +28069,12 @@ INSERT INTO leads (
     'adityasahu68195@gmail.com',
     '+917000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -28090,16 +28090,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Khemraj Adhikari',
+    'Khemraj Adhikar',
     'akhemraj07@gmail.com',
     '+9780000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -28119,12 +28119,12 @@ INSERT INTO leads (
     'rahulpatil98@gmail.com',
     '+920000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -28144,12 +28144,12 @@ INSERT INTO leads (
     'zhenya.aramyan@mail.ru',
     '+37491021498',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'AM',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -28169,12 +28169,12 @@ INSERT INTO leads (
     'hitarthvyas66@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -28194,12 +28194,12 @@ INSERT INTO leads (
     'Gabton@yshoo.vom',
     '+60102803231',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'MY',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -28219,12 +28219,12 @@ INSERT INTO leads (
     'nepalipathekali123@gmail.com',
     '+9780000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -28244,12 +28244,12 @@ INSERT INTO leads (
     'doc.prageshmahato77@gmail.com',
     '+9780000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'NP',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Aslam'
 );
 INSERT INTO leads (
@@ -28265,16 +28265,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Vethaoli Ayush Cen',
+    'Vethaoli Ayush ',
     'vsfb78@gmail.com',
     '+920000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -28294,12 +28294,12 @@ INSERT INTO leads (
     'dr.ashoktodkar97@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -28315,16 +28315,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr. Rajeev Mishra',
+    'Dr. Rajeev Mish',
     'rajumishra010397@gmail.com',
     '+917000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -28344,12 +28344,12 @@ INSERT INTO leads (
     'Wafa1977@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -28365,16 +28365,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr-Ismail AlShoaib',
+    'Dr-Ismail AlSho',
     'drismsho@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -28390,16 +28390,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Dr harshu Sharma',
+    'Dr harshu Sharm',
     'harshus062@gmail.com',
     '+918000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -28415,16 +28415,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mahinda Wanisundar',
+    'Mahinda Wanisun',
     'wanisundaram@gmail.com',
     '+94718108127',
     'Others',
-    'Interventional car',
+    'Interventional',
     'LK',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -28440,16 +28440,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'DanaseSudarsan bab',
+    'DanaseSudarsan ',
     'dsudarshanbabu1985@gmail.com',
     '+17013485893',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -28469,12 +28469,12 @@ INSERT INTO leads (
     'Drahmadcardio@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'GB',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -28494,12 +28494,12 @@ INSERT INTO leads (
     'kumardhanush01534@gmail.com',
     '+919000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -28519,12 +28519,12 @@ INSERT INTO leads (
     'sjaffar135@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -28544,12 +28544,12 @@ INSERT INTO leads (
     'drpardeepwadhwa@gmail.com',
     '+917000000000',
     'AYUSH',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Roshan'
 );
 INSERT INTO leads (
@@ -28569,12 +28569,12 @@ INSERT INTO leads (
     'wael372002@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -28590,16 +28590,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mohammed Alezzi Mu',
+    'Mohammed Alezzi',
     'mamda1510@gmail.com',
     '+968000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -28619,12 +28619,12 @@ INSERT INTO leads (
     'ma01065m@gmail.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -28640,16 +28640,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Mansour Aref El-as',
+    'Mansour Aref El',
     'mans_aref@yahoo.com',
     '+201000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -28669,12 +28669,12 @@ INSERT INTO leads (
     'tykassem@gmail.com',
     '+201000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -28690,16 +28690,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'karima benbouchta',
+    'karima benbouch',
     'karima_22@hotmail.com',
     '+213000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -28719,12 +28719,12 @@ INSERT INTO leads (
     'rama786jkp9@gmail.com',
     '+920000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -28740,16 +28740,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    'Abdalla wagialla',
+    'Abdalla wagiall',
     'Abooody24@yahoo.com',
     '+972000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'AE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -28769,12 +28769,12 @@ INSERT INTO leads (
     'essafarisraa@gmail.com',
     '+213000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -28790,16 +28790,16 @@ INSERT INTO leads (
     "createdAt", 
     "assignedTo"
 ) VALUES (
-    '𝚆𝙴𝙳𝙸𝙰𝙽 || ود',
+    '𝚆𝙴𝙳𝙸𝙰𝙽 ||',
     'dd8512910@gmail.com',
     '+201000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'EG',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -28819,12 +28819,12 @@ INSERT INTO leads (
     'bsharaldylmy729@gmail.com',
     '+968000000000',
     'MD/MS/DNB',
-    'Interventional car',
+    'Interventional',
     'YE',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -28844,12 +28844,12 @@ INSERT INTO leads (
     'khatoonsakina058@gmail.com',
     '+916000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'IN',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -28869,12 +28869,12 @@ INSERT INTO leads (
     'hafiddok@gmail.com',
     '+213000000000',
     'MBBS/ FMG',
-    'Interventional car',
+    'Interventional',
     'MA',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
 INSERT INTO leads (
@@ -28894,11 +28894,11 @@ INSERT INTO leads (
     'najmhuda560@gmail.com',
     '+968000000000',
     'Others',
-    'Interventional car',
+    'Interventional',
     'US',
     'Fresh',
     NULL,
     'IBMP',
-    '2025-09-29T11:21:02.624Z',
+    '2025-09-29T12:30:57.903Z',
     'Satish'
 );
