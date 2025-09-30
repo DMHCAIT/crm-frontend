@@ -1051,6 +1051,18 @@ const LeadsManagement: React.FC = () => {
     setSelectedLeadId(leadId);
     setShowDetailPanel(true);
     
+    // Scroll the selected lead into view smoothly after a brief delay
+    setTimeout(() => {
+      const leadElement = document.querySelector(`[data-lead-id="${leadId}"]`);
+      if (leadElement) {
+        leadElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center',
+          inline: 'nearest'
+        });
+      }
+    }, 100);
+    
     console.log(`🔄 Loading notes for lead: ${leadId}`);
     // Load notes for the selected lead and wait for completion
     await loadNotesForLead(leadId);
@@ -2287,8 +2299,11 @@ const LeadsManagement: React.FC = () => {
               {filteredLeads.map((lead) => (
                 <div 
                   key={lead.id}
-                  className={`p-4 hover:bg-gray-50 transition-colors ${
-                    selectedLeadId === lead.id ? 'bg-blue-50 border-l-4 border-blue-500' : ''
+                  data-lead-id={lead.id}
+                  className={`p-4 hover:bg-gray-50 transition-all duration-200 ${
+                    selectedLeadId === lead.id 
+                      ? 'bg-blue-50 border-l-4 border-blue-500 shadow-sm ring-1 ring-blue-200' 
+                      : 'hover:shadow-sm'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -2483,9 +2498,9 @@ const LeadsManagement: React.FC = () => {
           </div>
         </div>
 
-        {/* Enhanced Detail Panel */}
+        {/* Enhanced Detail Panel - Sticky positioned for easy access */}
         {showDetailPanel && selectedLeadId && (
-          <div className="w-1/3 bg-white rounded-xl shadow-lg border border-gray-200 h-fit overflow-hidden">
+          <div className="w-1/3 bg-white rounded-xl shadow-lg border border-gray-200 sticky top-4 h-[calc(100vh-2rem)] overflow-y-auto">
             {(() => {
               const selectedLead = leads.find(l => l.id === selectedLeadId);
               
@@ -2498,20 +2513,21 @@ const LeadsManagement: React.FC = () => {
               
               return (
                 <div>
-                  {/* Enhanced Detail Header */}
-                  <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 flex items-center justify-between">
+                  {/* Enhanced Detail Header - Sticky Panel */}
+                  <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 flex items-center justify-between sticky top-0 z-10">
                     <div className="flex items-center space-x-3">
                       <div className="bg-white bg-opacity-20 p-2 rounded-lg">
                         <User className="w-5 h-5" />
                       </div>
                       <div>
                         <h3 className="font-semibold text-lg">Lead Details</h3>
-                        <p className="text-blue-100 text-sm">ID: #{selectedLead.id}</p>
+                        <p className="text-blue-100 text-sm">ID: #{selectedLead.id} • Always Visible</p>
                       </div>
                     </div>
                     <button
                       onClick={() => setShowDetailPanel(false)}
                       className="text-blue-100 hover:text-white transition-colors p-1 rounded-lg hover:bg-white hover:bg-opacity-20"
+                      title="Close Detail Panel"
                     >
                       <X className="w-5 h-5" />
                     </button>
