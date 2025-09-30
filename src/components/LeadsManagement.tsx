@@ -128,6 +128,12 @@ const LeadsManagement: React.FC = () => {
   // Team Workload Distribution states
   const [selectedTeamMember, setSelectedTeamMember] = useState<any | null>(null);
   const [teamMemberLeads, setTeamMemberLeads] = useState<Lead[]>([]);
+  
+  // Popup notification states
+  const [showOverduePopup, setShowOverduePopup] = useState(false);
+  const [overdueLeads, setOverdueLeads] = useState<Lead[]>([]);
+  const [popupNotifications, setPopupNotifications] = useState<any[]>([]);
+  const [lastNotificationCheck, setLastNotificationCheck] = useState<Date>(new Date());
   const [showTeamMemberModal, setShowTeamMemberModal] = useState(false);
   const [loadingTeamMemberLeads, setLoadingTeamMemberLeads] = useState(false);
 
@@ -288,6 +294,7 @@ const LeadsManagement: React.FC = () => {
   const [sourceFilter, setSourceFilter] = useState('all');
   const [assignedToFilter, setAssignedToFilter] = useState('all');
   const [qualificationFilter, setQualificationFilter] = useState('all');
+  const [showOverdueOnly, setShowOverdueOnly] = useState(false);
   const [courseFilter, setCourseFilter] = useState('all');
   
   // Updated Today Tracking with persistence
@@ -341,7 +348,7 @@ const LeadsManagement: React.FC = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [leads, searchQuery, dateFilter, dateFrom, dateTo, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, leadsUpdatedToday]);
+  }, [leads, searchQuery, dateFilter, dateFrom, dateTo, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, leadsUpdatedToday, showOverdueOnly]);
 
   // Data Loading - Production Only
   const loadLeads = async () => {
@@ -675,6 +682,16 @@ const LeadsManagement: React.FC = () => {
     // Course filter
     if (courseFilter !== 'all') {
       filtered = filtered.filter(lead => lead.course === courseFilter);
+    }
+
+    // Overdue follow-up filter
+    if (showOverdueOnly) {
+      const now = new Date();
+      filtered = filtered.filter((lead: Lead) => {
+        if (!lead.followUp) return false;
+        const followUpDate = new Date(lead.followUp);
+        return followUpDate < now && lead.status !== 'Enrolled' && lead.status !== 'Not Interested';
+      });
     }
 
     setFilteredLeads(filtered);
@@ -1610,6 +1627,108 @@ const LeadsManagement: React.FC = () => {
     return alerts;
   };
 
+  // Check for overdue follow-ups and trigger popup notifications
+  const checkOverdueFollowups = () => {
+    const now = new Date();
+    const overdue = leads.filter((lead: Lead) => {
+      if (!lead.followUp) return false;
+      const followUpDate = new Date(lead.followUp);
+      return followUpDate < now && lead.status !== 'Enrolled' && lead.status !== 'Not Interested';
+    });
+
+    setOverdueLeads(overdue);
+
+    // Trigger popup notifications for newly overdue leads
+    if (overdue.length > 0) {
+      const newNotifications = overdue.map(lead => ({
+        id: `overdue-${lead.id}`,
+        type: 'overdue',
+        title: '🔔 Overdue Follow-up!',
+        message: `${lead.fullName} (${lead.email}) has an overdue follow-up`,
+        leadId: lead.id,
+        timestamp: new Date(),
+        priority: 'high'
+      }));
+
+      // Only show notifications for leads that weren't already notified recently
+      const recentNotifications = newNotifications.filter(notif => {
+        const existingNotif = popupNotifications.find(p => p.leadId === notif.leadId);
+        if (!existingNotif) return true;
+        
+        // Show again if it's been more than 1 hour since last notification
+        const timeSince = new Date().getTime() - existingNotif.timestamp.getTime();
+        return timeSince > 3600000; // 1 hour in milliseconds
+      });
+
+      if (recentNotifications.length > 0) {
+        setPopupNotifications(prev => [...prev, ...recentNotifications]);
+        setShowOverduePopup(true);
+      }
+    }
+
+    return overdue;
+  };
+
+  // Send desktop notification for overdue follow-ups
+  const sendDesktopNotification = (title: string, body: string, leadId?: string) => {
+    if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+      const notification = new Notification(title, {
+        body,
+        icon: '/favicon.ico',
+        badge: '/favicon.ico',
+        tag: leadId || 'overdue-followup',
+        requireInteraction: true
+      });
+
+      notification.onclick = () => {
+        window.focus();
+        if (leadId) {
+          setSelectedLeadId(leadId);
+          setShowDetailPanel(true);
+        }
+        notification.close();
+      };
+
+      // Auto close after 10 seconds
+      setTimeout(() => notification.close(), 10000);
+    }
+  };
+
+  // Auto-refresh overdue follow-ups every 5 minutes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (leads.length > 0) {
+        const overdue = checkOverdueFollowups();
+        
+        // Send desktop notifications for critical overdue leads (>3 days)
+        if (overdue.length > 0) {
+          const criticalOverdue = overdue.filter((lead: Lead) => {
+            const daysOverdue = Math.floor((new Date().getTime() - new Date(lead.followUp!).getTime()) / (1000 * 60 * 60 * 24));
+            return daysOverdue >= 3;
+          });
+
+          criticalOverdue.forEach((lead: Lead) => {
+            const daysOverdue = Math.floor((new Date().getTime() - new Date(lead.followUp!).getTime()) / (1000 * 60 * 60 * 24));
+            sendDesktopNotification(
+              `🚨 Critical: ${lead.fullName} - ${daysOverdue} days overdue!`,
+              `Follow-up was due ${daysOverdue} days ago. Contact immediately.`,
+              lead.id
+            );
+          });
+        }
+      }
+    }, 300000); // 5 minutes
+
+    return () => clearInterval(interval);
+  }, [leads]);
+
+  // Initial check when leads are loaded
+  useEffect(() => {
+    if (leads.length > 0) {
+      setTimeout(checkOverdueFollowups, 2000); // Wait 2 seconds after leads load
+    }
+  }, [leads]);
+
   // Performance insights
   const getPerformanceInsights = () => {
     const metrics = getAdvancedMetrics();
@@ -1856,6 +1975,55 @@ const LeadsManagement: React.FC = () => {
                 )}
               </div>
               <Edit3 className="h-8 w-8 text-cyan-600" />
+            </div>
+          </div>
+
+          {/* Overdue Follow-ups Card - Clickable Filter */}
+          <div 
+            className={`p-4 rounded-lg shadow-sm border cursor-pointer transition-all transform hover:scale-105 ${
+              showOverdueOnly 
+                ? 'border-red-500 bg-red-50 shadow-md' 
+                : overdueLeads.length > 0 
+                  ? 'border-red-200 bg-red-50 hover:bg-red-100' 
+                  : 'border-gray-200 bg-white hover:bg-gray-50'
+            }`}
+            onClick={() => {
+              setShowOverdueOnly(!showOverdueOnly);
+              if (!showOverdueOnly) {
+                // Reset other filters when showing overdue only
+                setSearchQuery('');
+                setStatusFilter('all');
+              }
+            }}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className={`text-sm font-medium ${
+                  overdueLeads.length > 0 ? 'text-red-700' : 'text-gray-600'
+                }`}>
+                  {showOverdueOnly ? '🔍 Showing ' : ''}Overdue Follow-ups
+                </p>
+                <p className={`text-2xl font-bold ${
+                  overdueLeads.length > 0 ? 'text-red-600' : 'text-gray-400'
+                }`}>
+                  {overdueLeads.length}
+                </p>
+                {overdueLeads.length > 0 && (
+                  <p className="text-xs text-red-500 font-medium animate-pulse">
+                    {showOverdueOnly ? 'Click to show all' : 'Click to filter'}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col items-center">
+                <AlertTriangle className={`h-8 w-8 ${
+                  overdueLeads.length > 0 ? 'text-red-600 animate-bounce' : 'text-gray-400'
+                }`} />
+                {overdueLeads.length > 0 && (
+                  <span className="text-xs bg-red-500 text-white px-2 py-1 rounded-full mt-1">
+                    URGENT
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -2224,6 +2392,20 @@ const LeadsManagement: React.FC = () => {
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
+
+          {/* Overdue Filter Indicator */}
+          {showOverdueOnly && (
+            <div className="flex items-center bg-red-100 border border-red-300 rounded-lg px-4 py-3">
+              <AlertTriangle className="w-5 h-5 text-red-600 mr-2" />
+              <span className="text-red-700 font-medium">Showing Overdue Follow-ups Only</span>
+              <button
+                onClick={() => setShowOverdueOnly(false)}
+                className="ml-3 text-red-600 hover:text-red-800"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
 
           {/* Filter Toggle */}
           <button
@@ -3789,6 +3971,147 @@ const LeadsManagement: React.FC = () => {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Overdue Follow-up Popup Notifications */}
+      {showOverduePopup && popupNotifications.length > 0 && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full mx-4 transform animate-pulse">
+            <div className="bg-red-500 text-white px-6 py-4 rounded-t-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <Bell className="w-6 h-6 mr-3 animate-bounce" />
+                  <h3 className="text-lg font-bold">⚠️ Urgent: Overdue Follow-ups!</h3>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowOverduePopup(false);
+                    setPopupNotifications([]);
+                  }}
+                  className="text-white hover:text-gray-200 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-6">
+              <div className="text-center mb-4">
+                <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-2" />
+                <p className="text-gray-700 font-medium">
+                  You have {overdueLeads.length} overdue follow-up{overdueLeads.length !== 1 ? 's' : ''}!
+                </p>
+                <p className="text-sm text-gray-500 mt-1">
+                  These leads require immediate attention
+                </p>
+              </div>
+
+              <div className="max-h-64 overflow-y-auto space-y-3">
+                {overdueLeads.slice(0, 5).map((lead: Lead) => {
+                  const daysOverdue = Math.floor((new Date().getTime() - new Date(lead.followUp!).getTime()) / (1000 * 60 * 60 * 24));
+                  return (
+                    <div key={lead.id} className="bg-red-50 border border-red-200 rounded-lg p-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-900">{lead.fullName}</h4>
+                          <p className="text-sm text-gray-600">{lead.email}</p>
+                          <p className="text-xs text-red-600 font-medium mt-1">
+                            🔥 {daysOverdue} day{daysOverdue !== 1 ? 's' : ''} overdue
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            Due: {new Date(lead.followUp!).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setSelectedLeadId(lead.id);
+                            setShowDetailPanel(true);
+                            setShowOverduePopup(false);
+                          }}
+                          className="ml-3 bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600 transition-colors"
+                        >
+                          View Lead
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+                
+                {overdueLeads.length > 5 && (
+                  <div className="text-center text-sm text-gray-500 mt-3">
+                    ... and {overdueLeads.length - 5} more overdue leads
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-6 flex space-x-3">
+                <button
+                  onClick={() => {
+                    // Reset all filters and show search for overdue leads
+                    setSearchQuery('');
+                    setStatusFilter('all');
+                    setCountryFilter('all');
+                    setSourceFilter('all');
+                    setAssignedToFilter('all');
+                    setQualificationFilter('all');
+                    setShowOverdueOnly(true);
+                    setShowOverduePopup(false);
+                    
+                    // Scroll to leads table
+                    setTimeout(() => {
+                      document.querySelector('.leads-table')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  }}
+                  className="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors font-medium"
+                >
+                  View All Overdue
+                </button>
+                <button
+                  onClick={() => {
+                    setShowOverduePopup(false);
+                    // Set reminder to show again in 30 minutes
+                    setTimeout(() => {
+                      if (overdueLeads.length > 0) {
+                        setShowOverduePopup(true);
+                      }
+                    }, 1800000); // 30 minutes
+                  }}
+                  className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                >
+                  Remind Later
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Desktop Notification Permission Request */}
+      {typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'default' && (
+        <div className="fixed bottom-4 right-4 bg-blue-500 text-white p-4 rounded-lg shadow-lg z-40">
+          <div className="flex items-center space-x-3">
+            <Bell className="w-5 h-5" />
+            <div className="flex-1">
+              <p className="text-sm font-medium">Enable Desktop Notifications</p>
+              <p className="text-xs opacity-90">Get alerts for overdue follow-ups</p>
+            </div>
+            <button
+              onClick={() => {
+                Notification.requestPermission().then(permission => {
+                  if (permission === 'granted') {
+                    new Notification('CRM Notifications Enabled!', {
+                      body: 'You\'ll now receive alerts for overdue follow-ups',
+                      icon: '/favicon.ico'
+                    });
+                  }
+                });
+              }}
+              className="bg-white text-blue-500 px-3 py-1 rounded text-xs font-medium hover:bg-gray-100 transition-colors"
+            >
+              Enable
+            </button>
           </div>
         </div>
       )}
