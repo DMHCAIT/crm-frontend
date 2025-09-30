@@ -109,6 +109,7 @@ const LeadsManagement: React.FC = () => {
   const [filteredLeads, setFilteredLeads] = useState<Lead[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [importLoading, setImportLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
   const [editingLead, setEditingLead] = useState<string | null>(null);
@@ -1114,38 +1115,181 @@ const LeadsManagement: React.FC = () => {
   };
 
   // Import leads from CSV
-  const handleImportLeads = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportLeads = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const csv = e.target?.result as string;
-      const lines = csv.split('\n');
-      
-      const importedLeads = lines.slice(1).map((line, index) => {
-        const values = line.split(',');
-        return {
-          id: values[0] || `imported-${Date.now()}-${index}`,
-          fullName: values[1] || '',
-          email: values[2] || '',
-          phone: values[3] || '',
-          country: values[4] || '',
-          branch: values[5] || '',
-          qualification: values[6] || '',
-          source: values[7] || '',
-          course: values[8] || '',
-          status: values[9] || 'Fresh',
-          assignedTo: values[10] || '',
-          followUp: values[11] || '',
-          createdAt: values[12] || new Date().toISOString(),
-          updatedAt: values[13] || new Date().toISOString(),
-          notes: []
-        };
-      }).filter(lead => lead.fullName); // Filter out empty rows
+    // Validate file type - accept both CSV and Excel files
+    const fileName = file.name.toLowerCase();
+    if (!fileName.endsWith('.csv') && !fileName.endsWith('.xlsx') && !fileName.endsWith('.xls')) {
+      alert('Please select a CSV file (.csv) or Excel file (.xlsx, .xls)');
+      return;
+    }
 
-      setLeads((prev: Lead[]) => [...prev, ...importedLeads]);
+    setImportLoading(true);
+    
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const csv = e.target?.result as string;
+        const lines = csv.split('\n').filter(line => line.trim()); // Remove empty lines
+        
+        if (lines.length < 2) {
+          alert('CSV file must contain at least a header row and one data row');
+          setImportLoading(false);
+          return;
+        }
+
+        // Parse header row to understand column mapping
+        const headerValues: string[] = [];
+        let current = '';
+        let inQuotes = false;
+        const headerLine = lines[0];
+        
+        for (let j = 0; j < headerLine.length; j++) {
+          const char = headerLine[j];
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === ',' && !inQuotes) {
+            headerValues.push(current.trim().toLowerCase());
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+        headerValues.push(current.trim().toLowerCase());
+
+        // Create column mapping
+        const getColumnIndex = (possibleNames: string[]) => {
+          for (const name of possibleNames) {
+            const index = headerValues.findIndex(h => h.includes(name.toLowerCase()));
+            if (index !== -1) return index;
+          }
+          return -1;
+        };
+
+        const columnMap = {
+          fullName: getColumnIndex(['full name', 'name', 'fullname']),
+          email: getColumnIndex(['email', 'e-mail']),
+          phone: getColumnIndex(['phone', 'mobile', 'contact']),
+          country: getColumnIndex(['country']),
+          branch: getColumnIndex(['branch']),
+          qualification: getColumnIndex(['qualification', 'education']),
+          source: getColumnIndex(['source']),
+          course: getColumnIndex(['course']),
+          status: getColumnIndex(['status']),
+          assignedTo: getColumnIndex(['assigned to', 'assigned', 'assignedto', 'counselor']),
+          followUp: getColumnIndex(['follow up', 'followup', 'follow-up'])
+        };
+
+        // Validate that we have at least name and email
+        if (columnMap.fullName === -1 || columnMap.email === -1) {
+          alert('CSV must contain at least "Full Name" and "Email" columns.\n\nFound columns: ' + headerValues.join(', '));
+          setImportLoading(false);
+          return;
+        }
+        
+        const apiClient = getApiClient();
+        let successCount = 0;
+        let errorCount = 0;
+        const errors: string[] = [];
+
+        // Process leads one by one to handle duplicates and validation
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i];
+          if (!line.trim()) continue;
+
+          try {
+            // Better CSV parsing - handle quoted values with commas
+            const values: string[] = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let j = 0; j < line.length; j++) {
+              const char = line[j];
+              if (char === '"') {
+                inQuotes = !inQuotes;
+              } else if (char === ',' && !inQuotes) {
+                values.push(current.trim());
+                current = '';
+              } else {
+                current += char;
+              }
+            }
+            values.push(current.trim()); // Add the last value
+            
+            // Get values using column mapping
+            const fullName = columnMap.fullName >= 0 ? values[columnMap.fullName] || '' : '';
+            const email = columnMap.email >= 0 ? values[columnMap.email] || '' : '';
+
+            // Skip if no name or email
+            if (!fullName || !email) {
+              errorCount++;
+              errors.push(`Row ${i + 1}: Missing name or email`);
+              continue;
+            }
+
+            // Check for duplicate email
+            const existingLead = leads.find((lead: Lead) => 
+              lead.email.toLowerCase() === email.toLowerCase()
+            );
+            
+            if (existingLead) {
+              errorCount++;
+              errors.push(`Row ${i + 1}: Email ${email} already exists`);
+              continue;
+            }
+
+            // Prepare lead data for API - use exact values from CSV, leave empty if not provided
+            const leadData = {
+              fullName: fullName,
+              email: email,
+              phone: columnMap.phone >= 0 ? values[columnMap.phone] || '' : '',
+              country: columnMap.country >= 0 ? values[columnMap.country] || '' : '',
+              branch: columnMap.branch >= 0 ? values[columnMap.branch] || '' : '',
+              qualification: columnMap.qualification >= 0 ? values[columnMap.qualification] || '' : '',
+              source: columnMap.source >= 0 ? values[columnMap.source] || '' : '',
+              course: columnMap.course >= 0 ? values[columnMap.course] || '' : '',
+              status: columnMap.status >= 0 ? values[columnMap.status] || '' : '',
+              assignedTo: columnMap.assignedTo >= 0 ? values[columnMap.assignedTo] || '' : '',
+              followUp: columnMap.followUp >= 0 ? values[columnMap.followUp] || '' : '',
+              notes: `Imported from CSV on ${new Date().toLocaleDateString()}`
+            };
+
+            // Save to backend
+            await apiClient.createLead(leadData);
+            successCount++;
+
+          } catch (error) {
+            errorCount++;
+            errors.push(`Row ${i + 1}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          }
+        }
+
+        // Show results
+        let message = `Import completed!\n${successCount} leads imported successfully`;
+        if (errorCount > 0) {
+          message += `\n${errorCount} leads failed to import`;
+          if (errors.length > 0) {
+            message += '\n\nFirst few errors:\n' + errors.slice(0, 5).join('\n');
+          }
+        }
+        
+        alert(message);
+        
+        // Refresh leads list to show imported data
+        await loadLeads();
+
+      } catch (error) {
+        console.error('Import error:', error);
+        alert(`Import failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      } finally {
+        setImportLoading(false);
+        // Reset file input
+        event.target.value = '';
+      }
     };
+    
     reader.readAsText(file);
     
     // Reset file input
@@ -1573,16 +1717,50 @@ const LeadsManagement: React.FC = () => {
                 <span>Export</span>
               </button>
               
-              <label className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2 cursor-pointer text-sm">
+              <label className={`px-4 py-2 rounded-lg transition-colors flex items-center space-x-2 text-sm ${
+                importLoading 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
+              } text-white`}>
                 <FileUp className="w-4 h-4" />
-                <span>Import</span>
+                <span>{importLoading ? 'Importing...' : 'Import'}</span>
                 <input 
                   type="file" 
-                  accept=".csv" 
+                  accept=".csv,.xlsx,.xls" 
                   onChange={handleImportLeads}
+                  disabled={importLoading}
                   className="hidden"
                 />
               </label>
+
+              <button
+                onClick={() => alert(
+                  'CSV/Excel Import Instructions:\n\n' +
+                  '✅ FLEXIBLE IMPORT - Column order doesn\'t matter!\n\n' +
+                  '📋 REQUIRED COLUMNS:\n' +
+                  '   • Full Name (or "Name")\n' +
+                  '   • Email (must be unique)\n\n' +
+                  '📋 OPTIONAL COLUMNS (use exact data from your file):\n' +
+                  '   • Phone, Country, Branch, Qualification\n' +
+                  '   • Source, Course, Status, Assigned To\n' +
+                  '   • Follow Up Date\n\n' +
+                  '🔧 SUPPORTED FORMATS:\n' +
+                  '   • CSV files (.csv)\n' +
+                  '   • Excel files (.xlsx, .xls)\n\n' +
+                  '⚙️ HOW IT WORKS:\n' +
+                  '   • Uses whatever data you provide\n' +
+                  '   • Empty fields stay empty (no defaults)\n' +
+                  '   • Duplicate emails are skipped\n' +
+                  '   • All data saved to database\n\n' +
+                  '💡 TIP: Export leads first to see the format!'
+                )}
+                className="text-gray-500 hover:text-gray-700 p-2"
+                title="Import Help"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </button>
             </div>
             
             <button 
