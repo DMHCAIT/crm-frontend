@@ -51,6 +51,16 @@ export const PRIORITY_OPTIONS = [
   'urgent'
 ] as const;
 
+// Qualification options
+export const QUALIFICATION_OPTIONS = [
+  'MBBS/ FMG',
+  'MD/MS/DNB', 
+  'Mch/ DM/ DNB-SS',
+  'BDS/MDS',
+  'AYUSH',
+  'Others'
+] as const;
+
 // Source options  
 export const SOURCE_OPTIONS = [
   'website',
@@ -66,5 +76,6 @@ export default {
   STATUS_MESSAGES,
   STATUS_ICONS,
   PRIORITY_OPTIONS,
+  QUALIFICATION_OPTIONS,
   SOURCE_OPTIONS
 };

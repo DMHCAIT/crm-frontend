@@ -238,7 +238,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Welcome back, {user?.name || 'Administrator'}!
+          Welcome back, {user?.name || (user as any)?.fullName || user?.username || 'User'}!
         </h1>
         <p className="text-gray-600">Here's what's happening with your CRM today.</p>
         

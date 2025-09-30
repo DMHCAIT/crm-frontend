@@ -3,7 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
 import { TokenManager } from '../lib/productionAuth';
 import { useNotify } from './NotificationSystem';
-import { STATUS_OPTIONS, STATUS_COLORS } from '../constants/crmConstants';
+import { STATUS_OPTIONS, STATUS_COLORS, QUALIFICATION_OPTIONS } from '../constants/crmConstants';
 import { 
   Search, 
   Plus,
@@ -209,7 +209,7 @@ const LeadsManagement: React.FC = () => {
     {code: 'KE', name: 'Kenya', phoneCode: '+254'},
     {code: 'ET', name: 'Ethiopia', phoneCode: '+251'}
   ]);
-  const [qualificationOptions] = useState(['MBBS/ FMG', 'MD/MS/DNB', 'Mch/ DM/ DNB-SS', 'BDS/MDS', 'AYUSH', 'Others']);
+  const [qualificationOptions] = useState<string[]>([...QUALIFICATION_OPTIONS]);
   const [assignableUsers, setAssignableUsers] = useState<AssignableUser[]>([]);
   
   // Default course options with proper prefixes - comprehensive list
@@ -643,9 +643,19 @@ const LeadsManagement: React.FC = () => {
       filtered = filtered.filter(lead => lead.source === sourceFilter);
     }
 
-    // Assigned to filter
+    // Assigned to filter - Enhanced to handle multiple assignment fields
     if (assignedToFilter !== 'all') {
-      filtered = filtered.filter(lead => lead.assignedTo === assignedToFilter);
+      filtered = filtered.filter(lead => {
+        // Check multiple assignment fields to handle different naming conventions
+        const leadAny = lead as any; // Type assertion for dynamic field access
+        const assignedTo = lead.assignedTo || leadAny.assigned_to || leadAny.assignedcounselor || 'Unassigned';
+        
+        // Handle both username and full name matching
+        return assignedTo === assignedToFilter || 
+               assignedTo.toLowerCase() === assignedToFilter.toLowerCase() ||
+               // Also check if the assignedTo contains the filter (for "Name (role)" format)
+               assignedTo.includes(assignedToFilter);
+      });
     }
 
     // Qualification filter
@@ -2026,9 +2036,13 @@ const LeadsManagement: React.FC = () => {
                     console.log(`🔍 Rendering assignable users in filter:`, assignableUsers);
                     return null;
                   })()}
-                  {assignableUsers.map((user: any) => (
-                    <option key={user.id} value={user.name}>{user.name} ({user.role})</option>
-                  ))}
+                  {assignableUsers.map((user: any) => {
+                    // Use username if available, fallback to name for consistency with lead assignment
+                    const filterValue = user.username || user.name;
+                    return (
+                      <option key={user.id} value={filterValue}>{user.name} ({user.role})</option>
+                    );
+                  })}
                   {/* Fallback to existing assigned users if no hierarchy data */}
                   {assignableUsers.length === 0 && (() => {
                     const uniqueAssigned = getUniqueValues('assignedTo');

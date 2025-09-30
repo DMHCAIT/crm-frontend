@@ -62,7 +62,7 @@ const Header: React.FC = () => {
           
           <div className="relative flex items-center space-x-3 border-l border-gray-200 pl-4">
             <div className="text-right">
-              <p className="text-sm font-medium text-gray-900">{user?.name || 'Dr. Sarah Johnson'}</p>
+              <p className="text-sm font-medium text-gray-900">{user?.name || (user as any)?.fullName || user?.username || 'User'}</p>
               <p className="text-xs text-gray-500">{user?.role || 'Admissions Counselor'}</p>
             </div>
             <div className="relative" ref={menuRef}>
