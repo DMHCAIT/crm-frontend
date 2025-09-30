@@ -415,7 +415,7 @@ const LeadsManagement: React.FC = () => {
           phone: lead.phone || '',
           country: lead.country || 'Unknown',
           branch: lead.branch || 'Main',
-          qualification: lead.qualification || 'Not specified',
+          qualification: lead.qualification || '',
           source: lead.source || 'manual',
           course: lead.course || 'MBBS',
           status: lead.status || 'Fresh',
@@ -507,7 +507,7 @@ const LeadsManagement: React.FC = () => {
         phone: lead.phone || '',
         country: lead.country || 'Unknown',
         branch: lead.branch || 'Main',
-        qualification: lead.qualification || 'Not specified',
+        qualification: lead.qualification || '',
         source: lead.source || 'manual',
         course: lead.course || 'MBBS',
         status: lead.status || 'Fresh',
@@ -954,7 +954,7 @@ const LeadsManagement: React.FC = () => {
         phone: createdLead.phone || newLead.phone || '',
         country: newLead.country || 'India',
         branch: newLead.branch || 'Main',
-        qualification: newLead.qualification || 'Not specified',
+        qualification: newLead.qualification || '',
         source: createdLead.source || newLead.source || 'Manual Entry',
         course: newLead.course || 'MBBS',
         status: createdLead.status || newLead.status || 'Fresh',
@@ -1168,6 +1168,11 @@ const LeadsManagement: React.FC = () => {
 
   // Handle bulk delete
   const handleBulkDelete = async () => {
+    if (selectedLeads.length === 0) {
+      alert('Please select leads to delete');
+      return;
+    }
+    
     if (window.confirm(`Are you sure you want to delete ${selectedLeads.length} lead(s)? This action cannot be undone.`)) {
       try {
         const apiClient = getApiClient();
@@ -1198,6 +1203,39 @@ const LeadsManagement: React.FC = () => {
       } catch (error) {
         console.error('Delete error:', error);
         alert(`Failed to delete leads: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    }
+  };
+
+  // Handle individual delete
+  const handleIndividualDelete = async (leadId: string) => {
+    if (window.confirm('Are you sure you want to delete this lead? This action cannot be undone.')) {
+      try {
+        const apiClient = getApiClient();
+        const result = await apiClient.bulkDeleteLeads([leadId]) as any;
+
+        if (result.success) {
+          // Update local state
+          setLeads((prev: Lead[]) => prev.filter((lead: Lead) => lead.id !== leadId));
+          
+          // Close detail panel if this lead is being viewed
+          if (selectedLeadId === leadId) {
+            setSelectedLeadId(null);
+            setShowDetailPanel(false);
+          }
+
+          // Remove from selected leads if it was selected
+          setSelectedLeads(prev => prev.filter(id => id !== leadId));
+
+          alert('Lead deleted successfully');
+          loadLeads(); // Refresh to ensure consistency
+        } else {
+          console.error('Delete failed:', result);
+          alert(`Failed to delete lead: ${result.error || 'Unknown error'}`);
+        }
+      } catch (error) {
+        console.error('Delete error:', error);
+        alert(`Failed to delete lead: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
   };
@@ -2266,10 +2304,15 @@ const LeadsManagement: React.FC = () => {
                     {/* Bulk Delete */}
                     <button
                       onClick={handleBulkDelete}
-                      className="bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700 flex items-center space-x-1 text-sm"
+                      disabled={selectedLeads.length === 0}
+                      className={`px-3 py-1.5 rounded-lg flex items-center space-x-1 text-sm ${
+                        selectedLeads.length === 0 
+                          ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+                          : 'bg-red-600 text-white hover:bg-red-700'
+                      }`}
                     >
                       <Trash2 className="w-4 h-4" />
-                      <span>Delete</span>
+                      <span>Delete ({selectedLeads.length})</span>
                     </button>
 
                     {/* Bulk Transfer - Only for managers */}
@@ -2475,6 +2518,16 @@ const LeadsManagement: React.FC = () => {
                             title="Edit lead"
                           >
                             <Edit3 className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleIndividualDelete(lead.id);
+                            }}
+                            className="text-red-600 hover:text-red-800 p-1"
+                            title="Delete lead"
+                          >
+                            <Trash2 className="w-4 h-4" />
                           </button>
                           {isManager() && (
                             <button
@@ -2880,6 +2933,19 @@ const LeadsManagement: React.FC = () => {
                         >
                           <CheckCircle className="w-4 h-4" />
                           <span>Save Changes</span>
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Delete Action */}
+                    {editingLead !== selectedLead.id && (
+                      <div className="flex items-center justify-end pt-4 border-t border-gray-200">
+                        <button
+                          onClick={() => handleIndividualDelete(selectedLead.id)}
+                          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center space-x-2"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          <span>Delete Lead</span>
                         </button>
                       </div>
                     )}
