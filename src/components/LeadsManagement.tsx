@@ -954,7 +954,7 @@ const LeadsManagement: React.FC = () => {
         phone: createdLead.phone || newLead.phone || '',
         country: newLead.country || 'India',
         branch: newLead.branch || 'Main',
-        qualification: newLead.qualification || '',
+        qualification: createdLead.qualification || newLead.qualification || '',
         source: createdLead.source || newLead.source || 'Manual Entry',
         course: newLead.course || 'MBBS',
         status: createdLead.status || newLead.status || 'Fresh',
