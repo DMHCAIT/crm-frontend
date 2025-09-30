@@ -29,9 +29,14 @@ const StudentsManagement: React.FC = () => {
     try {
       // Get real students data from backend API (proper architecture)
       const apiClient = getApiClient();
-      const studentsData: any = await apiClient.getStudents();
       
-      // Convert API data to frontend format
+      // Load both students and enrolled leads
+      const [studentsData, leadsData] = await Promise.all([
+        apiClient.getStudents(),
+        apiClient.getLeads()
+      ]);
+      
+      // Convert existing students data to frontend format
       const formattedStudents = Array.isArray(studentsData) ? 
         studentsData.map((student: any) => ({
           id: student.id,
@@ -45,10 +50,38 @@ const StudentsManagement: React.FC = () => {
           feeStatus: student.fee_status || 'pending',
           documents: student.documents_status || 'incomplete',
           nextPayment: student.next_payment_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          amount: student.fee_amount || '₹0'
+          amount: student.fee_amount || '₹0',
+          source: 'student_db'
         })) : [];
 
-      setStudents(formattedStudents);
+      // Convert enrolled leads to student format
+      const leadsArray = (leadsData as any)?.leads || leadsData || [];
+      const enrolledLeads = Array.isArray(leadsArray) ? 
+        leadsArray
+          .filter((lead: any) => lead.status === 'Enrolled')
+          .map((lead: any) => ({
+            id: `lead-${lead.id}`,
+            name: lead.fullName || lead.name || 'Unknown Student',
+            email: lead.email || '',
+            phone: lead.phone || '',
+            course: lead.course || 'Not specified',
+            year: 'Module 1 of 1', // Default for newly enrolled
+            status: 'active', // Enrolled leads are active students
+            enrollmentDate: lead.updatedAt?.split('T')[0] || new Date().toISOString().split('T')[0],
+            feeStatus: lead.fees ? 'paid' : 'pending',
+            documents: 'incomplete', // Default for new enrollments
+            nextPayment: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            amount: lead.fees ? `₹${lead.fees.toLocaleString()}` : '₹0',
+            assignedTo: lead.assignedTo || '',
+            qualification: lead.qualification || '',
+            country: lead.country || '',
+            branch: lead.branch || '',
+            source: 'crm_lead'
+          })) : [];
+
+      // Combine both data sources
+      const combinedStudents = [...formattedStudents, ...enrolledLeads];
+      setStudents(combinedStudents);
       
     } catch (error) {
       console.error('Error loading students data:', error);

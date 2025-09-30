@@ -58,6 +58,7 @@ interface Lead {
   createdAt: string;
   updatedAt: string;
   notes: Note[];
+  fees?: number; // Optional fees field for enrolled students
 }
 
 interface AssignableUser {
@@ -2500,7 +2501,7 @@ const LeadsManagement: React.FC = () => {
 
         {/* Enhanced Detail Panel - Sticky positioned for easy access */}
         {showDetailPanel && selectedLeadId && (
-          <div className="w-1/3 bg-white rounded-xl shadow-lg border border-gray-200 sticky top-4 h-[calc(100vh-2rem)] overflow-y-auto">
+          <div className="w-2/5 bg-white rounded-xl shadow-lg border border-gray-200 sticky top-2 h-[calc(100vh-1rem)] overflow-y-auto">
             {(() => {
               const selectedLead = leads.find(l => l.id === selectedLeadId);
               
@@ -2757,6 +2758,36 @@ const LeadsManagement: React.FC = () => {
                             ))}
                           </select>
                         </div>
+
+                        {/* Fees Field - Only show when status is Enrolled */}
+                        {(editedLead.status || selectedLead.status) === 'Enrolled' && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              💰 Course Fees (₹)
+                            </label>
+                            <input
+                              type="number"
+                              value={editedLead.fees || selectedLead.fees || ''}
+                              onChange={(e) => {
+                                const feesValue = e.target.value ? parseFloat(e.target.value) : undefined;
+                                setEditedLead(prev => ({ ...prev, fees: feesValue }));
+                                // Auto-save fees changes
+                                setLeads(prevLeads => prevLeads.map(lead => 
+                                  lead.id === selectedLead.id 
+                                    ? { ...lead, fees: feesValue, updatedAt: new Date().toISOString() }
+                                    : lead
+                                ));
+                              }}
+                              placeholder="Enter course fees amount"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                              min="0"
+                              step="100"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">
+                              Amount paid for course enrollment
+                            </p>
+                          </div>
+                        )}
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">Assigned to</label>
