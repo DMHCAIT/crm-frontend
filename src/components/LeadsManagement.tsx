@@ -1807,7 +1807,7 @@ const LeadsManagement: React.FC = () => {
             <h1 className="text-3xl font-bold text-gray-900">Lead Management</h1>
             <p className="text-gray-600 mt-1">Manage and track all your leads in one place</p>
             {/* Hierarchical Access Indicator - Compact */}
-            <div className="mt-1 flex items-center">
+            <div className="mt-1 flex items-center space-x-2">
               <div className="bg-blue-50 border border-blue-200 rounded-md px-2 py-1 flex items-center space-x-1">
                 <UserCheck className="w-3 h-3 text-blue-600" />
                 <span className="text-xs text-blue-600 font-medium">
@@ -1819,6 +1819,14 @@ const LeadsManagement: React.FC = () => {
                   )}
                 </span>
               </div>
+              {user?.company && (
+                <div className="bg-green-50 border border-green-200 rounded-md px-2 py-1 flex items-center space-x-1">
+                  <span className="text-lg">🏛️</span>
+                  <span className="text-xs text-green-700 font-medium">
+                    {user.company}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
           <div className="flex items-center space-x-3">
@@ -3297,18 +3305,7 @@ const LeadsManagement: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Delete Action */}
-                    {editingLead !== selectedLead.id && (
-                      <div className="flex items-center justify-end pt-4 border-t border-gray-200">
-                        <button
-                          onClick={() => handleIndividualDelete(selectedLead.id)}
-                          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center space-x-2"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                          <span>Delete Lead</span>
-                        </button>
-                      </div>
-                    )}
+
 
                     {/* Notes Section */}
                     <div className="bg-gray-50 rounded-lg p-4" key={`notes-${selectedLead.id}-${lastUpdateTime?.getTime()}`}>

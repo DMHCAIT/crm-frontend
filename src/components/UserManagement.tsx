@@ -796,6 +796,12 @@ const UserManagement: React.FC = () => {
                                     {user.branch}
                                   </span>
                                 )}
+                                {user.company && (
+                                  <span className="flex items-center">
+                                    <span className="w-4 h-4 mr-1 text-lg">🏛️</span>
+                                    {user.company}
+                                  </span>
+                                )}
                               </div>
                               {/* Hierarchy Information */}
                               {user.reports_to && (
@@ -1213,6 +1219,7 @@ const UserModal: React.FC<UserModalProps> = ({
     department: user?.department || '',
     location: user?.location || '',
     branch: user?.branch || '', // Branch field for filtering
+    company: user?.company || '', // Company field (DMHCA, IBMP)
     status: user?.status || 'active',
     reports_to: user?.reports_to || '', // Fixed: Use correct field name
     password: '', // Password field for new users
@@ -1242,6 +1249,7 @@ const UserModal: React.FC<UserModalProps> = ({
         department: user.department || '',
         location: user.location || '',
         branch: user.branch || '',
+        company: user.company || '',
         status: user.status || 'active',
         reports_to: user.reports_to || '',
         password: '',
@@ -1281,11 +1289,14 @@ const UserModal: React.FC<UserModalProps> = ({
     // Prepare user data - exclude password confirmation and fix types
     const { confirmPassword, ...rawUserData } = formData;
     
-    // Fix branch type - convert empty string to undefined and cast to proper type
+    // Fix branch and company types - convert empty string to undefined and cast to proper type
     const userData = {
       ...rawUserData,
       branch: (rawUserData.branch && ['Delhi', 'Hyderabad', 'Kashmir'].includes(rawUserData.branch)) 
         ? rawUserData.branch as DatabaseUser['branch'] 
+        : undefined,
+      company: (rawUserData.company && ['DMHCA', 'IBMP'].includes(rawUserData.company))
+        ? rawUserData.company as DatabaseUser['company']
         : undefined
     };
     
@@ -1459,6 +1470,19 @@ const UserModal: React.FC<UserModalProps> = ({
               <option value="Delhi">Delhi</option>
               <option value="Hyderabad">Hyderabad</option>
               <option value="Kashmir">Kashmir</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Company</label>
+            <select
+              value={formData.company}
+              onChange={(e) => setFormData({...formData, company: e.target.value || ''})}
+              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+            >
+              <option value="">Select Company</option>
+              <option value="DMHCA">DMHCA</option>
+              <option value="IBMP">IBMP</option>
             </select>
           </div>
 

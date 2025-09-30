@@ -113,6 +113,7 @@ export interface DatabaseUser {
   reports_to?: string;
   profile_image?: string;
   branch?: 'Delhi' | 'Hyderabad' | 'Kashmir';
+  company?: 'DMHCA' | 'IBMP';
   assignedTo?: string;
 }
 

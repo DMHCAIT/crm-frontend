@@ -66,7 +66,7 @@ const App: React.FC = () => {
     'dashboard': 1,
     'crm-pipeline': 1,
     'leads': 1,
-    'leads-monitoring': 2,
+    'leads-monitoring': 1,
     'facebook-leads': 3,
     'inbox': 1,
     'communications': 1,
