@@ -8,8 +8,6 @@ import {
   Phone,
   Mail,
   MessageSquare,
-  Clock,
-  CheckCircle,
   User,
   TrendingUp,
   MoreHorizontal,
@@ -32,7 +30,6 @@ interface Lead {
   course: string;
   source: string;
   status: string;
-  priority: string;
   experience: string;
   location: string;
   notes: string;
@@ -52,7 +49,7 @@ const LeadsMonitoring: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [filterPriority, setFilterPriority] = useState('all');
+
   const [filterSource, setFilterSource] = useState('all');
   const [sortBy, setSortBy] = useState('score');
   const [sortOrder, setSortOrder] = useState('desc');
@@ -74,7 +71,7 @@ const LeadsMonitoring: React.FC = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [leads, searchQuery, filterStatus, filterPriority, filterSource, sortBy, sortOrder]);
+  }, [leads, searchQuery, filterStatus, filterSource, sortBy, sortOrder]);
 
   const loadLeads = async () => {
     try {
@@ -106,7 +103,6 @@ const LeadsMonitoring: React.FC = () => {
         course: lead.course || 'Not specified',
         source: lead.source || 'Unknown',
         status: lead.status || 'fresh',
-        priority: lead.priority || 'medium',
         experience: lead.experience || 'Not specified',
         location: lead.location || 'Not specified',
         notes: lead.notes || '',
@@ -168,10 +164,7 @@ const LeadsMonitoring: React.FC = () => {
       filtered = filtered.filter(lead => lead.status === filterStatus);
     }
 
-    // Apply priority filter
-    if (filterPriority !== 'all') {
-      filtered = filtered.filter(lead => lead.priority === filterPriority);
-    }
+
 
     // Apply source filter
     if (filterSource !== 'all') {
@@ -211,17 +204,10 @@ const LeadsMonitoring: React.FC = () => {
   };
 
   const getStatusColor = (status: string) => {
-    return STATUS_COLORS[status as keyof typeof STATUS_COLORS] || STATUS_COLORS['not interested'];
+    return STATUS_COLORS[status as keyof typeof STATUS_COLORS] || STATUS_COLORS['Not Interested'];
   };
 
-  const getPriorityIcon = (priority: string) => {
-    switch (priority) {
-      case 'high': return <AlertCircle className="w-4 h-4 text-red-500" />;
-      case 'medium': return <Clock className="w-4 h-4 text-yellow-500" />;
-      case 'low': return <CheckCircle className="w-4 h-4 text-green-500" />;
-      default: return <User className="w-4 h-4 text-gray-500" />;
-    }
-  };
+
 
   const isOverdue = (nextFollowUp: string) => {
     return new Date(nextFollowUp) < new Date();
@@ -391,19 +377,7 @@ const LeadsMonitoring: React.FC = () => {
                 ))}
               </select>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
-              <select
-                value={filterPriority}
-                onChange={(e) => setFilterPriority(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="all">All Priority</option>
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
-              </select>
-            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Source</label>
               <select
@@ -458,7 +432,7 @@ const LeadsMonitoring: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0">
-                        {getPriorityIcon(lead.priority)}
+                        <User className="w-4 h-4 text-gray-500" />
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">{lead.name}</div>

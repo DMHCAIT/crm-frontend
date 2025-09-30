@@ -218,7 +218,7 @@ const FacebookLeadIntegration: React.FC = () => {
     const mappedData: any = {
       source: 'Facebook Lead Ads',
       status: 'fresh',
-      priority: 'Medium',
+
       fbLeadId: fbLead.id,
       fbAdId: fbLead.ad_id,
       fbCampaignId: fbLead.campaign_id,

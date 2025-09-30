@@ -43,7 +43,7 @@ const getActivityMessage = (status: string): string => {
 };
 
 const getStatusColor = (status: string) => {
-  return STATUS_COLORS[status as keyof typeof STATUS_COLORS] || STATUS_COLORS['not interested'];
+  return STATUS_COLORS[status as keyof typeof STATUS_COLORS] || STATUS_COLORS['Not Interested'];
 };
 
 const getRelativeTime = (dateString: string): string => {
@@ -133,7 +133,7 @@ const CRMPipeline: React.FC = () => {
       }).length;
       
       const hotLeads = (leads || []).filter((lead: any) => lead.status === 'hot').length;
-      const qualifiedLeads = (leads || []).filter((lead: any) => lead.status === 'warm').length;
+      const qualifiedLeads = (leads || []).filter((lead: any) => lead.status === 'qualified').length;
       const convertedLeads = (leads || []).filter((lead: any) => lead.status === 'enrolled').length;
       
       const conversionRate = totalLeads > 0 ? (convertedLeads / totalLeads) * 100 : 0;
@@ -247,7 +247,7 @@ const CRMPipeline: React.FC = () => {
             <Star className="h-8 w-8 text-orange-600" />
           </div>
           <div className="mt-2 flex items-center">
-            <span className="text-gray-600 text-sm">High priority</span>
+            <span className="text-gray-600 text-sm">Immediate attention</span>
           </div>
         </div>
 

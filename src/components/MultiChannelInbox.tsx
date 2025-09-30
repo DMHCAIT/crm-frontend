@@ -46,8 +46,7 @@ const MultiChannelInbox: React.FC = () => {
           preview: comm.content?.substring(0, 60) + '...' || 'No preview available',
           timestamp: formatTimestamp(comm.timestamp || comm.created_at),
           status: comm.status || 'read',
-          priority: comm.priority || 'medium',
-          course: comm.leadStatus === 'hot' ? 'High Priority' : 'Standard',
+          course: comm.leadStatus === 'hot' ? 'Urgent' : 'Standard',
           messages: [
             {
               id: 1,
@@ -127,18 +126,7 @@ const MultiChannelInbox: React.FC = () => {
     }
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high':
-        return 'bg-red-100 text-red-800 border-red-200';
-      case 'medium':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'low':
-        return 'bg-green-100 text-green-800 border-green-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
+
 
   const filteredConversations = activeFilter === 'all' 
     ? conversations 
@@ -241,9 +229,6 @@ const MultiChannelInbox: React.FC = () => {
                     <p className="text-sm text-gray-700 truncate mb-2">{conversation.subject}</p>
                     <p className="text-xs text-gray-500 truncate mb-2">{conversation.preview}</p>
                     <div className="flex items-center justify-between">
-                      <span className={`px-2 py-1 text-xs rounded-full border ${getPriorityColor(conversation.priority)}`}>
-                        {conversation.priority}
-                      </span>
                       <span className="text-xs text-gray-400">{conversation.timestamp}</span>
                     </div>
                   </div>

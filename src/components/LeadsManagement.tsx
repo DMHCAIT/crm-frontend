@@ -952,7 +952,7 @@ const LeadsManagement: React.FC = () => {
         assignedTo: newLead.assignedTo || user?.username || user?.name || 'Unassigned',
         assigned_to: newLead.assignedTo || user?.username || user?.name || 'Unassigned', // For backend compatibility
         followUp: newLead.followUp,
-        priority: 'medium',
+
         score: 50, // Default score for new leads
         notes: `Lead created via manual entry by ${user?.name || 'System'}`,
       };
@@ -1647,7 +1647,7 @@ const LeadsManagement: React.FC = () => {
         message: `${lead.fullName} (${lead.email}) has an overdue follow-up`,
         leadId: lead.id,
         timestamp: new Date(),
-        priority: 'high'
+        urgency: 'high'
       }));
 
       // Only show notifications for leads that weren't already notified recently

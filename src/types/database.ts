@@ -16,7 +16,7 @@ export interface DatabaseLead {
   status?: string;
   assignedTo?: string;
   followUp?: string;
-  priority?: string;
+
   notes?: string;
   tags?: string[];
   custom_fields?: Record<string, any>;

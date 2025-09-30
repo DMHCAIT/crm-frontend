@@ -59,7 +59,7 @@ const FacebookFieldMapper: React.FC = () => {
 
   const [availableCrmFields] = useState<string[]>([
     'name', 'email', 'phone', 'company', 'designation', 'country', 'branch', 
-    'qualification', 'course', 'source', 'status', 'priority', 'notes'
+    'qualification', 'course', 'source', 'status', 'notes'
   ]);
 
   const [loading, setLoading] = useState(false);
@@ -295,7 +295,7 @@ const FacebookFieldMapper: React.FC = () => {
         <div className="text-sm text-blue-700 space-y-1">
           <p><strong>source:</strong> Always set to "Facebook Lead Ads"</p>
           <p><strong>status:</strong> Always set to "New"</p>
-          <p><strong>priority:</strong> Set to "High" for webhook leads, "Medium" for manual imports</p>
+
           <p><strong>createdAt:</strong> Facebook lead creation timestamp</p>
           <p><strong>receivedAt:</strong> System processing timestamp</p>
         </div>

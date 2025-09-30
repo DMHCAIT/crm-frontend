@@ -43,13 +43,7 @@ export const STATUS_ICONS = {
   'Junk': '🗑️'
 } as const;
 
-// Priority options
-export const PRIORITY_OPTIONS = [
-  'low',
-  'medium', 
-  'high',
-  'urgent'
-] as const;
+
 
 // Qualification options
 export const QUALIFICATION_OPTIONS = [
@@ -75,7 +69,6 @@ export default {
   STATUS_COLORS,
   STATUS_MESSAGES,
   STATUS_ICONS,
-  PRIORITY_OPTIONS,
   QUALIFICATION_OPTIONS,
   SOURCE_OPTIONS
 };
