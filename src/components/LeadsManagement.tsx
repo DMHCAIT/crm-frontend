@@ -2501,7 +2501,7 @@ const LeadsManagement: React.FC = () => {
 
         {/* Enhanced Detail Panel - Sticky positioned for easy access */}
         {showDetailPanel && selectedLeadId && (
-          <div className="w-2/5 bg-white rounded-xl shadow-lg border border-gray-200 sticky top-2 h-[calc(100vh-1rem)] overflow-y-auto">
+          <div className="w-2/5 bg-white rounded-xl shadow-lg border border-gray-200 sticky top-1 mb-6 overflow-y-auto" style={{height: 'calc(100vh - 3.5rem)', maxHeight: 'calc(100vh - 3.5rem)'}}>
             {(() => {
               const selectedLead = leads.find(l => l.id === selectedLeadId);
               
