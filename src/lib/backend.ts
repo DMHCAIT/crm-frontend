@@ -1047,7 +1047,7 @@ export class DatabaseManager {
   }
 
   // LEADS OPERATIONS
-  async getLeads(limit = 50, offset = 0): Promise<DatabaseLead[]> {
+  async getLeads(limit = 30000, offset = 0): Promise<DatabaseLead[]> {
     const { data, error } = await this.supabase
       .from('leads')
       .select('*')
@@ -1091,7 +1091,7 @@ export class DatabaseManager {
   }
 
   // STUDENTS OPERATIONS
-  async getStudents(limit = 50, offset = 0): Promise<DatabaseStudent[]> {
+  async getStudents(limit = 30000, offset = 0): Promise<DatabaseStudent[]> {
     const { data, error } = await this.supabase
       .from('students')
       .select('*')
@@ -1135,7 +1135,7 @@ export class DatabaseManager {
   }
 
   // USER OPERATIONS
-  async getUsers(limit = 50, offset = 0): Promise<DatabaseUser[]> {
+  async getUsers(limit = 30000, offset = 0): Promise<DatabaseUser[]> {
     try {
       // First try to get from custom users table
       const { data, error } = await this.supabase
@@ -1225,7 +1225,7 @@ export class DatabaseManager {
   }
 
   // COMMUNICATIONS OPERATIONS
-  async getCommunications(limit = 50, offset = 0): Promise<DatabaseCommunication[]> {
+  async getCommunications(limit = 30000, offset = 0): Promise<DatabaseCommunication[]> {
     const { data, error } = await this.supabase
       .from('communications')
       .select('*')
