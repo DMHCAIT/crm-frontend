@@ -313,6 +313,10 @@ const LeadsManagement: React.FC = () => {
 
   // Add Lead Modal States
   const [showAddLeadModal, setShowAddLeadModal] = useState(false);
+  
+  // Expanded sections state
+  const [showExpandedAlerts, setShowExpandedAlerts] = useState(false);
+  const [showExpandedInsights, setShowExpandedInsights] = useState(false);
   const [newLead, setNewLead] = useState<NewLeadForm>({
     fullName: '',
     email: '',
@@ -628,9 +632,12 @@ const LeadsManagement: React.FC = () => {
       });
     }
 
-    // Status filter
+    // Status filter - Case-sensitive exact match
     if (statusFilter !== 'all') {
-      filtered = filtered.filter(lead => lead.status === statusFilter);
+      filtered = filtered.filter(lead => {
+        // Exact case-sensitive match with the database status values
+        return lead.status === statusFilter;
+      });
     }
 
     // Country filter
@@ -1274,6 +1281,13 @@ const LeadsManagement: React.FC = () => {
     };
   };
 
+  // Individual status count functions for filter buttons
+  const getHotLeadsCount = () => (leads || []).filter((lead: Lead) => lead.status === 'Hot').length;
+  const getWarmLeadsCount = () => (leads || []).filter((lead: Lead) => lead.status === 'Warm').length;
+  const getFollowUpLeadsCount = () => (leads || []).filter((lead: Lead) => lead.status === 'Follow Up').length;
+  const getFreshLeadsCount = () => (leads || []).filter((lead: Lead) => lead.status === 'Fresh').length;
+  const getAllLeadsCount = () => (leads || []).length;
+
   // Advanced Monitoring Functions
   const getAdvancedMetrics = () => {
     const now = new Date();
@@ -1622,10 +1636,18 @@ const LeadsManagement: React.FC = () => {
           
           {/* Real-time Alerts */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between mb-4">
+            <div 
+              className="flex items-center justify-between mb-4 cursor-pointer hover:bg-gray-50 -m-2 p-2 rounded-lg transition-colors"
+              onClick={() => setShowExpandedAlerts(!showExpandedAlerts)}
+            >
               <h3 className="text-lg font-semibold text-gray-900 flex items-center">
                 <Bell className="w-5 h-5 mr-2 text-red-500" />
                 Monitoring Alerts
+                {showExpandedAlerts ? (
+                  <ChevronUp className="w-4 h-4 ml-2 text-gray-400" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 ml-2 text-gray-400" />
+                )}
               </h3>
               <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
                 {monitoringAlerts.length}
@@ -1637,7 +1659,7 @@ const LeadsManagement: React.FC = () => {
                 <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-2" />
                 <p className="text-sm text-gray-600">All systems normal</p>
               </div>
-            ) : (
+            ) : showExpandedAlerts ? (
               <div className="space-y-3">
                 {monitoringAlerts.map((alert, index) => {
                   const IconComponent = alert.icon;
@@ -1667,6 +1689,38 @@ const LeadsManagement: React.FC = () => {
                     </div>
                   );
                 })}
+                <div className="mt-4 pt-3 border-t border-gray-200">
+                  <button className="text-xs text-blue-600 hover:text-blue-800 font-medium">
+                    View All Alerts →
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {monitoringAlerts.slice(0, 2).map((alert, index) => {
+                  const IconComponent = alert.icon;
+                  return (
+                    <div key={index} className={`p-2 rounded-lg border-l-4 ${
+                      alert.type === 'danger' ? 'border-red-500 bg-red-50' :
+                      alert.type === 'warning' ? 'border-yellow-500 bg-yellow-50' :
+                      'border-blue-500 bg-blue-50'
+                    }`}>
+                      <div className="flex items-center">
+                        <IconComponent className={`w-4 h-4 mr-2 ${
+                          alert.type === 'danger' ? 'text-red-500' :
+                          alert.type === 'warning' ? 'text-yellow-500' :
+                          'text-blue-500'
+                        }`} />
+                        <p className="text-xs text-gray-800 truncate">{alert.message}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+                {monitoringAlerts.length > 2 && (
+                  <div className="text-center pt-2">
+                    <span className="text-xs text-gray-500">+{monitoringAlerts.length - 2} more alerts</span>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -1728,11 +1782,22 @@ const LeadsManagement: React.FC = () => {
 
           {/* Performance Insights */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between mb-4">
+            <div 
+              className="flex items-center justify-between mb-4 cursor-pointer hover:bg-gray-50 -m-2 p-2 rounded-lg transition-colors"
+              onClick={() => setShowExpandedInsights(!showExpandedInsights)}
+            >
               <h3 className="text-lg font-semibold text-gray-900 flex items-center">
                 <Eye className="w-5 h-5 mr-2 text-purple-500" />
                 Insights
+                {showExpandedInsights ? (
+                  <ChevronUp className="w-4 h-4 ml-2 text-gray-400" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 ml-2 text-gray-400" />
+                )}
               </h3>
+              <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
+                {performanceInsights.length}
+              </span>
             </div>
             
             {performanceInsights.length === 0 ? (
@@ -1740,7 +1805,7 @@ const LeadsManagement: React.FC = () => {
                 <PieChart className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                 <p className="text-sm text-gray-600">No insights available</p>
               </div>
-            ) : (
+            ) : showExpandedInsights ? (
               <div className="space-y-4">
                 {performanceInsights.map((insight, index) => {
                   const IconComponent = insight.icon;
@@ -1764,6 +1829,40 @@ const LeadsManagement: React.FC = () => {
                     </div>
                   );
                 })}
+                <div className="mt-4 pt-3 border-t border-gray-200">
+                  <button className="text-xs text-purple-600 hover:text-purple-800 font-medium">
+                    View Detailed Analytics →
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {performanceInsights.slice(0, 2).map((insight, index) => {
+                  const IconComponent = insight.icon;
+                  return (
+                    <div key={index} className={`p-2 rounded-lg ${
+                      insight.type === 'success' ? 'bg-green-50 border border-green-200' :
+                      insight.type === 'warning' ? 'bg-yellow-50 border border-yellow-200' :
+                      'bg-blue-50 border border-blue-200'
+                    }`}>
+                      <div className="flex items-center">
+                        <IconComponent className={`w-4 h-4 mr-2 ${
+                          insight.type === 'success' ? 'text-green-500' :
+                          insight.type === 'warning' ? 'text-yellow-500' :
+                          'text-blue-500'
+                        }`} />
+                        <div>
+                          <p className="text-xs font-medium text-gray-800 truncate">{insight.title}</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+                {performanceInsights.length > 2 && (
+                  <div className="text-center pt-2">
+                    <span className="text-xs text-gray-500">+{performanceInsights.length - 2} more insights</span>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -1816,44 +1915,44 @@ const LeadsManagement: React.FC = () => {
       {/* Quick Status Filters */}
       <div className="mb-6 flex flex-wrap gap-3">
         <button
-          onClick={() => quickStatusFilter('hot')}
+          onClick={() => quickStatusFilter('Hot')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-            statusFilter === 'hot' 
+            statusFilter === 'Hot' 
               ? 'bg-red-100 text-red-800 border-2 border-red-300 shadow-md' 
               : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
           }`}
         >
-          🔥 Hot
+          🔥 Hot ({getHotLeadsCount()})
         </button>
         <button
-          onClick={() => quickStatusFilter('warm')}
+          onClick={() => quickStatusFilter('Warm')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-            statusFilter === 'warm' 
+            statusFilter === 'Warm' 
               ? 'bg-orange-100 text-orange-800 border-2 border-orange-300 shadow-md' 
               : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
           }`}
         >
-          🌡️ Warm
+          🌡️ Warm ({getWarmLeadsCount()})
         </button>
         <button
-          onClick={() => quickStatusFilter('followup')}
+          onClick={() => quickStatusFilter('Follow Up')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-            statusFilter === 'followup' 
+            statusFilter === 'Follow Up' 
               ? 'bg-yellow-100 text-yellow-800 border-2 border-yellow-300 shadow-md' 
               : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
           }`}
         >
-          📅 Follow-up
+          📅 Follow-up ({getFollowUpLeadsCount()})
         </button>
         <button
-          onClick={() => quickStatusFilter('fresh')}
+          onClick={() => quickStatusFilter('Fresh')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-            statusFilter === 'fresh' 
+            statusFilter === 'Fresh' 
               ? 'bg-green-100 text-green-800 border-2 border-green-300 shadow-md' 
               : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
           }`}
         >
-          🌱 Fresh
+          🌱 Fresh ({getFreshLeadsCount()})
         </button>
         <button
           onClick={() => quickStatusFilter('all')}
@@ -1863,7 +1962,7 @@ const LeadsManagement: React.FC = () => {
               : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
           }`}
         >
-          📊 All
+          📊 All ({getAllLeadsCount()})
         </button>
         
         {/* Updated Today Filter */}
@@ -3257,7 +3356,7 @@ const LeadsManagement: React.FC = () => {
       {/* Team Member Modal */}
       {showTeamMemberModal && selectedTeamMember && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-6xl max-h-[90vh] flex flex-col">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-6xl h-[90vh] flex flex-col">
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -3270,6 +3369,9 @@ const LeadsManagement: React.FC = () => {
                   </h2>
                   <p className="text-sm text-gray-600">
                     {selectedTeamMember.role} • {teamMemberLeads.length} leads
+                    {teamMemberLeads.length > 5 && (
+                      <span className="text-blue-600 ml-2">• Scroll to see all</span>
+                    )}
                   </p>
                 </div>
               </div>
@@ -3285,17 +3387,17 @@ const LeadsManagement: React.FC = () => {
               </button>
             </div>
 
-            {/* Modal Content */}
+            {/* Modal Content - Enhanced scrolling */}
             <div className="flex-1 overflow-hidden">
               {loadingTeamMemberLeads ? (
-                <div className="flex items-center justify-center h-64">
+                <div className="flex items-center justify-center h-full">
                   <div className="flex flex-col items-center space-y-4">
                     <RefreshCw className="w-8 h-8 text-blue-500 animate-spin" />
                     <p className="text-gray-600">Loading {selectedTeamMember.name}'s leads...</p>
                   </div>
                 </div>
               ) : teamMemberLeads.length === 0 ? (
-                <div className="flex items-center justify-center h-64">
+                <div className="flex items-center justify-center h-full">
                   <div className="text-center">
                     <Target className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No leads found</h3>
@@ -3305,19 +3407,21 @@ const LeadsManagement: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <div className="overflow-auto h-full">
-                  <div className="grid gap-4 p-6">
-                    {teamMemberLeads.map((lead) => (
+                <div className="flex-1 overflow-y-auto">
+                  <div className="p-6 space-y-4">
+                    {teamMemberLeads.map((lead, index) => (
                       <div key={lead.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <div className="flex items-center space-x-3 mb-2">
+                              <span className="text-sm text-gray-500 font-mono">#{index + 1}</span>
                               <h4 className="text-lg font-semibold text-gray-900">{lead.fullName}</h4>
                               <span className={`px-2 py-1 text-xs rounded-full ${
-                                lead.status === 'converted' ? 'bg-green-100 text-green-800' :
-                                lead.status === 'hot' ? 'bg-red-100 text-red-800' :
-                                lead.status === 'warm' ? 'bg-yellow-100 text-yellow-800' :
-                                lead.status === 'cold' ? 'bg-blue-100 text-blue-800' :
+                                lead.status === 'Enrolled' ? 'bg-green-100 text-green-800' :
+                                lead.status === 'Hot' ? 'bg-red-100 text-red-800' :
+                                lead.status === 'Warm' ? 'bg-orange-100 text-orange-800' :
+                                lead.status === 'Follow Up' ? 'bg-yellow-100 text-yellow-800' :
+                                lead.status === 'Fresh' ? 'bg-blue-100 text-blue-800' :
                                 'bg-gray-100 text-gray-800'
                               }`}>
                                 {lead.status}
@@ -3354,8 +3458,11 @@ const LeadsManagement: React.FC = () => {
                           <div className="flex flex-col space-y-2 ml-4">
                             <button
                               onClick={() => {
-                                // Edit functionality - you can implement this later
-                                console.log('Edit lead:', lead.id);
+                                // Open edit modal for this specific lead
+                                setSelectedLeadId(lead.id);
+                                setShowDetailPanel(true);
+                                // Close the team member modal to show the edit panel
+                                setShowTeamMemberModal(false);
                               }}
                               className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
                             >
