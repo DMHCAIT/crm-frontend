@@ -1516,11 +1516,12 @@ const UserModal: React.FC<UserModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Company</label>
+            <label className="block text-sm font-medium text-gray-700">Company <span className="text-red-500">*</span></label>
             <select
               value={formData.company}
               onChange={(e) => setFormData({...formData, company: e.target.value || ''})}
               className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+              required
             >
               <option value="">Select Company</option>
               <option value="DMHCA">DMHCA</option>

@@ -36,6 +36,7 @@ interface Lead {
   createdAt: string;
   assignedCounselor: string;
   createdBy: string;
+  company?: string;  // Company field for DMHCA/IBMP separation
   score?: number;
   lastContact?: string;
   nextFollowUp?: string;

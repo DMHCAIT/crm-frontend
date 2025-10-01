@@ -55,6 +55,7 @@ interface Lead {
   status: string;
   assignedTo: string;
   followUp: string;
+  company: string;
   createdAt: string;
   updatedAt: string;
   notes: Note[];
@@ -82,6 +83,7 @@ interface NewLeadForm {
   status: string;
   assignedTo: string;
   followUp: string;
+  company: string;
 }
 
 interface Note {
@@ -338,7 +340,8 @@ const LeadsManagement: React.FC = () => {
     course: '',
     status: 'Fresh',
     assignedTo: '',
-    followUp: ''
+    followUp: '',
+    company: ''
   });
 
   // Effects
@@ -1058,6 +1061,7 @@ const LeadsManagement: React.FC = () => {
         status: createdLead.status || newLead.status || 'Fresh',
         assignedTo: createdLead.assignedTo || newLead.assignedTo || user?.username || user?.name || 'Unassigned',
         followUp: newLead.followUp || '',
+        company: createdLead.company || newLead.company || 'DMHCA',
         createdAt: createdLead.createdAt || new Date().toISOString(),
         updatedAt: createdLead.updatedAt || new Date().toISOString(),
         notes: [{
@@ -1092,7 +1096,8 @@ const LeadsManagement: React.FC = () => {
         course: '',
         status: 'Fresh',
         assignedTo: '',
-        followUp: ''
+        followUp: '',
+        company: ''
       });
       setShowAddLeadModal(false);
 
@@ -1132,7 +1137,8 @@ const LeadsManagement: React.FC = () => {
       course: '',
       status: 'Fresh',
       assignedTo: '',
-      followUp: ''
+      followUp: '',
+      company: ''
     });
     setShowAddLeadModal(false);
   };
@@ -1890,18 +1896,24 @@ const LeadsManagement: React.FC = () => {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Lead Management</h1>
             <p className="text-gray-600 mt-1">Manage and track all your leads in one place</p>
-            {/* Hierarchical Access Indicator - Compact */}
-            <div className="mt-1 flex items-center space-x-2">
-              <div className="bg-blue-50 border border-blue-200 rounded-md px-2 py-1 flex items-center space-x-1">
-                <UserCheck className="w-3 h-3 text-blue-600" />
-                <span className="text-xs text-blue-600 font-medium">
-                  Hierarchical View
-                  {user?.role === 'super_admin' && (
-                    <span className="ml-1 px-1 py-0.5 bg-purple-100 text-purple-600 rounded text-xs">
-                      All Access
-                    </span>
+            {/* Hierarchical Access Indicator - Enhanced */}
+            <div className="mt-2 flex items-center space-x-2">
+              <div className="bg-blue-50 border border-blue-200 rounded-md px-3 py-1.5 flex items-center space-x-2">
+                <UserCheck className="w-4 h-4 text-blue-600" />
+                <div>
+                  <span className="text-sm text-blue-700 font-medium">
+                    {user?.role === 'super_admin' && 'All Leads Access'}
+                    {user?.role === 'senior_manager' && 'Manager View: Your leads + All team leads'}
+                    {user?.role === 'manager' && 'Manager View: Your leads + Team leads'}
+                    {user?.role === 'team_leader' && 'Team Leader View: Your leads + Subordinate leads'}
+                    {user?.role === 'counselor' && 'Personal View: Your assigned leads'}
+                  </span>
+                  {(user?.role === 'manager' || user?.role === 'senior_manager' || user?.role === 'team_leader') && (
+                    <div className="text-xs text-blue-600 mt-0.5">
+                      🏢 Viewing leads from your reporting hierarchy
+                    </div>
                   )}
-                </span>
+                </div>
               </div>
               {user?.company && (
                 <div className="bg-green-50 border border-green-200 rounded-md px-2 py-1 flex items-center space-x-1">
@@ -2556,6 +2568,42 @@ const LeadsManagement: React.FC = () => {
             </div>
           )}
 
+          {/* Team Hierarchy Summary - Only for managers/team leaders */}
+          {(user?.role === 'manager' || user?.role === 'senior_manager' || user?.role === 'team_leader') && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center space-x-2 mb-2">
+                <Users className="w-5 h-5 text-blue-600" />
+                <h3 className="text-sm font-medium text-blue-800">Team Lead Visibility</h3>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-blue-700">
+                    {filteredLeads.filter(lead => lead.assignedTo?.toLowerCase() === user?.username?.toLowerCase()).length}
+                  </div>
+                  <div className="text-blue-600">Your Leads</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-green-700">
+                    {filteredLeads.filter(lead => lead.assignedTo?.toLowerCase() !== user?.username?.toLowerCase()).length}
+                  </div>
+                  <div className="text-green-600">Team Leads</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-gray-700">
+                    {filteredLeads.length}
+                  </div>
+                  <div className="text-gray-600">Total Visible</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-orange-700">
+                    {assignableUsers.length}
+                  </div>
+                  <div className="text-orange-600">Team Size</div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Filter Toggle */}
           <button
             onClick={() => setShowFilters(!showFilters)}
@@ -2884,7 +2932,18 @@ const LeadsManagement: React.FC = () => {
                               onClick={(e) => e.stopPropagation()}
                             />
                           ) : (
-                            <h3 className="font-medium text-gray-900">{lead.fullName}</h3>
+                            <div className="flex items-center space-x-2">
+                              <h3 className="font-medium text-gray-900">{lead.fullName}</h3>
+                              {/* Hierarchy indicator */}
+                              {lead.assignedTo && lead.assignedTo.toLowerCase() !== user?.username?.toLowerCase() && (
+                                <span 
+                                  className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                                  title={`Team member lead: ${lead.assignedTo}`}
+                                >
+                                  👥
+                                </span>
+                              )}
+                            </div>
                           )}
                           <p className="text-xs text-gray-500">#{lead.id}</p>
                           <div className="flex items-center space-x-1">
@@ -3897,6 +3956,22 @@ const LeadsManagement: React.FC = () => {
                         {user.name} ({user.role})
                       </option>
                     ))}
+                  </select>
+                </div>
+
+                {/* Company */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Company <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={newLead.company || ''}
+                    onChange={(e) => setNewLead({...newLead, company: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">Select Company</option>
+                    <option value="DMHCA">🏥 DMHCA</option>
+                    <option value="IBMP">🎓 IBMP</option>
                   </select>
                 </div>
 

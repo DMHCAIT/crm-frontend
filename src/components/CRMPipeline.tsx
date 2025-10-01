@@ -195,10 +195,30 @@ const CRMPipeline: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">CRM Pipeline</h1>
           <p className="text-gray-600 mt-2">Monitor leads, track conversions, and manage your sales pipeline</p>
-          <div className="mt-1">
-            <div className="bg-blue-50 border border-blue-200 px-2 py-1 rounded-md text-xs text-blue-600 font-medium inline-flex items-center">
-              🔍 <span className="ml-1">Hierarchical View</span>
+          <div className="mt-2 flex items-center space-x-2">
+            <div className="bg-blue-50 border border-blue-200 rounded-md px-3 py-1.5 flex items-center space-x-2">
+              <span className="text-lg">📊</span>
+              <div>
+                <div className="text-sm text-blue-700 font-medium">
+                  {user?.role === 'super_admin' && 'All Pipeline Data'}
+                  {user?.role === 'senior_manager' && 'Team Pipeline: Your + All subordinates'}
+                  {user?.role === 'manager' && 'Team Pipeline: Your + Subordinate data'}
+                  {user?.role === 'team_leader' && 'Team Pipeline: Your + Team data'}
+                  {user?.role === 'counselor' && 'Personal Pipeline Data'}
+                </div>
+                {(user?.role === 'manager' || user?.role === 'senior_manager' || user?.role === 'team_leader') && (
+                  <div className="text-xs text-blue-600 mt-0.5">
+                    � Metrics include your reporting hierarchy
+                  </div>
+                )}
+              </div>
             </div>
+            {user?.company && (
+              <div className="bg-green-50 border border-green-200 rounded-md px-2 py-1 flex items-center space-x-1">
+                <span className="text-sm">🏛️</span>
+                <span className="text-xs text-green-700 font-medium">{user.company}</span>
+              </div>
+            )}
           </div>
         </div>
         
