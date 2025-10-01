@@ -610,6 +610,25 @@ const LeadsManagement: React.FC = () => {
             return leadDate >= monthAgo;
           case 'updated_today':
             return leadsUpdatedToday.includes(lead.id);
+          case 'recently_imported':
+            const twentyFourHoursAgo = new Date();
+            twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+            const createdAt = new Date(lead.createdAt);
+            return createdAt >= twentyFourHoursAgo && (
+              // Check if lead was created by import process
+              lead.source === 'Import' ||
+              lead.source === 'CSV Import' ||
+              lead.source === 'Excel Import' ||
+              lead.assignedTo === 'Import System' ||
+              // Check notes array for import-related content
+              lead.notes?.some(note => 
+                note.content?.includes('Imported from CSV') ||
+                note.content?.includes('Imported from Excel') ||
+                note.content?.includes('Bulk import') ||
+                note.content?.includes('CSV file') ||
+                note.content?.includes('Excel file')
+              )
+            );
           case 'custom':
             if (dateFrom && dateTo) {
               const fromDate = new Date(dateFrom);
@@ -897,6 +916,43 @@ const LeadsManagement: React.FC = () => {
     setLastUpdateTime(null);
     localStorage.removeItem('crm-leads-updated-today');
     localStorage.removeItem('crm-last-update-time');
+  };
+
+  // Filter to show only recently imported leads (last 24 hours)
+  const setFilterToRecentlyImported = () => {
+    if (dateFilter === 'recently_imported') {
+      // If already filtering by recently imported, switch back to all
+      setDateFilter('all');
+    } else {
+      // If not filtering by recently imported, switch to it
+      setDateFilter('recently_imported');
+      setStatusFilter('all'); // Reset status filter to show all imported leads
+    }
+  };
+
+  // Get count of recently imported leads (last 24 hours)
+  const getRecentlyImportedCount = () => {
+    const twentyFourHoursAgo = new Date();
+    twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+    
+    return leads.filter(lead => {
+      const createdAt = new Date(lead.createdAt);
+      return createdAt >= twentyFourHoursAgo && (
+        // Check if lead was created by import process
+        lead.source === 'Import' ||
+        lead.source === 'CSV Import' ||
+        lead.source === 'Excel Import' ||
+        lead.assignedTo === 'Import System' ||
+        // Check notes array for import-related content
+        lead.notes?.some(note => 
+          note.content?.includes('Imported from CSV') ||
+          note.content?.includes('Imported from Excel') ||
+          note.content?.includes('Bulk import') ||
+          note.content?.includes('CSV file') ||
+          note.content?.includes('Excel file')
+        )
+      );
+    }).length;
   };
 
   // Add Lead Functions
@@ -1265,12 +1321,12 @@ const LeadsManagement: React.FC = () => {
               country: columnMap.country >= 0 ? values[columnMap.country] || '' : '',
               branch: columnMap.branch >= 0 ? values[columnMap.branch] || '' : '',
               qualification: columnMap.qualification >= 0 ? values[columnMap.qualification] || '' : '',
-              source: columnMap.source >= 0 ? values[columnMap.source] || '' : '',
+              source: columnMap.source >= 0 ? (values[columnMap.source] || (fileName.includes('.xlsx') || fileName.includes('.xls') ? 'Excel Import' : 'CSV Import')) : (fileName.includes('.xlsx') || fileName.includes('.xls') ? 'Excel Import' : 'CSV Import'),
               course: columnMap.course >= 0 ? values[columnMap.course] || '' : '',
               status: columnMap.status >= 0 ? values[columnMap.status] || '' : '',
               assignedTo: columnMap.assignedTo >= 0 ? values[columnMap.assignedTo] || '' : '',
               followUp: columnMap.followUp >= 0 ? values[columnMap.followUp] || '' : '',
-              notes: `Imported from CSV on ${new Date().toLocaleDateString()}`
+              notes: `Imported from ${fileName.includes('.xlsx') || fileName.includes('.xls') ? 'Excel' : 'CSV'} file on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`
             };
 
             // Save to backend
@@ -2382,6 +2438,21 @@ const LeadsManagement: React.FC = () => {
           {dateFilter === 'updated_today' 
             ? `✅ Showing Updated Today (${getLeadsUpdatedTodayCount()})` 
             : `✏️ Updated Today (${getLeadsUpdatedTodayCount()})`
+          }
+        </button>
+
+        {/* Recently Imported Filter */}
+        <button
+          onClick={() => setFilterToRecentlyImported()}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+            dateFilter === 'recently_imported' 
+              ? 'bg-purple-100 text-purple-800 border-2 border-purple-300 shadow-md' 
+              : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
+          }`}
+        >
+          {dateFilter === 'recently_imported' 
+            ? `✅ Showing Recently Imported (${getRecentlyImportedCount()})` 
+            : `📥 Recently Imported (${getRecentlyImportedCount()})`
           }
         </button>
       </div>
