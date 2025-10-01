@@ -296,6 +296,7 @@ const LeadsManagement: React.FC = () => {
   const [qualificationFilter, setQualificationFilter] = useState('all');
   const [showOverdueOnly, setShowOverdueOnly] = useState(false);
   const [courseFilter, setCourseFilter] = useState('all');
+  const [companyFilter, setCompanyFilter] = useState('all');
   
   // Updated Today Tracking with persistence
   const [leadsUpdatedToday, setLeadsUpdatedToday] = useState<string[]>(() => {
@@ -348,7 +349,7 @@ const LeadsManagement: React.FC = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [leads, searchQuery, dateFilter, dateFrom, dateTo, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, leadsUpdatedToday, showOverdueOnly]);
+  }, [leads, searchQuery, dateFilter, dateFrom, dateTo, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, companyFilter, leadsUpdatedToday, showOverdueOnly]);
 
   // Data Loading - Production Only
   const loadLeads = async () => {
@@ -703,6 +704,15 @@ const LeadsManagement: React.FC = () => {
       filtered = filtered.filter(lead => lead.course === courseFilter);
     }
 
+    // Company filter - filter by DMHCA or IBMP
+    if (companyFilter !== 'all') {
+      filtered = filtered.filter(lead => {
+        // Check if lead has company field or check assignedTo user's company
+        const leadAny = lead as any;
+        return leadAny.company === companyFilter;
+      });
+    }
+
     // Overdue follow-up filter
     if (showOverdueOnly) {
       const now = new Date();
@@ -894,6 +904,20 @@ const LeadsManagement: React.FC = () => {
       setStatusFilter(status);
       if (status !== 'all') {
         setDateFilter('all'); // Reset date filter when applying status filter
+      }
+    }
+  };
+
+  // Quick company filter function
+  const quickCompanyFilter = (company: string) => {
+    if (companyFilter === company && company !== 'all') {
+      // If already filtering by this company, switch back to all
+      setCompanyFilter('all');
+    } else {
+      // Apply the new company filter
+      setCompanyFilter(company);
+      if (company !== 'all') {
+        setDateFilter('all'); // Reset other filters when applying company filter
       }
     }
   };
@@ -1555,6 +1579,10 @@ const LeadsManagement: React.FC = () => {
   const getFollowUpLeadsCount = () => (leads || []).filter((lead: Lead) => lead.status === 'Follow Up').length;
   const getFreshLeadsCount = () => (leads || []).filter((lead: Lead) => lead.status === 'Fresh').length;
   const getAllLeadsCount = () => (leads || []).length;
+
+  // Company count functions for filter buttons
+  const getDMHCALeadsCount = () => (leads || []).filter((lead: Lead) => (lead as any).company === 'DMHCA').length;
+  const getIBMPLeadsCount = () => (leads || []).filter((lead: Lead) => (lead as any).company === 'IBMP').length;
 
   // Advanced Monitoring Functions
   const getAdvancedMetrics = () => {
@@ -2454,6 +2482,48 @@ const LeadsManagement: React.FC = () => {
             ? `✅ Showing Recently Imported (${getRecentlyImportedCount()})` 
             : `📥 Recently Imported (${getRecentlyImportedCount()})`
           }
+        </button>
+      </div>
+
+      {/* Company Filters */}
+      <div className="mb-4 flex flex-wrap gap-3">
+        <div className="text-sm font-medium text-gray-700 flex items-center mr-4">
+          <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            🏢 Filter by Company:
+          </span>
+        </div>
+        
+        <button
+          onClick={() => quickCompanyFilter('DMHCA')}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+            companyFilter === 'DMHCA' 
+              ? 'bg-blue-100 text-blue-800 border-2 border-blue-300 shadow-md' 
+              : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
+          }`}
+        >
+          🏥 DMHCA ({getDMHCALeadsCount()})
+        </button>
+
+        <button
+          onClick={() => quickCompanyFilter('IBMP')}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+            companyFilter === 'IBMP' 
+              ? 'bg-green-100 text-green-800 border-2 border-green-300 shadow-md' 
+              : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
+          }`}
+        >
+          🎓 IBMP ({getIBMPLeadsCount()})
+        </button>
+
+        <button
+          onClick={() => quickCompanyFilter('all')}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+            companyFilter === 'all' 
+              ? 'bg-gray-100 text-gray-800 border-2 border-gray-300 shadow-md' 
+              : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
+          }`}
+        >
+          🌐 All Companies ({getAllLeadsCount()})
         </button>
       </div>
 

@@ -41,6 +41,7 @@ const UserManagement: React.FC = () => {
   const [selectedTeam, setSelectedTeam] = useState('all');
   const [showTeamComparison, setShowTeamComparison] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState('all');
+  const [selectedCompany, setSelectedCompany] = useState('all');
   const [showUserDetailModal, setShowUserDetailModal] = useState(false);
   const [userDetailData, setUserDetailData] = useState<{
     user: DatabaseUser | null;
@@ -224,11 +225,12 @@ const UserManagement: React.FC = () => {
       const matchesBranch = selectedBranch === 'all' || 
                            (user.branch && user.branch.toLowerCase() === selectedBranch.toLowerCase()) ||
                            (user.location && user.location.toLowerCase().includes(selectedBranch.toLowerCase()));
+      const matchesCompany = selectedCompany === 'all' || user.company === selectedCompany;
       const matchesSearch = (user.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                            (user.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                            (user.username || '').toLowerCase().includes(searchTerm.toLowerCase());
       
-      return canSeeUser && matchesRole && matchesTeam && matchesBranch && matchesSearch;
+      return canSeeUser && matchesRole && matchesTeam && matchesBranch && matchesCompany && matchesSearch;
     });
   };
 
@@ -653,6 +655,46 @@ const UserManagement: React.FC = () => {
                   <span>{branch.name}</span>
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Company Filter Buttons */}
+          <div className="flex items-center space-x-2">
+            <Briefcase className="w-4 h-4 text-gray-400" />
+            <div className="flex space-x-1">
+              <button
+                onClick={() => setSelectedCompany('all')}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1 ${
+                  selectedCompany === 'all'
+                    ? 'bg-gray-600 text-white shadow-sm'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <span>🌐</span>
+                <span>All Companies</span>
+              </button>
+              <button
+                onClick={() => setSelectedCompany('DMHCA')}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1 ${
+                  selectedCompany === 'DMHCA'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <span>🏥</span>
+                <span>DMHCA</span>
+              </button>
+              <button
+                onClick={() => setSelectedCompany('IBMP')}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1 ${
+                  selectedCompany === 'IBMP'
+                    ? 'bg-green-600 text-white shadow-sm'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <span>🎓</span>
+                <span>IBMP</span>
+              </button>
             </div>
           </div>
 
