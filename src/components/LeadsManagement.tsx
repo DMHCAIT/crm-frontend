@@ -2486,7 +2486,7 @@ const LeadsManagement: React.FC = () => {
             </div>
           </h3>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 max-h-[300px] overflow-y-auto pr-2">
             {assignableUsers.map((teamUser) => {
               const userLeadCount = leads.filter(lead => 
                 lead.assignedTo === teamUser.username || lead.assignedTo === teamUser.name
@@ -2885,8 +2885,8 @@ const LeadsManagement: React.FC = () => {
                     const selectedValues = Array.from(e.target.selectedOptions, option => option.value);
                     setAssignedToFilter(selectedValues);
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[80px]"
-                  size={4}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[150px] max-h-[200px] overflow-y-auto"
+                  size={8}
                 >
                   <option value="all">All Assigned ({assignableUsers.length} users)</option>
                   
@@ -4304,7 +4304,7 @@ const LeadsManagement: React.FC = () => {
             </div>
 
             {/* Modal Content - Enhanced scrolling */}
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 overflow-hidden relative">
               {loadingTeamMemberLeads ? (
                 <div className="flex items-center justify-center h-full">
                   <div className="flex flex-col items-center space-y-4">
@@ -4323,10 +4323,22 @@ const LeadsManagement: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <div className="flex-1 overflow-y-auto">
-                  <div className="p-6 space-y-4">
+                <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                  <div className="p-6 space-y-4">{/* Scrollable leads list */}
                     {teamMemberLeads.map((lead, index) => (
-                      <div key={lead.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                      <div 
+                        key={lead.id} 
+                        className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer hover:bg-blue-50"
+                        onClick={() => {
+                          // Open lead details
+                          setSelectedLeadId(lead.id);
+                          setShowDetailPanel(true);
+                          setShowTeamMemberModal(false);
+                          // Load notes for the lead
+                          loadNotesForLead(lead.id);
+                        }}
+                        title="Click to view lead details"
+                      >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <div className="flex items-center space-x-3 mb-2">
