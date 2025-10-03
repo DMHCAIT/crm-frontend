@@ -419,6 +419,11 @@ class ProductionApiClient {
     return this.request('/debug-assignable-users');
   }
 
+  // Test user lookup methods
+  async testUserLookup() {
+    return this.request('/test-user-lookup');
+  }
+
   // Get subordinates for a specific user (reporting hierarchy)
   async getUserSubordinates(userId: string) {
     return this.request(`/users/${userId}/subordinates`);

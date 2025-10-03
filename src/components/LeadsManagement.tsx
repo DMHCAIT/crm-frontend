@@ -1991,9 +1991,30 @@ const LeadsManagement: React.FC = () => {
                   onClick={async () => {
                     try {
                       const apiClient = getApiClient();
+                      
+                      console.log('🧪 TESTING USER LOOKUP...');
+                      const testInfo = await apiClient.testUserLookup() as any;
+                      console.log('🧪 USER LOOKUP TEST:', testInfo);
+                      
+                      console.log('🔍 HIERARCHY DEBUG...');
                       const debugInfo = await apiClient.debugAssignableUsers() as any;
                       console.log('🔍 HIERARCHY DEBUG INFO:', debugInfo);
-                      alert(`Hierarchy Debug Info logged to console!\n\nQuick Summary:\nTotal Users: ${debugInfo.debug?.totalUsersInDatabase || 'N/A'}\nCurrent User: ${debugInfo.debug?.currentUserFound ? 'Found' : 'Not Found'}\nAssignable Users: ${assignableUsers.length}\n\nCheck browser console for full details.`);
+                      
+                      // Show summary
+                      const testResults = testInfo?.testResults;
+                      const userFound = testResults?.userLookupAttempts?.find((attempt: any) => attempt.found);
+                      const subordinateResults = Object.values(testResults?.subordinateResults || {}) as any[];
+                      const subordinateCount = subordinateResults.find((result: any) => result?.subordinateCount > 0)?.subordinateCount || 0;
+                      
+                      alert(`🧪 USER LOOKUP & HIERARCHY DEBUG\n\n` +
+                            `JWT User: ${testResults?.jwtToken?.username || 'N/A'}\n` +
+                            `Database Users: ${testResults?.totalUsersInDB || 'N/A'}\n` +
+                            `User Found: ${userFound ? 'YES' : 'NO'}\n` +
+                            `Method: ${userFound?.method || 'None worked'}\n` +
+                            `Subordinates: ${subordinateCount}\n` +
+                            `Assignable Users: ${assignableUsers.length}\n\n` +
+                            `Check browser console for full details!`);
+                      
                     } catch (error) {
                       console.error('Debug failed:', error);
                       alert('Debug failed. Check console for errors.');
