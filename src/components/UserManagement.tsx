@@ -382,17 +382,22 @@ const UserManagement: React.FC = () => {
       setActionLoading('save');
       const apiClient = getApiClient();
       
-      console.log('💾 Saving user data:', userData);
-      console.log('🔍 Reports to field specifically:', userData.reports_to);
+      // Convert empty string UUID fields to null for database compatibility
+      const cleanedUserData = {
+        ...userData,
+        reports_to: userData.reports_to === '' ? null : userData.reports_to
+      };
+      
+      console.log('💾 Saving user data:', cleanedUserData);
+      console.log('🔍 Reports to field specifically:', cleanedUserData.reports_to);
       
       if (selectedUser) {
         // Update existing user using proper backend API
-        const result = await apiClient.updateUser(selectedUser.id, userData);
+        const result = await apiClient.updateUser(selectedUser.id, cleanedUserData);
         console.log('✅ User updated successfully:', result);
-        console.log('🔍 Updated user reports_to:', result?.user?.reports_to);
       } else {
         // Create new user using proper backend API 
-        const result = await apiClient.createUser(userData);
+        const result = await apiClient.createUser(cleanedUserData);
         console.log('✅ User created successfully:', result);
       }
       
@@ -1263,7 +1268,7 @@ const UserModal: React.FC<UserModalProps> = ({
     branch: user?.branch || '', // Branch field for filtering
     company: user?.company || '', // Company field (DMHCA, IBMP)
     status: user?.status || 'active',
-    reports_to: user?.reports_to || '', // Fixed: Use correct field name
+    reports_to: user?.reports_to || '', // Keep as string for form handling
     password: '', // Password field for new users
     confirmPassword: '' // Confirm password field
   });
