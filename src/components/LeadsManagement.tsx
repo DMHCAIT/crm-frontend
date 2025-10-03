@@ -294,7 +294,7 @@ const LeadsManagement: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [countryFilter, setCountryFilter] = useState('all');
   const [sourceFilter, setSourceFilter] = useState('all');
-  const [assignedToFilter, setAssignedToFilter] = useState('all');
+  const [assignedToFilter, setAssignedToFilter] = useState<string[]>(['all']);
   const [qualificationFilter, setQualificationFilter] = useState('all');
   const [showOverdueOnly, setShowOverdueOnly] = useState(false);
   const [courseFilter, setCourseFilter] = useState('all');
@@ -471,8 +471,13 @@ const LeadsManagement: React.FC = () => {
       let usersArray: any[] = [];
       if (Array.isArray(assignableUsersResponse)) {
         usersArray = assignableUsersResponse;
-      } else if (assignableUsersResponse && (assignableUsersResponse as any).success && Array.isArray((assignableUsersResponse as any).users)) {
-        usersArray = (assignableUsersResponse as any).users;
+      } else if (assignableUsersResponse && (assignableUsersResponse as any).success) {
+        // Check multiple possible response formats
+        if (Array.isArray((assignableUsersResponse as any).users)) {
+          usersArray = (assignableUsersResponse as any).users;
+        } else if (Array.isArray((assignableUsersResponse as any).data)) {
+          usersArray = (assignableUsersResponse as any).data;
+        }
       }
       
       if (usersArray.length > 0) {
@@ -682,18 +687,20 @@ const LeadsManagement: React.FC = () => {
       filtered = filtered.filter(lead => lead.source === sourceFilter);
     }
 
-    // Assigned to filter - Enhanced to handle multiple assignment fields
-    if (assignedToFilter !== 'all') {
+    // Assigned to filter - Enhanced to handle multiple selections
+    if (!assignedToFilter.includes('all')) {
       filtered = filtered.filter(lead => {
         // Check multiple assignment fields to handle different naming conventions
         const leadAny = lead as any; // Type assertion for dynamic field access
         const assignedTo = lead.assignedTo || leadAny.assigned_to || leadAny.assignedcounselor || 'Unassigned';
         
-        // Handle both username and full name matching
-        return assignedTo === assignedToFilter || 
-               assignedTo.toLowerCase() === assignedToFilter.toLowerCase() ||
-               // Also check if the assignedTo contains the filter (for "Name (role)" format)
-               assignedTo.includes(assignedToFilter);
+        // Check if the assignedTo matches any of the selected filters
+        return assignedToFilter.some(filter => 
+          assignedTo === filter || 
+          assignedTo.toLowerCase() === filter.toLowerCase() ||
+          // Also check if the assignedTo contains the filter (for "Name (role)" format)
+          assignedTo.includes(filter)
+        );
       });
     }
 
@@ -2820,17 +2827,23 @@ const LeadsManagement: React.FC = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center justify-between">
-                  <span>Assigned To</span>
+                  <span>Assigned To (Multi-Select)</span>
                   {(user?.role === 'manager' || user?.role === 'senior_manager' || user?.role === 'team_leader') && (
                     <span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
                       👥 Team View
                     </span>
                   )}
                 </label>
+                <p className="text-xs text-gray-600 mb-2">Hold Ctrl/Cmd to select multiple users</p>
                 <select
+                  multiple
                   value={assignedToFilter}
-                  onChange={(e) => setAssignedToFilter(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  onChange={(e) => {
+                    const selectedValues = Array.from(e.target.selectedOptions, option => option.value);
+                    setAssignedToFilter(selectedValues);
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[80px]"
+                  size={4}
                 >
                   <option value="all">All Assigned ({assignableUsers.length} users)</option>
                   
@@ -4441,7 +4454,7 @@ const LeadsManagement: React.FC = () => {
                     setStatusFilter('all');
                     setCountryFilter('all');
                     setSourceFilter('all');
-                    setAssignedToFilter('all');
+                    setAssignedToFilter(['all']);
                     setQualificationFilter('all');
                     setShowOverdueOnly(true);
                     setShowOverduePopup(false);
