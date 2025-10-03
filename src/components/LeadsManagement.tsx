@@ -999,8 +999,14 @@ const LeadsManagement: React.FC = () => {
     console.log('🔍 Assignment value (newLead.assignedTo):', newLead.assignedTo);
     try {
       // Validate required fields
-      if (!newLead.fullName || !newLead.email || !newLead.phone) {
-        alert('Please fill in all required fields (Full Name, Email, Phone)');
+      if (!newLead.fullName || !newLead.email || !newLead.phone || !newLead.company) {
+        alert('Please fill in all required fields (Full Name, Email, Phone, Company)');
+        return;
+      }
+
+      // Validate company selection
+      if (!['DMHCA', 'IBMP'].includes(newLead.company)) {
+        alert('Please select a valid company (DMHCA or IBMP)');
         return;
       }
 
@@ -1061,7 +1067,7 @@ const LeadsManagement: React.FC = () => {
         status: createdLead.status || newLead.status || 'Fresh',
         assignedTo: createdLead.assignedTo || newLead.assignedTo || user?.username || user?.name || 'Unassigned',
         followUp: newLead.followUp || '',
-        company: createdLead.company || newLead.company || 'DMHCA',
+        company: createdLead.company || newLead.company || '',
         createdAt: createdLead.createdAt || new Date().toISOString(),
         updatedAt: createdLead.updatedAt || new Date().toISOString(),
         notes: [{
@@ -1187,7 +1193,7 @@ const LeadsManagement: React.FC = () => {
   // Export leads to CSV
   const handleExportLeads = () => {
     const csvContent = [
-      ['ID', 'Full Name', 'Email', 'Phone', 'Country', 'Branch', 'Qualification', 'Source', 'Course', 'Status', 'Assigned To', 'Follow Up', 'Created At', 'Updated At'],
+      ['ID', 'Full Name', 'Email', 'Phone', 'Country', 'Branch', 'Qualification', 'Source', 'Course', 'Status', 'Assigned To', 'Follow Up', 'Company', 'Notes', 'Created At', 'Updated At'],
       ...filteredLeads.map((lead: Lead) => [
         lead.id,
         lead.fullName,
@@ -1201,6 +1207,17 @@ const LeadsManagement: React.FC = () => {
         lead.status,
         lead.assignedTo,
         lead.followUp,
+        (lead as any).company || '',
+        // Extract notes content from notes array and clean up for CSV
+        (() => {
+          const notes = (lead as any).notes;
+          if (Array.isArray(notes) && notes.length > 0) {
+            return notes.map((note: any) => note.content || '').join(' | ').replace(/"/g, '""');
+          } else if (typeof notes === 'string' && notes.trim()) {
+            return notes.replace(/"/g, '""');
+          }
+          return '';
+        })(),
         lead.createdAt,
         lead.updatedAt
       ])
@@ -1282,7 +1299,9 @@ const LeadsManagement: React.FC = () => {
           course: getColumnIndex(['course']),
           status: getColumnIndex(['status']),
           assignedTo: getColumnIndex(['assigned to', 'assigned', 'assignedto', 'counselor']),
-          followUp: getColumnIndex(['follow up', 'followup', 'follow-up'])
+          followUp: getColumnIndex(['follow up', 'followup', 'follow-up']),
+          company: getColumnIndex(['company', 'organization', 'org']),
+          notes: getColumnIndex(['notes', 'note', 'comments', 'comment', 'remarks', 'remark'])
         };
 
         // Validate that we have at least name and email
@@ -1344,6 +1363,19 @@ const LeadsManagement: React.FC = () => {
             }
 
             // Prepare lead data for API - use exact values from CSV, leave empty if not provided
+            const companyValue = columnMap.company >= 0 ? values[columnMap.company] || '' : '';
+            // Validate company value - if provided, must be DMHCA or IBMP
+            let validatedCompany = '';
+            if (companyValue) {
+              const normalizedCompany = companyValue.toUpperCase().trim();
+              if (normalizedCompany === 'DMHCA' || normalizedCompany === 'IBMP') {
+                validatedCompany = normalizedCompany;
+              } else {
+                // If invalid company value, throw error
+                throw new Error(`Invalid company value "${companyValue}". Must be either "DMHCA" or "IBMP"`);
+              }
+            }
+            
             const leadData = {
               fullName: fullName,
               email: email,
@@ -1356,7 +1388,20 @@ const LeadsManagement: React.FC = () => {
               status: columnMap.status >= 0 ? values[columnMap.status] || '' : '',
               assignedTo: columnMap.assignedTo >= 0 ? values[columnMap.assignedTo] || '' : '',
               followUp: columnMap.followUp >= 0 ? values[columnMap.followUp] || '' : '',
-              notes: `Imported from ${fileName.includes('.xlsx') || fileName.includes('.xls') ? 'Excel' : 'CSV'} file on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`
+              company: validatedCompany, // Will be empty string if not provided or invalid
+              notes: (() => {
+                // Get notes from CSV if available
+                const csvNotes = columnMap.notes >= 0 ? values[columnMap.notes] || '' : '';
+                // Create import timestamp note
+                const importNote = `Imported from ${fileName.includes('.xlsx') || fileName.includes('.xls') ? 'Excel' : 'CSV'} file on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`;
+                
+                // Combine CSV notes with import note
+                if (csvNotes.trim()) {
+                  return `${csvNotes.trim()}\n\n--- System Note ---\n${importNote}`;
+                } else {
+                  return importNote;
+                }
+              })()
             };
 
             // Save to backend
@@ -1966,7 +2011,8 @@ const LeadsManagement: React.FC = () => {
                   '📋 OPTIONAL COLUMNS (use exact data from your file):\n' +
                   '   • Phone, Country, Branch, Qualification\n' +
                   '   • Source, Course, Status, Assigned To\n' +
-                  '   • Follow Up Date\n\n' +
+                  '   • Follow Up Date, Company (DMHCA/IBMP)\n' +
+                  '   • Notes (imported and preserved)\n\n' +
                   '🔧 SUPPORTED FORMATS:\n' +
                   '   • CSV files (.csv)\n' +
                   '   • Excel files (.xlsx, .xls)\n\n' +
@@ -2369,35 +2415,73 @@ const LeadsManagement: React.FC = () => {
           </div>
         </div>
 
-        {/* Team Workload Distribution - Enhanced with User Management Integration */}
+        {/* Team Workload Distribution - Enhanced with Hierarchical Team Members */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-            <Users className="w-5 h-5 mr-2 text-indigo-500" />
-            Team Workload Distribution
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center justify-between">
+            <div className="flex items-center">
+              <Users className="w-5 h-5 mr-2 text-indigo-500" />
+              Team Workload Distribution
+            </div>
+            <div className="text-sm text-gray-500">
+              {(user?.role === 'manager' || user?.role === 'senior_manager' || user?.role === 'team_leader') && (
+                <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs">
+                  👥 Including Subordinates ({assignableUsers.length})
+                </span>
+              )}
+              {user?.role === 'counselor' && (
+                <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">
+                  📋 Personal View
+                </span>
+              )}
+            </div>
           </h3>
           
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {assignableUsers.map((user) => {
+            {assignableUsers.map((teamUser) => {
               const userLeadCount = leads.filter(lead => 
-                lead.assignedTo === user.username || lead.assignedTo === user.name
+                lead.assignedTo === teamUser.username || lead.assignedTo === teamUser.name
               ).length;
+              
+              // Determine if this is the current user or a subordinate
+              const isCurrentUser = teamUser.username === user?.username || teamUser.email === user?.email;
+              const isSubordinate = !isCurrentUser;
               
               return (
                 <div 
-                  key={user.id} 
+                  key={teamUser.id} 
                   className="text-center cursor-pointer hover:bg-gray-50 rounded-lg p-2 transition-colors duration-200"
-                  onClick={() => handleTeamMemberClick(user)}
-                  title={`Click to view ${user.name}'s leads`}
+                  onClick={() => handleTeamMemberClick(teamUser)}
+                  title={`Click to view ${teamUser.name}'s leads${isSubordinate ? ' (Reports to you)' : ' (You)'}`}
                 >
-                  <div className="bg-indigo-100 rounded-lg p-4 mb-2 hover:bg-indigo-200 transition-colors">
-                    <User className="w-8 h-8 text-indigo-600 mx-auto mb-2" />
-                    <span className="text-2xl font-bold text-indigo-800">{userLeadCount}</span>
+                  <div className={`rounded-lg p-4 mb-2 transition-colors ${
+                    isCurrentUser 
+                      ? 'bg-green-100 hover:bg-green-200' 
+                      : 'bg-indigo-100 hover:bg-indigo-200'
+                  }`}>
+                    <div className="flex items-center justify-center mb-2">
+                      <User className={`w-8 h-8 mx-auto ${
+                        isCurrentUser ? 'text-green-600' : 'text-indigo-600'
+                      }`} />
+                      {isSubordinate && (
+                        <span className="ml-1 text-xs">👤</span>
+                      )}
+                      {isCurrentUser && (
+                        <span className="ml-1 text-xs">🎯</span>
+                      )}
+                    </div>
+                    <span className={`text-2xl font-bold ${
+                      isCurrentUser ? 'text-green-800' : 'text-indigo-800'
+                    }`}>
+                      {userLeadCount}
+                    </span>
                   </div>
-                  <p className="text-xs text-gray-600 truncate" title={user.name}>
-                    {user.name}
+                  <p className="text-xs text-gray-600 truncate" title={teamUser.name}>
+                    {teamUser.name}
+                    {isCurrentUser && <span className="text-green-600 ml-1">(You)</span>}
                   </p>
-                  <p className="text-xs text-gray-400 truncate" title={user.role}>
-                    {user.role}
+                  <p className="text-xs text-gray-400 truncate" title={teamUser.role}>
+                    {teamUser.role}
+                    {isSubordinate && <span className="text-blue-600 ml-1">↳</span>}
                   </p>
                 </div>
               );
@@ -2408,6 +2492,9 @@ const LeadsManagement: React.FC = () => {
             <div className="text-center py-8">
               <Users className="w-12 h-12 text-gray-400 mx-auto mb-2" />
               <p className="text-sm text-gray-600">No team members found</p>
+              <p className="text-xs text-gray-500 mt-1">
+                {user?.role === 'counselor' ? 'Only your personal leads are visible' : 'Check user hierarchy setup'}
+              </p>
             </div>
           )}
         </div>
@@ -2732,24 +2819,58 @@ const LeadsManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Assigned To</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center justify-between">
+                  <span>Assigned To</span>
+                  {(user?.role === 'manager' || user?.role === 'senior_manager' || user?.role === 'team_leader') && (
+                    <span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                      👥 Team View
+                    </span>
+                  )}
+                </label>
                 <select
                   value={assignedToFilter}
                   onChange={(e) => setAssignedToFilter(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="all">All Assigned ({assignableUsers.length} users)</option>
-                  {(() => {
-                    console.log(`🔍 Rendering assignable users in filter:`, assignableUsers);
-                    return null;
-                  })()}
-                  {assignableUsers.map((user: any) => {
-                    // Use username if available, fallback to name for consistency with lead assignment
-                    const filterValue = user.username || user.name;
+                  
+                  {/* Current User First */}
+                  {assignableUsers.filter(teamUser => 
+                    teamUser.username === user?.username || teamUser.email === user?.email
+                  ).map((currentUser) => {
+                    const filterValue = currentUser.username || currentUser.name;
                     return (
-                      <option key={user.id} value={filterValue}>{user.name} ({user.role})</option>
+                      <option key={currentUser.id} value={filterValue}>
+                        🎯 {currentUser.name} (You - {currentUser.role})
+                      </option>
                     );
                   })}
+                  
+                  {/* Subordinates Section */}
+                  {(user?.role === 'manager' || user?.role === 'senior_manager' || user?.role === 'team_leader') && 
+                   assignableUsers.filter(teamUser => 
+                     teamUser.username !== user?.username && teamUser.email !== user?.email
+                   ).length > 0 && (
+                    <>
+                      <option disabled>─── Your Team Members ───</option>
+                      {assignableUsers.filter(teamUser => 
+                        teamUser.username !== user?.username && teamUser.email !== user?.email
+                      ).map((teamUser) => {
+                        const filterValue = teamUser.username || teamUser.name;
+                        return (
+                          <option key={teamUser.id} value={filterValue}>
+                            👤 {teamUser.name} (Reports to you - {teamUser.role})
+                          </option>
+                        );
+                      })}
+                    </>
+                  )}
+                  
+                  {/* For counselors showing personal view only */}
+                  {user?.role === 'counselor' && assignableUsers.length <= 1 && (
+                    <option disabled>─── Personal View Only ───</option>
+                  )}
+                  
                   {/* Fallback to existing assigned users if no hierarchy data */}
                   {assignableUsers.length === 0 && (() => {
                     const uniqueAssigned = getUniqueValues('assignedTo');
@@ -3017,12 +3138,42 @@ const LeadsManagement: React.FC = () => {
                                   </option>
                                 ))}
                               </select>
+                              <select
+                                value={editedLead.course || lead.course}
+                                onChange={(e) => setEditedLead(prev => ({ ...prev, course: e.target.value }))}
+                                className="text-xs text-gray-400 bg-white border border-gray-300 rounded px-2 py-1 w-full"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <option value="">Select Course</option>
+                                <option value="MBBS">MBBS</option>
+                                <option value="BDS">BDS</option>
+                                <option value="BAMS">BAMS</option>
+                                <option value="BHMS">BHMS</option>
+                                <option value="BUMS">BUMS</option>
+                                <option value="B.Sc Nursing">B.Sc Nursing</option>
+                                <option value="Paramedical">Paramedical</option>
+                              </select>
+                              <select
+                                value={(editedLead as any).company || (lead as any).company || ''}
+                                onChange={(e) => setEditedLead(prev => ({ ...prev, company: e.target.value }))}
+                                className="text-xs font-medium text-indigo-600 bg-white border border-gray-300 rounded px-2 py-1 w-full"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <option value="">Select Company</option>
+                                <option value="DMHCA">🏥 DMHCA</option>
+                                <option value="IBMP">🎓 IBMP</option>
+                              </select>
                             </>
                           ) : (
                             <>
                               <p className="text-sm text-gray-600">{lead.country}</p>
                               <p className="text-sm text-gray-500">{lead.qualification}</p>
                               <p className="text-xs text-gray-400">{lead.course}</p>
+                              {(lead as any).company && (
+                                <p className="text-xs font-medium text-indigo-600">
+                                  {(lead as any).company === 'DMHCA' ? '🏥 DMHCA' : '🎓 IBMP'}
+                                </p>
+                              )}
                             </>
                           )}
                         </div>
@@ -3317,6 +3468,29 @@ const LeadsManagement: React.FC = () => {
                             </select>
                           ) : (
                             <span className="text-gray-700">{selectedLead.course}</span>
+                          )}
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                          {editingLead === selectedLead.id ? (
+                            <select
+                              value={(editedLead as any).company || (selectedLead as any).company || ''}
+                              onChange={(e) => setEditedLead(prev => ({ ...prev, company: e.target.value }))}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                              <option value="">Select Company</option>
+                              <option value="DMHCA">🏥 DMHCA</option>
+                              <option value="IBMP">🎓 IBMP</option>
+                            </select>
+                          ) : (
+                            <span className="text-gray-700">
+                              {(selectedLead as any).company ? (
+                                (selectedLead as any).company === 'DMHCA' ? '🏥 DMHCA' : '🎓 IBMP'
+                              ) : (
+                                <span className="text-gray-400 italic">Not specified</span>
+                              )}
+                            </span>
                           )}
                         </div>
                         
