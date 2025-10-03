@@ -38,7 +38,8 @@ import {
   Eye,
   Bell,
   Zap,
-  RefreshCw
+  RefreshCw,
+  Bug
 } from 'lucide-react';
 
 // Types and Interfaces
@@ -1984,6 +1985,27 @@ const LeadsManagement: React.FC = () => {
             
             {/* Import/Export Buttons */}
             <div className="flex items-center space-x-2">
+              {/* Debug Button for Hierarchy Issues */}
+              {(user?.role === 'super_admin' || assignableUsers.length === 0) && (
+                <button 
+                  onClick={async () => {
+                    try {
+                      const apiClient = getApiClient();
+                      const debugInfo = await apiClient.debugAssignableUsers() as any;
+                      console.log('🔍 HIERARCHY DEBUG INFO:', debugInfo);
+                      alert(`Hierarchy Debug Info logged to console!\n\nQuick Summary:\nTotal Users: ${debugInfo.debug?.totalUsersInDatabase || 'N/A'}\nCurrent User: ${debugInfo.debug?.currentUserFound ? 'Found' : 'Not Found'}\nAssignable Users: ${assignableUsers.length}\n\nCheck browser console for full details.`);
+                    } catch (error) {
+                      console.error('Debug failed:', error);
+                      alert('Debug failed. Check console for errors.');
+                    }
+                  }}
+                  className="bg-orange-600 text-white px-3 py-2 rounded-lg hover:bg-orange-700 transition-colors flex items-center space-x-1 text-xs"
+                  title="Debug hierarchy and assignable users"
+                >
+                  <Bug className="w-3 h-3" />
+                  <span>Debug</span>
+                </button>
+              )}
               <button 
                 onClick={handleExportLeads}
                 className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2 text-sm"

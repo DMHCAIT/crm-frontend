@@ -414,6 +414,11 @@ class ProductionApiClient {
     return this.request('/assignable-users');
   }
 
+  // Debug assignable users (shows detailed hierarchy information)
+  async debugAssignableUsers() {
+    return this.request('/debug-assignable-users');
+  }
+
   // Get subordinates for a specific user (reporting hierarchy)
   async getUserSubordinates(userId: string) {
     return this.request(`/users/${userId}/subordinates`);
