@@ -2038,12 +2038,15 @@ const LeadsManagement: React.FC = () => {
                     {user?.role === 'super_admin' && 'All Leads Access'}
                     {user?.role === 'senior_manager' && 'Manager View: Your leads + All team leads'}
                     {user?.role === 'manager' && 'Manager View: Your leads + Team leads'}
-                    {user?.role === 'team_leader' && 'Team Leader View: Your leads + Subordinate leads'}
+                    {user?.role === 'team_leader' && `Team Leader View: Your leads + Team members (${assignableUsers.filter(u => u.username !== user?.username).length} subordinates)`}
                     {user?.role === 'counselor' && 'Personal View: Your assigned leads'}
                   </span>
                   {(user?.role === 'manager' || user?.role === 'senior_manager' || user?.role === 'team_leader') && (
                     <div className="text-xs text-blue-600 mt-0.5">
                       🏢 Viewing leads from your reporting hierarchy
+                      {user?.role === 'team_leader' && assignableUsers.filter(u => u.username !== user?.username).length === 0 && (
+                        <span className="ml-1 text-red-600 font-semibold">⚠️ No team members found</span>
+                      )}
                     </div>
                   )}
                 </div>
@@ -2054,6 +2057,21 @@ const LeadsManagement: React.FC = () => {
                   <span className="text-xs text-green-700 font-medium">
                     {user.company}
                   </span>
+                </div>
+              )}
+              {/* Team Leader Debug Info */}
+              {user?.role === 'team_leader' && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-md px-2 py-1 flex items-center space-x-1">
+                  <span className="text-lg">👥</span>
+                  <div className="text-xs">
+                    <div className="text-yellow-700 font-medium">
+                      Total Leads: {leads.length} | Team Access: {assignableUsers.length} users
+                    </div>
+                    <div className="text-yellow-600">
+                      Your leads: {leads.filter(l => l.assignedTo === user?.username).length} | 
+                      Team leads: {leads.filter(l => l.assignedTo !== user?.username && assignableUsers.some(u => u.username === l.assignedTo)).length}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
