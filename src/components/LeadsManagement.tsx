@@ -2065,8 +2065,8 @@ const LeadsManagement: React.FC = () => {
             
             {/* Import/Export Buttons */}
             <div className="flex items-center space-x-2">
-              {/* Debug Button for Hierarchy Issues */}
-              {(user?.role === 'super_admin' || assignableUsers.length === 0) && (
+              {/* Debug Button for Hierarchy Issues - DEVELOPMENT ONLY */}
+              {(import.meta.env.DEV || import.meta.env.VITE_DEBUG_MODE === 'true') && (user?.role === 'super_admin' || assignableUsers.length === 0) && (
                 <button 
                   onClick={async () => {
                     try {

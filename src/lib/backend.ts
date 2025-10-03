@@ -419,9 +419,14 @@ class ProductionApiClient {
     return this.request('/debug-assignable-users');
   }
 
-  // Test user lookup methods
+  // Test user lookup methods - DEVELOPMENT ONLY
   async testUserLookup() {
-    return this.request('/test-user-lookup');
+    if (import.meta.env.DEV || import.meta.env.VITE_DEBUG_MODE === 'true') {
+      return this.request('/test-user-lookup');
+    } else {
+      console.warn('testUserLookup is only available in development mode');
+      return { error: 'Not available in production' };
+    }
   }
 
   // Get subordinates for a specific user (reporting hierarchy)
