@@ -1331,7 +1331,7 @@ const UserModal: React.FC<UserModalProps> = ({
     // Prepare user data - exclude password confirmation and fix types
     const { confirmPassword, ...rawUserData } = formData;
     
-    // Fix branch and company types - convert empty string to undefined and cast to proper type
+    // Fix branch and company types - explicitly send undefined to prevent database defaults
     const userData = {
       ...rawUserData,
       branch: (rawUserData.branch && ['Delhi', 'Hyderabad', 'Kashmir'].includes(rawUserData.branch)) 
@@ -1339,7 +1339,7 @@ const UserModal: React.FC<UserModalProps> = ({
         : undefined,
       company: (rawUserData.company && ['DMHCA', 'IBMP'].includes(rawUserData.company))
         ? rawUserData.company as DatabaseUser['company']
-        : undefined
+        : undefined // Keep as undefined, but make sure backend handles this properly
     };
     
     // For existing users, don't send password if it's empty
