@@ -39,7 +39,8 @@ import {
   Bell,
   Zap,
   RefreshCw,
-  Bug
+  Bug,
+  Building
 } from 'lucide-react';
 
 // Types and Interfaces
@@ -127,6 +128,10 @@ const LeadsManagement: React.FC = () => {
   const [showBulkTransferModal, setShowBulkTransferModal] = useState(false);
   const [bulkTransferCounselor, setBulkTransferCounselor] = useState('');
   const [bulkTransferReason, setBulkTransferReason] = useState('');
+  
+  // Bulk Company Change states
+  const [showBulkCompanyModal, setShowBulkCompanyModal] = useState(false);
+  const [bulkCompanyTarget, setBulkCompanyTarget] = useState('');
   
   // Team Workload Distribution states
   const [selectedTeamMember, setSelectedTeamMember] = useState<any | null>(null);
@@ -494,6 +499,14 @@ const LeadsManagement: React.FC = () => {
         }));
         setAssignableUsers(assignableUsersList);
         console.log(`✅ Set ${assignableUsersList.length} assignable users based on hierarchy:`, assignableUsersList);
+        console.log('🔍 Dropdown will show:', {
+          currentUserRole: user?.role,
+          willShowCurrentUser: assignableUsersList.some(u => u.username === user?.username || u.email === user?.email),
+          willShowSubordinates: (user?.role === 'manager' || user?.role === 'senior_manager' || user?.role === 'team_leader') && 
+                                assignableUsersList.filter(u => u.username !== user?.username && u.email !== user?.email).length > 0,
+          willShowAllUsers: user?.role === 'super_admin' && 
+                           assignableUsersList.filter(u => u.username !== user?.username && u.email !== user?.email).length > 0
+        });
       } else {
         setUsers([]);
         setAssignableUsers([]);
@@ -1607,6 +1620,73 @@ const LeadsManagement: React.FC = () => {
       setSelectedLeads([]);
       
       // Close detail panel if selected lead was transferred
+      if (selectedLeadId && selectedLeads.includes(selectedLeadId)) {
+        setSelectedLeadId(null);
+        setShowDetailPanel(false);
+      }
+    }
+  };
+
+  // Handle bulk company change
+  const handleBulkCompanyChange = async () => {
+    if (!bulkCompanyTarget) {
+      alert('Please select a company to change to');
+      return;
+    }
+
+    if (window.confirm(`Are you sure you want to change ${selectedLeads.length} lead(s) to ${bulkCompanyTarget} company?`)) {
+      try {
+        // Update each lead's company in the backend
+        const updateData = { company: bulkCompanyTarget };
+        
+        const apiClient = getApiClient();
+        await apiClient.bulkUpdateLeads(
+          selectedLeads,
+          updateData,
+          `Bulk company change to ${bulkCompanyTarget}`
+        );
+        
+        console.log('✅ Bulk company change saved to backend successfully');
+
+        // Update leads in state
+        const updatedLeads = leads.map(lead => {
+          if (selectedLeads.includes(lead.id)) {
+            return { 
+              ...lead, 
+              company: bulkCompanyTarget,
+              notes: [
+                ...lead.notes,
+                {
+                  id: Date.now().toString(),
+                  content: `Company changed to ${bulkCompanyTarget}`,
+                  timestamp: new Date().toISOString(),
+                  author: user?.name || user?.username || 'Unknown'
+                }
+              ]
+            };
+          }
+          return lead;
+        });
+
+        setLeads(updatedLeads);
+        
+        // Show success message
+        notify.success(`Successfully changed ${selectedLeads.length} lead(s) to ${bulkCompanyTarget} company`);
+
+        alert(`Successfully changed ${selectedLeads.length} lead(s) to ${bulkCompanyTarget} company`);
+        
+      } catch (error) {
+        console.error('❌ Error during bulk company change:', error);
+        alert('Failed to change company. Please check your connection and try again.');
+        return; // Don't reset the form if there was an error
+      }
+      
+      // Reset form and close modal only after successful change
+      setBulkCompanyTarget('');
+      setShowBulkCompanyModal(false);
+      setSelectedLeads([]);
+      
+      // Close detail panel if selected lead was changed
       if (selectedLeadId && selectedLeads.includes(selectedLeadId)) {
         setSelectedLeadId(null);
         setShowDetailPanel(false);
@@ -2890,42 +2970,35 @@ const LeadsManagement: React.FC = () => {
                 >
                   <option value="all">All Assigned ({assignableUsers.length} users)</option>
                   
-                  {/* Current User First */}
-                  {assignableUsers.filter(teamUser => 
-                    teamUser.username === user?.username || teamUser.email === user?.email
-                  ).map((currentUser) => {
-                    const filterValue = currentUser.username || currentUser.name;
+                  {/* Show ALL assignable users - Simplified Logic */}
+                  {assignableUsers.map((teamUser) => {
+                    const filterValue = teamUser.username || teamUser.name;
+                    const isCurrentUser = teamUser.username === user?.username || teamUser.email === user?.email;
+                    
+                    // Determine the display label based on relationship
+                    let displayLabel = '';
+                    if (isCurrentUser) {
+                      displayLabel = `🎯 ${teamUser.name} (You - ${teamUser.role})`;
+                    } else if (user?.role === 'super_admin') {
+                      displayLabel = `👥 ${teamUser.name} (${teamUser.role})`;
+                    } else {
+                      displayLabel = `👤 ${teamUser.name} (${teamUser.role})`;
+                    }
+                    
                     return (
-                      <option key={currentUser.id} value={filterValue}>
-                        🎯 {currentUser.name} (You - {currentUser.role})
+                      <option key={teamUser.id} value={filterValue}>
+                        {displayLabel}
                       </option>
                     );
                   })}
-                  
-                  {/* Subordinates Section */}
-                  {(user?.role === 'manager' || user?.role === 'senior_manager' || user?.role === 'team_leader') && 
-                   assignableUsers.filter(teamUser => 
-                     teamUser.username !== user?.username && teamUser.email !== user?.email
-                   ).length > 0 && (
-                    <>
-                      <option disabled>─── Your Team Members ───</option>
-                      {assignableUsers.filter(teamUser => 
-                        teamUser.username !== user?.username && teamUser.email !== user?.email
-                      ).map((teamUser) => {
-                        const filterValue = teamUser.username || teamUser.name;
-                        return (
-                          <option key={teamUser.id} value={filterValue}>
-                            👤 {teamUser.name} (Reports to you - {teamUser.role})
-                          </option>
-                        );
-                      })}
-                    </>
-                  )}
                   
                   {/* For counselors showing personal view only */}
                   {user?.role === 'counselor' && assignableUsers.length <= 1 && (
                     <option disabled>─── Personal View Only ───</option>
                   )}
+                  
+                  {/* Show unassigned option */}
+                  <option value="unassigned">🚫 Unassigned Leads</option>
                   
                   {/* Fallback to existing assigned users if no hierarchy data */}
                   {assignableUsers.length === 0 && (() => {
@@ -3059,6 +3132,16 @@ const LeadsManagement: React.FC = () => {
                         <span>Transfer</span>
                       </button>
                     )}
+
+                    {/* Bulk Company Change */}
+                    <button
+                      onClick={() => setShowBulkCompanyModal(true)}
+                      className="bg-purple-600 text-white px-3 py-1.5 rounded-lg hover:bg-purple-700 flex items-center space-x-1 text-sm"
+                      title="Change company for selected leads"
+                    >
+                      <Building className="w-4 h-4" />
+                      <span>Company</span>
+                    </button>
 
                     {/* Clear Selection */}
                     <button
@@ -3979,6 +4062,93 @@ const LeadsManagement: React.FC = () => {
               >
                 <ArrowUpDown className="w-4 h-4" />
                 <span>Transfer {selectedLeads.length} Lead{selectedLeads.length > 1 ? 's' : ''}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Company Change Modal */}
+      {showBulkCompanyModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-lg mx-4">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-3">
+                <div className="bg-purple-100 p-2 rounded-lg">
+                  <Building className="w-6 h-6 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Change Company
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    Change company for {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowBulkCompanyModal(false)}
+                className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Form */}
+            <div className="space-y-4">
+              {/* Company Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <span className="flex items-center space-x-1">
+                    <Building className="w-4 h-4" />
+                    <span>Select Company</span>
+                    <span className="text-red-500">*</span>
+                  </span>
+                </label>
+                <select
+                  value={bulkCompanyTarget}
+                  onChange={(e) => setBulkCompanyTarget(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                >
+                  <option value="">Select Company...</option>
+                  <option value="DMHCA">DMHCA</option>
+                  <option value="IBMP">IBMP</option>
+                </select>
+              </div>
+
+              {/* Preview */}
+              {bulkCompanyTarget && (
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                  <p className="text-sm text-purple-800">
+                    <strong>{selectedLeads.length}</strong> lead{selectedLeads.length > 1 ? 's' : ''} will be changed to <strong>{bulkCompanyTarget}</strong> company
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center justify-end space-x-3 mt-6 pt-4 border-t border-gray-200">
+              <button
+                onClick={() => {
+                  setShowBulkCompanyModal(false);
+                  setBulkCompanyTarget('');
+                }}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleBulkCompanyChange}
+                disabled={!bulkCompanyTarget}
+                className={`px-6 py-2 rounded-lg font-medium flex items-center space-x-2 ${
+                  bulkCompanyTarget 
+                    ? 'bg-purple-600 text-white hover:bg-purple-700' 
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                <Building className="w-4 h-4" />
+                <span>Change {selectedLeads.length} Lead{selectedLeads.length > 1 ? 's' : ''}</span>
               </button>
             </div>
           </div>
