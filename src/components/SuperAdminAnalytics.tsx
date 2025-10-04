@@ -62,16 +62,68 @@ const SuperAdminAnalytics: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [dateFilter, setDateFilter] = useState('last_7_days');
   const [availableUsers, setAvailableUsers] = useState<string[]>([]);
+
+  // Date filter options
+  const dateFilterOptions = [
+    { value: 'today', label: 'Today' },
+    { value: 'yesterday', label: 'Yesterday' },
+    { value: 'last_7_days', label: 'Last 7 Days' },
+    { value: 'last_30_days', label: 'Last 30 Days' },
+    { value: 'this_month', label: 'This Month' },
+    { value: 'last_month', label: 'Last Month' },
+    { value: 'custom', label: 'Custom Range' }
+  ];
+
+  // Handle date filter changes
+  const handleDateFilterChange = (filterValue: string) => {
+    setDateFilter(filterValue);
+    const today = new Date();
+    
+    switch (filterValue) {
+      case 'today':
+        setStartDate(today.toISOString().split('T')[0]);
+        setEndDate(today.toISOString().split('T')[0]);
+        break;
+      case 'yesterday':
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+        setStartDate(yesterday.toISOString().split('T')[0]);
+        setEndDate(yesterday.toISOString().split('T')[0]);
+        break;
+      case 'last_7_days':
+        const lastWeek = new Date(today);
+        lastWeek.setDate(today.getDate() - 7);
+        setStartDate(lastWeek.toISOString().split('T')[0]);
+        setEndDate(today.toISOString().split('T')[0]);
+        break;
+      case 'last_30_days':
+        const lastMonth = new Date(today);
+        lastMonth.setDate(today.getDate() - 30);
+        setStartDate(lastMonth.toISOString().split('T')[0]);
+        setEndDate(today.toISOString().split('T')[0]);
+        break;
+      case 'this_month':
+        const firstDayThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        setStartDate(firstDayThisMonth.toISOString().split('T')[0]);
+        setEndDate(today.toISOString().split('T')[0]);
+        break;
+      case 'last_month':
+        const firstDayLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        const lastDayLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+        setStartDate(firstDayLastMonth.toISOString().split('T')[0]);
+        setEndDate(lastDayLastMonth.toISOString().split('T')[0]);
+        break;
+      case 'custom':
+        // Keep current dates for custom range
+        break;
+    }
+  };
 
   // Initialize with last 7 days
   useEffect(() => {
-    const today = new Date();
-    const lastWeek = new Date(today);
-    lastWeek.setDate(today.getDate() - 7);
-    
-    setStartDate(lastWeek.toISOString().split('T')[0]);
-    setEndDate(today.toISOString().split('T')[0]);
+    handleDateFilterChange('last_7_days');
   }, []);
 
   // Load user activity data
@@ -91,7 +143,12 @@ const SuperAdminAnalytics: React.FC = () => {
         limit: '500'
       });
 
-      const response = await fetch(`/api/super-admin?${params}`, {
+      // Use production API URL
+      const baseUrl = window.location.hostname === 'localhost' 
+        ? 'http://localhost:3001' 
+        : 'https://crm-backend-dmhca.vercel.app';
+      
+      const response = await fetch(`${baseUrl}/api/super-admin?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -99,7 +156,17 @@ const SuperAdminAnalytics: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to load user activity data');
+        const errorText = await response.text();
+        console.error('API Error Response:', errorText);
+        throw new Error(`API Error (${response.status}): ${response.statusText}`);
+      }
+
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const textResponse = await response.text();
+        console.error('Non-JSON Response:', textResponse);
+        throw new Error('Server returned HTML instead of JSON. Please check the API endpoint.');
       }
 
       const result = await response.json();
@@ -202,14 +269,31 @@ const SuperAdminAnalytics: React.FC = () => {
               <span>Filters</span>
             </h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
+                <select
+                  value={dateFilter}
+                  onChange={(e) => handleDateFilterChange(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  {dateFilterOptions.map(option => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
                 <input
                   type="date"
                   value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  onChange={(e) => {
+                    setStartDate(e.target.value);
+                    setDateFilter('custom');
+                  }}
+                  disabled={dateFilter !== 'custom'}
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                 />
               </div>
               
@@ -218,8 +302,12 @@ const SuperAdminAnalytics: React.FC = () => {
                 <input
                   type="date"
                   value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  onChange={(e) => {
+                    setEndDate(e.target.value);
+                    setDateFilter('custom');
+                  }}
+                  disabled={dateFilter !== 'custom'}
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                 />
               </div>
               
