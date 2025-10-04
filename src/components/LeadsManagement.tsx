@@ -439,6 +439,7 @@ const LeadsManagement: React.FC = () => {
           status: lead.status || 'Fresh',
           assignedTo: lead.assigned_to || lead.assignedTo || 'Unassigned',
           followUp: lead.follow_up || lead.followUp || '',
+          company: lead.company || '', // Company field for DMHCA/IBMP
           createdAt: lead.created_at || lead.createdAt || new Date().toISOString(),
           updatedAt: lead.updated_at || lead.updatedAt || new Date().toISOString(),
           notes: Array.isArray(lead.notes) ? lead.notes : []
@@ -732,8 +733,7 @@ const LeadsManagement: React.FC = () => {
     if (companyFilter !== 'all') {
       filtered = filtered.filter(lead => {
         // Check if lead has company field or check assignedTo user's company
-        const leadAny = lead as any;
-        return leadAny.company === companyFilter;
+        return lead.company === companyFilter;
       });
     }
 
@@ -1228,7 +1228,7 @@ const LeadsManagement: React.FC = () => {
         lead.status,
         lead.assignedTo,
         lead.followUp,
-        (lead as any).company || '',
+        lead.company || '',
         // Extract notes content from notes array and clean up for CSV
         (() => {
           const notes = (lead as any).notes;
@@ -1720,8 +1720,8 @@ const LeadsManagement: React.FC = () => {
   const getAllLeadsCount = () => (leads || []).length;
 
   // Company count functions for filter buttons
-  const getDMHCALeadsCount = () => (leads || []).filter((lead: Lead) => (lead as any).company === 'DMHCA').length;
-  const getIBMPLeadsCount = () => (leads || []).filter((lead: Lead) => (lead as any).company === 'IBMP').length;
+  const getDMHCALeadsCount = () => (leads || []).filter((lead: Lead) => lead.company === 'DMHCA').length;
+  const getIBMPLeadsCount = () => (leads || []).filter((lead: Lead) => lead.company === 'IBMP').length;
 
   // Advanced Monitoring Functions
   const getAdvancedMetrics = () => {
@@ -3311,7 +3311,7 @@ const LeadsManagement: React.FC = () => {
                                 <option value="Paramedical">Paramedical</option>
                               </select>
                               <select
-                                value={(editedLead as any).company || (lead as any).company || ''}
+                                value={editedLead.company || lead.company || ''}
                                 onChange={(e) => setEditedLead(prev => ({ ...prev, company: e.target.value }))}
                                 className="text-xs font-medium text-indigo-600 bg-white border border-gray-300 rounded px-2 py-1 w-full"
                                 onClick={(e) => e.stopPropagation()}
@@ -3326,9 +3326,9 @@ const LeadsManagement: React.FC = () => {
                               <p className="text-sm text-gray-600">{lead.country}</p>
                               <p className="text-sm text-gray-500">{lead.qualification}</p>
                               <p className="text-xs text-gray-400">{lead.course}</p>
-                              {(lead as any).company && (
+                              {lead.company && (
                                 <p className="text-xs font-medium text-indigo-600">
-                                  {(lead as any).company === 'DMHCA' ? '🏥 DMHCA' : '🎓 IBMP'}
+                                  {lead.company === 'DMHCA' ? '🏥 DMHCA' : '🎓 IBMP'}
                                 </p>
                               )}
                             </>
@@ -3632,7 +3632,7 @@ const LeadsManagement: React.FC = () => {
                           <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
                           {editingLead === selectedLead.id ? (
                             <select
-                              value={(editedLead as any).company || (selectedLead as any).company || ''}
+                              value={editedLead.company || selectedLead.company || ''}
                               onChange={(e) => setEditedLead(prev => ({ ...prev, company: e.target.value }))}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
@@ -3642,8 +3642,8 @@ const LeadsManagement: React.FC = () => {
                             </select>
                           ) : (
                             <span className="text-gray-700">
-                              {(selectedLead as any).company ? (
-                                (selectedLead as any).company === 'DMHCA' ? '🏥 DMHCA' : '🎓 IBMP'
+                              {selectedLead.company ? (
+                                selectedLead.company === 'DMHCA' ? '🏥 DMHCA' : '🎓 IBMP'
                               ) : (
                                 <span className="text-gray-400 italic">Not specified</span>
                               )}
