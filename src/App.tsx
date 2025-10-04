@@ -19,6 +19,7 @@ import Automations from './components/Automations';
 import Integrations from './components/Integrations';
 import UserProfile from './components/UserProfile';
 import UserManagement from './components/UserManagement';
+import SuperAdminAnalytics from './components/SuperAdminAnalytics';
 import Settings from './components/Settings';
 import DataExport from './components/DataExport';
 
@@ -78,6 +79,7 @@ const App: React.FC = () => {
     'real-time-integrations': 3,
     'profile': 1,
     'user-management': 2,
+    'super-admin-analytics': 5,
     'settings': 3,
     'data-export': 2
   };
@@ -126,6 +128,8 @@ const App: React.FC = () => {
           return <UserProfile />;
         case 'user-management':
           return <UserManagement />;
+        case 'super-admin-analytics':
+          return <SuperAdminAnalytics />;
         case 'settings':
           return <Settings />;
         case 'data-export':

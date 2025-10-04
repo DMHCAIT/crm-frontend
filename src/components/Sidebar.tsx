@@ -54,6 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
     { id: 'data-export', label: 'Data Export', icon: Download, minLevel: 2 },
     { id: 'profile', label: 'Profile', icon: User, minLevel: 1 },
     { id: 'user-management', label: 'User Management', icon: Shield, minLevel: 2 },
+    { id: 'super-admin-analytics', label: 'User Activity Analytics', icon: BarChart3, minLevel: 5 },
     { id: 'settings', label: 'Settings', icon: Settings, minLevel: 3 }
   ];
 
