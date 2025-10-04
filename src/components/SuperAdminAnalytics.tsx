@@ -215,37 +215,20 @@ const SuperAdminAnalytics: React.FC = () => {
       setActivityData(result.data);
       console.log('✅ User activity data loaded successfully:', result.data);
 
-      // Extract unique users for filter dropdown - clean up usernames
+      // Extract unique users for filter dropdown - use resolved usernames from backend
       const users = new Set<string>();
+      
+      // Use userStats which now contains resolved usernames
       result.data.userStats.forEach((stat: UserActivity) => {
-        if (stat.username && stat.username !== 'Unknown' && stat.username !== 'System') {
-          // Clean up username display
-          let cleanUsername = stat.username;
-          
-          // If it looks like a UUID or database ID, try to extract meaningful part
-          if (cleanUsername.includes('-') && cleanUsername.length > 20) {
-            cleanUsername = cleanUsername.split('-')[0];
-          }
-          
-          // Convert to proper case
-          cleanUsername = cleanUsername.charAt(0).toUpperCase() + cleanUsername.slice(1).toLowerCase();
-          
-          users.add(cleanUsername);
+        if (stat.username && stat.username !== 'Unknown' && stat.username !== 'System' && !stat.username.includes('-')) {
+          users.add(stat.username);
         }
       });
       
-      // Also extract users from leadUpdates for more comprehensive list
-      result.data.leadUpdates.forEach((update: LeadUpdate) => {
-        if (update.updated_by && update.updated_by !== 'Unknown' && update.updated_by !== 'System') {
-          let cleanUsername = update.updated_by;
-          
-          // Clean up username display
-          if (cleanUsername.includes('-') && cleanUsername.length > 20) {
-            cleanUsername = cleanUsername.split('-')[0];
-          }
-          
-          cleanUsername = cleanUsername.charAt(0).toUpperCase() + cleanUsername.slice(1).toLowerCase();
-          users.add(cleanUsername);
+      // Also extract users from leadUpdates using the resolved usernames
+      result.data.leadUpdates.forEach((update: any) => {
+        if (update.updated_by_username && update.updated_by_username !== 'Unknown' && update.updated_by_username !== 'System') {
+          users.add(update.updated_by_username);
         }
       });
       
@@ -623,13 +606,13 @@ const SuperAdminAnalytics: React.FC = () => {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {update.updated_by || 'System'}
+                          {(update as any).updated_by_username || update.updated_by || 'System'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {formatDate(update.updated_at)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {update.assigned_to || 'Unassigned'}
+                          {(update as any).assigned_to_username || update.assigned_to || 'Unassigned'}
                         </td>
                       </tr>
                     ))}
