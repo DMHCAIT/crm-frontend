@@ -67,13 +67,18 @@ const SuperAdminAnalytics: React.FC = () => {
 
   // Date filter options
   const dateFilterOptions = [
-    { value: 'today', label: 'Today' },
-    { value: 'yesterday', label: 'Yesterday' },
-    { value: 'last_7_days', label: 'Last 7 Days' },
-    { value: 'last_30_days', label: 'Last 30 Days' },
-    { value: 'this_month', label: 'This Month' },
-    { value: 'last_month', label: 'Last Month' },
-    { value: 'custom', label: 'Custom Range' }
+    { value: 'today', label: 'On - Today' },
+    { value: 'yesterday', label: 'On - Yesterday' },
+    { value: 'last_7_days', label: 'After - Last 7 Days' },
+    { value: 'last_30_days', label: 'After - Last 30 Days' },
+    { value: 'this_month', label: 'Between - This Month' },
+    { value: 'last_month', label: 'Between - Last Month' },
+    { value: 'before_today', label: 'Before - Today' },
+    { value: 'before_week', label: 'Before - This Week' },
+    { value: 'custom_on', label: 'On - Custom Date' },
+    { value: 'custom_after', label: 'After - Custom Date' },
+    { value: 'custom_before', label: 'Before - Custom Date' },
+    { value: 'custom_between', label: 'Between - Custom Range' }
   ];
 
   // Handle date filter changes
@@ -115,7 +120,26 @@ const SuperAdminAnalytics: React.FC = () => {
         setStartDate(firstDayLastMonth.toISOString().split('T')[0]);
         setEndDate(lastDayLastMonth.toISOString().split('T')[0]);
         break;
-      case 'custom':
+      case 'before_today':
+        const weekAgo = new Date(today);
+        weekAgo.setDate(today.getDate() - 7);
+        setStartDate(weekAgo.toISOString().split('T')[0]);
+        const dayBeforeToday = new Date(today);
+        dayBeforeToday.setDate(today.getDate() - 1);
+        setEndDate(dayBeforeToday.toISOString().split('T')[0]);
+        break;
+      case 'before_week':
+        const twoWeeksAgo = new Date(today);
+        twoWeeksAgo.setDate(today.getDate() - 14);
+        setStartDate(twoWeeksAgo.toISOString().split('T')[0]);
+        const weekStart = new Date(today);
+        weekStart.setDate(today.getDate() - today.getDay());
+        setEndDate(weekStart.toISOString().split('T')[0]);
+        break;
+      case 'custom_on':
+      case 'custom_after':
+      case 'custom_before':
+      case 'custom_between':
         // Keep current dates for custom range
         break;
     }
@@ -135,13 +159,20 @@ const SuperAdminAnalytics: React.FC = () => {
     setError(null);
 
     try {
+      // Prepare API parameters
       const params = new URLSearchParams({
         action: 'user-activity',
-        ...(selectedUser && { username: selectedUser }),
         ...(startDate && { start_date: startDate }),
         ...(endDate && { end_date: endDate }),
         limit: '500'
       });
+
+      // Add username filter if selected (try both cleaned and original format)
+      if (selectedUser) {
+        params.append('username', selectedUser);
+        // Also try lowercase version for better matching
+        params.append('username_alt', selectedUser.toLowerCase());
+      }
 
       // Use configured API base URL (same as other components)
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://crm-backend-fh34.onrender.com';
@@ -184,13 +215,40 @@ const SuperAdminAnalytics: React.FC = () => {
       setActivityData(result.data);
       console.log('✅ User activity data loaded successfully:', result.data);
 
-      // Extract unique users for filter dropdown
+      // Extract unique users for filter dropdown - clean up usernames
       const users = new Set<string>();
       result.data.userStats.forEach((stat: UserActivity) => {
-        if (stat.username && stat.username !== 'Unknown') {
-          users.add(stat.username);
+        if (stat.username && stat.username !== 'Unknown' && stat.username !== 'System') {
+          // Clean up username display
+          let cleanUsername = stat.username;
+          
+          // If it looks like a UUID or database ID, try to extract meaningful part
+          if (cleanUsername.includes('-') && cleanUsername.length > 20) {
+            cleanUsername = cleanUsername.split('-')[0];
+          }
+          
+          // Convert to proper case
+          cleanUsername = cleanUsername.charAt(0).toUpperCase() + cleanUsername.slice(1).toLowerCase();
+          
+          users.add(cleanUsername);
         }
       });
+      
+      // Also extract users from leadUpdates for more comprehensive list
+      result.data.leadUpdates.forEach((update: LeadUpdate) => {
+        if (update.updated_by && update.updated_by !== 'Unknown' && update.updated_by !== 'System') {
+          let cleanUsername = update.updated_by;
+          
+          // Clean up username display
+          if (cleanUsername.includes('-') && cleanUsername.length > 20) {
+            cleanUsername = cleanUsername.split('-')[0];
+          }
+          
+          cleanUsername = cleanUsername.charAt(0).toUpperCase() + cleanUsername.slice(1).toLowerCase();
+          users.add(cleanUsername);
+        }
+      });
+      
       setAvailableUsers(Array.from(users).sort());
 
     } catch (err) {
@@ -290,7 +348,7 @@ const SuperAdminAnalytics: React.FC = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Date Filter Type</label>
                 <select
                   value={dateFilter}
                   onChange={(e) => handleDateFilterChange(e.target.value)}
@@ -302,33 +360,67 @@ const SuperAdminAnalytics: React.FC = () => {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => {
-                    setStartDate(e.target.value);
-                    setDateFilter('custom');
-                  }}
-                  disabled={dateFilter !== 'custom'}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
-                <input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => {
-                    setEndDate(e.target.value);
-                    setDateFilter('custom');
-                  }}
-                  disabled={dateFilter !== 'custom'}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
-                />
-              </div>
+              {/* Show appropriate date inputs based on filter type */}
+              {(dateFilter.startsWith('custom_') || dateFilter === 'custom') && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {dateFilter === 'custom_on' ? 'Select Date' :
+                       dateFilter === 'custom_after' ? 'After Date' :
+                       dateFilter === 'custom_before' ? 'Before Date' :
+                       'Start Date'}
+                    </label>
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => {
+                        setStartDate(e.target.value);
+                        if (dateFilter === 'custom_on') {
+                          setEndDate(e.target.value); // For "on" date, start and end are same
+                        }
+                      }}
+                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  
+                  {(dateFilter === 'custom_between') && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                      <input
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Show read-only date fields for preset filters */}
+              {!dateFilter.startsWith('custom_') && dateFilter !== 'custom' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+                    <input
+                      type="date"
+                      value={startDate}
+                      disabled
+                      className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+                    <input
+                      type="date"
+                      value={endDate}
+                      disabled
+                      className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600"
+                    />
+                  </div>
+                </>
+              )}
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">User Filter</label>
