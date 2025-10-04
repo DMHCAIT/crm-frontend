@@ -143,10 +143,8 @@ const SuperAdminAnalytics: React.FC = () => {
         limit: '500'
       });
 
-      // Use production API URL
-      const baseUrl = window.location.hostname === 'localhost' 
-        ? 'http://localhost:3001' 
-        : 'https://crm-backend-dmhca.vercel.app';
+      // Use configured API base URL (same as other components)
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://crm-backend-fh34.onrender.com';
       
       const response = await fetch(`${baseUrl}/api/super-admin?${params}`, {
         headers: {
@@ -157,8 +155,16 @@ const SuperAdminAnalytics: React.FC = () => {
 
       if (!response.ok) {
         const errorText = await response.text();
+        // Enhanced error messages for debugging
         console.error('API Error Response:', errorText);
-        throw new Error(`API Error (${response.status}): ${response.statusText}`);
+        
+        if (response.status === 404) {
+          throw new Error('User Activity Analytics feature is being deployed. Please check back in a few minutes.');
+        } else if (response.status === 401) {
+          throw new Error('Authentication failed. Please log out and log back in.');
+        } else {
+          throw new Error(`API Error (${response.status}): ${response.statusText}`);
+        }
       }
 
       // Check if response is JSON
@@ -176,6 +182,7 @@ const SuperAdminAnalytics: React.FC = () => {
       }
 
       setActivityData(result.data);
+      console.log('✅ User activity data loaded successfully:', result.data);
 
       // Extract unique users for filter dropdown
       const users = new Set<string>();
@@ -188,7 +195,19 @@ const SuperAdminAnalytics: React.FC = () => {
 
     } catch (err) {
       console.error('Error loading user activity:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load activity data');
+      let errorMessage = 'Failed to load activity data';
+      
+      if (err instanceof Error) {
+        if (err.message.includes('CORS')) {
+          errorMessage = 'Backend is updating with new analytics features. Please try again in a few minutes.';
+        } else if (err.message.includes('Failed to fetch')) {
+          errorMessage = 'Unable to connect to backend. The server may be updating or temporarily unavailable.';
+        } else {
+          errorMessage = err.message;
+        }
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
