@@ -164,7 +164,7 @@ const SuperAdminAnalytics: React.FC = () => {
         action: 'user-activity',
         ...(startDate && { start_date: startDate }),
         ...(endDate && { end_date: endDate }),
-        limit: '500'
+        limit: '2000' // Increased limit to get more comprehensive data
       });
 
       // Add username filter if selected (try both cleaned and original format)
@@ -218,14 +218,14 @@ const SuperAdminAnalytics: React.FC = () => {
       // Extract unique users for filter dropdown - use resolved usernames from backend
       const users = new Set<string>();
       
-      // Use userStats which now contains resolved usernames
+      // Use userStats which now contains resolved usernames - removed the dash filter
       result.data.userStats.forEach((stat: UserActivity) => {
-        if (stat.username && stat.username !== 'Unknown' && stat.username !== 'System' && !stat.username.includes('-')) {
+        if (stat.username && stat.username !== 'Unknown' && stat.username !== 'System') {
           users.add(stat.username);
         }
       });
       
-      // Also extract users from leadUpdates using the resolved usernames
+      // Also extract users from leadUpdates using the resolved usernames  
       result.data.leadUpdates.forEach((update: any) => {
         if (update.updated_by_username && update.updated_by_username !== 'Unknown' && update.updated_by_username !== 'System') {
           users.add(update.updated_by_username);
