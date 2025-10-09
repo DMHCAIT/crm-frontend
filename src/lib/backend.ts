@@ -279,7 +279,7 @@ class ProductionApiClient {
 
   // Health check
   async healthCheck() {
-    return this.request('/health');
+    return this.request('/api/health');
   }
 
   // Dashboard stats - Use correct endpoint
@@ -442,12 +442,12 @@ class ProductionApiClient {
 
   // Get users that current user can assign leads to (hierarchical filtering)
   async getAssignableUsers() {
-    return this.request('/assignable-users');
+    return this.request('/api/assignable-users');
   }
 
   // Debug assignable users (shows detailed hierarchy information)
   async debugAssignableUsers() {
-    return this.request('/debug-assignable-users');
+    return this.request('/api/debug-assignable-users');
   }
 
   // Test user lookup methods - DEVELOPMENT ONLY
@@ -492,7 +492,7 @@ class ProductionApiClient {
 
   // Get current user profile
   async getCurrentUser() {
-    return this.request('/users/me');
+    return this.request('/api/users/me');
   }
 
   // Communications API - New endpoints
