@@ -227,7 +227,10 @@ class ProductionApiClient {
     const url = `${this.config.backendUrl}${endpoint}`;
     
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
+    const timeoutId = setTimeout(() => {
+      console.warn(`⏰ Request timeout for ${endpoint}, aborting...`);
+      controller.abort();
+    }, this.config.timeout);
 
     // Get authentication token from localStorage
     const token = localStorage.getItem('crm_auth_token') || localStorage.getItem('token');
@@ -242,11 +245,13 @@ class ProductionApiClient {
 
     try {
       // API request initiated
+      console.log(`🔄 API Request: ${endpoint}`);
       
       const response = await fetch(url, { ...defaultOptions, ...options });
       clearTimeout(timeoutId);
       
       // API response received
+      console.log(`✅ API Response: ${endpoint} - ${response.status}`);
       
       if (!response.ok) {
         const errorText = await response.text();
@@ -259,6 +264,13 @@ class ProductionApiClient {
       return result;
     } catch (error) {
       clearTimeout(timeoutId);
+      
+      // Handle AbortError specifically
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.warn(`⚠️ Request aborted for ${endpoint}:`, 'Request was cancelled or timed out');
+        throw new Error(`Request timeout for ${endpoint}`);
+      }
+      
       console.error(`❌ API Request failed for ${endpoint}:`, error);
       throw error;
     }
