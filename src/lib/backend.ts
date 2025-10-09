@@ -37,7 +37,7 @@ export const getApiConfig = (): ApiConfig => {
   return {
     baseUrl,
     backendUrl,
-    timeout: 30000,
+    timeout: 60000, // Increased to 60 seconds for better reliability
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json'
@@ -224,13 +224,14 @@ class ProductionApiClient {
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const url = `${this.config.backendUrl}${endpoint}`;
+    // Use baseUrl instead of backendUrl to avoid double /api
+    const url = `${this.config.baseUrl}${endpoint}`;
     
     const controller = new AbortController();
     const timeoutId = setTimeout(() => {
       console.warn(`⏰ Request timeout for ${endpoint}, aborting...`);
       controller.abort();
-    }, this.config.timeout);
+    }, 60000); // Increased timeout to 60 seconds
 
     // Get authentication token from localStorage
     const token = localStorage.getItem('crm_auth_token') || localStorage.getItem('token');
@@ -284,15 +285,17 @@ class ProductionApiClient {
   // Dashboard stats - Use correct endpoint
   async getDashboardStats() {
     try {
-      // Use the simpler dashboard endpoint that we fixed
-      const response = await this.request('/dashboard') as any;
+      console.log('🔄 Fetching dashboard stats...');
+      // Use the API dashboard endpoint
+      const response = await this.request('/api/dashboard') as any;
+      console.log('✅ Dashboard stats fetched successfully:', response);
       // The backend returns data directly, but frontend expects { data: ... }
       return { data: response };
     } catch (error) {
       console.warn('Dashboard endpoint not available, using analytics fallback');
       try {
         // Fallback to analytics endpoint
-        const response = await this.request('/analytics/realtime') as {
+        const response = await this.request('/api/analytics/realtime') as {
           leads?: number;
           students?: number;
           communications?: number;
@@ -338,36 +341,48 @@ class ProductionApiClient {
   // Leads API - Direct connection to backend database
   async getLeads() {
     try {
-      const response = await this.request('/leads');
+      console.log('🔄 Attempting to fetch leads from backend...');
+      const response = await this.request('/api/leads');
+      console.log('✅ Leads fetched successfully:', response);
       return response;
     } catch (error) {
-      console.error('Failed to fetch leads from database:', error);
-      throw new Error('Unable to connect to leads database. Please check your connection.');
+      console.error('❌ Failed to fetch leads from database:', error);
+      
+      // Try alternative endpoint if main fails
+      try {
+        console.log('🔄 Trying alternative leads endpoint...');
+        const fallbackResponse = await this.request('/api/leads-simple');
+        console.log('✅ Fallback leads fetched successfully:', fallbackResponse);
+        return fallbackResponse;
+      } catch (fallbackError) {
+        console.error('❌ Fallback leads endpoint also failed:', fallbackError);
+        throw new Error('Unable to connect to leads database. Please check your connection.');
+      }
     }
   }
 
   async createLead(leadData: any) {
-    return this.request('/leads', {
+    return this.request('/api/leads', {
       method: 'POST',
       body: JSON.stringify(leadData)
     });
   }
 
   async updateLead(id: string, leadData: any) {
-    return this.request(`/leads?id=${id}`, {
+    return this.request(`/api/leads?id=${id}`, {
       method: 'PUT',
       body: JSON.stringify(leadData)
     });
   }
 
   async deleteLead(id: string) {
-    return this.request(`/leads?id=${id}`, {
+    return this.request(`/api/leads?id=${id}`, {
       method: 'DELETE'
     });
   }
 
   async bulkUpdateLeads(leadIds: string[], updateData: any, operationType: string = 'update', reason?: string) {
-    return this.request('/leads', {
+    return this.request('/api/leads', {
       method: 'POST',
       body: JSON.stringify({
         operation: 'bulk_update',
@@ -383,35 +398,39 @@ class ProductionApiClient {
   }
 
   async bulkDeleteLeads(leadIds: string[]) {
-    return this.request('/leads-simple', {
-      method: 'DELETE',
+    return this.request('/api/leads', {
+      method: 'POST',
       body: JSON.stringify({
-        leadIds
+        operation: 'bulk_delete',
+        leadIds,
+        updatedBy: localStorage.getItem('crm_user_data') ? 
+          JSON.parse(localStorage.getItem('crm_user_data') || '{}').id : 
+          'system'
       })
     });
   }
 
   // Students API - New endpoints
   async getStudents() {
-    return this.request('/students');
+    return this.request('/api/students');
   }
 
   async createStudent(studentData: any) {
-    return this.request('/students', {
+    return this.request('/api/students', {
       method: 'POST',
       body: JSON.stringify(studentData)
     });
   }
 
   async updateStudent(id: string, studentData: any) {
-    return this.request(`/students?id=${id}`, {
+    return this.request(`/api/students?id=${id}`, {
       method: 'PUT',
       body: JSON.stringify(studentData)
     });
   }
 
   async deleteStudent(id: string) {
-    return this.request(`/students?id=${id}`, {
+    return this.request(`/api/students?id=${id}`, {
       method: 'DELETE'
     });
   }
