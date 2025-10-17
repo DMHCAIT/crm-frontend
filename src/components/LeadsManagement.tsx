@@ -636,11 +636,11 @@ const LeadsManagement: React.FC = () => {
             return leadsUpdatedToday.includes(lead.id);
           case 'updated_yesterday':
             // Check if lead was updated yesterday (using updatedAt field or tracking)
-            const yesterday = new Date(today);
-            yesterday.setDate(yesterday.getDate() - 1);
+            const updatedYesterday = new Date(today);
+            updatedYesterday.setDate(updatedYesterday.getDate() - 1);
             const leadUpdatedAt = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
             const updatedDateOnly = new Date(leadUpdatedAt.getFullYear(), leadUpdatedAt.getMonth(), leadUpdatedAt.getDate());
-            return updatedDateOnly.getTime() === yesterday.getTime();
+            return updatedDateOnly.getTime() === updatedYesterday.getTime();
           case 'updated_this_week':
             // Check if lead was updated within this week (Sunday to Saturday)
             const startOfWeek = new Date(today);
