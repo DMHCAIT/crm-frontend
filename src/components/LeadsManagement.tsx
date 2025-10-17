@@ -634,6 +634,32 @@ const LeadsManagement: React.FC = () => {
             return leadDate >= monthAgo;
           case 'updated_today':
             return leadsUpdatedToday.includes(lead.id);
+          case 'updated_yesterday':
+            // Check if lead was updated yesterday (using updatedAt field or tracking)
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            const leadUpdatedAt = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
+            const updatedDateOnly = new Date(leadUpdatedAt.getFullYear(), leadUpdatedAt.getMonth(), leadUpdatedAt.getDate());
+            return updatedDateOnly.getTime() === yesterday.getTime();
+          case 'updated_this_week':
+            // Check if lead was updated within this week (Sunday to Saturday)
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay()); // Go to Sunday
+            const leadUpdatedThisWeek = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
+            return leadUpdatedThisWeek >= startOfWeek;
+          case 'updated_last_week':
+            // Check if lead was updated in the previous week
+            const startOfLastWeek = new Date(today);
+            startOfLastWeek.setDate(today.getDate() - today.getDay() - 7); // Previous Sunday
+            const endOfLastWeek = new Date(startOfLastWeek);
+            endOfLastWeek.setDate(startOfLastWeek.getDate() + 6); // Previous Saturday
+            const leadUpdatedLastWeek = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
+            return leadUpdatedLastWeek >= startOfLastWeek && leadUpdatedLastWeek <= endOfLastWeek;
+          case 'updated_this_month':
+            // Check if lead was updated within this month
+            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            const leadUpdatedThisMonth = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
+            return leadUpdatedThisMonth >= startOfMonth;
           case 'recently_imported':
             const twentyFourHoursAgo = new Date();
             twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
@@ -2021,6 +2047,42 @@ const LeadsManagement: React.FC = () => {
     return leadsUpdatedToday.length;
   };
 
+  // Get counts for different updated leads filters
+  const getUpdatedThisWeekCount = () => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay()); // Go to Sunday
+    
+    return (leads || []).filter(lead => {
+      const leadUpdated = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
+      return leadUpdated >= startOfWeek;
+    }).length;
+  };
+
+  const getUpdatedThisMonthCount = () => {
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    
+    return (leads || []).filter(lead => {
+      const leadUpdated = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
+      return leadUpdated >= startOfMonth;
+    }).length;
+  };
+
+  const getUpdatedYesterdayCount = () => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    return (leads || []).filter(lead => {
+      const leadUpdated = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
+      const updatedDateOnly = new Date(leadUpdated.getFullYear(), leadUpdated.getMonth(), leadUpdated.getDate());
+      return updatedDateOnly.getTime() === yesterday.getTime();
+    }).length;
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       {/* Header Section */}
@@ -2649,7 +2711,13 @@ const LeadsManagement: React.FC = () => {
       </div>
 
       {/* Quick Status Filters */}
-      <div className="mb-6 flex flex-wrap gap-3">
+      <div className="mb-4 flex flex-wrap gap-3">
+        <div className="text-sm font-medium text-gray-700 flex items-center mr-4">
+          <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+            🎯 Quick Status Filters:
+          </span>
+        </div>
+        
         <button
           onClick={() => quickStatusFilter('Hot')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
@@ -2701,6 +2769,16 @@ const LeadsManagement: React.FC = () => {
           📊 All ({getAllLeadsCount()})
         </button>
         
+      </div>
+
+      {/* Updated Leads Date Filters */}
+      <div className="mb-4 flex flex-wrap gap-3">
+        <div className="text-sm font-medium text-gray-700 flex items-center mr-4">
+          <span className="bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent">
+            📅 Filter by Updated Date:
+          </span>
+        </div>
+        
         {/* Updated Today Filter */}
         <button
           onClick={() => setFilterToUpdatedToday()}
@@ -2713,6 +2791,51 @@ const LeadsManagement: React.FC = () => {
           {dateFilter === 'updated_today' 
             ? `✅ Showing Updated Today (${getLeadsUpdatedTodayCount()})` 
             : `✏️ Updated Today (${getLeadsUpdatedTodayCount()})`
+          }
+        </button>
+
+        {/* Updated Yesterday Filter */}
+        <button
+          onClick={() => setDateFilter(dateFilter === 'updated_yesterday' ? 'all' : 'updated_yesterday')}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+            dateFilter === 'updated_yesterday' 
+              ? 'bg-orange-100 text-orange-800 border-2 border-orange-300 shadow-md' 
+              : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
+          }`}
+        >
+          {dateFilter === 'updated_yesterday' 
+            ? `✅ Updated Yesterday (${getUpdatedYesterdayCount()})` 
+            : `📝 Updated Yesterday (${getUpdatedYesterdayCount()})`
+          }
+        </button>
+
+        {/* Updated This Week Filter */}
+        <button
+          onClick={() => setDateFilter(dateFilter === 'updated_this_week' ? 'all' : 'updated_this_week')}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+            dateFilter === 'updated_this_week' 
+              ? 'bg-blue-100 text-blue-800 border-2 border-blue-300 shadow-md' 
+              : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
+          }`}
+        >
+          {dateFilter === 'updated_this_week' 
+            ? `✅ Updated This Week (${getUpdatedThisWeekCount()})` 
+            : `📅 Updated This Week (${getUpdatedThisWeekCount()})`
+          }
+        </button>
+
+        {/* Updated This Month Filter */}
+        <button
+          onClick={() => setDateFilter(dateFilter === 'updated_this_month' ? 'all' : 'updated_this_month')}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+            dateFilter === 'updated_this_month' 
+              ? 'bg-indigo-100 text-indigo-800 border-2 border-indigo-300 shadow-md' 
+              : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
+          }`}
+        >
+          {dateFilter === 'updated_this_month' 
+            ? `✅ Updated This Month (${getUpdatedThisMonthCount()})` 
+            : `📆 Updated This Month (${getUpdatedThisMonthCount()})`
           }
         </button>
 
@@ -2855,20 +2978,32 @@ const LeadsManagement: React.FC = () => {
           <div className="mt-4 pt-4 border-t border-gray-200">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Date Filter</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  📅 Date Filter - Updated Leads
+                </label>
                 <select
                   value={dateFilter}
                   onChange={(e) => setDateFilter(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                 >
-                  <option value="all">All Time</option>
-                  <option value="today">Today</option>
-                  <option value="yesterday">Yesterday</option>
-                  <option value="week">Last 7 Days</option>
-                  <option value="month">Last 30 Days</option>
-                  <option value="updated_today">Updated Today ({getLeadsUpdatedTodayCount()})</option>
-                  <option value="custom">Custom Range</option>
-                  <option value="advanced">Advanced Date Filter</option>
+                  <option value="all">🌐 All Time</option>
+                  <optgroup label="📊 Updated Leads">
+                    <option value="updated_today">✏️ Updated Today ({getLeadsUpdatedTodayCount()})</option>
+                    <option value="updated_yesterday">📝 Updated Yesterday ({getUpdatedYesterdayCount()})</option>
+                    <option value="updated_this_week">📅 Updated This Week ({getUpdatedThisWeekCount()})</option>
+                    <option value="updated_last_week">📋 Updated Last Week</option>
+                    <option value="updated_this_month">📆 Updated This Month ({getUpdatedThisMonthCount()})</option>
+                  </optgroup>
+                  <optgroup label="🗓️ Creation Date">
+                    <option value="today">📍 Created Today</option>
+                    <option value="yesterday">⏮️ Created Yesterday</option>
+                    <option value="week">🗓️ Created Last 7 Days</option>
+                    <option value="month">📅 Created Last 30 Days</option>
+                  </optgroup>
+                  <optgroup label="🔧 Advanced">
+                    <option value="custom">📊 Custom Date Range</option>
+                    <option value="advanced">⚙️ Advanced Date Filter</option>
+                  </optgroup>
                 </select>
               </div>
 
