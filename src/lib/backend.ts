@@ -289,8 +289,8 @@ class ProductionApiClient {
       // Use the API dashboard endpoint
       const response = await this.request('/api/dashboard') as any;
       console.log('✅ Dashboard stats fetched successfully:', response);
-      // The backend returns data directly, but frontend expects { data: ... }
-      return { data: response };
+      // Backend already returns { success: true, data: {...} }, so return it directly
+      return response;
     } catch (error) {
       console.warn('Dashboard endpoint not available, using analytics fallback');
       try {
@@ -305,6 +305,7 @@ class ProductionApiClient {
         
         // Transform the response to match expected format
         return {
+          success: true,
           data: {
             totalLeads: response.leads || 0,
             activeLeads: response.leads || 0,
@@ -321,6 +322,7 @@ class ProductionApiClient {
       } catch (fallbackError) {
         console.warn('Analytics endpoint also not available, using default data');
         return {
+          success: true,
           data: {
             totalLeads: 0,
             activeLeads: 0,
@@ -836,6 +838,11 @@ class ProductionApiClient {
   // Analytics API - Updated to match backend endpoint
   async getAnalytics(_period: string = '30d') {
     return this.request('/api/analytics/realtime');
+  }
+
+  // Enhanced Analytics API - Real-time analytics
+  async getEnhancedAnalytics(timeframe: string = 'month') {
+    return this.request(`/api/enhanced-analytics/realtime?timeframe=${timeframe}`);
   }
 
   async createPaymentLink(_amount: number, _description: string) {

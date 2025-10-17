@@ -1029,6 +1029,44 @@ const LeadsManagement: React.FC = () => {
     }).length;
   };
 
+  // Clear all filters - Reset to default state
+  const clearAllFilters = () => {
+    setSearchQuery('');
+    setDateFilter('all');
+    setStatusFilter('all');
+    setCountryFilter('all');
+    setSourceFilter('all');
+    setAssignedToFilter('all');
+    setQualificationFilter('all');
+    setCourseFilter('all');
+    setCompanyFilter('all');
+    setShowOverdueOnly(false);
+    setDateFrom('');
+    setDateTo('');
+    setSpecificDate('');
+    setDateFilterType('on');
+    
+    // Also clear any temporary filter states if they exist
+    console.log('✅ All filters cleared - showing all leads');
+  };
+
+  // Check if any filters are currently active
+  const hasActiveFilters = () => {
+    return searchQuery !== '' ||
+           dateFilter !== 'all' ||
+           statusFilter !== 'all' ||
+           countryFilter !== 'all' ||
+           sourceFilter !== 'all' ||
+           assignedToFilter !== 'all' ||
+           qualificationFilter !== 'all' ||
+           courseFilter !== 'all' ||
+           companyFilter !== 'all' ||
+           showOverdueOnly ||
+           dateFrom !== '' ||
+           dateTo !== '' ||
+           specificDate !== '';
+  };
+
   // Add Lead Functions
   const handleAddLead = () => {
     setShowAddLeadModal(true);
@@ -1780,11 +1818,12 @@ const LeadsManagement: React.FC = () => {
     const convertedLeads = leads.filter((lead: Lead) => lead.status === 'Enrolled');
     const conversionRate = leads.length > 0 ? (convertedLeads.length / leads.length * 100) : 0;
     
-    // Response time metrics
+    // Response time metrics - Fixed to match notification logic
     const followupDueLeads = leads.filter((lead: Lead) => {
       if (!lead.followUp) return false;
       const followupDate = new Date(lead.followUp);
-      return followupDate <= now && lead.status !== 'Enrolled';
+      const now = new Date();
+      return followupDate < now && lead.status !== 'Enrolled' && lead.status !== 'Not Interested';
     });
     
     // Assignment distribution
@@ -1882,12 +1921,15 @@ const LeadsManagement: React.FC = () => {
     const overdue = leads.filter((lead: Lead) => {
       if (!lead.followUp) return false;
       const followUpDate = new Date(lead.followUp);
+      // Ensure we're comparing dates properly and excluding completed/uninterested leads
       return followUpDate < now && lead.status !== 'Enrolled' && lead.status !== 'Not Interested';
     });
 
+    console.log(`🔍 Overdue check: Found ${overdue.length} overdue leads out of ${leads.length} total leads`);
+    
     setOverdueLeads(overdue);
 
-    // Trigger popup notifications for newly overdue leads
+    // Only trigger popup notifications if there are actual overdue leads
     if (overdue.length > 0) {
       const newNotifications = overdue.map(lead => ({
         id: `overdue-${lead.id}`,
@@ -1904,11 +1946,14 @@ const LeadsManagement: React.FC = () => {
         const existingNotif = popupNotifications.find(p => p.leadId === notif.leadId);
         if (!existingNotif) return true;
         
-        // Show again if it's been more than 1 hour since last notification
+        // Show again if it's been more than 5 minutes since last notification (matching reminder interval)
         const timeSince = new Date().getTime() - existingNotif.timestamp.getTime();
-        return timeSince > 3600000; // 1 hour in milliseconds
+        return timeSince > 300000; // 5 minutes in milliseconds
       });
 
+      if (recentNotifications.length > 0) {
+        setPopupNotifications(prev => [...prev, ...recentNotifications]);
+      }
       if (recentNotifications.length > 0) {
         setPopupNotifications(prev => [...prev, ...recentNotifications]);
         setShowOverduePopup(true);
@@ -1947,10 +1992,14 @@ const LeadsManagement: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (leads.length > 0) {
+        console.log('🔄 Checking for overdue follow-ups (5-min interval)...');
         const overdue = checkOverdueFollowups();
         
-        // Send desktop notifications for critical overdue leads (>3 days)
+        // Only send notifications if there are actual overdue leads
         if (overdue.length > 0) {
+          console.log(`📢 Found ${overdue.length} overdue leads, sending notifications...`);
+          
+          // Send desktop notifications for critical overdue leads (>3 days)
           const criticalOverdue = overdue.filter((lead: Lead) => {
             const daysOverdue = Math.floor((new Date().getTime() - new Date(lead.followUp!).getTime()) / (1000 * 60 * 60 * 24));
             return daysOverdue >= 3;
@@ -1964,9 +2013,23 @@ const LeadsManagement: React.FC = () => {
               lead.id
             );
           });
+          
+          // Send popup notification for all overdue leads
+          if (overdue.length > 5) {
+            setPopupNotifications(prev => [...prev, {
+              id: `bulk-overdue-${Date.now()}`,
+              type: 'bulk-overdue',
+              title: '⚠️ Urgent: Overdue Follow-ups!',
+              message: `You have ${overdue.length} overdue follow-ups!`,
+              timestamp: new Date(),
+              urgency: 'high'
+            }]);
+          }
+        } else {
+          console.log('✅ No overdue follow-ups found');
         }
       }
-    }, 300000); // 5 minutes
+    }, 300000); // 5 minutes (300000ms)
 
     return () => clearInterval(interval);
   }, [leads]);
@@ -2853,7 +2916,72 @@ const LeadsManagement: React.FC = () => {
             : `📥 Recently Imported (${getRecentlyImportedCount()})`
           }
         </button>
+
+        {/* Clear All Filters Button */}
+        {hasActiveFilters() && (
+          <button
+            onClick={clearAllFilters}
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 hover:border-red-300 hover:shadow-sm"
+          >
+            🗑️ Clear All Filters
+          </button>
+        )}
       </div>
+
+      {/* Active Filters Summary */}
+      {hasActiveFilters() && (
+        <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center text-sm text-gray-700">
+              <Filter className="w-4 h-4 mr-2 text-gray-500" />
+              <span className="font-medium">Active Filters:</span>
+              <div className="ml-2 flex flex-wrap gap-1">
+                {searchQuery && (
+                  <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                    Search: "{searchQuery}"
+                  </span>
+                )}
+                {dateFilter !== 'all' && (
+                  <span className="bg-cyan-100 text-cyan-800 px-2 py-1 rounded text-xs">
+                    Date: {dateFilter.replace('_', ' ')}
+                  </span>
+                )}
+                {statusFilter !== 'all' && (
+                  <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
+                    Status: {statusFilter}
+                  </span>
+                )}
+                {countryFilter !== 'all' && (
+                  <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">
+                    Country: {countryFilter}
+                  </span>
+                )}
+                {companyFilter !== 'all' && (
+                  <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">
+                    Company: {companyFilter}
+                  </span>
+                )}
+                {assignedToFilter !== 'all' && (
+                  <span className="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-xs">
+                    Assigned: {assignedToFilter}
+                  </span>
+                )}
+                {showOverdueOnly && (
+                  <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">
+                    Overdue Only
+                  </span>
+                )}
+              </div>
+            </div>
+            <button
+              onClick={clearAllFilters}
+              className="text-xs text-red-600 hover:text-red-800 font-medium"
+            >
+              Clear All
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Company Filters */}
       <div className="mb-4 flex flex-wrap gap-3">
@@ -2908,9 +3036,30 @@ const LeadsManagement: React.FC = () => {
               placeholder="Search leads by name, email, phone, or ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 hover:text-gray-600 transition-colors"
+                title="Clear search"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
+
+          {/* Clear All Filters Button */}
+          {hasActiveFilters() && (
+            <button
+              onClick={clearAllFilters}
+              className="flex items-center space-x-2 px-4 py-3 bg-red-50 text-red-700 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition-colors"
+              title="Clear all active filters"
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span>Clear All Filters</span>
+            </button>
+          )}
 
           {/* Overdue Filter Indicator */}
           {showOverdueOnly && (
@@ -3337,35 +3486,67 @@ const LeadsManagement: React.FC = () => {
                         {/* Primary Info Column */}
                         <div className="space-y-1">
                           {editingLead === lead.id ? (
-                            <input
-                              type="text"
-                              value={editedLead.fullName || lead.fullName}
-                              onChange={(e) => setEditedLead(prev => ({ ...prev, fullName: e.target.value }))}
-                              className="font-medium text-gray-900 bg-white border border-gray-300 rounded px-2 py-1 text-sm w-full"
-                              onClick={(e) => e.stopPropagation()}
-                            />
+                            <>
+                              <input
+                                type="text"
+                                value={editedLead.fullName || lead.fullName}
+                                onChange={(e) => setEditedLead(prev => ({ ...prev, fullName: e.target.value }))}
+                                className="font-medium text-gray-900 bg-white border border-gray-300 rounded px-2 py-1 text-sm w-full"
+                                onClick={(e) => e.stopPropagation()}
+                                placeholder="Full Name"
+                              />
+                              <select
+                                value={editedLead.status || lead.status}
+                                onChange={(e) => setEditedLead(prev => ({ ...prev, status: e.target.value }))}
+                                className="text-sm font-medium bg-white border border-gray-300 rounded px-2 py-1 w-full"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <option value="">Select Status</option>
+                                {(statusOptions || STATUS_OPTIONS).map(status => (
+                                  <option key={status} value={status}>
+                                    {status}
+                                  </option>
+                                ))}
+                              </select>
+                              <input
+                                type="date"
+                                value={editedLead.followUp || lead.followUp || ''}
+                                onChange={(e) => setEditedLead(prev => ({ ...prev, followUp: e.target.value }))}
+                                className="text-xs text-gray-600 bg-white border border-gray-300 rounded px-2 py-1 w-full"
+                                onClick={(e) => e.stopPropagation()}
+                                title="Follow Up Date"
+                              />
+                            </>
                           ) : (
-                            <div className="flex items-center space-x-2">
-                              <h3 className="font-medium text-gray-900">{lead.fullName}</h3>
-                              {/* Hierarchy indicator */}
-                              {lead.assignedTo && lead.assignedTo.toLowerCase() !== user?.username?.toLowerCase() && (
-                                <span 
-                                  className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-                                  title={`Team member lead: ${lead.assignedTo}`}
-                                >
-                                  👥
+                            <>
+                              <div className="flex items-center space-x-2">
+                                <h3 className="font-medium text-gray-900">{lead.fullName}</h3>
+                                {/* Hierarchy indicator */}
+                                {lead.assignedTo && lead.assignedTo.toLowerCase() !== user?.username?.toLowerCase() && (
+                                  <span 
+                                    className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                                    title={`Team member lead: ${lead.assignedTo}`}
+                                  >
+                                    👥
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-gray-500">#{lead.id}</p>
+                              <div className="flex items-center space-x-1">
+                                <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
+                                  STATUS_COLORS[lead.status as keyof typeof STATUS_COLORS] || STATUS_COLORS['Fresh']
+                                }`}>
+                                  {lead.status}
                                 </span>
+                              </div>
+                              {lead.followUp && (
+                                <p className="text-xs text-gray-600 flex items-center">
+                                  <Calendar className="w-3 h-3 mr-1" />
+                                  Follow: {new Date(lead.followUp).toLocaleDateString()}
+                                </p>
                               )}
-                            </div>
+                            </>
                           )}
-                          <p className="text-xs text-gray-500">#{lead.id}</p>
-                          <div className="flex items-center space-x-1">
-                            <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
-                              STATUS_COLORS[lead.status as keyof typeof STATUS_COLORS] || STATUS_COLORS['Fresh']
-                            }`}>
-                              {lead.status}
-                            </span>
-                          </div>
                         </div>
 
                         {/* Contact Info Column */}
@@ -3473,19 +3654,72 @@ const LeadsManagement: React.FC = () => {
                         {/* Assignment & Date Column */}
                         <div className="space-y-1">
                           {editingLead === lead.id ? (
-                            <select
-                              value={editedLead.assignedTo || lead.assignedTo}
-                              onChange={(e) => setEditedLead(prev => ({ ...prev, assignedTo: e.target.value }))}
-                              className="text-sm text-gray-600 bg-white border border-gray-300 rounded px-2 py-1 w-full"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <option value="">Unassigned</option>
-                              {users.map(user => (
-                                <option key={user.id} value={user.email}>{user.name}</option>
-                              ))}
-                            </select>
+                            <>
+                              <select
+                                value={editedLead.assignedTo || lead.assignedTo}
+                                onChange={(e) => setEditedLead(prev => ({ ...prev, assignedTo: e.target.value }))}
+                                className="text-sm text-gray-600 bg-white border border-gray-300 rounded px-2 py-1 w-full"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <option value="">Unassigned</option>
+                                {users.map(user => (
+                                  <option key={user.id} value={user.email}>{user.name}</option>
+                                ))}
+                              </select>
+                              <select
+                                value={editedLead.status || lead.status}
+                                onChange={(e) => setEditedLead(prev => ({ ...prev, status: e.target.value }))}
+                                className="text-sm text-gray-600 bg-white border border-gray-300 rounded px-2 py-1 w-full"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {STATUS_OPTIONS.map(status => (
+                                  <option key={status} value={status}>
+                                    {status === 'Hot' && '🔥 '}
+                                    {status === 'Warm' && '🌡️ '}
+                                    {status === 'Follow Up' && '📞 '}
+                                    {status === 'Not Interested' && '❌ '}
+                                    {status === 'Enrolled' && '✅ '}
+                                    {status === 'Fresh' && '🆕 '}
+                                    {status === 'Junk' && '🗑️ '}
+                                    {status}
+                                  </option>
+                                ))}
+                              </select>
+                              <input
+                                type="datetime-local"
+                                value={(() => {
+                                  const followUpDate = editedLead.followUp || lead.followUp;
+                                  if (!followUpDate) return '';
+                                  const date = new Date(followUpDate);
+                                  if (isNaN(date.getTime())) return '';
+                                  const year = date.getFullYear();
+                                  const month = String(date.getMonth() + 1).padStart(2, '0');
+                                  const day = String(date.getDate()).padStart(2, '0');
+                                  const hours = String(date.getHours()).padStart(2, '0');
+                                  const minutes = String(date.getMinutes()).padStart(2, '0');
+                                  return `${year}-${month}-${day}T${hours}:${minutes}`;
+                                })()}
+                                onChange={(e) => setEditedLead(prev => ({ ...prev, followUp: e.target.value }))}
+                                className="text-xs text-gray-500 bg-white border border-gray-300 rounded px-2 py-1 w-full"
+                                onClick={(e) => e.stopPropagation()}
+                                placeholder="Follow-up date"
+                              />
+                            </>
                           ) : (
-                            <p className="text-sm text-gray-600 font-medium">{lead.assignedTo}</p>
+                            <>
+                              <p className="text-sm text-gray-600 font-medium">{lead.assignedTo}</p>
+                              <div className="flex items-center space-x-1">
+                                <span 
+                                  className={`inline-block w-2 h-2 rounded-full ${STATUS_COLORS[lead.status] || 'bg-gray-300'}`}
+                                ></span>
+                                <p className="text-sm text-gray-600">{lead.status}</p>
+                              </div>
+                              {lead.followUp && (
+                                <p className="text-xs text-gray-500">
+                                  Follow: {new Date(lead.followUp).toLocaleDateString()}
+                                </p>
+                              )}
+                            </>
                           )}
                           <p className="text-xs text-gray-500">{new Date(lead.createdAt).toLocaleDateString()}</p>
                           <p className="text-xs text-gray-400">{lead.source}</p>
@@ -3850,7 +4084,7 @@ const LeadsManagement: React.FC = () => {
                         {(editedLead.status || selectedLead.status) === 'Enrolled' && (
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              💰 Course Fees (₹)
+                              💰 Course Fees ({(editedLead.company || selectedLead.company) === 'IBMP' ? '$' : '₹'})
                             </label>
                             <input
                               type="number"
@@ -3865,13 +4099,13 @@ const LeadsManagement: React.FC = () => {
                                     : lead
                                 ));
                               }}
-                              placeholder="Enter course fees amount"
+                              placeholder={`Enter course fees amount in ${(editedLead.company || selectedLead.company) === 'IBMP' ? 'USD' : 'INR'}`}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                               min="0"
-                              step="100"
+                              step={(editedLead.company || selectedLead.company) === 'IBMP' ? '1' : '100'}
                             />
                             <p className="text-xs text-gray-500 mt-1">
-                              Amount paid for course enrollment
+                              Amount paid for course enrollment in {(editedLead.company || selectedLead.company) === 'IBMP' ? 'USD' : 'Indian Rupees'}
                             </p>
                           </div>
                         )}

@@ -47,8 +47,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         const apiClient = getApiClient();
         
         // Get dashboard stats from the new API endpoint
-        const response = await apiClient.getDashboardStats() as { data: any };
-        const dashboardData = response.data;
+        const response = await apiClient.getDashboardStats() as { success: boolean; data: any };
+        console.log('📊 Dashboard API Response:', response);
+        
+        // Extract data properly from response structure
+        const dashboardData = response.success ? response.data : response.data || response;
         
         setStats({
           totalLeads: dashboardData.totalLeads || 0,
@@ -59,7 +62,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         });
         
         setCrmStats({
-          hotLeads: 0, // Will be calculated correctly in loadRecentActivities
+          hotLeads: dashboardData.hotLeads || 0,
           avgResponseTime: parseFloat(dashboardData.responseTime) || 0,
           pipelineValue: (dashboardData.activeLeads || 0) * 250000,
           monthlyConversions: Math.round((dashboardData.totalLeads || 0) * ((dashboardData.conversionRate || 0) / 100)),
@@ -70,10 +73,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         // Load recent activities from real data
         await loadRecentActivities();
         
-        // Dashboard stats loaded
+        console.log('✅ Dashboard stats loaded successfully');
       } catch (error) {
         console.error('❌ Failed to load dashboard stats from API:', error);
-        // Data remains at initial zero values if API fails
+        // Load fallback data from leads API if dashboard API fails
+        await loadRecentActivities();
       } finally {
         setLoading(false);
       }
@@ -97,8 +101,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         status: lead.status
       })));
       
-      // Calculate actual hot leads count from real data
-      const actualHotLeads = leads.filter((lead: any) => lead.status === 'hot').length;
+      // Calculate actual hot leads count from real data - Use proper case
+      const actualHotLeads = leads.filter((lead: any) => lead.status === 'Hot').length;
       
       console.log(`🔥 Dashboard: Found ${actualHotLeads} hot leads out of ${leads.length} total leads`);
       

@@ -40,7 +40,7 @@ const Analytics: React.FC = () => {
       const apiClient = getApiClient();
       
       // Get comprehensive real analytics data from enhanced analytics API
-      const analyticsResponse: any = await (apiClient as any).request(`/analytics/realtime?timeframe=${timeframe}`);
+      const analyticsResponse: any = await (apiClient as any).getEnhancedAnalytics(timeframe);
       
       if (!analyticsResponse.success) {
         throw new Error('Failed to load analytics data');
@@ -161,19 +161,81 @@ const Analytics: React.FC = () => {
       // Show error notification
       notify.error('Analytics Data Error', 'Unable to load analytics data. Please check your connection and try again.');
       
-      // Set empty/default data on error with meaningful error handling
+      // Set meaningful fallback data instead of showing "Offline"
       setKpiMetrics([
         {
-          title: 'Data Connection Error',
-          value: 'Offline',
+          title: 'Lead Conversion Rate',
+          value: '0.0%',
           change: '',
           changeType: 'neutral' as const,
           icon: Target,
-          description: 'Check network connection and try again'
+          description: 'Data temporarily unavailable'
+        },
+        {
+          title: 'Average Response Time',
+          value: '--',
+          change: '',
+          changeType: 'neutral' as const,
+          icon: Calendar,
+          description: 'Data temporarily unavailable'
+        },
+        {
+          title: 'Total Students',
+          value: '0',
+          change: '',
+          changeType: 'neutral' as const,
+          icon: GraduationCap,
+          description: 'Data temporarily unavailable'
+        },
+        {
+          title: 'Total Revenue',
+          value: '₹0',
+          change: '',
+          changeType: 'neutral' as const,
+          icon: DollarSign,
+          description: 'Data temporarily unavailable'
         }
       ]);
+      
+      // Set empty arrays for other data
       setChannelPerformance([]);
-      setCourseAnalytics([]);
+      setCourseAnalytics([
+        { 
+          course: 'MBBS', 
+          applications: 0,
+          enrolled: 0,
+          capacity: 500, 
+          utilization: '0%'
+        },
+        { 
+          course: 'MD General Medicine', 
+          applications: 0,
+          enrolled: 0,
+          capacity: 150, 
+          utilization: '0%'
+        },
+        { 
+          course: 'MD Pediatrics', 
+          applications: 0,
+          enrolled: 0,
+          capacity: 80, 
+          utilization: '0%'
+        },
+        { 
+          course: 'MS Surgery', 
+          applications: 0,
+          enrolled: 0,
+          capacity: 60, 
+          utilization: '0%'
+        },
+        { 
+          course: 'Fellowship Programs', 
+          applications: 0,
+          enrolled: 0,
+          capacity: 200, 
+          utilization: '0%'
+        }
+      ]);
     } finally {
       setLoading(false);
     }

@@ -125,16 +125,32 @@ const CRMPipeline: React.FC = () => {
         console.log('✅ CRMPipeline: Using leadsData.data format:', leads.length, 'leads');
       }
       
-      const totalLeads = (leads || []).length;
-      const newLeads = (leads || []).filter((lead: any) => {
+      // Remove duplicates based on lead ID to ensure accurate counting
+      const uniqueLeads = (leads || []).filter((lead: any, index: number, self: any[]) => 
+        index === self.findIndex((l: any) => l.id === lead.id)
+      );
+      
+      console.log(`🔍 CRMPipeline: Removed ${leads.length - uniqueLeads.length} duplicate leads. Processing ${uniqueLeads.length} unique leads.`);
+      
+      const totalLeads = uniqueLeads.length;
+      const newLeads = uniqueLeads.filter((lead: any) => {
         const createdAt = new Date(lead.createdAt || lead.created_at);
         const daysDiff = (Date.now() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
         return daysDiff <= 7;
       }).length;
       
-      const hotLeads = (leads || []).filter((lead: any) => lead.status === 'hot').length;
-      const qualifiedLeads = (leads || []).filter((lead: any) => lead.status === 'qualified').length;
-      const convertedLeads = (leads || []).filter((lead: any) => lead.status === 'enrolled').length;
+      // Fix case sensitivity for status filtering to match actual database values
+      const hotLeads = uniqueLeads.filter((lead: any) => 
+        ['Hot', 'hot'].includes(lead.status)
+      ).length;
+      
+      const qualifiedLeads = uniqueLeads.filter((lead: any) => 
+        ['Qualified', 'qualified', 'Warm', 'warm', 'Follow Up', 'follow_up'].includes(lead.status)
+      ).length;
+      
+      const convertedLeads = uniqueLeads.filter((lead: any) => 
+        ['Enrolled', 'enrolled'].includes(lead.status)
+      ).length;
       
       const conversionRate = totalLeads > 0 ? (convertedLeads / totalLeads) * 100 : 0;
 
@@ -151,18 +167,23 @@ const CRMPipeline: React.FC = () => {
         monthlyGrowth: 0 // Calculate from historical data when available
       };
 
-      // Generate recent activities from leads
-      const recentActivities: LeadActivity[] = (leads || [])
+      // Generate recent activities from unique leads with proper deduplication
+      const recentActivities: LeadActivity[] = uniqueLeads
+        .filter((lead: any) => lead.id && (lead.fullName || lead.name)) // Only leads with valid ID and name
         .sort((a: any, b: any) => new Date(b.lastContact || b.last_contact || b.updatedAt || b.updated_at || b.createdAt || b.created_at).getTime() - new Date(a.lastContact || a.last_contact || a.updatedAt || a.updated_at || a.createdAt || a.created_at).getTime())
         .slice(0, 5)
         .map((lead: any, index: number) => ({
-          id: lead.id || `activity-${index}`,
+          id: `activity-${lead.id}-${index}`, // Ensure unique activity IDs
           leadName: lead.fullName || lead.name || 'Unknown Lead',
           activity: getActivityMessage(lead.status),
           timestamp: getRelativeTime(lead.lastContact || lead.last_contact || lead.updatedAt || lead.updated_at || lead.createdAt || lead.created_at),
           status: lead.status || 'fresh',
           counselor: lead.assignedTo || lead.assignedCounselor || lead.assigned_to || 'Unassigned'
-        }));
+        }))
+        // Remove any potential duplicates based on lead name and activity
+        .filter((activity: LeadActivity, index: number, self: LeadActivity[]) => 
+          index === self.findIndex((a: LeadActivity) => a.leadName === activity.leadName && a.activity === activity.activity)
+        );
 
       setPipelineStats(realStats);
       setRecentActivities(recentActivities);

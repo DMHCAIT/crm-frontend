@@ -11,13 +11,24 @@ import {
   Clock, 
   AlertCircle,
   User,
-  UserPlus
+  UserPlus,
+  X,
+  Mail,
+  Phone,
+  MapPin,
+  Building,
+  Award,
+  DollarSign,
+  Activity
 } from 'lucide-react';
 
 const StudentsManagement: React.FC = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('all');
   const [students, setStudents] = useState<any[]>([]);
+  const [selectedStudent, setSelectedStudent] = useState<any>(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [originalLeadData, setOriginalLeadData] = useState<any>(null);
   const currentUser = user?.name || 'Unknown User';
   const currentUserRole = user?.role || 'team_leader';
 
@@ -50,7 +61,7 @@ const StudentsManagement: React.FC = () => {
           feeStatus: student.fee_status || 'pending',
           documents: student.documents_status || 'incomplete',
           nextPayment: student.next_payment_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          amount: student.fee_amount || '₹0',
+          amount: student.fee_amount || (student.company === 'IBMP' ? '$0' : '₹0'),
           source: 'student_db'
         })) : [];
 
@@ -61,6 +72,7 @@ const StudentsManagement: React.FC = () => {
           .filter((lead: any) => lead.status === 'Enrolled')
           .map((lead: any) => ({
             id: `lead-${lead.id}`,
+            originalLeadId: lead.id,
             name: lead.fullName || lead.name || 'Unknown Student',
             email: lead.email || '',
             phone: lead.phone || '',
@@ -71,12 +83,23 @@ const StudentsManagement: React.FC = () => {
             feeStatus: lead.fees ? 'paid' : 'pending',
             documents: 'incomplete', // Default for new enrollments
             nextPayment: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            amount: lead.fees ? `₹${lead.fees.toLocaleString()}` : '₹0',
+            amount: lead.fees ? 
+              (lead.company === 'IBMP' ? `$${lead.fees.toLocaleString()}` : `₹${lead.fees.toLocaleString()}`) : 
+              (lead.company === 'IBMP' ? '$0' : '₹0'),
             assignedTo: lead.assignedTo || '',
             qualification: lead.qualification || '',
             country: lead.country || '',
             branch: lead.branch || '',
-            source: 'crm_lead'
+            company: lead.company || '',
+            source: 'crm_lead',
+            // Additional lead details for profile view
+            originalLead: lead,
+            salesperson: lead.assignedTo || lead.assignedCounselor || lead.assigned_to || 'Unknown',
+            leadSource: lead.source || 'Unknown',
+            createdAt: lead.createdAt || lead.created_at,
+            notes: lead.notes || '',
+            followUp: lead.followUp || lead.follow_up,
+            lastContact: lead.lastContact || lead.last_contact
           })) : [];
 
       // Combine both data sources
@@ -160,6 +183,42 @@ const StudentsManagement: React.FC = () => {
     if (activeTab === 'pending-docs') return accessibleStudents.filter(s => s.documents === 'incomplete');
     if (activeTab === 'fee-pending') return accessibleStudents.filter(s => s.feeStatus !== 'paid');
     return accessibleStudents;
+  };
+
+  const handleViewProfile = async (student: any) => {
+    setSelectedStudent(student);
+    
+    // If this is a converted lead, get the original lead data for more details
+    if (student.originalLeadId) {
+      try {
+        const apiClient = getApiClient();
+        const leadData: any = await apiClient.getLeads();
+        const leadsArray = leadData?.leads || leadData || [];
+        const originalLead = leadsArray.find((lead: any) => lead.id === student.originalLeadId);
+        setOriginalLeadData(originalLead);
+      } catch (error) {
+        console.error('Error loading original lead data:', error);
+        setOriginalLeadData(null);
+      }
+    } else {
+      setOriginalLeadData(null);
+    }
+    
+    setShowProfileModal(true);
+  };
+
+  const closeProfileModal = () => {
+    setShowProfileModal(false);
+    setSelectedStudent(null);
+    setOriginalLeadData(null);
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   };
 
   return (
@@ -318,7 +377,10 @@ const StudentsManagement: React.FC = () => {
 
               {/* Actions */}
               <div className="grid grid-cols-2 gap-2 pt-2">
-                <button className="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
+                <button 
+                  onClick={() => handleViewProfile(student)}
+                  className="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
+                >
                   View Profile
                 </button>
                 <button className="px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors">
@@ -361,6 +423,213 @@ const StudentsManagement: React.FC = () => {
           <p className="text-sm text-gray-500">Fee Overdue</p>
         </div>
       </div>
+
+      {/* Student Profile Modal */}
+      {showProfileModal && selectedStudent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="bg-white bg-opacity-20 p-2 rounded-lg">
+                  <GraduationCap className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold">Student Profile</h3>
+                  <p className="text-blue-100 text-sm">Enrolled Student Details & Lead History</p>
+                </div>
+              </div>
+              <button
+                onClick={closeProfileModal}
+                className="text-blue-100 hover:text-white transition-colors p-1 rounded-lg hover:bg-white hover:bg-opacity-20"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 space-y-6">
+              {/* Student Basic Info */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
+                  <User className="w-5 h-5 mr-2 text-blue-600" />
+                  Student Information
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <p className="text-gray-900">{selectedStudent.name}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <p className="text-gray-900 flex items-center">
+                      <Mail className="w-4 h-4 mr-1 text-gray-500" />
+                      {selectedStudent.email}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                    <p className="text-gray-900 flex items-center">
+                      <Phone className="w-4 h-4 mr-1 text-gray-500" />
+                      {selectedStudent.phone}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                    <p className="text-gray-900 flex items-center">
+                      <MapPin className="w-4 h-4 mr-1 text-gray-500" />
+                      {selectedStudent.country || 'Not specified'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Academic Information */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
+                  <Award className="w-5 h-5 mr-2 text-green-600" />
+                  Academic Details
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Course Enrolled</label>
+                    <p className="text-gray-900">{selectedStudent.course}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Academic Year</label>
+                    <p className="text-gray-900">{selectedStudent.year}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Qualification</label>
+                    <p className="text-gray-900">{selectedStudent.qualification || 'Not specified'}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                    <p className="text-gray-900 flex items-center">
+                      <Building className="w-4 h-4 mr-1 text-gray-500" />
+                      {selectedStudent.company ? 
+                        (selectedStudent.company === 'DMHCA' ? '🏥 DMHCA' : '🎓 IBMP') : 
+                        'Not specified'
+                      }
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Enrollment & Financial Details */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
+                  <DollarSign className="w-5 h-5 mr-2 text-purple-600" />
+                  Enrollment & Financial Information
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Enrollment Date</label>
+                    <p className="text-gray-900 flex items-center">
+                      <Calendar className="w-4 h-4 mr-1 text-gray-500" />
+                      {formatDate(selectedStudent.enrollmentDate)}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Fee Status</label>
+                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                      selectedStudent.feeStatus === 'paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {selectedStudent.feeStatus === 'paid' ? '✅ Paid' : '⏰ Pending'}
+                    </span>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Course Fee</label>
+                    <p className="text-gray-900 font-medium">{selectedStudent.amount}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Documents Status</label>
+                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                      selectedStudent.documents === 'complete' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {selectedStudent.documents === 'complete' ? '✅ Complete' : '📄 Incomplete'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sales & Lead Information */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
+                  <Activity className="w-5 h-5 mr-2 text-orange-600" />
+                  Sales & Lead History
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">🎯 Sale Completed By</label>
+                    <p className="text-gray-900 font-medium text-green-700">
+                      {selectedStudent.salesperson || selectedStudent.assignedTo || 'Unknown'}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Lead Source</label>
+                    <p className="text-gray-900">{selectedStudent.leadSource || 'Unknown'}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Lead Created</label>
+                    <p className="text-gray-900">
+                      {selectedStudent.createdAt ? formatDate(selectedStudent.createdAt) : 'Not available'}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Last Contact</label>
+                    <p className="text-gray-900">
+                      {selectedStudent.lastContact ? formatDate(selectedStudent.lastContact) : 'Not available'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Lead Notes */}
+              {selectedStudent.notes && (
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 text-lg mb-3">Lead Notes</h4>
+                  <p className="text-gray-700 whitespace-pre-wrap">{selectedStudent.notes}</p>
+                </div>
+              )}
+
+              {/* Original Lead Data (if available) */}
+              {originalLeadData && (
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 text-lg mb-3">Complete Lead Journey</h4>
+                  <div className="text-sm text-gray-600">
+                    <p><strong>Original Lead ID:</strong> #{originalLeadData.id}</p>
+                    <p><strong>Lead Progress:</strong> {originalLeadData.source} → {originalLeadData.status} → Enrolled</p>
+                    <p><strong>Total Journey Time:</strong> {
+                      selectedStudent.createdAt && selectedStudent.enrollmentDate ? 
+                      Math.ceil((new Date(selectedStudent.enrollmentDate).getTime() - new Date(selectedStudent.createdAt).getTime()) / (1000 * 60 * 60 * 24)) + ' days' :
+                      'Unknown'
+                    }</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
+                <button className="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors flex items-center space-x-2">
+                  <Phone className="w-4 h-4" />
+                  <span>Call Student</span>
+                </button>
+                <button className="px-4 py-2 text-green-600 border border-green-600 rounded-lg hover:bg-green-50 transition-colors flex items-center space-x-2">
+                  <Mail className="w-4 h-4" />
+                  <span>Send Email</span>
+                </button>
+                <button
+                  onClick={closeProfileModal}
+                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

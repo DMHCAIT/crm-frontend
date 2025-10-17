@@ -18,7 +18,11 @@ import {
   Zap,
   ChevronDown,
   ChevronUp,
-  BarChart3
+  BarChart3,
+  X,
+  Calendar,
+  MapPin,
+  Building
 } from 'lucide-react';
 
 interface Lead {
@@ -50,11 +54,17 @@ const LeadsMonitoring: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
-
   const [filterSource, setFilterSource] = useState('all');
+  const [filterCourse, setFilterCourse] = useState('all');
+  const [filterCompany, setFilterCompany] = useState('all');
+  const [filterAssignee, setFilterAssignee] = useState('all');
+  const [dateRange, setDateRange] = useState('all');
+  const [scoreRange, setScoreRange] = useState('all');
   const [sortBy, setSortBy] = useState('score');
   const [sortOrder, setSortOrder] = useState('desc');
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [showLeadDetail, setShowLeadDetail] = useState(false);
 
   // Monitoring stats
   const [monitoringStats, setMonitoringStats] = useState({
@@ -72,7 +82,7 @@ const LeadsMonitoring: React.FC = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [leads, searchQuery, filterStatus, filterSource, sortBy, sortOrder]);
+  }, [leads, searchQuery, filterStatus, filterSource, filterCourse, filterCompany, filterAssignee, dateRange, scoreRange, sortBy, sortOrder]);
 
   const loadLeads = async () => {
     try {
@@ -126,11 +136,15 @@ const LeadsMonitoring: React.FC = () => {
           formattedLeads.reduce((sum, lead) => sum + (lead.score || 0), 0) / formattedLeads.length : 0,
         overdueTasks: formattedLeads.filter(lead => {
           if (!lead.nextFollowUp) return false;
-          return new Date(lead.nextFollowUp) < new Date();
+          const followUpDate = new Date(lead.nextFollowUp);
+          const now = new Date();
+          return followUpDate < now && !['Enrolled', 'enrolled', 'Not Interested', 'not_interested'].includes(lead.status);
         }).length,
-        hotLeads: formattedLeads.filter(lead => lead.status === 'hot').length,
+        hotLeads: formattedLeads.filter(lead => 
+          ['Hot', 'hot'].includes(lead.status)
+        ).length,
         recentConversions: formattedLeads.filter(lead => {
-          if (lead.status !== 'enrolled') return false;
+          if (!['Enrolled', 'enrolled'].includes(lead.status)) return false;
           const daysDiff = (Date.now() - new Date(lead.createdAt).getTime()) / (1000 * 60 * 60 * 24);
           return daysDiff <= 7;
         }).length
@@ -165,11 +179,48 @@ const LeadsMonitoring: React.FC = () => {
       filtered = filtered.filter(lead => lead.status === filterStatus);
     }
 
-
-
     // Apply source filter
     if (filterSource !== 'all') {
       filtered = filtered.filter(lead => lead.source === filterSource);
+    }
+
+    // Apply course filter
+    if (filterCourse !== 'all') {
+      filtered = filtered.filter(lead => lead.course === filterCourse);
+    }
+
+    // Apply company filter
+    if (filterCompany !== 'all') {
+      filtered = filtered.filter(lead => (lead as any).company === filterCompany);
+    }
+
+    // Apply assignee filter
+    if (filterAssignee !== 'all') {
+      filtered = filtered.filter(lead => lead.assignedCounselor === filterAssignee);
+    }
+
+    // Apply date range filter
+    if (dateRange !== 'all') {
+      const now = new Date();
+      const daysDiff = dateRange === 'today' ? 1 : 
+                      dateRange === 'week' ? 7 : 
+                      dateRange === 'month' ? 30 : 0;
+      
+      if (daysDiff > 0) {
+        const cutoffDate = new Date(now.getTime() - daysDiff * 24 * 60 * 60 * 1000);
+        filtered = filtered.filter(lead => new Date(lead.createdAt) >= cutoffDate);
+      }
+    }
+
+    // Apply score range filter
+    if (scoreRange !== 'all') {
+      if (scoreRange === 'high') {
+        filtered = filtered.filter(lead => (lead.score || 0) >= 80);
+      } else if (scoreRange === 'medium') {
+        filtered = filtered.filter(lead => (lead.score || 0) >= 60 && (lead.score || 0) < 80);
+      } else if (scoreRange === 'low') {
+        filtered = filtered.filter(lead => (lead.score || 0) < 60);
+      }
     }
 
     // Apply sorting
@@ -211,7 +262,10 @@ const LeadsMonitoring: React.FC = () => {
 
 
   const isOverdue = (nextFollowUp: string) => {
-    return new Date(nextFollowUp) < new Date();
+    if (!nextFollowUp) return false;
+    const followUpDate = new Date(nextFollowUp);
+    const now = new Date();
+    return followUpDate < now;
   };
 
   const formatDate = (dateString: string) => {
@@ -221,6 +275,16 @@ const LeadsMonitoring: React.FC = () => {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const handleLeadClick = (lead: Lead) => {
+    setSelectedLead(lead);
+    setShowLeadDetail(true);
+  };
+
+  const closeLeadDetail = () => {
+    setShowLeadDetail(false);
+    setSelectedLead(null);
   };
 
   if (loading) {
@@ -362,7 +426,7 @@ const LeadsMonitoring: React.FC = () => {
         </div>
 
         {showFilters && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-gray-200">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-gray-200">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
               <select
@@ -388,11 +452,109 @@ const LeadsMonitoring: React.FC = () => {
               >
                 <option value="all">All Sources</option>
                 <option value="Website">Website</option>
-                <option value="Facebook Ads">Facebook Ads</option>
+                <option value="Facebook">Facebook</option>
                 <option value="Google Ads">Google Ads</option>
                 <option value="Education Fair">Education Fair</option>
                 <option value="Referral">Referral</option>
+                <option value="WhatsApp">WhatsApp</option>
+                <option value="Social Media">Social Media</option>
               </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Course</label>
+              <select
+                value={filterCourse}
+                onChange={(e) => setFilterCourse(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="all">All Courses</option>
+                <option value="MBBS">MBBS</option>
+                <option value="BDS">BDS</option>
+                <option value="BAMS">BAMS</option>
+                <option value="BHMS">BHMS</option>
+                <option value="BUMS">BUMS</option>
+                <option value="B.Sc Nursing">B.Sc Nursing</option>
+                <option value="Paramedical">Paramedical</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
+              <select
+                value={filterCompany}
+                onChange={(e) => setFilterCompany(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="all">All Companies</option>
+                <option value="DMHCA">🏥 DMHCA</option>
+                <option value="IBMP">🎓 IBMP</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+              <select
+                value={dateRange}
+                onChange={(e) => setDateRange(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Score Range</label>
+              <select
+                value={scoreRange}
+                onChange={(e) => setScoreRange(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="all">All Scores</option>
+                <option value="high">High (80+)</option>
+                <option value="medium">Medium (60-79)</option>
+                <option value="low">Low (&lt;60)</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
+              <select
+                value={filterAssignee}
+                onChange={(e) => setFilterAssignee(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="all">All Assignees</option>
+                <option value="Unassigned">Unassigned</option>
+                {/* Dynamically populated from unique assignees */}
+                {Array.from(new Set(leads.map(lead => lead.assignedCounselor)))
+                  .filter(assignee => assignee && assignee !== 'Unassigned')
+                  .map(assignee => (
+                    <option key={assignee} value={assignee}>{assignee}</option>
+                  ))
+                }
+              </select>
+            </div>
+
+            <div className="flex items-end">
+              <button
+                onClick={() => {
+                  setFilterStatus('all');
+                  setFilterSource('all');
+                  setFilterCourse('all');
+                  setFilterCompany('all');
+                  setFilterAssignee('all');
+                  setDateRange('all');
+                  setScoreRange('all');
+                  setSearchQuery('');
+                }}
+                className="w-full px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Clear All Filters
+              </button>
             </div>
           </div>
         )}
@@ -429,7 +591,11 @@ const LeadsMonitoring: React.FC = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredLeads.map((lead) => (
-                <tr key={lead.id} className="hover:bg-gray-50">
+                <tr 
+                  key={lead.id} 
+                  className="hover:bg-gray-50 cursor-pointer transition-colors"
+                  onClick={() => handleLeadClick(lead)}
+                >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0">
@@ -500,6 +666,184 @@ const LeadsMonitoring: React.FC = () => {
           <p className="mt-1 text-sm text-gray-500">
             Try adjusting your search criteria or filters.
           </p>
+        </div>
+      )}
+
+      {/* Lead Detail Modal */}
+      {showLeadDetail && selectedLead && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="bg-white bg-opacity-20 p-2 rounded-lg">
+                  <User className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold">Lead Details</h3>
+                  <p className="text-blue-100 text-sm">ID: #{selectedLead.id}</p>
+                </div>
+              </div>
+              <button
+                onClick={closeLeadDetail}
+                className="text-blue-100 hover:text-white transition-colors p-1 rounded-lg hover:bg-white hover:bg-opacity-20"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 space-y-6">
+              {/* Primary Info */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
+                  <User className="w-5 h-5 mr-2 text-blue-600" />
+                  Contact Information
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <p className="text-gray-900">{selectedLead.name}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <p className="text-gray-900">{selectedLead.email}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                    <p className="text-gray-900">{selectedLead.phone}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                    <p className="text-gray-900 flex items-center">
+                      <MapPin className="w-4 h-4 mr-1 text-gray-500" />
+                      {selectedLead.location}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Academic & Professional Info */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
+                  <Building className="w-5 h-5 mr-2 text-green-600" />
+                  Academic & Professional
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Course Interest</label>
+                    <p className="text-gray-900">{selectedLead.course}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Experience</label>
+                    <p className="text-gray-900">{selectedLead.experience}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Source</label>
+                    <p className="text-gray-900">{selectedLead.source}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                    <p className="text-gray-900">
+                      {(selectedLead as any).company ? 
+                        ((selectedLead as any).company === 'DMHCA' ? '🏥 DMHCA' : '🎓 IBMP') : 
+                        'Not specified'
+                      }
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status & Assignment */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
+                  <Activity className="w-5 h-5 mr-2 text-purple-600" />
+                  Status & Assignment
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-full border ${getStatusColor(selectedLead.status)}`}>
+                      {selectedLead.status.replace('_', ' ')}
+                    </span>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Lead Score</label>
+                    <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getScoreColor(selectedLead.score || 0)}`}>
+                      {selectedLead.score || 0}/100
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Assigned Counselor</label>
+                    <p className="text-gray-900">{selectedLead.assignedCounselor}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Created By</label>
+                    <p className="text-gray-900">{selectedLead.createdBy}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Timeline */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
+                  <Calendar className="w-5 h-5 mr-2 text-indigo-600" />
+                  Timeline
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Created</label>
+                    <p className="text-gray-900">{formatDate(selectedLead.createdAt)}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Last Contact</label>
+                    <p className="text-gray-900">
+                      {selectedLead.lastContact ? formatDate(selectedLead.lastContact) : 'Never'}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Next Follow-up</label>
+                    <p className={`${selectedLead.nextFollowUp && isOverdue(selectedLead.nextFollowUp) ? 'text-red-600 font-medium' : 'text-gray-900'}`}>
+                      {selectedLead.nextFollowUp ? formatDate(selectedLead.nextFollowUp) : 'Not scheduled'}
+                      {selectedLead.nextFollowUp && isOverdue(selectedLead.nextFollowUp) && (
+                        <span className="block text-xs text-red-500">Overdue</span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notes */}
+              {selectedLead.notes && (
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 text-lg mb-3">Notes</h4>
+                  <p className="text-gray-700 whitespace-pre-wrap">{selectedLead.notes}</p>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
+                <button className="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors flex items-center space-x-2">
+                  <Phone className="w-4 h-4" />
+                  <span>Call</span>
+                </button>
+                <button className="px-4 py-2 text-green-600 border border-green-600 rounded-lg hover:bg-green-50 transition-colors flex items-center space-x-2">
+                  <Mail className="w-4 h-4" />
+                  <span>Email</span>
+                </button>
+                <button className="px-4 py-2 text-purple-600 border border-purple-600 rounded-lg hover:bg-purple-50 transition-colors flex items-center space-x-2">
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Message</span>
+                </button>
+                <button
+                  onClick={closeLeadDetail}
+                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
