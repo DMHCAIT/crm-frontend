@@ -61,6 +61,7 @@ interface Note {
   content: string;
   timestamp: string;
   author: string;
+  note_type?: string; // Optional field added by backend
 }
 
 interface LeadStats {
@@ -220,7 +221,12 @@ const LeadsManagement: React.FC = () => {
             monthAgo.setMonth(monthAgo.getMonth() - 1);
             return leadDate >= monthAgo;
           case 'updated_today':
-            return leadsUpdatedToday.includes(lead.id);
+            // Check if lead was updated today using actual updatedAt field
+            const leadUpdatedToday = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
+            const updatedTodayDateOnly = new Date(leadUpdatedToday.getFullYear(), leadUpdatedToday.getMonth(), leadUpdatedToday.getDate());
+            const isTodayFromDB = updatedTodayDateOnly.getTime() === today.getTime();
+            const isInLocalTracking = leadsUpdatedToday.includes(lead.id);
+            return isTodayFromDB || isInLocalTracking;
           case 'custom':
             if (dateFrom && dateTo) {
               const fromDate = new Date(dateFrom);
@@ -900,7 +906,16 @@ const LeadsManagement: React.FC = () => {
 
   // Get leads updated today count
   const getLeadsUpdatedTodayCount = () => {
-    return leadsUpdatedToday.length;
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    return (leads || []).filter(lead => {
+      const leadUpdated = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
+      const updatedDateOnly = new Date(leadUpdated.getFullYear(), leadUpdated.getMonth(), leadUpdated.getDate());
+      const isTodayFromDB = updatedDateOnly.getTime() === today.getTime();
+      const isInLocalTracking = leadsUpdatedToday.includes(lead.id);
+      return isTodayFromDB || isInLocalTracking;
+    }).length;
   };
 
   return (
@@ -2047,6 +2062,44 @@ const LeadsManagement: React.FC = () => {
                       </div>
                     )}
 
+                    {/* Lead Timeline & Tracking */}
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
+                        <Clock className="w-5 h-5 mr-2 text-blue-600" />
+                        Lead Activity Timeline
+                      </h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-600">Created:</span>
+                          <span className="text-gray-900 font-medium">
+                            {selectedLead.createdAt ? new Date(selectedLead.createdAt).toLocaleString() : 'Unknown'}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-600">Last Updated:</span>
+                          <span className="text-gray-900 font-medium">
+                            {selectedLead.updatedAt ? new Date(selectedLead.updatedAt).toLocaleString() : 'Unknown'}
+                          </span>
+                        </div>
+                        {selectedLead.updatedAt !== selectedLead.createdAt && (
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-600">Time Since Update:</span>
+                            <span className="text-blue-600 font-medium">
+                              {(() => {
+                                if (!selectedLead.updatedAt) return 'Unknown';
+                                const diffMs = new Date().getTime() - new Date(selectedLead.updatedAt).getTime();
+                                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                                const diffDays = Math.floor(diffHours / 24);
+                                if (diffDays > 0) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+                                if (diffHours > 0) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+                                return 'Less than 1 hour ago';
+                              })()}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
                     {/* Notes Section */}
                     <div className="bg-gray-50 rounded-lg p-4">
                       <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
@@ -2054,16 +2107,26 @@ const LeadsManagement: React.FC = () => {
                         Notes & Communication
                       </h4>
                       <div className="space-y-3 max-h-60 overflow-y-auto">
-                        {selectedLead.notes.map((note) => (
-                          <div key={note.id} className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
-                            <p className="text-sm text-gray-900 mb-2">{note.content}</p>
+                        {(selectedLead.notes || []).filter(note => note && typeof note === 'object').map((note, index) => (
+                          <div key={note.id || `note-${index}`} className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                            <p className="text-sm text-gray-900 mb-2">
+                              {typeof note.content === 'string' ? note.content : 
+                               typeof note.content === 'object' ? JSON.stringify(note.content) : 
+                               String(note.content || 'No content')}
+                            </p>
                             <div className="flex items-center justify-between text-xs text-gray-500">
-                              <span className="font-medium">{note.author}</span>
-                              <span>{new Date(note.timestamp).toLocaleString()}</span>
+                              <span className="font-medium">
+                                {typeof note.author === 'string' ? note.author : 
+                                 typeof note.author === 'object' ? JSON.stringify(note.author) : 
+                                 String(note.author || 'Unknown')}
+                              </span>
+                              <span>
+                                {note.timestamp ? new Date(note.timestamp).toLocaleString() : 'No date'}
+                              </span>
                             </div>
                           </div>
                         ))}
-                        {selectedLead.notes.length === 0 && (
+                        {(!selectedLead.notes || selectedLead.notes.length === 0) && (
                           <p className="text-gray-500 text-sm italic">No notes added yet</p>
                         )}
                       </div>
