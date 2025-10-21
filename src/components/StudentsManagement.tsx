@@ -562,7 +562,7 @@ const StudentsManagement: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">🎯 Sale Completed By</label>
-                    <p className="text-gray-900 font-medium text-green-700">
+                    <p className="text-green-700 font-medium">
                       {selectedStudent.salesperson || selectedStudent.assignedTo || 'Unknown'}
                     </p>
                   </div>

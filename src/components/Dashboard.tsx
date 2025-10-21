@@ -5,7 +5,6 @@ import {
   TrendingUp, 
   Users, 
   GraduationCap, 
-  DollarSign, 
   MessageSquare,
   UserPlus,
   Target,

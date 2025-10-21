@@ -1635,7 +1635,6 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
   onClose,
   userData,
   onTransferLead,
-  users,
   roleHierarchy
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'subordinates' | 'leads'>('overview');
