@@ -357,25 +357,25 @@ class ProductionApiClient {
 
   // Users API - New endpoints
   async getUsers() {
-    return this.request('/users');
+    return this.request('/users-supabase');
   }
 
   async createUser(userData: any) {
-    return this.request('/users', {
+    return this.request('/users-supabase', {
       method: 'POST',
       body: JSON.stringify(userData)
     });
   }
 
   async updateUser(id: string, userData: any) {
-    return this.request(`/users?id=${id}`, {
+    return this.request(`/users-supabase?id=${id}`, {
       method: 'PUT',
       body: JSON.stringify(userData)
     });
   }
 
   async deleteUser(id: string) {
-    return this.request(`/users?id=${id}`, {
+    return this.request(`/users-supabase?id=${id}`, {
       method: 'DELETE'
     });
   }
