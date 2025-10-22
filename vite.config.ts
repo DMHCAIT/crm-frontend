@@ -4,12 +4,15 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  mode: 'production',
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
   build: {
     outDir: 'dist',
     sourcemap: false,
+    minify: 'terser',
+    target: 'esnext',
     rollupOptions: {
       output: {
         manualChunks: {
@@ -19,6 +22,14 @@ export default defineConfig({
         }
       }
     }
+  },
+  define: {
+    'process.env.NODE_ENV': '"production"',
+    __DEV__: false
+  },
+  esbuild: {
+    drop: ['console', 'debugger'],
+    legalComments: 'none'
   },
   server: {
     port: 5173,
