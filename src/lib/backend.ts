@@ -420,16 +420,24 @@ class ProductionApiClient {
   }
 
   async bulkDeleteLeads(leadIds: string[]) {
-    return this.request('/api/leads', {
-      method: 'POST',
-      body: JSON.stringify({
-        operation: 'bulk_delete',
-        leadIds,
-        updatedBy: localStorage.getItem('crm_user_data') ? 
-          JSON.parse(localStorage.getItem('crm_user_data') || '{}').id : 
-          'system'
-      })
-    });
+    try {
+      return this.request('/api/leads', {
+        method: 'POST',
+        body: JSON.stringify({
+          operation: 'bulk_delete',
+          leadIds,
+          updatedBy: localStorage.getItem('crm_user_data') ? 
+            JSON.parse(localStorage.getItem('crm_user_data') || '{}').id : 
+            'system'
+        })
+      });
+    } catch (error) {
+      // Handle 404 errors gracefully during backend deployment
+      if (error instanceof Error && error.message.includes('404')) {
+        throw new Error('Delete functionality is temporarily unavailable. The backend is being updated. Please try again in a few minutes.');
+      }
+      throw error;
+    }
   }
 
   // Students API - New endpoints
