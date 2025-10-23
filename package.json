@@ -5,15 +5,13 @@
   "type": "module",
   "description": "DMHCA CRM Frontend with Production Authentication - AUTH FIX v1.1.1",
   "scripts": {
+    "dev": "vite",
     "build": "vite build --mode production",
     "preview": "vite preview --mode production",
     "lint": "eslint .",
-    "postinstall": "npm rebuild rollup",
     "env-check": "echo \"✅ Production mode - .env file found\" && echo \"Environment variables ready for production deployment\"",
     "start": "npm run build && npm run preview",
-    "serve": "npm run build && npm run preview",
-    "deploy": "npm run build && npx vercel",
-    "deploy-production": "npm run build && npx vercel --prod"
+    "serve": "npm run build && npm run preview"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.55.0",
@@ -25,12 +23,13 @@
     "postcss": "^8.4.35",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "rollup": "^4.21.3",
     "tailwindcss": "^3.4.1",
     "vite": "^5.4.2"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.21.3"
+    "@rollup/rollup-darwin-arm64": "^4.21.3",
+    "@rollup/rollup-linux-x64-gnu": "^4.21.3",
+    "@rollup/rollup-win32-x64-msvc": "^4.21.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
