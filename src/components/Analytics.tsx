@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart3, TrendingUp, Users, DollarSign, Calendar, Filter, Download, RefreshCw } from 'lucide-react';
+import { BarChart3, TrendingUp, Users, DollarSign, RefreshCw } from 'lucide-react';
 
 interface Lead {
   id: string;
@@ -45,17 +45,6 @@ const Analytics: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState('30');
   const [companyFilter, setCompanyFilter] = useState('all');
-
-  // Currency utilities
-  const getCurrencyByCompany = (company: string): string => {
-    return company?.toLowerCase() === 'ibmp' ? 'USD' : 'INR';
-  };
-
-  const formatCurrency = (amount: number, company: string): string => {
-    const currency = getCurrencyByCompany(company);
-    const symbol = currency === 'USD' ? '$' : '₹';
-    return `${symbol}${amount.toLocaleString()}`;
-  };
 
   // Process lead source data from real leads
   const processLeadSourceData = (leads: Lead[]): LeadSourceData[] => {
