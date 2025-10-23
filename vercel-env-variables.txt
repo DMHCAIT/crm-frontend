@@ -1,0 +1,20 @@
+# Environment variables for Vercel production deployment
+# Add these in your Vercel Dashboard under Settings > Environment Variables
+
+VITE_API_BASE_URL=https://crm-backend-fh34.onrender.com
+VITE_API_BACKEND_URL=https://crm-backend-fh34.onrender.com/api
+VITE_SUPABASE_URL=https://cyzbdpsfquetmftlaswk.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5emJkcHNmcXVldG1mdGxhc3drIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ4NzY1NjYsImV4cCI6MjA1MDQ1MjU2Nn0.PdZJZu7YJ4m2YP4kDovCCz6hWnzOZSDC16q1ZBPuK3M
+VITE_DEBUG_MODE=false
+VITE_ENABLE_REAL_TIME=true
+VITE_ENABLE_NOTIFICATIONS=true
+VITE_DEVELOPMENT_MODE=false
+VITE_LOCAL_TESTING=false
+
+# Instructions:
+# 1. Go to your Vercel project dashboard
+# 2. Click Settings > Environment Variables
+# 3. Add each variable above with its value
+# 4. Set Environment to "Production"
+# 5. Click Save
+# 6. Redeploy your project

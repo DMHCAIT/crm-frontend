@@ -5,6 +5,7 @@ import AuthWrapper from './components/AuthWrapper';
 import { useAuth } from './hooks/useAuth';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
+import ConnectionStatus from './components/ConnectionStatus';
 import Dashboard from './components/Dashboard';
 import CRMPipeline from './components/CRMPipeline';
 import LeadsManagement from './components/LeadsManagement';
@@ -156,6 +157,11 @@ const App: React.FC = () => {
             {/* Main Content */}
             <div className="flex-1 flex flex-col overflow-hidden">
               <Header />
+              
+              {/* Connection Status */}
+              <div className="px-6 py-2">
+                <ConnectionStatus className="w-full" />
+              </div>
               
               {/* Page Content */}
               <main className="flex-1 overflow-y-auto">

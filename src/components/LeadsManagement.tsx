@@ -1691,12 +1691,14 @@ const LeadsManagement: React.FC = () => {
     
     if (window.confirm(`Are you sure you want to delete ${selectedLeads.length} lead(s)? This action cannot be undone.`)) {
       try {
+        console.log('🗑️ Starting bulk delete for lead IDs:', selectedLeads);
         const apiClient = getApiClient();
         
         // Use the proper API client method for bulk deletion
         const result = await apiClient.bulkDeleteLeads(selectedLeads) as any;
+        console.log('🗑️ Bulk delete API response:', result);
 
-        if (result.success) {
+        if (result && (result.success || result.deletedCount >= 0)) {
           // Update local state only after successful deletion
           setLeads((prev: Lead[]) => prev.filter((lead: Lead) => !selectedLeads.includes(lead.id)));
           setSelectedLeads([]);
@@ -1708,17 +1710,22 @@ const LeadsManagement: React.FC = () => {
           }
 
           // Show success message
-          alert(`${result.deletedCount || selectedLeads.length} lead(s) deleted successfully`);
+          const deletedCount = result.deletedCount || selectedLeads.length;
+          alert(`${deletedCount} lead(s) deleted successfully`);
+          notify.success('Leads Deleted', `${deletedCount} leads deleted successfully`);
           
           // Refresh leads list to ensure consistency
           loadLeads();
         } else {
-          console.error('Delete failed:', result);
-          alert(`Failed to delete leads: ${result.error || 'Unknown error'}`);
+          console.error('❌ Delete failed:', result);
+          alert(`Failed to delete leads: ${result?.error || result?.message || 'Unknown error'}`);
+          notify.error('Delete Failed', `Failed to delete leads: ${result?.error || 'Unknown error'}`);
         }
       } catch (error) {
-        console.error('Delete error:', error);
-        alert(`Failed to delete leads: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        console.error('❌ Delete error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        alert(`Failed to delete leads: ${errorMessage}`);
+        notify.error('Delete Failed', `Failed to delete leads: ${errorMessage}`);
       }
     }
   };
@@ -1727,10 +1734,12 @@ const LeadsManagement: React.FC = () => {
   const handleIndividualDelete = async (leadId: string) => {
     if (window.confirm('Are you sure you want to delete this lead? This action cannot be undone.')) {
       try {
+        console.log('🗑️ Starting individual delete for lead ID:', leadId);
         const apiClient = getApiClient();
         const result = await apiClient.bulkDeleteLeads([leadId]) as any;
+        console.log('🗑️ Individual delete API response:', result);
 
-        if (result.success) {
+        if (result && (result.success || result.deletedCount >= 0)) {
           // Update local state
           setLeads((prev: Lead[]) => prev.filter((lead: Lead) => lead.id !== leadId));
           
@@ -1744,14 +1753,18 @@ const LeadsManagement: React.FC = () => {
           setSelectedLeads(prev => prev.filter(id => id !== leadId));
 
           alert('Lead deleted successfully');
+          notify.success('Lead Deleted', 'Lead deleted successfully');
           loadLeads(); // Refresh to ensure consistency
         } else {
-          console.error('Delete failed:', result);
-          alert(`Failed to delete lead: ${result.error || 'Unknown error'}`);
+          console.error('❌ Delete failed:', result);
+          alert(`Failed to delete lead: ${result?.error || result?.message || 'Unknown error'}`);
+          notify.error('Delete Failed', `Failed to delete lead: ${result?.error || 'Unknown error'}`);
         }
       } catch (error) {
-        console.error('Delete error:', error);
-        alert(`Failed to delete lead: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        console.error('❌ Individual delete error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        alert(`Failed to delete lead: ${errorMessage}`);
+        notify.error('Delete Failed', `Failed to delete lead: ${errorMessage}`);
       }
     }
   };

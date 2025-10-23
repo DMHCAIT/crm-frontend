@@ -266,14 +266,34 @@ class ProductionApiClient {
     } catch (error) {
       clearTimeout(timeoutId);
       
-      // Handle AbortError specifically
-      if (error instanceof Error && error.name === 'AbortError') {
-        console.warn(`⚠️ Request aborted for ${endpoint}:`, 'Request was cancelled or timed out');
-        throw new Error(`Request timeout for ${endpoint}`);
+      // Handle different types of errors with user-friendly messages
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          console.warn(`⚠️ Request aborted for ${endpoint}:`, 'Request was cancelled or timed out');
+          throw new Error(`Connection timeout. Please check your internet connection and try again.`);
+        }
+        
+        // Network connection errors
+        if (error.message.includes('fetch') || error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
+          console.error(`🌐 Network error for ${endpoint}:`, error.message);
+          throw new Error(`Unable to connect to server. Please check your internet connection or try again later.`);
+        }
+        
+        // CORS errors
+        if (error.message.includes('CORS') || error.message.includes('cross-origin')) {
+          console.error(`🔒 CORS error for ${endpoint}:`, error.message);
+          throw new Error(`Server configuration issue. Please contact support.`);
+        }
       }
       
       console.error(`❌ API Request failed for ${endpoint}:`, error);
-      throw error;
+      
+      // Generic error with helpful message
+      if (error instanceof Error) {
+        throw new Error(`Connection failed: ${error.message}. Please try refreshing the page.`);
+      }
+      
+      throw new Error(`Unknown connection error. Please try again or contact support.`);
     }
   }
 
