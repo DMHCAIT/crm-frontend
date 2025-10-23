@@ -84,7 +84,7 @@ out
 # Nuxt.js build / generate output
 .nuxt
 
-# Gatsby files
+.vercel
 .cache/
 public
 

@@ -224,8 +224,18 @@ class ProductionApiClient {
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    // Use backendUrl which includes /api prefix for proper endpoint routing
-    const url = `${this.config.backendUrl}${endpoint}`;
+    // Normalize backendUrl and endpoint to avoid duplicated segments like `/api/api/...`
+    const rawBase = this.config.backendUrl || '';
+    // remove trailing slashes from base
+    const base = rawBase.replace(/\/+$/, '');
+    // ensure endpoint starts with a single '/'
+    let ep = endpoint || '';
+    if (!ep.startsWith('/')) ep = `/${ep}`;
+    // If both base already ends with '/api' and endpoint begins with '/api', drop the leading '/api' from endpoint
+    if (base.endsWith('/api') && ep.startsWith('/api')) {
+      ep = ep.replace(/^\/api/, '');
+    }
+    const url = `${base}${ep}`;
     
     const controller = new AbortController();
     const timeoutId = setTimeout(() => {
