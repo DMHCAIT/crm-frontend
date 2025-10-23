@@ -107,6 +107,21 @@ interface LeadStats {
   thisMonth: number;
 }
 
+interface UserActivityStats {
+  userId: string;
+  username: string;
+  role: string;
+  totalLeads: number;
+  updatedToday: number;
+  updatedThisWeek: number;
+  updatedThisMonth: number;
+  hotLeads: number;
+  warmLeads: number;
+  enrolledLeads: number;
+  totalRevenue: number;
+  estimatedRevenue: number;
+}
+
 // Currency Utility Functions
 const getCurrencyByCompany = (company: string): 'USD' | 'INR' => {
   const companyLower = company?.toLowerCase() || '';
@@ -187,12 +202,16 @@ const LeadsManagement: React.FC = () => {
   const [selectedTeamMember, setSelectedTeamMember] = useState<any | null>(null);
   const [teamMemberLeads, setTeamMemberLeads] = useState<Lead[]>([]);
   
-  // Popup notification states
-  const [showOverduePopup, setShowOverduePopup] = useState(false);
+  // Popup notification states - DISABLED
+  const [showOverduePopup, setShowOverduePopup] = useState(false); // Permanently disabled
   const [overdueLeads, setOverdueLeads] = useState<Lead[]>([]);
   const [popupNotifications, setPopupNotifications] = useState<any[]>([]);
   const [showTeamMemberModal, setShowTeamMemberModal] = useState(false);
   const [loadingTeamMemberLeads, setLoadingTeamMemberLeads] = useState(false);
+
+  // User Activity Stats
+  const [userActivityStats, setUserActivityStats] = useState<UserActivityStats[]>([]);
+  const [showUserActivityPanel, setShowUserActivityPanel] = useState(false);
 
   // Dynamic Configuration States - From API
   const [statusOptions, setStatusOptions] = useState(STATUS_OPTIONS);
@@ -408,6 +427,11 @@ const LeadsManagement: React.FC = () => {
   useEffect(() => {
     applyFilters();
   }, [leads, searchQuery, dateFilter, dateFrom, dateTo, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, companyFilter, leadsUpdatedToday, showOverdueOnly]);
+
+  // Update user activity stats when leads or users change
+  useEffect(() => {
+    setUserActivityStats(calculateUserActivityStats());
+  }, [leads, assignableUsers]);
 
   // Data Loading - Production Only
   const loadLeads = async () => {
@@ -641,6 +665,72 @@ const LeadsManagement: React.FC = () => {
       console.error('❌ Error transferring lead:', error);
       notify.error('Transfer Failed', 'Failed to transfer lead');
     }
+  };
+
+  // Calculate User Activity Statistics
+  const calculateUserActivityStats = (): UserActivityStats[] => {
+    if (!assignableUsers.length || !leads.length) return [];
+
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const weekStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    return assignableUsers.map(user => {
+      // Get all leads assigned to this user
+      const userLeads = leads.filter(lead => 
+        lead.assignedTo === user.username || 
+        lead.assignedTo === user.name ||
+        lead.assignedTo === user.display_name
+      );
+
+      // Calculate updates (leads modified by this user)
+      const updatedToday = userLeads.filter(lead => {
+        const updatedDate = new Date(lead.updatedAt);
+        return updatedDate >= todayStart;
+      }).length;
+
+      const updatedThisWeek = userLeads.filter(lead => {
+        const updatedDate = new Date(lead.updatedAt);
+        return updatedDate >= weekStart;
+      }).length;
+
+      const updatedThisMonth = userLeads.filter(lead => {
+        const updatedDate = new Date(lead.updatedAt);
+        return updatedDate >= monthStart;
+      }).length;
+
+      // Calculate lead status counts
+      const hotLeads = userLeads.filter(lead => lead.status === 'Hot').length;
+      const warmLeads = userLeads.filter(lead => lead.status === 'Warm').length;
+      const enrolledLeads = userLeads.filter(lead => lead.status === 'Enrolled').length;
+
+      // Calculate revenue (actual from enrolled + estimated from hot/warm)
+      const actualRevenue = userLeads
+        .filter(lead => lead.status === 'Enrolled' && lead.fees)
+        .reduce((sum, lead) => sum + (lead.fees || 0), 0);
+
+      const estimatedRevenue = userLeads
+        .filter(lead => (lead.status === 'Hot' || lead.status === 'Warm') && lead.estimatedValue)
+        .reduce((sum, lead) => sum + (lead.estimatedValue || 0), 0);
+
+      const totalRevenue = actualRevenue + (estimatedRevenue * 0.3); // 30% probability for warm/hot leads
+
+      return {
+        userId: user.id,
+        username: user.username || user.display_name || user.name,
+        role: user.role,
+        totalLeads: userLeads.length,
+        updatedToday,
+        updatedThisWeek,
+        updatedThisMonth,
+        hotLeads,
+        warmLeads,
+        enrolledLeads,
+        totalRevenue: actualRevenue,
+        estimatedRevenue
+      };
+    }).sort((a, b) => b.updatedToday - a.updatedToday); // Sort by today's updates
   };
 
   // Filtering Logic
@@ -2005,7 +2095,7 @@ const LeadsManagement: React.FC = () => {
       }
       if (recentNotifications.length > 0) {
         setPopupNotifications(prev => [...prev, ...recentNotifications]);
-        setShowOverduePopup(true);
+        // setShowOverduePopup(true); // DISABLED - No more popup notifications
       }
     }
 
@@ -2063,16 +2153,17 @@ const LeadsManagement: React.FC = () => {
             );
           });
           
-          // Send popup notification for all overdue leads
+          // Send popup notification for all overdue leads - DISABLED
           if (overdue.length > 5) {
-            setPopupNotifications(prev => [...prev, {
-              id: `bulk-overdue-${Date.now()}`,
-              type: 'bulk-overdue',
-              title: '⚠️ Urgent: Overdue Follow-ups!',
-              message: `You have ${overdue.length} overdue follow-ups!`,
-              timestamp: new Date(),
-              urgency: 'high'
-            }]);
+            // setPopupNotifications(prev => [...prev, {
+            //   id: `bulk-overdue-${Date.now()}`,
+            //   type: 'bulk-overdue',
+            //   title: '⚠️ Urgent: Overdue Follow-ups!',
+            //   message: `You have ${overdue.length} overdue follow-ups!`,
+            //   timestamp: new Date(),
+            //   urgency: 'high'
+            // }]);
+            console.log(`📊 ${overdue.length} overdue follow-ups detected (popup disabled)`);
           }
         } else {
           console.log('✅ No overdue follow-ups found');
@@ -2305,6 +2396,18 @@ const LeadsManagement: React.FC = () => {
               >
                 <FileDown className="w-4 h-4" />
                 <span>Export</span>
+              </button>
+
+              <button 
+                onClick={() => setShowUserActivityPanel(!showUserActivityPanel)}
+                className={`px-4 py-2 rounded-lg transition-colors flex items-center space-x-2 text-sm ${
+                  showUserActivityPanel 
+                    ? 'bg-purple-700 text-white' 
+                    : 'bg-purple-600 hover:bg-purple-700 text-white'
+                }`}
+              >
+                <BarChart3 className="w-4 h-4" />
+                <span>User Activity</span>
               </button>
               
               <label className={`px-4 py-2 rounded-lg transition-colors flex items-center space-x-2 text-sm ${
@@ -2821,6 +2924,114 @@ const LeadsManagement: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* User Activity Panel */}
+      {showUserActivityPanel && (
+        <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="p-4 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <BarChart3 className="w-5 h-5 text-purple-600 mr-2" />
+                  User Activity & Lead Updates
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Shows lead update counts for users in your reporting hierarchy
+                </p>
+              </div>
+              <button
+                onClick={() => setShowUserActivityPanel(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+          <div className="p-4">
+            {userActivityStats.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-2 px-3 text-sm font-medium text-gray-700">User</th>
+                      <th className="text-left py-2 px-3 text-sm font-medium text-gray-700">Role</th>
+                      <th className="text-center py-2 px-3 text-sm font-medium text-gray-700">Total Leads</th>
+                      <th className="text-center py-2 px-3 text-sm font-medium text-gray-700">Updated Today</th>
+                      <th className="text-center py-2 px-3 text-sm font-medium text-gray-700">This Week</th>
+                      <th className="text-center py-2 px-3 text-sm font-medium text-gray-700">This Month</th>
+                      <th className="text-center py-2 px-3 text-sm font-medium text-gray-700">Hot/Warm</th>
+                      <th className="text-center py-2 px-3 text-sm font-medium text-gray-700">Enrolled</th>
+                      <th className="text-center py-2 px-3 text-sm font-medium text-gray-700">Revenue</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {userActivityStats.map((stats, index) => (
+                      <tr key={stats.userId} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="py-3 px-3">
+                          <div>
+                            <div className="font-medium text-gray-900">{stats.username}</div>
+                          </div>
+                        </td>
+                        <td className="py-3 px-3">
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            stats.role === 'super_admin' ? 'bg-purple-100 text-purple-800' :
+                            stats.role === 'senior_manager' ? 'bg-blue-100 text-blue-800' :
+                            stats.role === 'manager' ? 'bg-green-100 text-green-800' :
+                            stats.role === 'team_leader' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}>
+                            {stats.role.replace('_', ' ')}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 text-center font-medium">{stats.totalLeads}</td>
+                        <td className="py-3 px-3 text-center">
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            stats.updatedToday > 5 ? 'bg-green-100 text-green-800' :
+                            stats.updatedToday > 2 ? 'bg-yellow-100 text-yellow-800' :
+                            stats.updatedToday > 0 ? 'bg-blue-100 text-blue-800' :
+                            'bg-gray-100 text-gray-600'
+                          }`}>
+                            {stats.updatedToday}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 text-center text-gray-700">{stats.updatedThisWeek}</td>
+                        <td className="py-3 px-3 text-center text-gray-700">{stats.updatedThisMonth}</td>
+                        <td className="py-3 px-3 text-center">
+                          <div className="flex items-center justify-center space-x-1">
+                            <span className="text-red-600 font-medium">🔥{stats.hotLeads}</span>
+                            <span className="text-orange-600 font-medium">🌡️{stats.warmLeads}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-3 text-center">
+                          <span className="text-green-600 font-medium">✅{stats.enrolledLeads}</span>
+                        </td>
+                        <td className="py-3 px-3 text-center">
+                          <div className="text-xs">
+                            <div className="font-medium text-green-600">
+                              {formatCurrency(stats.totalRevenue, user?.company === 'IBMP' ? 'USD' : 'INR')}
+                            </div>
+                            {stats.estimatedRevenue > 0 && (
+                              <div className="text-gray-500">
+                                Est: {formatCurrency(stats.estimatedRevenue, user?.company === 'IBMP' ? 'USD' : 'INR')}
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <BarChart3 className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                <p>No user activity data available</p>
+                <p className="text-sm mt-1">User activity will appear here once leads and users are loaded</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Quick Status Filters */}
       <div className="mb-4 flex flex-wrap gap-3">
@@ -5125,8 +5336,8 @@ const LeadsManagement: React.FC = () => {
         </div>
       )}
 
-      {/* Overdue Follow-up Popup Notifications */}
-      {showOverduePopup && popupNotifications.length > 0 && (
+      {/* Overdue Follow-up Popup Notifications - DISABLED */}
+      {false && showOverduePopup && popupNotifications.length > 0 && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-2xl max-w-md w-full mx-4 transform animate-pulse">
             <div className="bg-red-500 text-white px-6 py-4 rounded-t-lg">
