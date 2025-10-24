@@ -79,6 +79,7 @@ export interface DatabaseLead {
   score: number;
   notes?: string;
   assigned_to?: string;
+  estimatedValue?: number;
 }
 
 export interface DatabaseStudent {
