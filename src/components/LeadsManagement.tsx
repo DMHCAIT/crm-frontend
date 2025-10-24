@@ -727,7 +727,7 @@ const LeadsManagement: React.FC = () => {
         hotLeads,
         warmLeads,
         enrolledLeads,
-        totalRevenue: actualRevenue,
+        totalRevenue, // Use the calculated total revenue (actual + 30% of estimated)
         estimatedRevenue
       };
     }).sort((a, b) => b.updatedToday - a.updatedToday); // Sort by today's updates
