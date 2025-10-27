@@ -60,6 +60,7 @@ interface Lead {
   company: string;
   createdAt: string;
   updatedAt: string;
+  updated_by?: string; // Who last updated the lead (username)
   notes: Note[];
   fees?: number; // Optional fees field for enrolled students
   estimatedValue?: number; // Estimated value for warm/hot leads
@@ -96,6 +97,25 @@ interface Note {
   content: string;
   timestamp: string;
   author: string;
+}
+
+interface LeadActivity {
+  id: string;
+  lead_id: string;
+  activity_type: string;
+  description: string;
+  old_value?: string;
+  new_value?: string;
+  performed_by: string;
+  timestamp: string;
+  created_at: string;
+}
+
+interface CombinedItem extends Note {
+  type: 'note' | 'activity';
+  activityType?: string;
+  oldValue?: string;
+  newValue?: string;
 }
 
 interface LeadStats {
@@ -185,6 +205,7 @@ const LeadsManagement: React.FC = () => {
   const [editedLead, setEditedLead] = useState<Partial<Lead>>({});
   const [showFilters, setShowFilters] = useState(false);
   const [newNote, setNewNote] = useState<{[key: string]: string}>({});
+  const [leadActivities, setLeadActivities] = useState<{[key: string]: LeadActivity[]}>({});
   
   // New states for compact view and detail panel
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
@@ -371,6 +392,7 @@ const LeadsManagement: React.FC = () => {
   const [assignedToFilter, setAssignedToFilter] = useState<string[]>(['all']);
   const [qualificationFilter, setQualificationFilter] = useState('all');
   const [showOverdueOnly, setShowOverdueOnly] = useState(false);
+  const [excludeSystemUpdates, setExcludeSystemUpdates] = useState(true); // New: exclude system updates by default
   const [courseFilter, setCourseFilter] = useState('all');
   const [companyFilter, setCompanyFilter] = useState('all');
   
@@ -424,9 +446,56 @@ const LeadsManagement: React.FC = () => {
     loadUsers();
   }, []);
 
+  // Helper function to check if a lead update was a real user update (not system/import)
+  const isRealUserUpdate = (lead: Lead): boolean => {
+    // If no updatedAt, it's only been created, not updated
+    if (!lead.updatedAt) return false;
+    
+    // Check if the update was from system processes
+    const systemUpdaters = ['System', 'Import System', 'Admin', 'system', 'import'];
+    const updatedBy = lead.updated_by?.toLowerCase() || '';
+    
+    // If updated by system processes, not a real user update
+    if (systemUpdaters.some(sys => updatedBy.includes(sys.toLowerCase()))) {
+      return false;
+    }
+    
+    // Check if lead was imported/transferred recently (same day as creation but with updatedAt)
+    const createdDate = new Date(lead.createdAt);
+    const updatedDate = new Date(lead.updatedAt);
+    const timeDiff = updatedDate.getTime() - createdDate.getTime();
+    const oneDayMs = 24 * 60 * 60 * 1000;
+    
+    // If updated within 1 hour of creation and source indicates import, likely not a real update
+    if (timeDiff < (60 * 60 * 1000) && (
+      lead.source?.includes('Import') ||
+      lead.source?.includes('CSV') ||
+      lead.source?.includes('Excel') ||
+      lead.source?.includes('Transfer')
+    )) {
+      return false;
+    }
+    
+    // Check notes for system activities
+    const hasSystemNotes = lead.notes?.some(note => 
+      note.content?.includes('Imported from') ||
+      note.content?.includes('Transferred from') ||
+      note.content?.includes('Bulk import') ||
+      note.content?.includes('CSV import') ||
+      note.content?.includes('System update') ||
+      note.author?.toLowerCase().includes('system')
+    );
+    
+    if (hasSystemNotes && timeDiff < oneDayMs) {
+      return false;
+    }
+    
+    return true;
+  };
+
   useEffect(() => {
     applyFilters();
-  }, [leads, searchQuery, dateFilter, dateFrom, dateTo, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, companyFilter, leadsUpdatedToday, showOverdueOnly]);
+  }, [leads, searchQuery, dateFilter, dateFrom, dateTo, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, companyFilter, leadsUpdatedToday, showOverdueOnly, excludeSystemUpdates]);
 
   // Update user activity stats when leads or users change
   useEffect(() => {
@@ -747,14 +816,36 @@ const LeadsManagement: React.FC = () => {
       );
     }
 
-    // Date filter
+    // Date filter - IMPORTANT: All date filters now use LAST UPDATE DATE, not creation date
+    // This means filters show leads based on when they were LAST TOUCHED/UPDATED
+    // Example: If a lead was created on 1/9/2025 but last updated on 15/10/2025,
+    // and you filter "20/9/2025 to 20/10/2025", the lead will SHOW (last update is in range)
+    // But if the same lead was updated again on 25/10/2025, it will NOT show (outside range)
     if (dateFilter !== 'all') {
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       
       filtered = filtered.filter(lead => {
-        const leadDate = new Date(lead.createdAt);
-        const leadDateOnly = new Date(leadDate.getFullYear(), leadDate.getMonth(), leadDate.getDate());
+        // FIXED: For updated filters, only consider REAL user updates (not imports/transfers)
+        // For other filters, use the most recent date
+        let leadDate;
+        let leadDateOnly;
+        
+        // Check if this is an "updated" filter that should exclude system updates
+        const isUpdatedFilter = ['updated_today', 'updated_yesterday', 'updated_this_week', 'updated_last_week', 'updated_this_month'].includes(dateFilter);
+        
+        if (isUpdatedFilter && excludeSystemUpdates) {
+          // For "updated" filters with system exclusion, only show leads with real user updates
+          if (!isRealUserUpdate(lead)) {
+            return false; // Skip leads that were only updated by system/import
+          }
+          leadDate = new Date(lead.updatedAt);
+        } else {
+          // For other filters (creation-based or custom), use the most recent date
+          leadDate = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
+        }
+        
+        leadDateOnly = new Date(leadDate.getFullYear(), leadDate.getMonth(), leadDate.getDate());
         
         switch (dateFilter) {
           case 'today':
@@ -774,6 +865,7 @@ const LeadsManagement: React.FC = () => {
           case 'updated_today':
             return leadsUpdatedToday.includes(lead.id);
           case 'updated_yesterday':
+            // FIXED: Precise date filtering - shows leads updated exactly on yesterday
             // Check if lead was updated yesterday (using updatedAt field or tracking)
             const updatedYesterday = new Date(today);
             updatedYesterday.setDate(updatedYesterday.getDate() - 1);
@@ -781,24 +873,44 @@ const LeadsManagement: React.FC = () => {
             const updatedDateOnly = new Date(leadUpdatedAt.getFullYear(), leadUpdatedAt.getMonth(), leadUpdatedAt.getDate());
             return updatedDateOnly.getTime() === updatedYesterday.getTime();
           case 'updated_this_week':
-            // Check if lead was updated within this week (Sunday to Saturday)
-            const startOfWeek = new Date(today);
-            startOfWeek.setDate(today.getDate() - today.getDay()); // Go to Sunday
+            // FIXED: Week cycles Monday to Sunday as requested
+            const startOfThisWeek = new Date(today);
+            const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+            const daysFromMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Adjust for Monday = 0
+            startOfThisWeek.setDate(today.getDate() - daysFromMonday); // Go to Monday
+            startOfThisWeek.setHours(0, 0, 0, 0); // Start of Monday
+            
+            const endOfThisWeek = new Date(startOfThisWeek);
+            endOfThisWeek.setDate(startOfThisWeek.getDate() + 6); // Go to Sunday
+            endOfThisWeek.setHours(23, 59, 59, 999); // End of Sunday
+            
             const leadUpdatedThisWeek = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
-            return leadUpdatedThisWeek >= startOfWeek;
+            return leadUpdatedThisWeek >= startOfThisWeek && leadUpdatedThisWeek <= endOfThisWeek;
+            
           case 'updated_last_week':
-            // Check if lead was updated in the previous week
+            // FIXED: Previous week Monday to Sunday with precise boundaries
             const startOfLastWeek = new Date(today);
-            startOfLastWeek.setDate(today.getDate() - today.getDay() - 7); // Previous Sunday
+            const dayOfWeekLast = today.getDay();
+            const daysFromMondayLast = dayOfWeekLast === 0 ? 6 : dayOfWeekLast - 1;
+            startOfLastWeek.setDate(today.getDate() - daysFromMondayLast - 7); // Previous Monday
+            startOfLastWeek.setHours(0, 0, 0, 0); // Start of previous Monday
+            
             const endOfLastWeek = new Date(startOfLastWeek);
-            endOfLastWeek.setDate(startOfLastWeek.getDate() + 6); // Previous Saturday
+            endOfLastWeek.setDate(startOfLastWeek.getDate() + 6); // Previous Sunday
+            endOfLastWeek.setHours(23, 59, 59, 999); // End of previous Sunday
+            
             const leadUpdatedLastWeek = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
             return leadUpdatedLastWeek >= startOfLastWeek && leadUpdatedLastWeek <= endOfLastWeek;
           case 'updated_this_month':
-            // Check if lead was updated within this month
+            // FIXED: Exact month boundaries with precise start and end times
             const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            startOfMonth.setHours(0, 0, 0, 0); // Start of month
+            
+            const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0); // Last day of current month
+            endOfMonth.setHours(23, 59, 59, 999); // End of month
+            
             const leadUpdatedThisMonth = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
-            return leadUpdatedThisMonth >= startOfMonth;
+            return leadUpdatedThisMonth >= startOfMonth && leadUpdatedThisMonth <= endOfMonth;
           case 'recently_imported':
             const twentyFourHoursAgo = new Date();
             twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
@@ -820,24 +932,42 @@ const LeadsManagement: React.FC = () => {
             );
           case 'custom':
             if (dateFrom && dateTo) {
+              // FIXED: Custom date range now uses LAST UPDATED date, not created date
+              // Example: Filter "20/9/2025 to 20/10/2025" shows only leads whose LAST update was in that period
+              // If a lead was updated on 18/10/2025 and again on 22/10/2025, it will NOT show (last update is outside range)
               const fromDate = new Date(dateFrom);
+              fromDate.setHours(0, 0, 0, 0); // Start of day
               const toDate = new Date(dateTo);
-              toDate.setHours(23, 59, 59, 999); // Include full day
-              return leadDate >= fromDate && leadDate <= toDate;
+              toDate.setHours(23, 59, 59, 999); // End of day
+              
+              // Use the most recent update date (updatedAt or fall back to createdAt)
+              const leadLastUpdateDate = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
+              
+              return leadLastUpdateDate >= fromDate && leadLastUpdateDate <= toDate;
             }
             return true;
           case 'advanced':
             if (specificDate) {
+              // FIXED: Specific date filtering now uses updatedAt field properly
+              // "before 20/10/2025" shows leads NOT updated after that date
               const targetDate = new Date(specificDate);
               const targetDateOnly = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
               
+              // Get lead's update date (use updatedAt if available, otherwise createdAt)
+              const leadUpdateDate = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
+              const leadUpdateDateOnly = new Date(leadUpdateDate.getFullYear(), leadUpdateDate.getMonth(), leadUpdateDate.getDate());
+              
               switch (dateFilterType) {
                 case 'on':
-                  return leadDateOnly.getTime() === targetDateOnly.getTime();
+                  // Show leads updated exactly on this date
+                  return leadUpdateDateOnly.getTime() === targetDateOnly.getTime();
                 case 'after':
-                  return leadDateOnly.getTime() > targetDateOnly.getTime();
+                  // Show leads updated after this date (not including the date itself)
+                  return leadUpdateDateOnly.getTime() > targetDateOnly.getTime();
                 case 'before':
-                  return leadDateOnly.getTime() < targetDateOnly.getTime();
+                  // Show leads updated before this date (not including the date itself)
+                  // This means leads that were last touched before this date
+                  return leadUpdateDateOnly.getTime() < targetDateOnly.getTime();
                 default:
                   return true;
               }
@@ -1008,6 +1138,47 @@ const LeadsManagement: React.FC = () => {
     // If notes aren't loaded yet, refresh the entire leads list
     console.log(`🔄 Refreshing leads data to get notes for lead ${leadId}`);
     await loadLeads();
+  };
+
+  // Load activities for a specific lead
+  const loadActivitiesForLead = async (leadId: string) => {
+    try {
+      console.log(`📋 Loading activities for lead: ${leadId}`);
+      
+      const backendUrl = import.meta.env.VITE_API_BASE_URL || 'https://crm-backend-fh34.onrender.com';
+      const response = await fetch(`${backendUrl}/api/lead-activities?leadId=${leadId}&limit=50`, {
+        headers: {
+          'Authorization': `Bearer ${TokenManager.getToken()}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.success && data.activities) {
+        console.log(`✅ Loaded ${data.activities.length} activities for lead ${leadId}`);
+        setLeadActivities(prev => ({
+          ...prev,
+          [leadId]: data.activities
+        }));
+      } else {
+        console.warn(`⚠️ No activities found for lead ${leadId}`);
+        setLeadActivities(prev => ({
+          ...prev,
+          [leadId]: []
+        }));
+      }
+    } catch (error) {
+      console.error(`❌ Error loading activities for lead ${leadId}:`, error);
+      setLeadActivities(prev => ({
+        ...prev,
+        [leadId]: []
+      }));
+    }
   };
 
   const handleAddNote = async (leadId: string) => {
@@ -1184,6 +1355,7 @@ const LeadsManagement: React.FC = () => {
     setDateTo('');
     setSpecificDate('');
     setDateFilterType('on');
+    setExcludeSystemUpdates(true); // Reset to default (exclude system updates)
     
     // Also clear any temporary filter states if they exist
     console.log('✅ All filters cleared - showing all leads');
@@ -1398,11 +1570,12 @@ const LeadsManagement: React.FC = () => {
       }
     }, 100);
     
-    console.log(`🔄 Loading notes for lead: ${leadId}`);
-    // Load notes for the selected lead and wait for completion
+    console.log(`🔄 Loading notes and activities for lead: ${leadId}`);
+    // Load notes and activities for the selected lead and wait for completion
     await loadNotesForLead(leadId);
+    await loadActivitiesForLead(leadId);
     
-    console.log(`🔄 Notes loading completed for lead: ${leadId}`);
+    console.log(`🔄 Notes and activities loading completed for lead: ${leadId}`);
     
     // Force a state update to ensure the UI re-renders with the updated notes
     setLastUpdateTime(new Date());
@@ -1922,7 +2095,7 @@ const LeadsManagement: React.FC = () => {
       followup: (leads || []).filter((lead: Lead) => lead.status === 'Follow Up').length,
       converted: (leads || []).filter((lead: Lead) => lead.status === 'Enrolled').length,
       thisMonth: (leads || []).filter((lead: Lead) => {
-        const leadDate = new Date(lead.createdAt);
+        const leadDate = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
         return leadDate.getMonth() === currentMonth && leadDate.getFullYear() === currentYear;
       }).length
     };
@@ -1950,19 +2123,19 @@ const LeadsManagement: React.FC = () => {
     
     // Lead velocity metrics
     const todayLeads = leads.filter((lead: Lead) => {
-      const leadDate = new Date(lead.createdAt);
+      const leadDate = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
       const leadDateOnly = new Date(leadDate.getFullYear(), leadDate.getMonth(), leadDate.getDate());
       return leadDateOnly.getTime() === today.getTime();
     });
     
     const yesterdayLeads = leads.filter((lead: Lead) => {
-      const leadDate = new Date(lead.createdAt);
+      const leadDate = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
       const leadDateOnly = new Date(leadDate.getFullYear(), leadDate.getMonth(), leadDate.getDate());
       return leadDateOnly.getTime() === yesterday.getTime();
     });
     
     const weekLeads = leads.filter((lead: Lead) => {
-      const leadDate = new Date(lead.createdAt);
+      const leadDate = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
       return leadDate >= weekAgo;
     });
     
@@ -3416,23 +3589,37 @@ const LeadsManagement: React.FC = () => {
                     <option value="updated_last_week">📋 Updated Last Week</option>
                     <option value="updated_this_month">📆 Updated This Month ({getUpdatedThisMonthCount()})</option>
                   </optgroup>
-                  <optgroup label="🗓️ Creation Date">
-                    <option value="today">📍 Created Today</option>
-                    <option value="yesterday">⏮️ Created Yesterday</option>
-                    <option value="week">🗓️ Created Last 7 Days</option>
-                    <option value="month">📅 Created Last 30 Days</option>
+                  <optgroup label="🗓️ General Date Filters">
+                    <option value="today">📍 Updated Today</option>
+                    <option value="yesterday">⏮️ Updated Yesterday</option>
+                    <option value="week">🗓️ Updated Last 7 Days</option>
+                    <option value="month">📅 Updated Last 30 Days</option>
                   </optgroup>
                   <optgroup label="🔧 Advanced">
-                    <option value="custom">📊 Custom Date Range</option>
+                    <option value="custom">📊 Custom Last Updated Range</option>
                     <option value="advanced">⚙️ Advanced Date Filter</option>
                   </optgroup>
                 </select>
               </div>
 
+              {/* System Updates Toggle - FIXED: Prevents imported/transferred leads from showing as "updated" */}
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="excludeSystemUpdates"
+                  checked={excludeSystemUpdates}
+                  onChange={(e) => setExcludeSystemUpdates(e.target.checked)}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label htmlFor="excludeSystemUpdates" className="ml-2 block text-sm text-gray-700">
+                  📋 Exclude System Updates (imports/transfers)
+                </label>
+              </div>
+
               {dateFilter === 'custom' && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">From Date (Last Updated)</label>
                     <input
                       type="date"
                       value={dateFrom}
@@ -3441,7 +3628,7 @@ const LeadsManagement: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">To Date (Last Updated)</label>
                     <input
                       type="date"
                       value={dateTo}
@@ -4540,67 +4727,146 @@ const LeadsManagement: React.FC = () => {
 
 
 
-                    {/* Notes Section */}
+                    {/* Notes & Activities Section */}
                     <div className="bg-gray-50 rounded-lg p-4" key={`notes-${selectedLead.id}-${lastUpdateTime?.getTime()}`}>
-                      <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
-                        <MessageSquare className="w-5 h-5 mr-2 text-orange-600" />
-                        Notes & Communication ({selectedLead.notes?.length || 0})
-                      </h4>
-                      <div className="space-y-3 max-h-60 overflow-y-auto">
-                        {(() => {
-                          console.log(`🔍 === RENDERING DEBUG ===`);
-                          console.log(`🔍 Selected lead ID: ${selectedLead.id}`);
-                          console.log(`🔍 Selected lead notes:`, selectedLead.notes);
-                          console.log(`🔍 Notes type:`, typeof selectedLead.notes);
-                          console.log(`🔍 Notes is array:`, Array.isArray(selectedLead.notes));
-                          console.log(`🔍 Notes length:`, selectedLead.notes?.length);
-                          if (selectedLead.notes && selectedLead.notes.length > 0) {
-                            console.log(`🔍 First note:`, selectedLead.notes[0]);
-                            console.log(`🔍 First note content:`, selectedLead.notes[0]?.content);
-                          }
-                          console.log(`🔍 === END DEBUG ===`);
-                          return null;
-                        })()}
-                        {(selectedLead.notes || []).map((note) => (
-                          <div key={note.id} className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
-                            <p className="text-sm text-gray-900 mb-2">{note.content}</p>
-                            <div className="flex items-center justify-between text-xs text-gray-500">
-                              <span className="font-medium">{note.author}</span>
-                              <span>{new Date(note.timestamp).toLocaleString()}</span>
+                      {(() => {
+                        // Combine notes and activities
+                        const notes = selectedLead.notes || [];
+                        const activities = leadActivities[selectedLead.id] || [];
+                        
+                        // Transform activities to match note structure for display
+                        const activityItems: CombinedItem[] = activities.map(activity => ({
+                          id: `activity-${activity.id}`,
+                          content: activity.description,
+                          timestamp: activity.timestamp || activity.created_at,
+                          author: activity.performed_by,
+                          type: 'activity' as const,
+                          activityType: activity.activity_type,
+                          oldValue: activity.old_value,
+                          newValue: activity.new_value
+                        }));
+                        
+                        // Transform notes to include type
+                        const noteItems: CombinedItem[] = notes.map(note => ({
+                          ...note,
+                          type: 'note' as const
+                        }));
+                        
+                        // Combine and sort by timestamp (newest first)
+                        const allItems: CombinedItem[] = [...noteItems, ...activityItems].sort((a, b) => 
+                          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+                        );
+                        
+                        const totalCount = allItems.length;
+                        const notesCount = noteItems.length;
+                        const activitiesCount = activityItems.length;
+                        
+                        return (
+                          <>
+                            <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
+                              <MessageSquare className="w-5 h-5 mr-2 text-orange-600" />
+                              Notes & Activities ({totalCount})
+                              <span className="ml-2 text-sm text-gray-500 font-normal">
+                                ({notesCount} notes, {activitiesCount} activities)
+                              </span>
+                            </h4>
+                            <div className="space-y-3 max-h-60 overflow-y-auto">
+                              {allItems.length > 0 ? allItems.map((item) => (
+                                <div 
+                                  key={item.id} 
+                                  className={`p-3 rounded-lg border shadow-sm ${
+                                    item.type === 'note' 
+                                      ? 'bg-white border-gray-200' 
+                                      : item.activityType === 'transfer' || item.activityType === 'assignment_change'
+                                      ? 'bg-purple-50 border-purple-200'
+                                      : item.activityType === 'status_change'
+                                      ? 'bg-blue-50 border-blue-200'
+                                      : item.activityType === 'lead_created'
+                                      ? 'bg-green-50 border-green-200'
+                                      : 'bg-yellow-50 border-yellow-200'
+                                  }`}
+                                >
+                                  <div className="flex items-start justify-between mb-2">
+                                    <div className="flex items-center space-x-2">
+                                      {item.type === 'note' ? (
+                                        <MessageSquare className="w-4 h-4 text-gray-500 mt-0.5" />
+                                      ) : item.activityType === 'transfer' || item.activityType === 'assignment_change' ? (
+                                        <ArrowUpDown className="w-4 h-4 text-purple-500 mt-0.5" />
+                                      ) : item.activityType === 'status_change' ? (
+                                        <Edit3 className="w-4 h-4 text-blue-500 mt-0.5" />
+                                      ) : item.activityType === 'lead_created' ? (
+                                        <Plus className="w-4 h-4 text-green-500 mt-0.5" />
+                                      ) : (
+                                        <Clock className="w-4 h-4 text-yellow-500 mt-0.5" />
+                                      )}
+                                      <span className="text-xs font-medium text-gray-600 capitalize">
+                                        {item.type === 'note' ? 'Note' : item.activityType?.replace('_', ' ')}
+                                      </span>
+                                    </div>
+                                    <span className="text-xs text-gray-500">
+                                      {new Date(item.timestamp).toLocaleString()}
+                                    </span>
+                                  </div>
+                                  
+                                  <p className="text-sm text-gray-900 mb-2">{item.content}</p>
+                                  
+                                  {/* Show old/new values for activities if available */}
+                                  {item.type === 'activity' && (item.oldValue || item.newValue) && (
+                                    <div className="text-xs text-gray-600 bg-gray-100 rounded p-2 mt-2">
+                                      {item.oldValue && (
+                                        <div><span className="font-medium">From:</span> {item.oldValue}</div>
+                                      )}
+                                      {item.newValue && (
+                                        <div><span className="font-medium">To:</span> {item.newValue}</div>
+                                      )}
+                                    </div>
+                                  )}
+                                  
+                                  <div className="flex items-center justify-between text-xs text-gray-500 mt-2">
+                                    <span className="font-medium">{item.author}</span>
+                                    <span className={`px-2 py-1 rounded ${
+                                      item.type === 'note' 
+                                        ? 'bg-gray-100 text-gray-600' 
+                                        : 'bg-blue-100 text-blue-600'
+                                    }`}>
+                                      {item.type === 'note' ? 'Manual Note' : 'System Activity'}
+                                    </span>
+                                  </div>
+                                </div>
+                              )) : (
+                                <p className="text-gray-500 text-sm italic">No notes or activities yet</p>
+                              )}
                             </div>
-                          </div>
-                        ))}
-                        {(!selectedLead.notes || selectedLead.notes.length === 0) && (
-                          <p className="text-gray-500 text-sm italic">No notes added yet</p>
-                        )}
-                      </div>
-                      
-                      {/* Add Note */}
-                      <div className="mt-4">
-                        <div className="flex space-x-2">
-                          <input
-                            type="text"
-                            placeholder="Add a note..."
-                            value={newNote[selectedLead.id] || ''}
-                            onChange={(e) => setNewNote(prev => ({
-                              ...prev,
-                              [selectedLead.id]: e.target.value
-                            }))}
-                            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            onKeyPress={(e) => {
-                              if (e.key === 'Enter') {
-                                handleAddNote(selectedLead.id);
-                              }
-                            }}
-                          />
-                          <button
-                            onClick={() => handleAddNote(selectedLead.id)}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm flex items-center space-x-1"
-                          >
-                            <Plus className="w-4 h-4" />
-                            <span>Add</span>
-                          </button>
-                        </div>
+                          </>
+                        );
+                      })()}
+                    </div>
+                    
+                    {/* Add Note */}
+                    <div className="mt-4">
+                      <div className="flex space-x-2">
+                        <input
+                          type="text"
+                          placeholder="Add a note..."
+                          value={newNote[selectedLead.id] || ''}
+                          onChange={(e) => setNewNote(prev => ({
+                            ...prev,
+                            [selectedLead.id]: e.target.value
+                          }))}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              handleAddNote(selectedLead.id);
+                            }
+                          }}
+                        />
+                        <button
+                          onClick={() => handleAddNote(selectedLead.id)}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm flex items-center space-x-1"
+                        >
+                          <Plus className="w-4 h-4" />
+                          <span>Add</span>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -5224,8 +5490,9 @@ const LeadsManagement: React.FC = () => {
                           setSelectedLeadId(lead.id);
                           setShowDetailPanel(true);
                           setShowTeamMemberModal(false);
-                          // Load notes for the lead
+                          // Load notes and activities for the lead
                           loadNotesForLead(lead.id);
+                          loadActivitiesForLead(lead.id);
                         }}
                         title="Click to view lead details"
                       >
@@ -5310,6 +5577,9 @@ const LeadsManagement: React.FC = () => {
                                 setShowDetailPanel(true);
                                 // Close the team member modal to show the edit panel
                                 setShowTeamMemberModal(false);
+                                // Load notes and activities for the lead
+                                loadNotesForLead(lead.id);
+                                loadActivitiesForLead(lead.id);
                               }}
                               className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
                             >
@@ -5403,6 +5673,9 @@ const LeadsManagement: React.FC = () => {
                             setSelectedLeadId(lead.id);
                             setShowDetailPanel(true);
                             setShowOverduePopup(false);
+                            // Load notes and activities for the lead
+                            loadNotesForLead(lead.id);
+                            loadActivitiesForLead(lead.id);
                           }}
                           className="ml-3 bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600 transition-colors"
                         >
