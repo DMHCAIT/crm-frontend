@@ -3,7 +3,7 @@
  * Real JWT-based authentication replacing mock localStorage system
  */
 
-import { getApiClient, getApiConfig } from './backend';
+import { getApiConfig } from './backend';
 
 // Types
 export interface User {
@@ -73,7 +73,11 @@ export class ProductionAuthService {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: username, password })
+        body: JSON.stringify({ 
+          email: username,  // Send as email for backend compatibility
+          username: username, // Also send as username
+          password 
+        })
       });
 
       if (!response.ok) {
