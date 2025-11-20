@@ -23,22 +23,19 @@ import {
   ChevronUp,
   Trash2,
   TrendingUp,
-  Users,
-  ArrowRight,
-  UserCheck,
-  FileDown,
-  FileUp,
-  ArrowUpDown,
-  User,
-  MessageSquare,
-  BarChart3,
-  PieChart,
-  TrendingDown,
-  AlertTriangle,
-  Timer,
-  Eye,
-  Bell,
-  Zap,
+                    <select
+                      value={""}
+                      onChange={(e) => {
+                        handleBulkStatusUpdate(e.target.value);
+                        e.target.value = ''; // Reset dropdown after selection
+                      }}
+                      className="px-3 py-1.5 border border-blue-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    >
+                      <option value="" disabled>Update Status</option>
+                      {(STATUS_OPTIONS || statusOptions).map((s: string) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
   RefreshCw,
   Bug,
   Building
@@ -398,7 +395,7 @@ const LeadsManagement: React.FC = () => {
   const [createdDateFilterType, setCreatedDateFilterType] = useState<'on' | 'after' | 'before' | 'between'>('on');
   const [createdSpecificDate, setCreatedSpecificDate] = useState('');
   
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState<string[]>(['all']);
   const [countryFilter, setCountryFilter] = useState('all');
   const [sourceFilter, setSourceFilter] = useState('all');
   const [assignedToFilter, setAssignedToFilter] = useState<string[]>(['all']);
@@ -459,11 +456,12 @@ const LeadsManagement: React.FC = () => {
   // ==========================================
   // OPTIMIZED PAGINATION - Memoized calculations
   // ==========================================
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
   const paginatedLeads = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
     return filteredLeads.slice(startIndex, endIndex);
-  }, [filteredLeads, currentPage, itemsPerPage]);
+  }, [filteredLeads, startIndex, endIndex]);
 
   const totalItems = filteredLeads.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -999,9 +997,11 @@ const LeadsManagement: React.FC = () => {
       });
     }
 
-    // 4. STATUS FILTER - O(n) with direct comparison
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter(lead => lead.status === statusFilter);
+    // 4. STATUS FILTER - O(n) with Set lookup for multiple selections
+    // If user selected 'all' OR nothing (empty array), treat as no status filter
+    if (!(statusFilter.includes('all') || statusFilter.length === 0)) {
+      const statusSet = new Set(statusFilter);
+      filtered = filtered.filter(lead => statusSet.has(lead.status));
     }
 
     // 5. COUNTRY FILTER - O(n) with direct comparison
@@ -1278,13 +1278,13 @@ const LeadsManagement: React.FC = () => {
   };
 
   const quickStatusFilter = (status: string) => {
-    if (statusFilter === status && status !== 'all') {
+    if (statusFilter.includes(status) && status !== 'all') {
       // If clicking the same filter (except 'all'), toggle it off
-      setStatusFilter('all');
+      setStatusFilter(['all']);
       setDateFilter('all'); // Also reset date filter when toggling status
     } else {
       // Apply the new filter
-      setStatusFilter(status);
+      setStatusFilter([status]);
       if (status !== 'all') {
         setDateFilter('all'); // Reset date filter when applying status filter
       }
@@ -1313,7 +1313,7 @@ const LeadsManagement: React.FC = () => {
     } else {
       // If not filtering by updated today, switch to it
       setDateFilter('updated_today');
-      setStatusFilter('all'); // Reset status filter to show all updated leads
+      setStatusFilter(['all']); // Reset status filter to show all updated leads
     }
   };
 
@@ -1333,7 +1333,7 @@ const LeadsManagement: React.FC = () => {
     } else {
       // If not filtering by recently imported, switch to it
       setDateFilter('recently_imported');
-      setStatusFilter('all'); // Reset status filter to show all imported leads
+      setStatusFilter(['all']); // Reset status filter to show all imported leads
     }
   };
 
@@ -1366,7 +1366,7 @@ const LeadsManagement: React.FC = () => {
   const clearAllFilters = () => {
     setSearchQuery('');
     setDateFilter('all');
-    setStatusFilter('all');
+    setStatusFilter(['all']);
     setCountryFilter('all');
     setSourceFilter('all');
     setAssignedToFilter(['all']);
@@ -1388,7 +1388,7 @@ const LeadsManagement: React.FC = () => {
   const hasActiveFilters = () => {
     return searchQuery !== '' ||
            dateFilter !== 'all' ||
-           statusFilter !== 'all' ||
+           !statusFilter.includes('all') ||
            countryFilter !== 'all' ||
            sourceFilter !== 'all' ||
            !assignedToFilter.includes('all') ||
@@ -2810,10 +2810,10 @@ const LeadsManagement: React.FC = () => {
             }`}
             onClick={() => {
               setShowOverdueOnly(!showOverdueOnly);
-              if (!showOverdueOnly) {
+                if (!showOverdueOnly) {
                 // Reset other filters when showing overdue only
                 setSearchQuery('');
-                setStatusFilter('all');
+                setStatusFilter(['all']);
               }
             }}
           >
@@ -3290,7 +3290,7 @@ const LeadsManagement: React.FC = () => {
         <button
           onClick={() => quickStatusFilter('Hot')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-            statusFilter === 'Hot' 
+            statusFilter.includes('Hot') 
               ? 'bg-red-100 text-red-800 border-2 border-red-300 shadow-md' 
               : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
           }`}
@@ -3300,7 +3300,7 @@ const LeadsManagement: React.FC = () => {
         <button
           onClick={() => quickStatusFilter('Warm')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-            statusFilter === 'Warm' 
+            statusFilter.includes('Warm') 
               ? 'bg-orange-100 text-orange-800 border-2 border-orange-300 shadow-md' 
               : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
           }`}
@@ -3310,7 +3310,7 @@ const LeadsManagement: React.FC = () => {
         <button
           onClick={() => quickStatusFilter('Follow Up')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-            statusFilter === 'Follow Up' 
+            statusFilter.includes('Follow Up') 
               ? 'bg-yellow-100 text-yellow-800 border-2 border-yellow-300 shadow-md' 
               : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
           }`}
@@ -3320,7 +3320,7 @@ const LeadsManagement: React.FC = () => {
         <button
           onClick={() => quickStatusFilter('Fresh')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-            statusFilter === 'Fresh' 
+            statusFilter.includes('Fresh') 
               ? 'bg-green-100 text-green-800 border-2 border-green-300 shadow-md' 
               : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
           }`}
@@ -3330,7 +3330,7 @@ const LeadsManagement: React.FC = () => {
         <button
           onClick={() => quickStatusFilter('all')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-            statusFilter === 'all' 
+            statusFilter.includes('all') 
               ? 'bg-blue-100 text-blue-800 border-2 border-blue-300 shadow-md' 
               : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
           }`}
@@ -3452,9 +3452,9 @@ const LeadsManagement: React.FC = () => {
                     Date: {dateFilter.replace('_', ' ')}
                   </span>
                 )}
-                {statusFilter !== 'all' && (
+                {!statusFilter.includes('all') && statusFilter.length > 0 && (
                   <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
-                    Status: {statusFilter}
+                    Status: {statusFilter.join(', ')}
                   </span>
                 )}
                 {countryFilter !== 'all' && (
@@ -3856,16 +3856,43 @@ const LeadsManagement: React.FC = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="all">All Status</option>
-                  {(statusOptions || []).map(status => (
-                    <option key={status} value={status}>{status}</option>
+                <div className="grid grid-cols-2 gap-2 max-h-40 overflow-auto p-2 border border-gray-200 rounded">
+                  <label className="flex items-center space-x-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={statusFilter.includes('all')}
+                      onChange={(e) => {
+                        if (e.target.checked) setStatusFilter(['all']);
+                        else setStatusFilter([]);
+                      }}
+                      className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                    />
+                    <span>All Status</span>
+                  </label>
+                  {(statusOptions || []).map((status: string) => (
+                    <label key={status} className="flex items-center space-x-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={statusFilter.includes(status)}
+                        onChange={(e) => {
+                          setStatusFilter(prev => {
+                            // If 'all' is currently selected, clear it first
+                            const base = prev.includes('all') ? [] : [...prev];
+                            if (e.target.checked) {
+                              // add status
+                              return Array.from(new Set([...base, status]));
+                            } else {
+                              // remove status
+                              return base.filter(s => s !== status);
+                            }
+                          });
+                        }}
+                        className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                      />
+                      <span>{status}</span>
+                    </label>
                   ))}
-                </select>
+                </div>
               </div>
 
               <div>
@@ -4051,12 +4078,9 @@ const LeadsManagement: React.FC = () => {
                       className="px-3 py-1.5 border border-blue-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                     >
                       <option value="" disabled>Update Status</option>
-                      <option value="hot">Hot</option>
-                      <option value="warm">Warm</option>
-                      <option value="Followup">Follow Up</option>
-                      <option value="will enroll later">Will Enroll Later</option>
-                      <option value="Not interested">Not Interested</option>
-                      <option value="enrolled">Enrolled</option>
+                      {statusOptions.map(status => (
+                        <option key={status} value={status}>{status}</option>
+                      ))}
                     </select>
 
                     {/* Bulk Delete */}
@@ -6027,7 +6051,7 @@ const LeadsManagement: React.FC = () => {
                   onClick={() => {
                     // Reset all filters and show search for overdue leads
                     setSearchQuery('');
-                    setStatusFilter('all');
+                    setStatusFilter(['all']);
                     setCountryFilter('all');
                     setSourceFilter('all');
                     setAssignedToFilter(['all']);
