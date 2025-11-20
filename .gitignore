@@ -7,6 +7,9 @@ node_modules/
 dist/
 build/
 
+# Prevent root src folder (frontend is in crm-frontend-main)
+/src/
+
 # Environment variables
 .env
 .env.local

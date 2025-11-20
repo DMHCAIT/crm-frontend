@@ -23,19 +23,22 @@ import {
   ChevronUp,
   Trash2,
   TrendingUp,
-                    <select
-                      value={""}
-                      onChange={(e) => {
-                        handleBulkStatusUpdate(e.target.value);
-                        e.target.value = ''; // Reset dropdown after selection
-                      }}
-                      className="px-3 py-1.5 border border-blue-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                    >
-                      <option value="" disabled>Update Status</option>
-                      {(STATUS_OPTIONS || statusOptions).map((s: string) => (
-                        <option key={s} value={s}>{s}</option>
-                      ))}
-                    </select>
+  Users,
+  ArrowRight,
+  UserCheck,
+  FileDown,
+  FileUp,
+  ArrowUpDown,
+  User,
+  MessageSquare,
+  BarChart3,
+  PieChart,
+  TrendingDown,
+  AlertTriangle,
+  Timer,
+  Eye,
+  Bell,
+  Zap,
   RefreshCw,
   Bug,
   Building
@@ -1882,12 +1885,14 @@ const LeadsManagement: React.FC = () => {
       console.log('✅ Bulk status update response:', result);
 
       if (result && (result.success || result.updatedCount >= 0)) {
+        // Refetch leads data immediately to show updated values
+        await refetchLeads();
+        
         // Clear selection after update
         setSelectedLeads([]);
         
         // Show success message
         const updatedCount = result.updatedCount || selectedLeads.length;
-        alert(`${updatedCount} lead(s) status updated to ${newStatus} successfully`);
         notify.success('Status Updated', `${updatedCount} leads updated to ${newStatus}`);
       } else {
         console.error('❌ Status update failed:', result);
