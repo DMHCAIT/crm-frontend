@@ -21,8 +21,8 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   const { user } = useAuth();
   const { data: dashboardResponse, isLoading: loadingDashboard } = useDashboardStats();
-  // Get all leads for dashboard stats (using large page size to get all data)
-  const { data: leadsResponse, isLoading: loadingLeads } = useLeads(1, 10000);
+  // For detailed analysis only - not for total count
+  const { data: leadsResponse, isLoading: loadingLeads } = useLeads(1, 1000);
   
   const loading = loadingDashboard || loadingLeads;
 
@@ -52,12 +52,26 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     return Array.isArray(leadsData) ? leadsData : [];
   }, [leadsData]);
 
-  // Calculate stats with memoization - only recalculates when leadsArray changes
+  // Calculate stats with memoization - prioritize dashboard API data
   const stats = useMemo(() => {
-    console.log('📊 Dashboard: Calculating stats from', leadsArray.length, 'leads');
+    console.log('📊 Dashboard: Calculating stats from API data');
     const startTime = performance.now();
     
-    // Use Set for O(1) lookups and counters for single-pass algorithm
+    // Use dashboard API data if available, fallback to leads array calculation
+    if (dashboardResponse?.data?.leads?.data || dashboardResponse?.leads?.data) {
+      const dashData = dashboardResponse?.data?.leads?.data || dashboardResponse?.leads?.data;
+      console.log('✅ Using dashboard API data:', dashData);
+      
+      return {
+        totalLeads: dashData.total || 0,
+        activeStudents: dashData.enrolled || 0,
+        revenue: dashData.actualRevenue || 0,
+        conversionRate: dashData.total > 0 ? parseFloat(((dashData.enrolled || 0) / dashData.total * 100).toFixed(2)) : 0,
+        leadsUpdatedToday: dashData.todayLeads || 0
+      };
+    }
+    
+    // Fallback to leads array calculation (for detailed analysis)
     const statusCount = new Map<string, number>();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -94,7 +108,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     const conversionRate = leadsArray.length > 0 ? (enrolled / leadsArray.length) * 100 : 0;
     
     const endTime = performance.now();
-    console.log(`✅ Dashboard stats calculated in ${(endTime - startTime).toFixed(2)}ms`);
+    console.log(`✅ Dashboard fallback stats calculated in ${(endTime - startTime).toFixed(2)}ms`);
     
     return {
       totalLeads: leadsArray.length,
@@ -103,7 +117,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       conversionRate: parseFloat(conversionRate.toFixed(2)),
       leadsUpdatedToday
     };
-  }, [leadsArray]);
+  }, [dashboardResponse, leadsArray]);
 
   // Calculate CRM stats with memoization and efficient algorithms
   const crmStats = useMemo(() => {
