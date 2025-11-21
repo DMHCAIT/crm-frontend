@@ -454,17 +454,35 @@ const LeadsManagement: React.FC = () => {
   // ==========================================
   // SERVER-SIDE FILTERING - Build filter object
   // ==========================================
-  const filterParams = useMemo(() => ({
-    search: searchQuery,
-    status: statusFilter,
-    country: countryFilter,
-    source: sourceFilter,
-    assignedTo: assignedToFilter,
-    qualification: qualificationFilter,
-    course: courseFilter,
-    company: companyFilter,
-    dateFilter: dateFilter
-  }), [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, companyFilter, dateFilter]);
+  const filterParams = useMemo(() => {
+    const filters = {
+      search: searchQuery,
+      status: statusFilter,
+      country: countryFilter,
+      source: sourceFilter,
+      assignedTo: assignedToFilter,
+      qualification: qualificationFilter,
+      course: courseFilter,
+      company: companyFilter,
+      dateFilter: dateFilter
+    };
+    
+    // DEBUG: Log filter parameters
+    console.log('🔍 Filter Parameters Debug:', {
+      searchQuery,
+      statusFilter,
+      countryFilter,
+      sourceFilter,
+      assignedToFilter,
+      qualificationFilter,
+      courseFilter,
+      companyFilter,
+      dateFilter,
+      finalFilters: filters
+    });
+    
+    return filters;
+  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, companyFilter, dateFilter]);
 
   // TanStack Query hooks with server-side pagination and filtering
   const { data: leadsData, isLoading: leadsLoading, refetch: refetchLeads } = useLeads(currentPage, itemsPerPage, filterParams);
