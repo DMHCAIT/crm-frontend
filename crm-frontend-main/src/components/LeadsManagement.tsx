@@ -197,9 +197,6 @@ const LeadsManagement: React.FC = () => {
   // Pagination States (must come first)
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-
-  // TanStack Query hooks with server-side pagination
-  const { data: leadsData, isLoading: leadsLoading, refetch: refetchLeads } = useLeads(currentPage, itemsPerPage);
   const bulkUpdateMutation = useBulkUpdateLeads();
   const bulkDeleteMutation = useBulkDeleteLeads();
   
@@ -462,6 +459,26 @@ const LeadsManagement: React.FC = () => {
     followUp: '',
     company: ''
   });
+
+  // ==========================================
+  // SERVER-SIDE FILTERING - Build filter object
+  // ==========================================
+  const filterParams = useMemo(() => ({
+    search: searchQuery,
+    status: statusFilter,
+    country: countryFilter,
+    source: sourceFilter,
+    assignedTo: assignedToFilter,
+    qualification: qualificationFilter,
+    course: courseFilter,
+    company: companyFilter,
+    dateFilter: dateFilter
+  }), [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, companyFilter, dateFilter]);
+
+  // TanStack Query hooks with server-side pagination and filtering
+  const { data: leadsData, isLoading: leadsLoading, refetch: refetchLeads } = useLeads(currentPage, itemsPerPage, filterParams);
+  const bulkUpdateMutation = useBulkUpdateLeads();
+  const bulkDeleteMutation = useBulkDeleteLeads();
 
   // ==========================================
   // SERVER-SIDE PAGINATION - No longer using client-side slice

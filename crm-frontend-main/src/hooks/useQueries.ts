@@ -17,12 +17,12 @@ export const queryKeys = {
 };
 
 // Leads Hooks - Optimized for performance with pagination support
-export const useLeads = (page: number = 1, pageSize: number = 100) => {
+export const useLeads = (page: number = 1, pageSize: number = 100, filters?: any) => {
   return useQuery({
-    queryKey: [...queryKeys.leads, page, pageSize],
+    queryKey: [...queryKeys.leads, page, pageSize, filters],
     queryFn: async () => {
       const apiClient = getApiClient();
-      const data = await apiClient.getLeads(page, pageSize);
+      const data = await apiClient.getLeads(page, pageSize, filters);
       console.log(`✅ Fetched ${Array.isArray(data?.leads || data?.data) ? (data?.leads || data?.data).length : 0} leads from API (page ${page}, size ${pageSize})`);
       
       // Debug: Log first few leads with status details

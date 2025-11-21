@@ -380,16 +380,40 @@ class ProductionApiClient {
   }
 
   // Leads API - Direct connection to backend database with pagination support
-  async getLeads(page: number = 1, pageSize: number = 100) {
+  async getLeads(page: number = 1, pageSize: number = 100, filters?: any) {
     try {
-      console.log(`🔄 Attempting to fetch leads from backend (page ${page}, size ${pageSize})...`);
-      const response = await this.request(`/api/leads?page=${page}&pageSize=${pageSize}`);
+      // Build query string with pagination and filters
+      const params = new URLSearchParams({
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      });
+      
+      // Add filter parameters if provided
+      if (filters) {
+        if (filters.search) params.append('search', filters.search);
+        if (filters.status && filters.status.length > 0 && !filters.status.includes('all')) {
+          params.append('status', filters.status.join(','));
+        }
+        if (filters.country && filters.country !== 'all') params.append('country', filters.country);
+        if (filters.source && filters.source !== 'all') params.append('source', filters.source);
+        if (filters.assignedTo && filters.assignedTo.length > 0) {
+          params.append('assignedTo', filters.assignedTo.join(','));
+        }
+        if (filters.qualification && filters.qualification !== 'all') params.append('qualification', filters.qualification);
+        if (filters.course && filters.course !== 'all') params.append('course', filters.course);
+        if (filters.company && filters.company !== 'all') params.append('company', filters.company);
+        if (filters.dateFilter && filters.dateFilter !== 'all') params.append('dateFilter', filters.dateFilter);
+      }
+      
+      const queryString = params.toString();
+      console.log(`🔄 Attempting to fetch leads from backend (page ${page}, size ${pageSize}) with filters: ${queryString}`);
+      const response = await this.request(`/api/leads?${queryString}`);
       console.log('✅ Leads fetched successfully:', response);
       return response;
     } catch (error) {
       console.error('❌ Failed to fetch leads from database:', error);
       
-      // Try alternative endpoint if main fails
+      // Try alternative endpoint if main fails (fallback without filters for now)
       try {
         console.log('🔄 Trying alternative leads endpoint...');
         const fallbackResponse = await this.request(`/api/leads-simple?page=${page}&pageSize=${pageSize}`);
