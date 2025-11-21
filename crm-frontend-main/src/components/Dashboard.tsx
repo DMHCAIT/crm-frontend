@@ -21,7 +21,8 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   const { user } = useAuth();
   const { data: dashboardResponse, isLoading: loadingDashboard } = useDashboardStats();
-  const { data: leadsData, isLoading: loadingLeads } = useLeads();
+  // Get all leads for dashboard stats (using large page size to get all data)
+  const { data: leadsResponse, isLoading: loadingLeads } = useLeads(1, 10000);
   
   const loading = loadingDashboard || loadingLeads;
 
@@ -31,6 +32,22 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   // ==========================================
   
   // Pre-process leads data once using Map for O(1) lookups
+  const leadsData = useMemo(() => {
+    // Handle different response formats from the paginated API
+    if (leadsResponse) {
+      if (Array.isArray(leadsResponse)) {
+        return leadsResponse;
+      }
+      if ((leadsResponse as any).leads && Array.isArray((leadsResponse as any).leads)) {
+        return (leadsResponse as any).leads;
+      }
+      if ((leadsResponse as any).data && Array.isArray((leadsResponse as any).data)) {
+        return (leadsResponse as any).data;
+      }
+    }
+    return [];
+  }, [leadsResponse]);
+
   const leadsArray = useMemo(() => {
     return Array.isArray(leadsData) ? leadsData : [];
   }, [leadsData]);

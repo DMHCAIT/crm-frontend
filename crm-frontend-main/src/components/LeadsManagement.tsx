@@ -3773,9 +3773,24 @@ const LeadsManagement: React.FC = () => {
             <div className="p-4 border-b border-gray-200 space-y-3">
               {/* Top row - Title and selection info */}
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Leads Management ({filteredLeads.length})
-                </h2>
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Leads Management ({paginatedLeads.length} on page)
+                  </h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Total accessible leads: <span className="font-semibold text-blue-600">{totalItems}</span>
+                    {user?.role !== 'super_admin' && (
+                      <span className="ml-2 text-gray-500 text-xs">
+                        (Your hierarchy view)
+                      </span>
+                    )}
+                    {user?.role === 'super_admin' && (
+                      <span className="ml-2 text-green-600 text-xs">
+                        (All database leads)
+                      </span>
+                    )}
+                  </p>
+                </div>
                 <div className="flex items-center space-x-3">
                   <input
                     type="checkbox"
@@ -4038,7 +4053,7 @@ const LeadsManagement: React.FC = () => {
 
             {/* Enhanced Systematic Leads List */}
             <div className="divide-y divide-gray-100">
-              {paginatedLeads.map((lead) => (
+              {paginatedLeads.map((lead: Lead) => (
                 <div 
                   key={lead.id}
                   data-lead-id={lead.id}
