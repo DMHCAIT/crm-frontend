@@ -48,6 +48,24 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     return [];
   }, [leadsResponse]);
 
+  // Extract total count from pagination response
+  const totalLeadsFromApi = useMemo(() => {
+    if (leadsResponse) {
+      // Check for pagination.totalRecords first (most reliable)
+      if ((leadsResponse as any).pagination?.totalRecords) {
+        return (leadsResponse as any).pagination.totalRecords;
+      }
+      // Fallback to other possible locations
+      if ((leadsResponse as any).total) {
+        return (leadsResponse as any).total;
+      }
+      if ((leadsResponse as any).totalRecords) {
+        return (leadsResponse as any).totalRecords;
+      }
+    }
+    return null;
+  }, [leadsResponse]);
+
   const leadsArray = useMemo(() => {
     return Array.isArray(leadsData) ? leadsData : [];
   }, [leadsData]);
@@ -111,13 +129,13 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     console.log(`✅ Dashboard fallback stats calculated in ${(endTime - startTime).toFixed(2)}ms`);
     
     return {
-      totalLeads: leadsArray.length,
+      totalLeads: totalLeadsFromApi || leadsArray.length, // Use API total if available, fallback to array length
       activeStudents,
       revenue: totalRevenue,
       conversionRate: parseFloat(conversionRate.toFixed(2)),
       leadsUpdatedToday
     };
-  }, [dashboardResponse, leadsArray]);
+  }, [dashboardResponse, leadsArray, totalLeadsFromApi]);
 
   // Calculate CRM stats with memoization and efficient algorithms
   const crmStats = useMemo(() => {
