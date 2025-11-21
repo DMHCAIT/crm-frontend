@@ -475,6 +475,17 @@ const LeadsManagement: React.FC = () => {
                 Array.isArray((serverResponse as any).data) ? (serverResponse as any).data : 
                 Array.isArray(leadsData) ? leadsData : [];
   const pagination = (serverResponse as any).pagination || null;
+  
+  // DEBUG: Log server response structure
+  console.log('🔍 Server Response Debug:', {
+    hasLeads: !!((serverResponse as any).leads),
+    hasData: !!((serverResponse as any).data),
+    hasPagination: !!pagination,
+    paginationData: pagination,
+    leadsCount: leads.length,
+    serverResponseKeys: Object.keys(serverResponse)
+  });
+  
   const totalRecords = pagination?.totalRecords || leads.length;
   const loading = leadsLoading;
 
@@ -486,6 +497,17 @@ const LeadsManagement: React.FC = () => {
   // For server-side pagination, we'll use leads directly from server
   const paginatedLeads = leads; // Server already returns paginated data
   const totalItems = pagination?.totalRecords || totalRecords || 0;
+  
+  // DEBUG: Log total items calculation
+  console.log('📊 Total Items Debug:', {
+    paginationTotalRecords: pagination?.totalRecords,
+    fallbackTotalRecords: totalRecords,
+    finalTotalItems: totalItems,
+    paginatedLeadsLength: paginatedLeads.length,
+    currentPage: currentPage,
+    itemsPerPage: itemsPerPage
+  });
+  
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const hasNextPage = pagination?.hasNextPage || currentPage < totalPages;
   const hasPrevPage = pagination?.hasPrevPage || currentPage > 1;
