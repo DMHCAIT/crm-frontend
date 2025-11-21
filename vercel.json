@@ -1,0 +1,12 @@
+{
+  "buildCommand": "cd crm-frontend-main && npm run build",
+  "outputDirectory": "crm-frontend-main/dist",
+  "installCommand": "cd crm-frontend-main && npm install",
+  
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
