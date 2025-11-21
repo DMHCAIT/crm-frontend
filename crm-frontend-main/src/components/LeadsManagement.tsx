@@ -477,8 +477,6 @@ const LeadsManagement: React.FC = () => {
 
   // TanStack Query hooks with server-side pagination and filtering
   const { data: leadsData, isLoading: leadsLoading, refetch: refetchLeads } = useLeads(currentPage, itemsPerPage, filterParams);
-  const bulkUpdateMutation = useBulkUpdateLeads();
-  const bulkDeleteMutation = useBulkDeleteLeads();
 
   // ==========================================
   // SERVER-SIDE PAGINATION - No longer using client-side slice
