@@ -801,6 +801,17 @@ const LeadsManagement: React.FC = () => {
   // Client-side filtering for server-paginated data
   const filteredLeads = useMemo(() => {
     console.log('🔍 Applying client-side filters to paginated data...');
+    console.log('📊 Raw paginated leads data:', paginatedLeads?.slice(0, 3)); // Log first 3 leads for debugging
+    
+    // Debug: Check status distribution
+    if (paginatedLeads?.length > 0) {
+      const statusCounts = paginatedLeads.reduce((acc: any, lead: Lead) => {
+        acc[lead.status] = (acc[lead.status] || 0) + 1;
+        return acc;
+      }, {});
+      console.log('📈 Status distribution in data:', statusCounts);
+    }
+    
     let filtered = paginatedLeads;
 
     // Search query filter
@@ -821,7 +832,9 @@ const LeadsManagement: React.FC = () => {
 
     // Status filter
     if (!statusFilter.includes('all') && statusFilter.length > 0) {
+      console.log('🎯 Applying status filter:', statusFilter);
       filtered = filtered.filter((lead: Lead) => statusFilter.includes(lead.status));
+      console.log('📊 After status filter:', filtered.length, 'leads remaining');
     }
 
     // Country filter

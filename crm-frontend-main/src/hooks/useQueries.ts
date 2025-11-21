@@ -24,6 +24,21 @@ export const useLeads = (page: number = 1, pageSize: number = 100) => {
       const apiClient = getApiClient();
       const data = await apiClient.getLeads(page, pageSize);
       console.log(`✅ Fetched ${Array.isArray(data?.leads || data?.data) ? (data?.leads || data?.data).length : 0} leads from API (page ${page}, size ${pageSize})`);
+      
+      // Debug: Log first few leads with status details
+      const leads = (data as any)?.leads || (data as any)?.data || [];
+      console.log('🔍 DEBUG - First 3 leads status details:');
+      leads.slice(0, 3).forEach((lead: any, i: number) => {
+        console.log(`  Lead ${i + 1}: id=${lead.id}, name=${lead.name || lead.fullName}, status="${lead.status}"`);
+      });
+      
+      // Debug: Check status distribution
+      const statusCounts = leads.reduce((acc: any, lead: any) => {
+        acc[lead.status] = (acc[lead.status] || 0) + 1;
+        return acc;
+      }, {});
+      console.log('🔍 DEBUG - Status distribution in API response:', statusCounts);
+      
       return data;
     },
     staleTime: 1000 * 60 * 2, // Cache for 2 minutes
