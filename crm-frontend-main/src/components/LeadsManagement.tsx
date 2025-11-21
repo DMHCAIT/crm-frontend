@@ -200,15 +200,6 @@ const LeadsManagement: React.FC = () => {
   const bulkUpdateMutation = useBulkUpdateLeads();
   const bulkDeleteMutation = useBulkDeleteLeads();
   
-  // Process server response to get leads array and pagination info
-  const serverResponse = leadsData || {};
-  const leads = Array.isArray((serverResponse as any).leads) ? (serverResponse as any).leads : 
-                Array.isArray((serverResponse as any).data) ? (serverResponse as any).data : 
-                Array.isArray(leadsData) ? leadsData : [];
-  const pagination = (serverResponse as any).pagination || null;
-  const totalRecords = pagination?.totalRecords || leads.length;
-  const loading = leadsLoading;
-  
   // State Management
   const [users, setUsers] = useState<any[]>([]);
   const [importLoading, setImportLoading] = useState(false);
@@ -477,6 +468,15 @@ const LeadsManagement: React.FC = () => {
 
   // TanStack Query hooks with server-side pagination and filtering
   const { data: leadsData, isLoading: leadsLoading, refetch: refetchLeads } = useLeads(currentPage, itemsPerPage, filterParams);
+
+  // Process server response to get leads array and pagination info
+  const serverResponse = leadsData || {};
+  const leads = Array.isArray((serverResponse as any).leads) ? (serverResponse as any).leads : 
+                Array.isArray((serverResponse as any).data) ? (serverResponse as any).data : 
+                Array.isArray(leadsData) ? leadsData : [];
+  const pagination = (serverResponse as any).pagination || null;
+  const totalRecords = pagination?.totalRecords || leads.length;
+  const loading = leadsLoading;
 
   // ==========================================
   // SERVER-SIDE PAGINATION - No longer using client-side slice
