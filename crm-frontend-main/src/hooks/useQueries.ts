@@ -252,6 +252,54 @@ export const useAnalytics = () => {
   });
 };
 
+// Add Note Mutation
+export const useAddNote = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ leadId, content, noteType = 'general' }: { 
+      leadId: string; 
+      content: string; 
+      noteType?: string;
+    }) => {
+      // Import TokenManager here to avoid circular dependencies
+      const { TokenManager } = await import('../lib/productionAuth');
+      
+      // Use the proper leads API addNote endpoint
+      const backendUrl = import.meta.env.VITE_API_BASE_URL || 'https://crm-backend-fh34.onrender.com';
+      const response = await fetch(`${backendUrl}/api/leads?action=addNote`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${TokenManager.getToken()}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          leadId,
+          content,
+          noteType
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+      
+      const result = await response.json();
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to add note');
+      }
+      
+      return result;
+    },
+    onSuccess: (_, variables) => {
+      // Invalidate relevant queries to trigger re-fetch
+      queryClient.invalidateQueries({ queryKey: queryKeys.leads });
+      queryClient.invalidateQueries({ queryKey: queryKeys.lead(variables.leadId) });
+    },
+  });
+};
+
 // Notifications Hooks
 export const useNotifications = () => {
   return useQuery({

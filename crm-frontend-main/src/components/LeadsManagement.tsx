@@ -4,7 +4,7 @@ import { getApiClient } from '../lib/backend';
 import { TokenManager } from '../lib/productionAuth';
 import { useNotify } from './NotificationSystem';
 import { STATUS_OPTIONS, STATUS_COLORS, QUALIFICATION_OPTIONS } from '../constants/crmConstants';
-import { useLeads, useBulkUpdateLeads, useBulkDeleteLeads } from '../hooks/useQueries';
+import { useLeads, useBulkUpdateLeads, useBulkDeleteLeads, useUpdateLead, useAddNote } from '../hooks/useQueries';
 import { 
   Search, 
   Plus,
@@ -199,6 +199,8 @@ const LeadsManagement: React.FC = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const bulkUpdateMutation = useBulkUpdateLeads();
   const bulkDeleteMutation = useBulkDeleteLeads();
+  const updateLeadMutation = useUpdateLead();
+  const addNoteMutation = useAddNote();
   
   // State Management
   const [users, setUsers] = useState<any[]>([]);
@@ -907,17 +909,14 @@ const LeadsManagement: React.FC = () => {
 
       console.log(`🔍 Saving lead ${editingLead} to backend...`);
       
-      // Save to backend API first
-      const apiClient = getApiClient();
+      // Use React Query mutation for proper cache invalidation
       const updateData = {
         ...editedLead,
         updatedAt: new Date().toISOString()
       };
       
-      await apiClient.updateLead(editingLead, updateData);
-      console.log('✅ Lead saved to backend successfully');
-      
-      // Query will auto-update via cache invalidation in the mutation
+      await updateLeadMutation.mutateAsync({ id: editingLead, data: updateData });
+      console.log('✅ Lead saved to backend successfully with cache invalidation');
       
       // Track this lead as updated today with persistence
       if (editingLead && !leadsUpdatedToday.includes(editingLead)) {
@@ -1011,43 +1010,19 @@ const LeadsManagement: React.FC = () => {
     if (!noteContent?.trim()) return;
 
     try {
-      // Use the proper leads API addNote endpoint with real user authentication
-      const backendUrl = import.meta.env.VITE_API_BASE_URL || 'https://crm-backend-fh34.onrender.com';
-      const response = await fetch(`${backendUrl}/api/leads?action=addNote`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${TokenManager.getToken()}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          leadId: leadId,
-          content: noteContent,
-          noteType: 'general'
-        })
+      console.log(`🔍 Adding note to lead ${leadId}...`);
+      
+      // Use React Query mutation for proper cache invalidation
+      await addNoteMutation.mutateAsync({
+        leadId: leadId,
+        content: noteContent,
+        noteType: 'general'
       });
 
-      console.log('🔍 Response status:', response.status, response.statusText);
-      console.log('🔍 Response headers:', Object.fromEntries(response.headers.entries()));
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ Response not OK:', response.status, errorText);
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
-      }
-      
-      const result = await response.json();
-      console.log('✅ Response JSON:', result);
-      
-      if (!result.success) {
-        throw new Error(result.error || 'Failed to add note');
-      }
-
-      console.log('✅ Note saved successfully');
+      console.log('✅ Note saved successfully with cache invalidation');
       
       // Show success notification
       notify.success('Note Saved', 'Your note has been added successfully');
-      
-      // Query will auto-update via cache invalidation
       
       // Track this lead as updated today when note is added
       if (!leadsUpdatedToday.includes(leadId)) {
@@ -4928,9 +4903,12 @@ const LeadsManagement: React.FC = () => {
 
 
 
-                    {/* Notes & Activities Section */}
-                    <div className="bg-gray-50 rounded-lg p-3" key={`notes-${selectedLead.id}-${lastUpdateTime?.getTime()}`}>
+                    {/* Enhanced Notes & Activities Section with Tabs */}
+                    <div className="bg-white rounded-lg border border-gray-200 p-4 mt-4" key={`notes-${selectedLead.id}-${lastUpdateTime?.getTime()}`}>
                       {(() => {
+                        // State for active tab
+                        const [activeTab, setActiveTab] = React.useState('notes');
+                        
                         // Combine notes and activities
                         const notes = selectedLead.notes || [];
                         const activities = leadActivities[selectedLead.id] || [];
@@ -4953,92 +4931,139 @@ const LeadsManagement: React.FC = () => {
                           type: 'note' as const
                         }));
                         
-                        // Combine and sort by timestamp (newest first)
-                        const allItems: CombinedItem[] = [...noteItems, ...activityItems].sort((a, b) => 
+                        // Sort each type by timestamp (newest first)
+                        const sortedNotes = noteItems.sort((a, b) => 
+                          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+                        );
+                        const sortedActivities = activityItems.sort((a, b) => 
                           new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
                         );
                         
-                        const totalCount = allItems.length;
                         const notesCount = noteItems.length;
                         const activitiesCount = activityItems.length;
                         
                         return (
-                          <>
-                            <h4 className="font-semibold text-gray-900 text-base mb-2 flex items-center">
-                              <MessageSquare className="w-4 h-4 mr-2 text-orange-600" />
-                              Notes & Activities ({totalCount})
-                              <span className="ml-2 text-xs text-gray-500 font-normal">
-                                ({notesCount} notes, {activitiesCount} activities)
-                              </span>
-                            </h4>
-                            <div className="space-y-2 max-h-40 overflow-y-auto">
-                              {allItems.length > 0 ? allItems.map((item) => (
-                                <div 
-                                  key={item.id} 
-                                  className={`p-2 rounded border shadow-sm ${
-                                    item.type === 'note' 
-                                      ? 'bg-white border-gray-200' 
-                                      : item.activityType === 'transfer' || item.activityType === 'assignment_change'
-                                      ? 'bg-purple-50 border-purple-200'
-                                      : item.activityType === 'status_change'
-                                      ? 'bg-blue-50 border-blue-200'
-                                      : item.activityType === 'lead_created'
-                                      ? 'bg-green-50 border-green-200'
-                                      : 'bg-yellow-50 border-yellow-200'
+                          <div className="space-y-4">
+                            {/* Tab Header */}
+                            <div className="flex items-center justify-between">
+                              <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+                                <button
+                                  onClick={() => setActiveTab('notes')}
+                                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                                    activeTab === 'notes'
+                                      ? 'bg-white text-blue-600 shadow-sm'
+                                      : 'text-gray-600 hover:text-gray-900'
                                   }`}
                                 >
-                                  <div className="flex items-start justify-between mb-1">
-                                    <div className="flex items-center space-x-1">
-                                      {item.type === 'note' ? (
-                                        <MessageSquare className="w-4 h-4 text-gray-500 mt-0.5" />
-                                      ) : item.activityType === 'transfer' || item.activityType === 'assignment_change' ? (
-                                        <ArrowUpDown className="w-4 h-4 text-purple-500 mt-0.5" />
-                                      ) : item.activityType === 'status_change' ? (
-                                        <Edit3 className="w-4 h-4 text-blue-500 mt-0.5" />
-                                      ) : item.activityType === 'lead_created' ? (
-                                        <Plus className="w-4 h-4 text-green-500 mt-0.5" />
-                                      ) : (
-                                        <Clock className="w-4 h-4 text-yellow-500 mt-0.5" />
-                                      )}
-                                      <span className="text-xs font-medium text-gray-600 capitalize">
-                                        {item.type === 'note' ? 'Note' : item.activityType?.replace('_', ' ')}
-                                      </span>
+                                  <MessageSquare className="w-4 h-4 mr-2 inline" />
+                                  Notes ({notesCount})
+                                </button>
+                                <button
+                                  onClick={() => setActiveTab('activities')}
+                                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                                    activeTab === 'activities'
+                                      ? 'bg-white text-blue-600 shadow-sm'
+                                      : 'text-gray-600 hover:text-gray-900'
+                                  }`}
+                                >
+                                  <Activity className="w-4 h-4 mr-2 inline" />
+                                  Activities ({activitiesCount})
+                                </button>
+                              </div>
+                            </div>
+                            
+                            {/* Tab Content - Increased size */}
+                            <div className="min-h-[300px] max-h-[500px] overflow-y-auto bg-gray-50 rounded-lg p-3">
+                              {activeTab === 'notes' ? (
+                                <div className="space-y-3">
+                                  {sortedNotes.length > 0 ? sortedNotes.map((note) => (
+                                    <div key={note.id} className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                                      <div className="flex items-start justify-between mb-2">
+                                        <div className="flex items-center space-x-2">
+                                          <MessageSquare className="w-4 h-4 text-blue-500 mt-1" />
+                                          <span className="text-sm font-medium text-gray-900">{note.author}</span>
+                                        </div>
+                                        <span className="text-xs text-gray-500">
+                                          {new Date(note.timestamp).toLocaleString()}
+                                        </span>
+                                      </div>
+                                      <p className="text-sm text-gray-700 leading-relaxed">{note.content}</p>
                                     </div>
-                                    <span className="text-xs text-gray-500">
-                                      {new Date(item.timestamp).toLocaleString()}
-                                    </span>
-                                  </div>
-                                  
-                                  <p className="text-xs text-gray-900 mb-1">{item.content}</p>
-                                  
-                                  {/* Show old/new values for activities if available */}
-                                  {item.type === 'activity' && (item.oldValue || item.newValue) && (
-                                    <div className="text-xs text-gray-600 bg-gray-100 rounded p-1 mt-1">
-                                      {item.oldValue && (
-                                        <div><span className="font-medium">From:</span> {item.oldValue}</div>
-                                      )}
-                                      {item.newValue && (
-                                        <div><span className="font-medium">To:</span> {item.newValue}</div>
-                                      )}
+                                  )) : (
+                                    <div className="text-center py-8">
+                                      <MessageSquare className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                      <p className="text-gray-500 text-sm">No notes yet</p>
+                                      <p className="text-gray-400 text-xs">Add a note below to get started</p>
                                     </div>
                                   )}
-                                  
-                                  <div className="flex items-center justify-between text-xs text-gray-500 mt-1">
-                                    <span className="font-medium">{item.author}</span>
-                                    <span className={`px-1 py-0.5 rounded text-xs ${
-                                      item.type === 'note' 
-                                        ? 'bg-gray-100 text-gray-600' 
-                                        : 'bg-blue-100 text-blue-600'
-                                    }`}>
-                                      {item.type === 'note' ? 'Note' : 'Activity'}
-                                    </span>
-                                  </div>
                                 </div>
-                              )) : (
-                                <p className="text-gray-500 text-sm italic">No notes or activities yet</p>
+                              ) : (
+                                <div className="space-y-3">
+                                  {sortedActivities.length > 0 ? sortedActivities.map((activity) => (
+                                    <div 
+                                      key={activity.id} 
+                                      className={`p-4 rounded-lg border shadow-sm ${
+                                        activity.activityType === 'transfer' || activity.activityType === 'assignment_change'
+                                          ? 'bg-purple-50 border-purple-200'
+                                          : activity.activityType === 'status_change'
+                                          ? 'bg-blue-50 border-blue-200'
+                                          : activity.activityType === 'lead_created'
+                                          ? 'bg-green-50 border-green-200'
+                                          : 'bg-yellow-50 border-yellow-200'
+                                      }`}
+                                    >
+                                      <div className="flex items-start justify-between mb-2">
+                                        <div className="flex items-center space-x-2">
+                                          {activity.activityType === 'transfer' || activity.activityType === 'assignment_change' ? (
+                                            <ArrowUpDown className="w-4 h-4 text-purple-500 mt-1" />
+                                          ) : activity.activityType === 'status_change' ? (
+                                            <Edit3 className="w-4 h-4 text-blue-500 mt-1" />
+                                          ) : activity.activityType === 'lead_created' ? (
+                                            <Plus className="w-4 h-4 text-green-500 mt-1" />
+                                          ) : (
+                                            <Clock className="w-4 h-4 text-yellow-500 mt-1" />
+                                          )}
+                                          <span className="text-sm font-medium text-gray-900 capitalize">
+                                            {activity.activityType?.replace('_', ' ')}
+                                          </span>
+                                          <span className="text-xs text-gray-500">by {activity.author}</span>
+                                        </div>
+                                        <span className="text-xs text-gray-500">
+                                          {new Date(activity.timestamp).toLocaleString()}
+                                        </span>
+                                      </div>
+                                      
+                                      <p className="text-sm text-gray-700 mb-2">{activity.content}</p>
+                                      
+                                      {/* Show old/new values for activities if available */}
+                                      {(activity.oldValue || activity.newValue) && (
+                                        <div className="text-xs bg-white rounded p-2 border border-gray-200">
+                                          {activity.oldValue && (
+                                            <div className="mb-1">
+                                              <span className="font-medium text-red-600">From:</span> 
+                                              <span className="ml-1 text-gray-700">{activity.oldValue}</span>
+                                            </div>
+                                          )}
+                                          {activity.newValue && (
+                                            <div>
+                                              <span className="font-medium text-green-600">To:</span> 
+                                              <span className="ml-1 text-gray-700">{activity.newValue}</span>
+                                            </div>
+                                          )}
+                                        </div>
+                                      )}
+                                    </div>
+                                  )) : (
+                                    <div className="text-center py-8">
+                                      <Activity className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                      <p className="text-gray-500 text-sm">No activities yet</p>
+                                      <p className="text-gray-400 text-xs">Activities will appear as changes are made</p>
+                                    </div>
+                                  )}
+                                </div>
                               )}
                             </div>
-                          </>
+                          </div>
                         );
                       })()}
                     </div>
