@@ -16,14 +16,14 @@ export const queryKeys = {
   notifications: ['notifications'] as const,
 };
 
-// Leads Hooks - Optimized for performance
-export const useLeads = () => {
+// Leads Hooks - Optimized for performance with pagination support
+export const useLeads = (page: number = 1, pageSize: number = 100) => {
   return useQuery({
-    queryKey: queryKeys.leads,
+    queryKey: [...queryKeys.leads, page, pageSize],
     queryFn: async () => {
       const apiClient = getApiClient();
-      const data = await apiClient.getLeads();
-      console.log(`✅ Fetched ${Array.isArray(data) ? data.length : 0} leads from API`);
+      const data = await apiClient.getLeads(page, pageSize);
+      console.log(`✅ Fetched ${Array.isArray(data?.leads || data?.data) ? (data?.leads || data?.data).length : 0} leads from API (page ${page}, size ${pageSize})`);
       return data;
     },
     staleTime: 1000 * 60 * 2, // Cache for 2 minutes

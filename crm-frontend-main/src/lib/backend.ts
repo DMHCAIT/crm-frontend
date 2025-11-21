@@ -379,11 +379,11 @@ class ProductionApiClient {
     }
   }
 
-  // Leads API - Direct connection to backend database
-  async getLeads() {
+  // Leads API - Direct connection to backend database with pagination support
+  async getLeads(page: number = 1, pageSize: number = 100) {
     try {
-      console.log('🔄 Attempting to fetch leads from backend...');
-      const response = await this.request('/api/leads');
+      console.log(`🔄 Attempting to fetch leads from backend (page ${page}, size ${pageSize})...`);
+      const response = await this.request(`/api/leads?page=${page}&pageSize=${pageSize}`);
       console.log('✅ Leads fetched successfully:', response);
       return response;
     } catch (error) {
@@ -392,7 +392,7 @@ class ProductionApiClient {
       // Try alternative endpoint if main fails
       try {
         console.log('🔄 Trying alternative leads endpoint...');
-        const fallbackResponse = await this.request('/api/leads-simple');
+        const fallbackResponse = await this.request(`/api/leads-simple?page=${page}&pageSize=${pageSize}`);
         console.log('✅ Fallback leads fetched successfully:', fallbackResponse);
         return fallbackResponse;
       } catch (fallbackError) {

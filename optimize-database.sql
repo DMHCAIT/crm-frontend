@@ -15,9 +15,14 @@ CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 CREATE INDEX IF NOT EXISTS idx_leads_assigned_status ON leads(assigned_to, status);
 CREATE INDEX IF NOT EXISTS idx_leads_updated_assigned ON leads(updated_at DESC, assigned_to);
 
--- 3. Optimize the leads table with VACUUM and ANALYZE
-VACUUM ANALYZE leads;
-VACUUM ANALYZE users;
+-- 3. Analyze the tables to update statistics (VACUUM requires special handling)
+ANALYZE leads;
+ANALYZE users;
+
+-- NOTE: VACUUM must be run separately outside a transaction block
+-- Run these commands ONE AT A TIME in Supabase SQL Editor if needed:
+-- VACUUM leads;
+-- VACUUM users;
 
 -- 4. Check current table statistics
 SELECT 
