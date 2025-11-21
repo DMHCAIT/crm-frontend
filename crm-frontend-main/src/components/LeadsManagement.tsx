@@ -798,15 +798,187 @@ const LeadsManagement: React.FC = () => {
     };
   }, []);
 
-  // TEMPORARY: For server-side pagination, we'll disable client-side filtering
-  // In production, filter parameters should be sent to the server
-  // const filteredLeads = useMemo(() => {
-  //   console.log('🔍 Applying filters...');
-  //   ... filtering logic would go here ...
-  // }, [leads, searchQuery, statusFilter, /* other filters */]);
-  
-  // For now, use all leads from server (already filtered/paginated server-side)
-  const filteredLeads = paginatedLeads;
+  // Client-side filtering for server-paginated data
+  const filteredLeads = useMemo(() => {
+    console.log('🔍 Applying client-side filters to paginated data...');
+    let filtered = paginatedLeads;
+
+    // Search query filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((lead: Lead) =>
+        lead.fullName?.toLowerCase().includes(query) ||
+        lead.email?.toLowerCase().includes(query) ||
+        lead.phone?.toLowerCase().includes(query) ||
+        lead.company?.toLowerCase().includes(query) ||
+        lead.course?.toLowerCase().includes(query) ||
+        lead.country?.toLowerCase().includes(query) ||
+        lead.source?.toLowerCase().includes(query) ||
+        lead.assignedTo?.toLowerCase().includes(query) ||
+        lead.status?.toLowerCase().includes(query)
+      );
+    }
+
+    // Status filter
+    if (!statusFilter.includes('all') && statusFilter.length > 0) {
+      filtered = filtered.filter((lead: Lead) => statusFilter.includes(lead.status));
+    }
+
+    // Country filter
+    if (countryFilter !== 'all') {
+      filtered = filtered.filter((lead: Lead) => lead.country === countryFilter);
+    }
+
+    // Source filter
+    if (sourceFilter !== 'all') {
+      filtered = filtered.filter((lead: Lead) => lead.source === sourceFilter);
+    }
+
+    // Assigned to filter
+    if (!assignedToFilter.includes('all') && assignedToFilter.length > 0) {
+      filtered = filtered.filter((lead: Lead) => assignedToFilter.includes(lead.assignedTo));
+    }
+
+    // Date filters for updatedAt
+    if (dateFilter !== 'all') {
+      const now = new Date();
+      let startDate: Date | null = null;
+      let endDate: Date | null = null;
+
+      switch (dateFilter) {
+        case 'today':
+          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+          break;
+        case 'yesterday':
+          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+          endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, 23, 59, 59);
+          break;
+        case 'last7days':
+          startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          endDate = now;
+          break;
+        case 'last30days':
+          startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          endDate = now;
+          break;
+        case 'custom':
+          if (dateFrom) startDate = new Date(dateFrom);
+          if (dateTo) endDate = new Date(dateTo);
+          break;
+        case 'advanced':
+          if (specificDate) {
+            const selectedDate = new Date(specificDate);
+            switch (dateFilterType) {
+              case 'on':
+                startDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+                endDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 23, 59, 59);
+                break;
+              case 'after':
+                startDate = selectedDate;
+                break;
+              case 'before':
+                endDate = selectedDate;
+                break;
+              case 'between':
+                if (dateFrom) startDate = new Date(dateFrom);
+                if (dateTo) endDate = new Date(dateTo);
+                break;
+            }
+          }
+          break;
+      }
+
+      if (startDate || endDate) {
+        filtered = filtered.filter((lead: Lead) => {
+          const leadDate = new Date(lead.updatedAt);
+          if (startDate && leadDate < startDate) return false;
+          if (endDate && leadDate > endDate) return false;
+          return true;
+        });
+      }
+    }
+
+    // Created date filters
+    if (createdDateFilter !== 'all') {
+      const now = new Date();
+      let startDate: Date | null = null;
+      let endDate: Date | null = null;
+
+      switch (createdDateFilter) {
+        case 'today':
+          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+          break;
+        case 'yesterday':
+          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+          endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, 23, 59, 59);
+          break;
+        case 'last7days':
+          startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          endDate = now;
+          break;
+        case 'last30days':
+          startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          endDate = now;
+          break;
+        case 'custom':
+          if (createdDateFrom) startDate = new Date(createdDateFrom);
+          if (createdDateTo) endDate = new Date(createdDateTo);
+          break;
+        case 'advanced':
+          if (createdSpecificDate) {
+            const selectedDate = new Date(createdSpecificDate);
+            switch (createdDateFilterType) {
+              case 'on':
+                startDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+                endDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 23, 59, 59);
+                break;
+              case 'after':
+                startDate = selectedDate;
+                break;
+              case 'before':
+                endDate = selectedDate;
+                break;
+              case 'between':
+                if (createdDateFrom) startDate = new Date(createdDateFrom);
+                if (createdDateTo) endDate = new Date(createdDateTo);
+                break;
+            }
+          }
+          break;
+      }
+
+      if (startDate || endDate) {
+        filtered = filtered.filter((lead: Lead) => {
+          const leadDate = new Date(lead.createdAt);
+          if (startDate && leadDate < startDate) return false;
+          if (endDate && leadDate > endDate) return false;
+          return true;
+        });
+      }
+    }
+
+    console.log(`✅ Filtered ${filtered.length} leads from ${paginatedLeads.length} paginated leads`);
+    return filtered;
+  }, [
+    paginatedLeads,
+    searchQuery,
+    statusFilter,
+    countryFilter,
+    sourceFilter,
+    assignedToFilter,
+    dateFilter,
+    dateFrom,
+    dateTo,
+    dateFilterType,
+    specificDate,
+    createdDateFilter,
+    createdDateFrom,
+    createdDateTo,
+    createdDateFilterType,
+    createdSpecificDate
+  ]);
 
   // ==========================================
   // OPTIMIZED CALLBACKS - Prevent unnecessary re-renders
