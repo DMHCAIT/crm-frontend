@@ -1340,33 +1340,39 @@ const LeadsManagement: React.FC = () => {
 
   // Handle lead selection for detail view
   const handleLeadClick = async (leadId: string) => {
-    console.log(`🔄 Lead clicked: ${leadId}`);
-    
-    // First set the selected lead and show panel
-    setSelectedLeadId(leadId);
-    setShowDetailPanel(true);
-    
-    // Scroll the selected lead into view smoothly after a brief delay
-    setTimeout(() => {
-      const leadElement = document.querySelector(`[data-lead-id="${leadId}"]`);
-      if (leadElement) {
-        leadElement.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center',
-          inline: 'nearest'
-        });
-      }
-    }, 100);
-    
-    console.log(`🔄 Loading notes and activities for lead: ${leadId}`);
-    // Load notes and activities for the selected lead and wait for completion
-    await loadNotesForLead(leadId);
-    await loadActivitiesForLead(leadId);
-    
-    console.log(`🔄 Notes and activities loading completed for lead: ${leadId}`);
-    
-    // Force a state update to ensure the UI re-renders with the updated notes
-    setLastUpdateTime(new Date());
+    try {
+      console.log(`🔄 Lead clicked: ${leadId}`);
+      
+      // First set the selected lead and show panel
+      setSelectedLeadId(leadId);
+      setShowDetailPanel(true);
+      
+      // Scroll the selected lead into view smoothly after a brief delay
+      setTimeout(() => {
+        const leadElement = document.querySelector(`[data-lead-id="${leadId}"]`);
+        if (leadElement) {
+          leadElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'nearest'
+          });
+        }
+      }, 100);
+      
+      console.log(`🔄 Loading notes and activities for lead: ${leadId}`);
+      // Load notes and activities for the selected lead and wait for completion
+      await loadNotesForLead(leadId);
+      await loadActivitiesForLead(leadId);
+      
+      console.log(`🔄 Notes and activities loading completed for lead: ${leadId}`);
+      
+      // Force a state update to ensure the UI re-renders with the updated notes
+      setLastUpdateTime(new Date());
+    } catch (error) {
+      console.error(`❌ Error in handleLeadClick for lead ${leadId}:`, error);
+      // Don't re-throw the error to avoid crashing the component
+      // The detail panel is already open, so the user can still see basic lead info
+    }
   };
 
   // Handle lead transfer (using bulk transfer modal for individual leads)
