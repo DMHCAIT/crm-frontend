@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+                      <Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+                       xmlns:x="urn:schemas-microsoft-com:office:excel"
+                       xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+                       xmlns:html="http://www.w3.org/TR/REC-html40">
+                      <Styles>
+                        <Style ss:ID="s17">
+                          <NumberFormat ss:Format="m/d/yy"/>
+                          <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s18">
+                          <NumberFormat ss:Format="m/d/yy"/>
+                          <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s19">
+                          <NumberFormat ss:Format="m/yy"/>
+                          <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s20">
+                          <NumberFormat ss:Format="m/yy"/>
+                          <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s21">
+                          <NumberFormat ss:Format="m/d/yy h:mm AM/PM"/>
+                          <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s22">
+                          <NumberFormat ss:Format="m/d/yy h:mm AM/PM"/>
+                          <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s23">
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s24">
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s25">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s26">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s27">
+                         <NumberFormat ss:Format="0"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s28">
+                         <NumberFormat ss:Format="0"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s29">
+                         <NumberFormat ss:Format="_(&quot;$&quot;* #,##0.00_);_(&quot;$&quot;* (#,##0.00);_(&quot;$&quot;* &quot;-&quot;??_);_(@_)"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s30">
+                         <NumberFormat ss:Format="_(&quot;$&quot;* #,##0.00_);_(&quot;$&quot;* (#,##0.00);_(&quot;$&quot;* &quot;-&quot;??_);_(@_)"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s31">
+                         <NumberFormat ss:Format="Percent"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s32">
+                         <NumberFormat ss:Format="Percent"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s33">
+                         <NumberFormat ss:Format="YYYY-mm-dd"/>
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                        </Style>
+                        <Style ss:ID="s34">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s35">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s36">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Top" ss:WrapText="1"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                      </Styles>
+<Worksheet ss:Name="Sheet1">
+<Table>
+<Column ss:Index="1" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="3" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="4" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="6" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="7" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="8" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="9" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="10" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="11" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="12" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="13" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="14" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="15" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="16" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="17" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="18" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="19" ss:AutoFitWidth="0" ss:Width="150"/>
+<Row>
+<Cell ss:StyleID="s24"><Data ss:Type="String">id</Data></Cell>
+<Cell ss:StyleID="s24"><Data ss:Type="String">created_time</Data></Cell>
+<Cell ss:StyleID="s24"><Data ss:Type="String">ad_id</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">ad_name</Data></Cell>
+<Cell ss:StyleID="s24"><Data ss:Type="String">adset_id</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">adset_name</Data></Cell>
+<Cell ss:StyleID="s24"><Data ss:Type="String">campaign_id</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">campaign_name</Data></Cell>
+<Cell ss:StyleID="s24"><Data ss:Type="String">form_id</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">form_name</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">is_organic</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">platform</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">your_highest_qualification</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">in_which_program_are_you_interested_?</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">full_name</Data></Cell>
+<Cell ss:StyleID="s24"><Data ss:Type="String">phone_number</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">email</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">country</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">lead_status</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s27"><Data ss:Type="Number">810207675190517</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T17:52:58.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120220523626570524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Paediatric ad</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120220523625220524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Paeditric adset</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">2804132873127962</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Fellow Pediatric</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">md/ms/dnb</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pediatric_endocrinology</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Sheetal Ahuja Sachdeva</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+919779819068</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">sheetalahuja305@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s25"><Data ss:Type="String">25222791914078264</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T13:30:57.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120220523626570524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Paediatric ad</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120220523625220524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Paeditric adset</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">2804132873127962</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Fellow Pediatric</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">mbbs/fmg</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pediatric_echocardiography</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Arpita Manektala</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+917814699000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">manektalaarpita@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1219518780032612</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T04:13:31.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120220523626570524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Paediatric ad</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120220523625220524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Paeditric adset</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">2804132873127962</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Fellow Pediatric</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">fb</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">others</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pediatric_endocrinology</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Assem ali</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+966545554881</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">assem-ali@hotmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">SA</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s27"><Data ss:Type="Number">823185543843376</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T00:54:44.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120220523626570524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Paediatric ad</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120220523625220524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Paeditric adset</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">2804132873127962</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Fellow Pediatric</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">md/ms/dnb</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pediatric_endocrinology</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Dr.Rajat Singh</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+917905869148</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">drrajatsingh1994@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1866528513985420</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T00:17:21.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120220523626570524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Paediatric ad</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120220523625220524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Paeditric adset</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">2804132873127962</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Fellow Pediatric</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ayush</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pediatric_endocrinology</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Abolee Wandhekar</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+919860866781</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">drabolee64@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+</Table>
+</Worksheet>
+</Workbook>

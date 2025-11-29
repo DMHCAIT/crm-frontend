@@ -477,7 +477,12 @@ const LeadsManagement: React.FC = () => {
       qualification: qualificationFilter,
       course: courseFilter,
       company: companyFilter,
-      dateFilter: dateFilter
+      dateFilter: dateFilter,
+      createdDateFilter: createdDateFilter,
+      createdDateFrom: createdDateFrom,
+      createdDateTo: createdDateTo,
+      createdDateFilterType: createdDateFilterType,
+      createdSpecificDate: createdSpecificDate
     };
     
     // DEBUG: Log filter parameters
@@ -491,11 +496,16 @@ const LeadsManagement: React.FC = () => {
       courseFilter,
       companyFilter,
       dateFilter,
+      createdDateFilter,
+      createdDateFrom,
+      createdDateTo,
+      createdDateFilterType,
+      createdSpecificDate,
       finalFilters: filters
     });
     
     return filters;
-  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, companyFilter, dateFilter]);
+  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, companyFilter, dateFilter, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate]);
 
   // TanStack Query hooks with server-side pagination and filtering
   const { data: leadsData, isLoading: leadsLoading, refetch: refetchLeads } = useLeads(currentPage, itemsPerPage, filterParams);
@@ -548,7 +558,7 @@ const LeadsManagement: React.FC = () => {
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, dateFilter, qualificationFilter, courseFilter, companyFilter]);
+  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, dateFilter, qualificationFilter, courseFilter, companyFilter, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate]);
 
   // Refetch data when pagination changes
   useEffect(() => {
@@ -2311,7 +2321,7 @@ const LeadsManagement: React.FC = () => {
                   <span className="text-lg">👥</span>
                   <div className="text-xs">
                     <div className="text-yellow-700 font-medium">
-                      Total Leads: {leads.length} | Team Access: {assignableUsers.length} users
+                      Total Leads: {pagination?.totalRecords || leads.length} | Team Access: {assignableUsers.length} users
                     </div>
                     <div className="text-yellow-600">
                       Your leads: {leads.filter((l: Lead) => l.assignedTo === user?.username).length} |

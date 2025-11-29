@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="UTF-8"?>
+                      <Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+                       xmlns:x="urn:schemas-microsoft-com:office:excel"
+                       xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+                       xmlns:html="http://www.w3.org/TR/REC-html40">
+                      <Styles>
+                        <Style ss:ID="s17">
+                          <NumberFormat ss:Format="m/d/yy"/>
+                          <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s18">
+                          <NumberFormat ss:Format="m/d/yy"/>
+                          <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s19">
+                          <NumberFormat ss:Format="m/yy"/>
+                          <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s20">
+                          <NumberFormat ss:Format="m/yy"/>
+                          <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s21">
+                          <NumberFormat ss:Format="m/d/yy h:mm AM/PM"/>
+                          <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s22">
+                          <NumberFormat ss:Format="m/d/yy h:mm AM/PM"/>
+                          <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s23">
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s24">
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s25">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s26">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s27">
+                         <NumberFormat ss:Format="0"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s28">
+                         <NumberFormat ss:Format="0"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s29">
+                         <NumberFormat ss:Format="_(&quot;$&quot;* #,##0.00_);_(&quot;$&quot;* (#,##0.00);_(&quot;$&quot;* &quot;-&quot;??_);_(@_)"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s30">
+                         <NumberFormat ss:Format="_(&quot;$&quot;* #,##0.00_);_(&quot;$&quot;* (#,##0.00);_(&quot;$&quot;* &quot;-&quot;??_);_(@_)"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s31">
+                         <NumberFormat ss:Format="Percent"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s32">
+                         <NumberFormat ss:Format="Percent"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s33">
+                         <NumberFormat ss:Format="YYYY-mm-dd"/>
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                        </Style>
+                        <Style ss:ID="s34">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s35">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s36">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Top" ss:WrapText="1"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                      </Styles>
+<Worksheet ss:Name="Sheet1">
+<Table>
+<Column ss:Index="1" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="3" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="4" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="6" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="7" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="8" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="9" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="10" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="11" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="12" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="13" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="14" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="15" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="16" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="17" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="18" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="19" ss:AutoFitWidth="0" ss:Width="150"/>
+<Row>
+<Cell ss:StyleID="s24"><Data ss:Type="String">id</Data></Cell>
+<Cell ss:StyleID="s24"><Data ss:Type="String">created_time</Data></Cell>
+<Cell ss:StyleID="s24"><Data ss:Type="String">ad_id</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">ad_name</Data></Cell>
+<Cell ss:StyleID="s24"><Data ss:Type="String">adset_id</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">adset_name</Data></Cell>
+<Cell ss:StyleID="s24"><Data ss:Type="String">campaign_id</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">campaign_name</Data></Cell>
+<Cell ss:StyleID="s24"><Data ss:Type="String">form_id</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">form_name</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">is_organic</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">platform</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">in_which_course_your_are_interested_?</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">your_highest_qualification</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">full_name</Data></Cell>
+<Cell ss:StyleID="s24"><Data ss:Type="String">phone_number</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">email</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">country</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">lead_status</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1350634466352561</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T20:40:53.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_in_intensive_care_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">mbbs/fmg</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Amit Singh</Data></Cell>
+<Cell ss:StyleID="s27"><Data ss:Type="Number">9406154830</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">amit.asingh.singh4@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1745165402847754</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T19:30:44.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_in_hiv_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">md/ms/dgo</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Dr. Ade Gartinah</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+6281808381140</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ade.gartinach@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ID</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s27"><Data ss:Type="Number">837777268851141</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T13:17:14.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_in_family_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ayush</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Dr Tanveer ul Islam</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+919045645531</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">drtanveerchoudhary@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1597724124939961</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T10:37:58.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_in_intensive_care_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ayush</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Dr. Shankar S Amarannavar</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+918088097249</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">shankaramarannavar7@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1193819189362429</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T10:32:01.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_in_psychiatric_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ayush</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Dr.Sourabh Mallewade</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+918983355418</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">sourabhmallewade@gamil.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s27"><Data ss:Type="Number">824385663537093</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T10:26:56.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_in_family_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ayush</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Dr.Ketaki Vitthal Patil</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+917972551885</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ketakipatildoc@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1171601164943484</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T10:18:25.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">fellowship_in_internal_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ayush</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">DR.ANHSIRK..SURYA</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+919942850426</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">prakashsurya6415@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1481586002911318</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T10:10:52.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_in_family_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">mbbs/fmg</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Abhijeet Singh Lakhera</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+918517079599</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">abhi.luck002@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1484665195937549</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T08:40:08.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_internal_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">md/ms/dgo</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Jasvinder Kumar</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+919896467128</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Jasvindersaini653@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1456253318797553</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T07:52:31.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_internal_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">md/ms/dgo</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">stephen</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+6287787241892</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">stephencharizard@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ID</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s27"><Data ss:Type="Number">769528529463961</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T07:49:33.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_in_intensive_care_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">mbbs/fmg</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">A. R. Oviya</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+919025487259</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">oviyaharshith2008@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s27"><Data ss:Type="Number">858874746716795</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T07:07:11.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">fb</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_in_intensive_care_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">md/ms/dgo</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Kulandhaissmy Samy</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+919842722360</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">kulandhaisamykulandhai@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">US</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s25"><Data ss:Type="String">2363174880807522</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T06:31:06.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_in_family_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">others</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Shrinewaassrinivas Vemula</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+919966528299</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">srinivasvemula@804gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">US</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s25"><Data ss:Type="String">3952001551719933</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T05:20:44.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_in_psychiatric_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">mbbs/fmg</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Sherin</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+96597885086</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">sherin.mk@outlook.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">KW</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1907576126838990</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T05:16:03.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_in_geriatric_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ayush</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">DrSandeep Singh Yadav</Data></Cell>
+<Cell ss:StyleID="s27"><Data ss:Type="Number">8840777033</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">skumaryadav15071997@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s27"><Data ss:Type="Number">711035228711561</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T03:46:16.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_in_family_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">mbbs/fmg</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Harish Popalghat</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+9779828967160</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">harishpopalghat01@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">NP</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s27"><Data ss:Type="Number">840147611755429</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T00:38:21.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_internal_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">mbbs/fmg</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Dr. Khalid Anwar</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+918434669000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">dr.khalidanwar14@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">IN</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s27"><Data ss:Type="Number">840667115273906</Data></Cell>
+<Cell ss:StyleID="s17"><Data ss:Type="DateTime">2025-11-20T00:32:13.000</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887160524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course – 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120235094887150524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicine Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">120215068701250524</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Chandan Leads campaign 2</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">1542901643572490</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Medicne Course</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">false</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">ig</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">pg_diploma_in_family_medicine</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">mbbs/fmg</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">Dr Edi Gayan Dayaratna</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">+94776627753</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">gayankumuditharocky@gmail.com</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">LK</Data></Cell>
+<Cell ss:StyleID="s25"><Data ss:Type="String">complete</Data></Cell>
+</Row>
+</Table>
+</Worksheet>
+</Workbook>

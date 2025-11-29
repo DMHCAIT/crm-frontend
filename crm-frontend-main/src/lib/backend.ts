@@ -403,6 +403,13 @@ class ProductionApiClient {
         if (filters.course && filters.course !== 'all') params.append('course', filters.course);
         if (filters.company && filters.company !== 'all') params.append('company', filters.company);
         if (filters.dateFilter && filters.dateFilter !== 'all') params.append('dateFilter', filters.dateFilter);
+        
+        // Add created date filter parameters
+        if (filters.createdDateFilter && filters.createdDateFilter !== 'all') params.append('createdDateFilter', filters.createdDateFilter);
+        if (filters.createdDateFrom) params.append('createdDateFrom', filters.createdDateFrom);
+        if (filters.createdDateTo) params.append('createdDateTo', filters.createdDateTo);
+        if (filters.createdDateFilterType && filters.createdDateFilterType !== 'on') params.append('createdDateFilterType', filters.createdDateFilterType);
+        if (filters.createdSpecificDate) params.append('createdSpecificDate', filters.createdSpecificDate);
       }
       
       const queryString = params.toString();
