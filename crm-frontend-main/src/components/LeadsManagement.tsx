@@ -100,6 +100,16 @@ interface Note {
   author: string;
 }
 
+interface Notification {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  leadId: string;
+  timestamp: Date;
+  urgency: string;
+}
+
 interface LeadActivity {
   id: string;
   lead_id: string;
@@ -232,9 +242,10 @@ const LeadsManagement: React.FC = () => {
   // Popup notification states - DISABLED
   const [showOverduePopup, setShowOverduePopup] = useState(false); // Permanently disabled
   const [overdueLeads, setOverdueLeads] = useState<Lead[]>([]);
-  const [popupNotifications, setPopupNotifications] = useState<any[]>([]);
+  const [popupNotifications, setPopupNotifications] = useState<Notification[]>([]);
   const [showTeamMemberModal, setShowTeamMemberModal] = useState(false);
   const [loadingTeamMemberLeads, setLoadingTeamMemberLeads] = useState(false);
+  const [activeTab, setActiveTab] = useState('notes');
 
   // User Activity Stats
   const [userActivityStats, setUserActivityStats] = useState<UserActivityStats[]>([]);
@@ -529,8 +540,6 @@ const LeadsManagement: React.FC = () => {
   });
   
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const hasNextPage = pagination?.hasNextPage || currentPage < totalPages;
-  const hasPrevPage = pagination?.hasPrevPage || currentPage > 1;
   
   // Calculate display indices for pagination info
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -551,55 +560,6 @@ const LeadsManagement: React.FC = () => {
     loadLeads();
     loadUsers();
   }, []);
-
-  // Helper function to check if a lead update was a real user update (not system/import)
-  const isRealUserUpdate = (lead: Lead): boolean => {
-    // If no updatedAt, it's only been created, not updated
-    if (!lead.updatedAt) return false;
-    
-    // Check if the update was from system processes
-    const systemUpdaters = ['System', 'Import System', 'Admin', 'system', 'import'];
-    const updatedBy = lead.updated_by?.toLowerCase() || '';
-    
-    // If updated by system processes, not a real user update
-    if (systemUpdaters.some(sys => updatedBy.includes(sys.toLowerCase()))) {
-      return false;
-    }
-    
-    // Check if lead was imported/transferred recently (same day as creation but with updatedAt)
-    const createdDate = new Date(lead.createdAt);
-    const updatedDate = new Date(lead.updatedAt);
-    const timeDiff = updatedDate.getTime() - createdDate.getTime();
-    const oneDayMs = 24 * 60 * 60 * 1000;
-    
-    // If updated within 1 hour of creation and source indicates import, likely not a real update
-    if (timeDiff < (60 * 60 * 1000) && (
-      lead.source?.includes('Import') ||
-      lead.source?.includes('CSV') ||
-      lead.source?.includes('Excel') ||
-      lead.source?.includes('Transfer')
-    )) {
-      return false;
-    }
-    
-    // Check notes for system activities
-    const hasSystemNotes = lead.notes?.some(note => 
-      note.content?.includes('Imported from') ||
-      note.content?.includes('Transferred from') ||
-      note.content?.includes('Bulk import') ||
-      note.content?.includes('CSV import') ||
-      note.content?.includes('System update') ||
-      note.author?.toLowerCase().includes('system')
-    );
-    
-    if (hasSystemNotes && timeDiff < oneDayMs) {
-      return false;
-    }
-    
-    return true;
-  };
-
-  // No longer needed - filteredLeads is computed via useMemo automatically
 
   // Update user activity stats when leads or users change
   useEffect(() => {
@@ -759,41 +719,41 @@ const LeadsManagement: React.FC = () => {
 
     return assignableUsers.map(user => {
       // Get all leads assigned to this user
-      const userLeads = leads.filter(lead => 
+      const userLeads = leads.filter((lead: Lead) => 
         lead.assignedTo === user.username || 
         lead.assignedTo === user.name ||
         lead.assignedTo === user.display_name
       );
 
       // Calculate updates (leads modified by this user)
-      const updatedToday = userLeads.filter(lead => {
+      const updatedToday = userLeads.filter((lead: Lead) => {
         const updatedDate = new Date(lead.updatedAt);
         return updatedDate >= todayStart;
       }).length;
 
-      const updatedThisWeek = userLeads.filter(lead => {
+      const updatedThisWeek = userLeads.filter((lead: Lead) => {
         const updatedDate = new Date(lead.updatedAt);
         return updatedDate >= weekStart;
       }).length;
 
-      const updatedThisMonth = userLeads.filter(lead => {
+      const updatedThisMonth = userLeads.filter((lead: Lead) => {
         const updatedDate = new Date(lead.updatedAt);
         return updatedDate >= monthStart;
       }).length;
 
       // Calculate lead status counts
-      const hotLeads = userLeads.filter(lead => lead.status === 'Hot').length;
-      const warmLeads = userLeads.filter(lead => lead.status === 'Warm').length;
-      const enrolledLeads = userLeads.filter(lead => lead.status === 'Enrolled').length;
+      const hotLeads = userLeads.filter((lead: Lead) => lead.status === 'Hot').length;
+      const warmLeads = userLeads.filter((lead: Lead) => lead.status === 'Warm').length;
+      const enrolledLeads = userLeads.filter((lead: Lead) => lead.status === 'Enrolled').length;
 
       // Calculate revenue (actual from enrolled + estimated from hot/warm)
       const actualRevenue = userLeads
-        .filter(lead => lead.status === 'Enrolled' && lead.fees)
-        .reduce((sum, lead) => sum + (lead.fees || 0), 0);
+        .filter((lead: Lead) => lead.status === 'Enrolled' && lead.fees)
+        .reduce((sum: number, lead: Lead) => sum + (lead.fees || 0), 0);
 
       const estimatedRevenue = userLeads
-        .filter(lead => (lead.status === 'Hot' || lead.status === 'Warm') && lead.estimatedValue)
-        .reduce((sum, lead) => sum + (lead.estimatedValue || 0), 0);
+        .filter((lead: Lead) => (lead.status === 'Hot' || lead.status === 'Warm') && lead.estimatedValue)
+        .reduce((sum: number, lead: Lead) => sum + (lead.estimatedValue || 0), 0);
 
       const totalRevenue = actualRevenue + (estimatedRevenue * 0.3); // 30% probability for warm/hot leads
 
@@ -819,42 +779,7 @@ const LeadsManagement: React.FC = () => {
   // ==========================================
   
   // Memoize expensive computations to prevent re-calculations
-  const leadsMap = useMemo(() => {
-    // Create a Map for O(1) lookup performance
-    const map = new Map();
-    leads.forEach(lead => {
-      map.set(lead.id, lead);
-    });
-    return map;
-  }, [leads]);
-
-  // Pre-compute searchable text for each lead (O(n) once, then O(1) access)
-  const leadsSearchIndex = useMemo(() => {
-    const index = new Map();
-    leads.forEach(lead => {
-      const searchText = [
-        lead.fullName,
-        lead.email,
-        lead.phone,
-        lead.id,
-        lead.country,
-        lead.course,
-        lead.status
-      ].join('|').toLowerCase();
-      index.set(lead.id, searchText);
-    });
-    return index;
-  }, [leads]);
-
   // Optimized date comparison functions (avoid repeated new Date() calls)
-  const getDateComparison = useCallback((dateStr: string) => {
-    const date = new Date(dateStr);
-    return {
-      timestamp: date.getTime(),
-      dateOnly: new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
-    };
-  }, []);
-
   // TEMPORARY: Disable client-side filtering for server-side pagination
   // TODO: Implement proper server-side filtering integration
   const filteredLeads = useMemo(() => {
@@ -949,19 +874,24 @@ const LeadsManagement: React.FC = () => {
 
   // Load notes for a specific lead (simplified - notes now come with leads data)
   const loadNotesForLead = async (leadId: string) => {
-    console.log(`� Loading notes for lead: ${leadId} (using simplified architecture)`);
-    
-    // Notes are now loaded with the leads data automatically
-    const currentLead = leads.find(l => l.id === leadId);
-    if (currentLead && currentLead.notes) {
-      console.log(`✅ Found ${currentLead.notes.length} notes for lead ${leadId} in current data`);
-      setLastUpdateTime(new Date()); // Force re-render
-      return;
+    try {
+      console.log(`📝 Loading notes for lead: ${leadId} (using simplified architecture)`);
+      
+      // Notes are now loaded with the leads data automatically
+      const currentLead = leads.find((l: Lead) => l.id === leadId);
+      if (currentLead && currentLead.notes) {
+        console.log(`✅ Found ${currentLead.notes.length} notes for lead ${leadId} in current data`);
+        setLastUpdateTime(new Date()); // Force re-render
+        return;
+      }
+      
+      // If notes aren't loaded yet, refresh the entire leads list
+      console.log(`🔄 Refreshing leads data to get notes for lead ${leadId}`);
+      await loadLeads();
+    } catch (error) {
+      console.error(`❌ Error loading notes for lead ${leadId}:`, error);
+      // Don't throw error, just log it
     }
-    
-    // If notes aren't loaded yet, refresh the entire leads list
-    console.log(`🔄 Refreshing leads data to get notes for lead ${leadId}`);
-    await loadLeads();
   };
 
   // Load activities for a specific lead
@@ -1021,6 +951,12 @@ const LeadsManagement: React.FC = () => {
 
       console.log('✅ Note saved successfully with cache invalidation');
       
+      // Force immediate refresh of the leads data
+      await loadLeads();
+      
+      // Also force reload notes for this specific lead
+      await loadNotesForLead(leadId);
+      
       // Show success notification
       notify.success('Note Saved', 'Your note has been added successfully');
       
@@ -1043,8 +979,11 @@ const LeadsManagement: React.FC = () => {
     }
   };
 
-  const getUniqueValues = (field: keyof Omit<Lead, 'notes'>) => {
-    return [...new Set((leads || []).map((lead: Lead) => lead[field] as string).filter(Boolean))];
+  const getUniqueValues = (field: keyof Omit<Lead, 'notes'>): string[] => {
+    const values = (leads || [])
+      .map((lead: Lead) => String(lead[field]))
+      .filter((value: string) => Boolean(value));
+    return [...new Set<string>(values)];
   };
 
   const quickStatusFilter = (status: string) => {
@@ -1112,7 +1051,7 @@ const LeadsManagement: React.FC = () => {
     const twentyFourHoursAgo = new Date();
     twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
     
-    return leads.filter(lead => {
+    return leads.filter((lead: Lead) => {
       const createdAt = new Date(lead.createdAt);
       return createdAt >= twentyFourHoursAgo && (
         // Check if lead was created by import process
@@ -1347,6 +1286,9 @@ const LeadsManagement: React.FC = () => {
       setSelectedLeadId(leadId);
       setShowDetailPanel(true);
       
+      // Reset tab to notes when opening a new lead
+      setActiveTab('notes');
+      
       // Scroll the selected lead into view smoothly after a brief delay
       setTimeout(() => {
         const leadElement = document.querySelector(`[data-lead-id="${leadId}"]`);
@@ -1361,8 +1303,10 @@ const LeadsManagement: React.FC = () => {
       
       console.log(`🔄 Loading notes and activities for lead: ${leadId}`);
       // Load notes and activities for the selected lead and wait for completion
-      await loadNotesForLead(leadId);
-      await loadActivitiesForLead(leadId);
+      await Promise.allSettled([
+        loadNotesForLead(leadId),
+        loadActivitiesForLead(leadId)
+      ]);
       
       console.log(`🔄 Notes and activities loading completed for lead: ${leadId}`);
       
@@ -1370,6 +1314,8 @@ const LeadsManagement: React.FC = () => {
       setLastUpdateTime(new Date());
     } catch (error) {
       console.error(`❌ Error in handleLeadClick for lead ${leadId}:`, error);
+      // Show user-friendly error notification
+      notify.error('Error Loading Details', 'Unable to load lead details. The basic information is still available.');
       // Don't re-throw the error to avoid crashing the component
       // The detail panel is already open, so the user can still see basic lead info
     }
@@ -1430,10 +1376,11 @@ const LeadsManagement: React.FC = () => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validate file type - accept both CSV and Excel files
+    // Validate file type - only accept CSV files for now
     const fileName = file.name.toLowerCase();
-    if (!fileName.endsWith('.csv') && !fileName.endsWith('.xlsx') && !fileName.endsWith('.xls')) {
-      alert('Please select a CSV file (.csv) or Excel file (.xlsx, .xls)');
+    if (!fileName.endsWith('.csv')) {
+      alert('Please select a CSV file (.csv). Excel files are not currently supported. Please convert your Excel file to CSV format first.');
+      event.target.value = ''; // Reset file input
       return;
     }
 
@@ -1443,6 +1390,10 @@ const LeadsManagement: React.FC = () => {
     reader.onload = async (e) => {
       try {
         const csv = e.target?.result as string;
+        if (!csv || csv.trim() === '') {
+          throw new Error('File is empty or could not be read');
+        }
+        
         const lines = csv.split('\n').filter(line => line.trim()); // Remove empty lines
         
         if (lines.length < 2) {
@@ -1574,7 +1525,7 @@ const LeadsManagement: React.FC = () => {
               country: columnMap.country >= 0 ? values[columnMap.country] || '' : '',
               branch: columnMap.branch >= 0 ? values[columnMap.branch] || '' : '',
               qualification: columnMap.qualification >= 0 ? values[columnMap.qualification] || '' : '',
-              source: columnMap.source >= 0 ? (values[columnMap.source] || (fileName.includes('.xlsx') || fileName.includes('.xls') ? 'Excel Import' : 'CSV Import')) : (fileName.includes('.xlsx') || fileName.includes('.xls') ? 'Excel Import' : 'CSV Import'),
+              source: columnMap.source >= 0 ? (values[columnMap.source] || 'CSV Import') : 'CSV Import',
               course: columnMap.course >= 0 ? values[columnMap.course] || '' : '',
               status: columnMap.status >= 0 ? values[columnMap.status] || '' : '',
               assignedTo: columnMap.assignedTo >= 0 ? values[columnMap.assignedTo] || '' : '',
@@ -1584,7 +1535,7 @@ const LeadsManagement: React.FC = () => {
                 // Get notes from CSV if available
                 const csvNotes = columnMap.notes >= 0 ? values[columnMap.notes] || '' : '';
                 // Create import timestamp note
-                const importNote = `Imported from ${fileName.includes('.xlsx') || fileName.includes('.xls') ? 'Excel' : 'CSV'} file on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`;
+                const importNote = `Imported from CSV file "${file.name}" on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`;
                 
                 // Combine CSV notes with import note
                 if (csvNotes.trim()) {
@@ -1606,11 +1557,14 @@ const LeadsManagement: React.FC = () => {
         }
 
         // Show results
-        let message = `Import completed!\n${successCount} leads imported successfully`;
+        let message = `Import completed!\n✅ ${successCount} leads imported successfully`;
         if (errorCount > 0) {
-          message += `\n${errorCount} leads failed to import`;
+          message += `\n❌ ${errorCount} leads failed to import`;
           if (errors.length > 0) {
             message += '\n\nFirst few errors:\n' + errors.slice(0, 5).join('\n');
+            if (errors.length > 5) {
+              message += `\n... and ${errors.length - 5} more errors`;
+            }
           }
         }
         
@@ -1620,19 +1574,22 @@ const LeadsManagement: React.FC = () => {
         await loadLeads();
 
       } catch (error) {
-        console.error('Import error:', error);
-        alert(`Import failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        console.error('❌ Import error:', error);
+        alert(`Import failed: ${error instanceof Error ? error.message : 'Unknown error occurred during import'}`);
       } finally {
         setImportLoading(false);
-        // Reset file input
+        // Reset file input to allow re-importing the same file
         event.target.value = '';
       }
     };
     
-    reader.readAsText(file);
+    reader.onerror = () => {
+      setImportLoading(false);
+      alert('Failed to read the file. Please ensure the file is not corrupted and try again.');
+      event.target.value = '';
+    };
     
-    // Reset file input
-    event.target.value = '';
+    reader.readAsText(file);
   };
 
   // Handle bulk status update - Using TanStack Query mutation
@@ -2035,7 +1992,7 @@ const LeadsManagement: React.FC = () => {
 
     // Only trigger popup notifications if there are actual overdue leads
     if (overdue.length > 0) {
-      const newNotifications = overdue.map(lead => ({
+      const newNotifications = overdue.map((lead: Lead) => ({
         id: `overdue-${lead.id}`,
         type: 'overdue',
         title: '🔔 Overdue Follow-up!',
@@ -2046,7 +2003,7 @@ const LeadsManagement: React.FC = () => {
       }));
 
       // Only show notifications for leads that weren't already notified recently
-      const recentNotifications = newNotifications.filter(notif => {
+      const recentNotifications = newNotifications.filter((notif: Notification) => {
         const existingNotif = popupNotifications.find(p => p.leadId === notif.leadId);
         if (!existingNotif) return true;
         
@@ -2222,7 +2179,7 @@ const LeadsManagement: React.FC = () => {
     const startOfWeek = new Date(today);
     startOfWeek.setDate(today.getDate() - today.getDay()); // Go to Sunday
     
-    return (leads || []).filter(lead => {
+    return (leads || []).filter((lead: Lead) => {
       const leadUpdated = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
       return leadUpdated >= startOfWeek;
     }).length;
@@ -2232,7 +2189,7 @@ const LeadsManagement: React.FC = () => {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     
-    return (leads || []).filter(lead => {
+    return (leads || []).filter((lead: Lead) => {
       const leadUpdated = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
       return leadUpdated >= startOfMonth;
     }).length;
@@ -2244,7 +2201,7 @@ const LeadsManagement: React.FC = () => {
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
     
-    return (leads || []).filter(lead => {
+    return (leads || []).filter((lead: Lead) => {
       const leadUpdated = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
       const updatedDateOnly = new Date(leadUpdated.getFullYear(), leadUpdated.getMonth(), leadUpdated.getDate());
       return updatedDateOnly.getTime() === yesterday.getTime();
@@ -2256,7 +2213,7 @@ const LeadsManagement: React.FC = () => {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
-    return (leads || []).filter(lead => {
+    return (leads || []).filter((lead: Lead) => {
       const leadCreated = new Date(lead.createdAt);
       const createdDateOnly = new Date(leadCreated.getFullYear(), leadCreated.getMonth(), leadCreated.getDate());
       return createdDateOnly.getTime() === today.getTime();
@@ -2269,7 +2226,7 @@ const LeadsManagement: React.FC = () => {
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
     
-    return (leads || []).filter(lead => {
+    return (leads || []).filter((lead: Lead) => {
       const leadCreated = new Date(lead.createdAt);
       const createdDateOnly = new Date(leadCreated.getFullYear(), leadCreated.getMonth(), leadCreated.getDate());
       return createdDateOnly.getTime() === yesterday.getTime();
@@ -2282,7 +2239,7 @@ const LeadsManagement: React.FC = () => {
     const startOfWeek = new Date(today);
     startOfWeek.setDate(today.getDate() - today.getDay()); // Go to Sunday
     
-    return (leads || []).filter(lead => {
+    return (leads || []).filter((lead: Lead) => {
       const leadCreated = new Date(lead.createdAt);
       return leadCreated >= startOfWeek;
     }).length;
@@ -2292,7 +2249,7 @@ const LeadsManagement: React.FC = () => {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     
-    return (leads || []).filter(lead => {
+    return (leads || []).filter((lead: Lead) => {
       const leadCreated = new Date(lead.createdAt);
       return leadCreated >= startOfMonth;
     }).length;
@@ -2304,7 +2261,7 @@ const LeadsManagement: React.FC = () => {
     const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
     endOfLastMonth.setHours(23, 59, 59, 999);
     
-    return (leads || []).filter(lead => {
+    return (leads || []).filter((lead: Lead) => {
       const leadCreated = new Date(lead.createdAt);
       return leadCreated >= startOfLastMonth && leadCreated <= endOfLastMonth;
     }).length;
@@ -2357,8 +2314,8 @@ const LeadsManagement: React.FC = () => {
                       Total Leads: {leads.length} | Team Access: {assignableUsers.length} users
                     </div>
                     <div className="text-yellow-600">
-                      Your leads: {leads.filter(l => l.assignedTo === user?.username).length} | 
-                      Team leads: {leads.filter(l => l.assignedTo !== user?.username && assignableUsers.some(u => u.username === l.assignedTo)).length}
+                      Your leads: {leads.filter((l: Lead) => l.assignedTo === user?.username).length} |
+                      Team leads: {leads.filter((l: Lead) => l.assignedTo !== user?.username && assignableUsers.some(u => u.username === l.assignedTo)).length}
                     </div>
                   </div>
                 </div>
@@ -2443,7 +2400,7 @@ const LeadsManagement: React.FC = () => {
                 <span>{importLoading ? 'Importing...' : 'Import'}</span>
                 <input 
                   type="file" 
-                  accept=".csv,.xlsx,.xls" 
+                  accept=".csv" 
                   onChange={handleImportLeads}
                   disabled={importLoading}
                   className="hidden"
@@ -2887,7 +2844,7 @@ const LeadsManagement: React.FC = () => {
           
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 max-h-[300px] overflow-y-auto pr-2">
             {assignableUsers.map((teamUser) => {
-              const userLeadCount = leads.filter(lead => 
+              const userLeadCount = leads.filter((lead: Lead) => 
                 lead.assignedTo === teamUser.username || lead.assignedTo === teamUser.name
               ).length;
               
@@ -3369,13 +3326,13 @@ const LeadsManagement: React.FC = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div className="text-center">
                   <div className="text-lg font-bold text-blue-700">
-                    {filteredLeads.filter(lead => lead.assignedTo?.toLowerCase() === user?.username?.toLowerCase()).length}
+                    {filteredLeads.filter((lead: Lead) => lead.assignedTo?.toLowerCase() === user?.username?.toLowerCase()).length}
                   </div>
                   <div className="text-blue-600">Your Leads</div>
                 </div>
                 <div className="text-center">
                   <div className="text-lg font-bold text-green-700">
-                    {filteredLeads.filter(lead => lead.assignedTo?.toLowerCase() !== user?.username?.toLowerCase()).length}
+                    {filteredLeads.filter((lead: Lead) => lead.assignedTo?.toLowerCase() !== user?.username?.toLowerCase()).length}
                   </div>
                   <div className="text-green-600">Team Leads</div>
                 </div>
@@ -4485,7 +4442,23 @@ const LeadsManagement: React.FC = () => {
               console.log(`🎯 Selected lead notes:`, selectedLead?.notes?.length || 0);
               console.log(`🎯 Last update time:`, lastUpdateTime?.getTime());
               
-              if (!selectedLead) return null;
+              if (!selectedLead) {
+                return (
+                  <div className="p-4 text-center">
+                    <div className="text-gray-500">
+                      <User className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                      <p className="font-medium">Lead not found</p>
+                      <p className="text-sm">The selected lead could not be loaded.</p>
+                      <button 
+                        onClick={() => setShowDetailPanel(false)}
+                        className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
+                      >
+                        Close Panel
+                      </button>
+                    </div>
+                  </div>
+                );
+              }
               
               return (
                 <div>
@@ -4912,9 +4885,6 @@ const LeadsManagement: React.FC = () => {
                     {/* Enhanced Notes & Activities Section with Tabs */}
                     <div className="bg-white rounded-lg border border-gray-200 p-4 mt-4" key={`notes-${selectedLead.id}-${lastUpdateTime?.getTime()}`}>
                       {(() => {
-                        // State for active tab
-                        const [activeTab, setActiveTab] = React.useState('notes');
-                        
                         // Combine notes and activities
                         const notes = selectedLead.notes || [];
                         const activities = leadActivities[selectedLead.id] || [];
