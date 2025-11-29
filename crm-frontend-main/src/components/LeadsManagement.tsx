@@ -1837,7 +1837,7 @@ const LeadsManagement: React.FC = () => {
     const currentYear = now.getFullYear();
 
     return {
-      total: (leads || []).length,
+      total: pagination?.totalRecords || (leads || []).length,
       hot: (leads || []).filter((lead: Lead) => lead.status === 'Hot').length,
       warm: (leads || []).filter((lead: Lead) => lead.status === 'Warm').length,
       followup: (leads || []).filter((lead: Lead) => lead.status === 'Follow Up').length,
