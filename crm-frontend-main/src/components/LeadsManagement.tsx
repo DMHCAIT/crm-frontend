@@ -1468,12 +1468,10 @@ const LeadsManagement: React.FC = () => {
           return;
         }
         
-        const apiClient = getApiClient();
-        let successCount = 0;
-        let errorCount = 0;
-        const errors: string[] = [];
+        // Parse all leads from CSV
+        const leadsToImport = [];
+        const parseErrors: string[] = [];
 
-        // Process leads one by one to handle duplicates and validation
         for (let i = 1; i < lines.length; i++) {
           const line = lines[i];
           if (!line.trim()) continue;
@@ -1503,33 +1501,20 @@ const LeadsManagement: React.FC = () => {
 
             // Skip if no name or email
             if (!fullName || !email) {
-              errorCount++;
-              errors.push(`Row ${i + 1}: Missing name or email`);
+              parseErrors.push(`Row ${i + 1}: Missing name or email`);
               continue;
             }
 
-            // Check for duplicate email
-            const existingLead = leads.find((lead: Lead) => 
-              lead.email.toLowerCase() === email.toLowerCase()
-            );
-            
-            if (existingLead) {
-              errorCount++;
-              errors.push(`Row ${i + 1}: Email ${email} already exists`);
-              continue;
-            }
-
-            // Prepare lead data for API - use exact values from CSV, leave empty if not provided
+            // Validate company value if provided
             const companyValue = columnMap.company >= 0 ? values[columnMap.company] || '' : '';
-            // Validate company value - if provided, must be DMHCA or IBMP
             let validatedCompany = '';
             if (companyValue) {
               const normalizedCompany = companyValue.toUpperCase().trim();
               if (normalizedCompany === 'DMHCA' || normalizedCompany === 'IBMP') {
                 validatedCompany = normalizedCompany;
               } else {
-                // If invalid company value, throw error
-                throw new Error(`Invalid company value "${companyValue}". Must be either "DMHCA" or "IBMP"`);
+                parseErrors.push(`Row ${i + 1}: Invalid company value "${companyValue}". Must be either "DMHCA" or "IBMP"`);
+                continue;
               }
             }
             
@@ -1545,14 +1530,11 @@ const LeadsManagement: React.FC = () => {
               status: columnMap.status >= 0 ? values[columnMap.status] || '' : '',
               assignedTo: columnMap.assignedTo >= 0 ? values[columnMap.assignedTo] || '' : '',
               followUp: columnMap.followUp >= 0 ? values[columnMap.followUp] || '' : '',
-              company: validatedCompany, // Will be empty string if not provided or invalid
+              company: validatedCompany,
               notes: (() => {
-                // Get notes from CSV if available
                 const csvNotes = columnMap.notes >= 0 ? values[columnMap.notes] || '' : '';
-                // Create import timestamp note
                 const importNote = `Imported from CSV file "${file.name}" on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`;
                 
-                // Combine CSV notes with import note
                 if (csvNotes.trim()) {
                   return `${csvNotes.trim()}\n\n--- System Note ---\n${importNote}`;
                 } else {
@@ -1561,32 +1543,74 @@ const LeadsManagement: React.FC = () => {
               })()
             };
 
-            // Save to backend
-            await apiClient.createLead(leadData);
-            successCount++;
+            leadsToImport.push(leadData);
 
           } catch (error) {
-            errorCount++;
-            errors.push(`Row ${i + 1}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            parseErrors.push(`Row ${i + 1}: ${error instanceof Error ? error.message : 'Unknown error'}`);
           }
         }
 
-        // Show results
-        let message = `Import completed!\n✅ ${successCount} leads imported successfully`;
-        if (errorCount > 0) {
-          message += `\n❌ ${errorCount} leads failed to import`;
-          if (errors.length > 0) {
-            message += '\n\nFirst few errors:\n' + errors.slice(0, 5).join('\n');
-            if (errors.length > 5) {
-              message += `\n... and ${errors.length - 5} more errors`;
-            }
+        // Show parse errors if any
+        if (parseErrors.length > 0) {
+          let errorMessage = `${parseErrors.length} rows had parsing errors:\n\n`;
+          errorMessage += parseErrors.slice(0, 5).join('\n');
+          if (parseErrors.length > 5) {
+            errorMessage += `\n... and ${parseErrors.length - 5} more errors`;
+          }
+          errorMessage += '\n\nDo you want to continue importing the valid leads?';
+          
+          if (!confirm(errorMessage)) {
+            setImportLoading(false);
+            return;
           }
         }
-        
-        alert(message);
-        
-        // Refresh leads list to show imported data
-        await loadLeads();
+
+        if (leadsToImport.length === 0) {
+          alert('No valid leads found to import');
+          setImportLoading(false);
+          return;
+        }
+
+        // Send to backend for bulk import
+        try {
+          const apiClient = getApiClient();
+          const response = await fetch(`${apiClient.baseURL}/api/leads/bulk-create`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({ leads: leadsToImport })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            const { success, failed, errors } = result.results;
+            
+            let message = `Import completed!\n✅ ${success} leads imported successfully`;
+            if (failed > 0) {
+              message += `\n❌ ${failed} leads failed to import`;
+              if (errors.length > 0) {
+                message += '\n\nFirst few errors:\n' + errors.slice(0, 5).join('\n');
+                if (errors.length > 5) {
+                  message += `\n... and ${errors.length - 5} more errors`;
+                }
+              }
+            }
+            
+            alert(message);
+            
+            // Refresh leads list to show imported data
+            await loadLeads();
+          } else {
+            throw new Error(result.message || 'Import failed');
+          }
+
+        } catch (error) {
+          console.error('❌ Backend import error:', error);
+          alert(`Import failed: ${error instanceof Error ? error.message : 'Unknown error occurred during import'}`);
+        }
 
       } catch (error) {
         console.error('❌ Import error:', error);
@@ -4324,8 +4348,20 @@ const LeadsManagement: React.FC = () => {
                                 value={(() => {
                                   const followUpDate = editedLead.followUp || lead.followUp;
                                   if (!followUpDate) return '';
-                                  const date = new Date(followUpDate);
+                                  
+                                  // Handle various date formats
+                                  let date;
+                                  if (typeof followUpDate === 'string' && followUpDate.includes('T')) {
+                                    // Already in ISO format
+                                    date = new Date(followUpDate);
+                                  } else {
+                                    // Handle date-only strings
+                                    date = new Date(followUpDate);
+                                  }
+                                  
                                   if (isNaN(date.getTime())) return '';
+                                  
+                                  // Format to datetime-local format (yyyy-MM-ddTHH:mm)
                                   const year = date.getFullYear();
                                   const month = String(date.getMonth() + 1).padStart(2, '0');
                                   const day = String(date.getDate()).padStart(2, '0');
@@ -4866,11 +4902,19 @@ const LeadsManagement: React.FC = () => {
                               const followUpDate = editedLead.followUp || selectedLead.followUp;
                               if (!followUpDate) return '';
                               
-                              // Convert date to datetime-local format (yyyy-MM-ddTHH:mm)
-                              const date = new Date(followUpDate);
+                              // Handle various date formats safely
+                              let date;
+                              if (typeof followUpDate === 'string' && followUpDate.includes('T')) {
+                                // Already in ISO format
+                                date = new Date(followUpDate);
+                              } else {
+                                // Handle date-only strings
+                                date = new Date(followUpDate);
+                              }
+                              
                               if (isNaN(date.getTime())) return '';
                               
-                              // Format to datetime-local format
+                              // Format to datetime-local format (yyyy-MM-ddTHH:mm)
                               const year = date.getFullYear();
                               const month = String(date.getMonth() + 1).padStart(2, '0');
                               const day = String(date.getDate()).padStart(2, '0');
