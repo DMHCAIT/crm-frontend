@@ -516,12 +516,15 @@ const LeadsManagement: React.FC = () => {
                 Array.isArray((serverResponse as any).data) ? (serverResponse as any).data : 
                 Array.isArray(leadsData) ? leadsData : [];
   const pagination = (serverResponse as any).pagination || null;
+  const backendStats = (serverResponse as any).stats || null; // Extract backend statistics
   
   // DEBUG: Log server response structure
   console.log('🔍 Server Response Debug:', {
     hasLeads: !!((serverResponse as any).leads),
     hasData: !!((serverResponse as any).data),
     hasPagination: !!pagination,
+    hasBackendStats: !!backendStats,
+    backendStatusCounts: backendStats?.statusCounts,
     paginationData: pagination,
     leadsCount: leads.length,
     serverResponseKeys: Object.keys(serverResponse),
@@ -1832,10 +1835,31 @@ const LeadsManagement: React.FC = () => {
   };
 
   const calculateStats = (): LeadStats => {
+    // Use backend-provided statistics if available, otherwise fallback to client calculation
+    if (backendStats?.statusCounts) {
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+
+      return {
+        total: backendStats.totalLeads || pagination?.totalRecords || (leads || []).length,
+        hot: backendStats.statusCounts['Hot'] || 0,
+        warm: backendStats.statusCounts['Warm'] || 0,
+        followup: backendStats.statusCounts['Follow Up'] || 0,
+        converted: backendStats.statusCounts['Enrolled'] || 0,
+        thisMonth: (leads || []).filter((lead: Lead) => {
+          const leadDate = new Date(lead.createdAt);
+          return leadDate.getMonth() === currentMonth && leadDate.getFullYear() === currentYear;
+        }).length // Keep this as client-side calculation for now
+      };
+    }
+
+    // Fallback to client-side calculation if backend stats not available
     const now = new Date();
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
 
+    // Use exact status values from backend: ['Fresh', 'Follow Up', 'Warm', 'Hot', 'Enrolled', 'Will Enroll Later', 'Not Answering', 'Not Interested', 'Junk']
     return {
       total: pagination?.totalRecords || (leads || []).length,
       hot: (leads || []).filter((lead: Lead) => lead.status === 'Hot').length,
@@ -1843,7 +1867,7 @@ const LeadsManagement: React.FC = () => {
       followup: (leads || []).filter((lead: Lead) => lead.status === 'Follow Up').length,
       converted: (leads || []).filter((lead: Lead) => lead.status === 'Enrolled').length,
       thisMonth: (leads || []).filter((lead: Lead) => {
-        const leadDate = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
+        const leadDate = new Date(lead.createdAt);
         return leadDate.getMonth() === currentMonth && leadDate.getFullYear() === currentYear;
       }).length
     };
