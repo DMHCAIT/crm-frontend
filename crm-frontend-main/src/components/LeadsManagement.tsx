@@ -524,7 +524,9 @@ const LeadsManagement: React.FC = () => {
     hasPagination: !!pagination,
     paginationData: pagination,
     leadsCount: leads.length,
-    serverResponseKeys: Object.keys(serverResponse)
+    serverResponseKeys: Object.keys(serverResponse),
+    totalRecordsFromPagination: pagination?.totalRecords,
+    fallbackToLeadsLength: leads.length
   });
   
   const totalRecords = pagination?.totalRecords || leads.length;

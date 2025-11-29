@@ -390,6 +390,7 @@ class ProductionApiClient {
       
       // Add filter parameters if provided
       if (filters) {
+        console.log('🔍 Raw filters being processed:', filters);
         if (filters.search) params.append('search', filters.search);
         if (filters.status && filters.status.length > 0 && !filters.status.includes('all')) {
           params.append('status', filters.status.join(','));
