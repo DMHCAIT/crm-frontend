@@ -408,7 +408,13 @@ class ProductionApiClient {
         if (filters.qualification && filters.qualification !== 'all') params.append('qualification', filters.qualification);
         if (filters.course && filters.course !== 'all') params.append('course', filters.course);
         if (filters.company && filters.company !== 'all') params.append('company', filters.company);
+        
+        // Add updated date filter parameters
         if (filters.dateFilter && filters.dateFilter !== 'all') params.append('dateFilter', filters.dateFilter);
+        if (filters.dateFrom) params.append('dateFrom', filters.dateFrom);
+        if (filters.dateTo) params.append('dateTo', filters.dateTo);
+        if (filters.dateFilterType && filters.dateFilterType !== 'on') params.append('dateFilterType', filters.dateFilterType);
+        if (filters.specificDate) params.append('specificDate', filters.specificDate);
         
         // Add created date filter parameters
         if (filters.createdDateFilter && filters.createdDateFilter !== 'all') params.append('createdDateFilter', filters.createdDateFilter);

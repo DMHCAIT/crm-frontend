@@ -477,7 +477,13 @@ const LeadsManagement: React.FC = () => {
       qualification: qualificationFilter,
       course: courseFilter,
       company: companyFilter,
+      // Updated date filter parameters
       dateFilter: dateFilter,
+      dateFrom: dateFrom,
+      dateTo: dateTo,
+      dateFilterType: dateFilterType,
+      specificDate: specificDate,
+      // Created date filter parameters
       createdDateFilter: createdDateFilter,
       createdDateFrom: createdDateFrom,
       createdDateTo: createdDateTo,
@@ -496,6 +502,10 @@ const LeadsManagement: React.FC = () => {
       courseFilter,
       companyFilter,
       dateFilter,
+      dateFrom,
+      dateTo,
+      dateFilterType,
+      specificDate,
       createdDateFilter,
       createdDateFrom,
       createdDateTo,
@@ -505,7 +515,7 @@ const LeadsManagement: React.FC = () => {
     });
     
     return filters;
-  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, companyFilter, dateFilter, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate]);
+  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, companyFilter, dateFilter, dateFrom, dateTo, dateFilterType, specificDate, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate]);
 
   // TanStack Query hooks with server-side pagination and filtering
   const { data: leadsData, isLoading: leadsLoading, refetch: refetchLeads } = useLeads(currentPage, itemsPerPage, filterParams);
@@ -563,7 +573,7 @@ const LeadsManagement: React.FC = () => {
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, dateFilter, qualificationFilter, courseFilter, companyFilter, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate]);
+  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, dateFilter, dateFrom, dateTo, dateFilterType, specificDate, qualificationFilter, courseFilter, companyFilter, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate]);
 
   // Refetch data when pagination changes
   useEffect(() => {
@@ -1098,10 +1108,17 @@ const LeadsManagement: React.FC = () => {
     setCourseFilter('all');
     setCompanyFilter('all');
     setShowOverdueOnly(false);
+    // Clear updated date filters
     setDateFrom('');
     setDateTo('');
     setSpecificDate('');
     setDateFilterType('on');
+    // Clear created date filters
+    setCreatedDateFilter('all');
+    setCreatedDateFrom('');
+    setCreatedDateTo('');
+    setCreatedDateFilterType('on');
+    setCreatedSpecificDate('');
     setExcludeSystemUpdates(true); // Reset to default (exclude system updates)
     
     // Also clear any temporary filter states if they exist
@@ -1122,7 +1139,11 @@ const LeadsManagement: React.FC = () => {
            showOverdueOnly ||
            dateFrom !== '' ||
            dateTo !== '' ||
-           specificDate !== '';
+           specificDate !== '' ||
+           createdDateFilter !== 'all' ||
+           createdDateFrom !== '' ||
+           createdDateTo !== '' ||
+           createdSpecificDate !== '';
   };
 
   // Add Lead Functions
@@ -1580,13 +1601,17 @@ const LeadsManagement: React.FC = () => {
             throw new Error('Backend URL not configured. Please check your environment settings.');
           }
           
-          console.log(`📤 Sending ${leadsToImport.length} leads to: ${backendUrl}/api/leads/bulk-create`);
+          // Build the URL - avoid duplicate /api if backendUrl already ends with /api
+          const endpoint = backendUrl.endsWith('/api') ? '/leads/bulk-create' : '/api/leads/bulk-create';
+          const fullUrl = `${backendUrl}${endpoint}`;
+          
+          console.log(`📤 Sending ${leadsToImport.length} leads to: ${fullUrl}`);
           
           // Create abort controller for timeout handling
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout for large imports
           
-          const response = await fetch(`${backendUrl}/api/leads/bulk-create`, {
+          const response = await fetch(fullUrl, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
