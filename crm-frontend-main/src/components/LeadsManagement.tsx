@@ -1574,16 +1574,50 @@ const LeadsManagement: React.FC = () => {
         // Send to backend for bulk import
         try {
           const apiClient = getApiClient();
-          const response = await fetch(`${apiClient.baseURL}/api/leads/bulk-create`, {
+          const backendUrl = apiClient.baseURL;
+          
+          if (!backendUrl) {
+            throw new Error('Backend URL not configured. Please check your environment settings.');
+          }
+          
+          console.log(`📤 Sending ${leadsToImport.length} leads to: ${backendUrl}/api/leads/bulk-create`);
+          
+          // Create abort controller for timeout handling
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout for large imports
+          
+          const response = await fetch(`${backendUrl}/api/leads/bulk-create`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
-            body: JSON.stringify({ leads: leadsToImport })
+            body: JSON.stringify({ leads: leadsToImport }),
+            signal: controller.signal
           });
+          
+          clearTimeout(timeoutId);
 
-          const result = await response.json();
+          // Check response status first
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`❌ Import API error (${response.status}):`, errorText);
+            throw new Error(`Server error (${response.status}): ${errorText || response.statusText}`);
+          }
+
+          // Try to parse JSON response
+          const responseText = await response.text();
+          if (!responseText || responseText.trim() === '') {
+            throw new Error('Server returned empty response. The import may have timed out - please check if leads were imported.');
+          }
+          
+          let result;
+          try {
+            result = JSON.parse(responseText);
+          } catch (parseError) {
+            console.error('❌ Failed to parse response:', responseText);
+            throw new Error('Server returned invalid response. Please try again or contact support.');
+          }
 
           if (result.success) {
             const { success, failed, errors } = result.results;
@@ -1591,7 +1625,7 @@ const LeadsManagement: React.FC = () => {
             let message = `Import completed!\n✅ ${success} leads imported successfully`;
             if (failed > 0) {
               message += `\n❌ ${failed} leads failed to import`;
-              if (errors.length > 0) {
+              if (errors && errors.length > 0) {
                 message += '\n\nFirst few errors:\n' + errors.slice(0, 5).join('\n');
                 if (errors.length > 5) {
                   message += `\n... and ${errors.length - 5} more errors`;
@@ -1609,7 +1643,18 @@ const LeadsManagement: React.FC = () => {
 
         } catch (error) {
           console.error('❌ Backend import error:', error);
-          alert(`Import failed: ${error instanceof Error ? error.message : 'Unknown error occurred during import'}`);
+          
+          // Provide more helpful error messages
+          let errorMessage = 'Unknown error occurred during import';
+          if (error instanceof Error) {
+            if (error.name === 'AbortError') {
+              errorMessage = 'Import timed out. Try importing fewer leads at a time (max 100 recommended).';
+            } else {
+              errorMessage = error.message;
+            }
+          }
+          
+          alert(`Import failed: ${errorMessage}`);
         }
 
       } catch (error) {

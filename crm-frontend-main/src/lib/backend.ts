@@ -224,6 +224,11 @@ class ProductionApiClient {
     this.config = getApiConfig();
   }
 
+  // Public getter for baseURL - used by direct fetch calls like bulk import
+  get baseURL(): string {
+    return this.config.backendUrl?.replace(/\/+$/, '') || '';
+  }
+
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     // Normalize backendUrl and endpoint to avoid duplicated segments like `/api/api/...`
     const rawBase = this.config.backendUrl || '';
