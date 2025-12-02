@@ -1611,11 +1611,17 @@ const LeadsManagement: React.FC = () => {
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout for large imports
           
+          // Get auth token - try both possible storage keys
+          const authToken = localStorage.getItem('crm_auth_token') || localStorage.getItem('token');
+          if (!authToken) {
+            throw new Error('Not authenticated. Please log in again.');
+          }
+          
           const response = await fetch(fullUrl, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
+              'Authorization': `Bearer ${authToken}`
             },
             body: JSON.stringify({ leads: leadsToImport }),
             signal: controller.signal
