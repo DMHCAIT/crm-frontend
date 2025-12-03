@@ -251,6 +251,12 @@ const LeadsManagement: React.FC = () => {
   const [userActivityStats, setUserActivityStats] = useState<UserActivityStats[]>([]);
   const [showUserActivityPanel, setShowUserActivityPanel] = useState(false);
 
+  // Custom source/course input mode for super admin
+  const [showCustomSourceInput, setShowCustomSourceInput] = useState(false);
+  const [showCustomCourseInput, setShowCustomCourseInput] = useState(false);
+  const [showEditCustomSourceInput, setShowEditCustomSourceInput] = useState(false);
+  const [showEditCustomCourseInput, setShowEditCustomCourseInput] = useState(false);
+
   // Dynamic Configuration States - From API
   const [statusOptions] = useState(STATUS_OPTIONS);
   const [countryOptions] = useState([
@@ -617,7 +623,7 @@ const LeadsManagement: React.FC = () => {
         } else {
           // Fallback to local calculation if backend fails
           console.log('⚠️ Backend user activity not available, using local calculation');
-          setUserActivityStats(calculateUserActivityStats());
+    setUserActivityStats(calculateUserActivityStats());
         }
       } catch (error) {
         console.error('❌ Error fetching user activity stats:', error);
@@ -935,6 +941,9 @@ const LeadsManagement: React.FC = () => {
   const handleCancelEdit = () => {
     setEditingLead(null);
     setEditedLead({});
+    // Reset custom input states for edit form
+    setShowEditCustomSourceInput(false);
+    setShowEditCustomCourseInput(false);
   };
 
   // Load notes for a specific lead (simplified - notes now come with leads data)
@@ -1229,22 +1238,22 @@ const LeadsManagement: React.FC = () => {
       }
 
       // Prepare lead data for database insertion - include ALL fields
+      // Custom source/course values from super admin are accepted as-is
       const leadData = {
         fullName: newLead.fullName,
-        // 'name' field removed - doesn't exist in database schema
         email: newLead.email,
         phone: newLead.phone,
         country: newLead.country,
         branch: newLead.branch,
         qualification: newLead.qualification,
-        source: (newLead.source || 'manual') as 'website' | 'social_media' | 'referral' | 'manual' | 'advertisement',
-        course: newLead.course,
-        status: (newLead.status || 'Fresh') as 'Hot' | 'Follow Up' | 'Warm' | 'Not Interested' | 'Enrolled' | 'Fresh' | 'Junk',
+        source: newLead.source || 'Manual Entry', // Accept any source including custom values
+        course: newLead.course || '', // Accept any course including custom values
+        status: newLead.status || 'Fresh',
+        company: newLead.company,
         assignedTo: newLead.assignedTo || user?.username || user?.name || 'Unassigned',
-        assigned_to: newLead.assignedTo || user?.username || user?.name || 'Unassigned', // For backend compatibility
+        assigned_to: newLead.assignedTo || user?.username || user?.name || 'Unassigned',
         followUp: newLead.followUp,
-
-        score: 50, // Default score for new leads
+        score: 50,
         notes: `Lead created via manual entry by ${user?.name || 'System'}`,
       };
 
@@ -1309,6 +1318,9 @@ const LeadsManagement: React.FC = () => {
         company: ''
       });
       setShowAddLeadModal(false);
+      // Reset custom input states
+      setShowCustomSourceInput(false);
+      setShowCustomCourseInput(false);
 
       // Show success notification
       notify.leadCreated(newLead.fullName || 'New Lead');
@@ -1348,6 +1360,9 @@ const LeadsManagement: React.FC = () => {
       company: ''
     });
     setShowAddLeadModal(false);
+    // Reset custom input states
+    setShowCustomSourceInput(false);
+    setShowCustomCourseInput(false);
   };
 
   // Check if user has manager permissions or above
@@ -4818,9 +4833,17 @@ const LeadsManagement: React.FC = () => {
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">Course</label>
                           {editingLead === selectedLead.id ? (
+                            !showEditCustomCourseInput ? (
                             <select
                               value={editedLead.course || selectedLead.course}
-                              onChange={(e) => setEditedLead(prev => ({ ...prev, course: e.target.value }))}
+                                onChange={(e) => {
+                                  if (e.target.value === '__custom__') {
+                                    setShowEditCustomCourseInput(true);
+                                    setEditedLead(prev => ({ ...prev, course: '' }));
+                                  } else {
+                                    setEditedLead(prev => ({ ...prev, course: e.target.value }));
+                                  }
+                                }}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
                               <option value="">Select Course</option>
@@ -4834,8 +4857,34 @@ const LeadsManagement: React.FC = () => {
                                   <option key={`pgdiploma-${course}`} value={course}>{course}</option>
                                 ))}
                               </optgroup>
-                              {/* No fallback to database values - always use proper course options */}
+                                {user?.role === 'super_admin' && (
+                                  <optgroup label="Super Admin Options">
+                                    <option value="__custom__">➕ Add Custom Course...</option>
+                                  </optgroup>
+                                )}
                             </select>
+                            ) : (
+                              <div className="flex gap-2">
+                                <input
+                                  type="text"
+                                  placeholder="Enter custom course"
+                                  value={editedLead.course || ''}
+                                  onChange={(e) => setEditedLead(prev => ({ ...prev, course: e.target.value }))}
+                                  className="flex-1 px-3 py-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 bg-purple-50"
+                                  autoFocus
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setShowEditCustomCourseInput(false);
+                                    setEditedLead(prev => ({ ...prev, course: selectedLead.course }));
+                                  }}
+                                  className="px-2 py-1 text-gray-600 hover:text-gray-800 border border-gray-300 rounded"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            )
                           ) : (
                             <span className="text-gray-700">{selectedLead.course}</span>
                           )}
@@ -4867,19 +4916,26 @@ const LeadsManagement: React.FC = () => {
                         <div className="col-span-2">
                           <label className="block text-sm font-medium text-gray-700 mb-1">Source</label>
                           {editingLead === selectedLead.id ? (
-                            <>
-                              <select
-                                value={editedLead.source || selectedLead.source}
-                                onChange={(e) => setEditedLead(prev => ({ ...prev, source: e.target.value }))}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                              >
-                                <option value="Website">Website</option>
+                            !showEditCustomSourceInput ? (
+                            <select
+                              value={editedLead.source || selectedLead.source}
+                                onChange={(e) => {
+                                  if (e.target.value === '__custom__') {
+                                    setShowEditCustomSourceInput(true);
+                                    setEditedLead(prev => ({ ...prev, source: '' }));
+                                  } else {
+                                    setEditedLead(prev => ({ ...prev, source: e.target.value }));
+                                  }
+                                }}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                              <option value="Website">Website</option>
                                 <option value="WhatsApp API">WhatsApp API</option>
-                                <option value="Referral">Referral</option>
+                              <option value="Referral">Referral</option>
                                 <option value="Facebook">Facebook</option>
                                 <option value="Instagram">Instagram</option>
                                 <option value="Google Ads">Google Ads</option>
-                                <option value="Walk-in">Walk-in</option>
+                              <option value="Walk-in">Walk-in</option>
                                 <option value="Phone Inquiry">Phone Inquiry</option>
                                 <option value="Email Campaign">Email Campaign</option>
                                 <option value="Manual Entry">Manual Entry</option>
@@ -4888,17 +4944,29 @@ const LeadsManagement: React.FC = () => {
                                   <option value="__custom__">➕ Add Custom...</option>
                                 )}
                                 <option value="Other">Other</option>
-                              </select>
-                              {user?.role === 'super_admin' && editedLead.source === '__custom__' && (
+                            </select>
+                            ) : (
+                              <div className="flex gap-2">
                                 <input
                                   type="text"
                                   placeholder="Enter custom source"
+                                  value={editedLead.source || ''}
                                   onChange={(e) => setEditedLead(prev => ({ ...prev, source: e.target.value }))}
-                                  className="mt-2 w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-blue-50"
+                                  className="flex-1 px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-blue-50"
                                   autoFocus
                                 />
-                              )}
-                            </>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setShowEditCustomSourceInput(false);
+                                    setEditedLead(prev => ({ ...prev, source: selectedLead.source }));
+                                  }}
+                                  className="px-2 py-1 text-gray-600 hover:text-gray-800 border border-gray-300 rounded"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            )
                           ) : (
                             <span className="text-gray-700">{selectedLead.source}</span>
                           )}
@@ -5692,46 +5760,74 @@ const LeadsManagement: React.FC = () => {
                 {/* Source */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Lead Source</label>
+                  {!showCustomSourceInput ? (
                   <select
                     value={newLead.source || ''}
-                    onChange={(e) => setNewLead({...newLead, source: e.target.value})}
+                      onChange={(e) => {
+                        if (e.target.value === '__custom__') {
+                          setShowCustomSourceInput(true);
+                          setNewLead({...newLead, source: ''});
+                        } else {
+                          setNewLead({...newLead, source: e.target.value});
+                        }
+                      }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="">Select Source</option>
                     <option value="Website">Website</option>
-                    <option value="WhatsApp API">WhatsApp API</option>
+                      <option value="WhatsApp API">WhatsApp API</option>
                     <option value="Referral">Referral</option>
-                    <option value="Facebook">Facebook</option>
-                    <option value="Instagram">Instagram</option>
-                    <option value="Google Ads">Google Ads</option>
+                      <option value="Facebook">Facebook</option>
+                      <option value="Instagram">Instagram</option>
+                      <option value="Google Ads">Google Ads</option>
                     <option value="Walk-in">Walk-in</option>
-                    <option value="Phone Inquiry">Phone Inquiry</option>
-                    <option value="Email Campaign">Email Campaign</option>
+                      <option value="Phone Inquiry">Phone Inquiry</option>
+                      <option value="Email Campaign">Email Campaign</option>
                     <option value="Manual Entry">Manual Entry</option>
-                    <option value="CSV Import">CSV Import</option>
-                    {user?.role === 'super_admin' && (
-                      <option value="__custom__">➕ Add Custom Source...</option>
-                    )}
+                      <option value="CSV Import">CSV Import</option>
+                      {user?.role === 'super_admin' && (
+                        <option value="__custom__">➕ Add Custom Source...</option>
+                      )}
                     <option value="Other">Other</option>
                   </select>
-                  {/* Custom source input for super admin */}
-                  {user?.role === 'super_admin' && newLead.source === '__custom__' && (
-                    <input
-                      type="text"
-                      placeholder="Enter custom source name"
-                      onChange={(e) => setNewLead({...newLead, source: e.target.value})}
-                      className="mt-2 w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-blue-50"
-                      autoFocus
-                    />
+                  ) : (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Enter custom source name"
+                        value={newLead.source || ''}
+                        onChange={(e) => setNewLead({...newLead, source: e.target.value})}
+                        className="flex-1 px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-blue-50"
+                        autoFocus
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowCustomSourceInput(false);
+                          setNewLead({...newLead, source: ''});
+                        }}
+                        className="px-3 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg"
+                      >
+                        ✕
+                      </button>
+                    </div>
                   )}
                 </div>
 
                 {/* Course */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Course Interest</label>
+                  {!showCustomCourseInput ? (
                   <select
                     value={newLead.course || ''}
-                    onChange={(e) => setNewLead({...newLead, course: e.target.value})}
+                      onChange={(e) => {
+                        if (e.target.value === '__custom__') {
+                          setShowCustomCourseInput(true);
+                          setNewLead({...newLead, course: ''});
+                        } else {
+                          setNewLead({...newLead, course: e.target.value});
+                        }
+                      }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="">Select Course</option>
@@ -5749,21 +5845,33 @@ const LeadsManagement: React.FC = () => {
                         ))}
                       </optgroup>
                     )}
-                    {user?.role === 'super_admin' && (
-                      <optgroup label="Super Admin Options">
-                        <option value="__custom__">➕ Add Custom Course...</option>
-                      </optgroup>
-                    )}
+                      {user?.role === 'super_admin' && (
+                        <optgroup label="Super Admin Options">
+                          <option value="__custom__">➕ Add Custom Course...</option>
+                        </optgroup>
+                      )}
                   </select>
-                  {/* Custom course input for super admin */}
-                  {user?.role === 'super_admin' && newLead.course === '__custom__' && (
-                    <input
-                      type="text"
-                      placeholder="Enter custom course name"
-                      onChange={(e) => setNewLead({...newLead, course: e.target.value})}
-                      className="mt-2 w-full px-3 py-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-purple-50"
-                      autoFocus
-                    />
+                  ) : (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Enter custom course name"
+                        value={newLead.course || ''}
+                        onChange={(e) => setNewLead({...newLead, course: e.target.value})}
+                        className="flex-1 px-3 py-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-purple-50"
+                        autoFocus
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowCustomCourseInput(false);
+                          setNewLead({...newLead, course: ''});
+                        }}
+                        className="px-3 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg"
+                      >
+                        ✕
+                      </button>
+                    </div>
                   )}
                 </div>
 
