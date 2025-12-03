@@ -589,7 +589,7 @@ class ProductionApiClient {
 
   // Get user activity stats for team/all users
   async getUserActivityStats() {
-    return this.request('/api/super-admin?action=user-activity');
+    return this.request('/api/user-activity-stats');
   }
 
   // Communications API - New endpoints

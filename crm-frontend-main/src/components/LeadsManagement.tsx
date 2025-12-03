@@ -590,19 +590,22 @@ const LeadsManagement: React.FC = () => {
   useEffect(() => {
     const fetchUserActivityStats = async () => {
       try {
+        console.log('📊 Fetching user activity stats from backend...');
         const apiClient = getApiClient();
         const response: any = await apiClient.getUserActivityStats();
+        
+        console.log('📊 User activity response:', response);
         
         if (response?.success && response?.data?.userStats) {
           // Transform backend data to match UserActivityStats interface
           const stats: UserActivityStats[] = response.data.userStats.map((stat: any) => ({
             userId: stat.userId || stat.username,
-            username: stat.username,
+            username: stat.username || 'Unknown',
             role: stat.role || 'counselor',
             totalLeads: stat.totalLeads || 0,
-            updatedToday: stat.todayUpdates || stat.totalUpdates || 0,
-            updatedThisWeek: stat.weekUpdates || stat.totalUpdates || 0,
-            updatedThisMonth: stat.monthUpdates || stat.totalUpdates || 0,
+            updatedToday: stat.updatedToday || 0,
+            updatedThisWeek: stat.updatedThisWeek || 0,
+            updatedThisMonth: stat.updatedThisMonth || 0,
             hotLeads: stat.hotLeads || 0,
             warmLeads: stat.warmLeads || 0,
             enrolledLeads: stat.enrolledLeads || 0,
@@ -626,7 +629,7 @@ const LeadsManagement: React.FC = () => {
     if (showUserActivityPanel) {
       fetchUserActivityStats();
     }
-  }, [showUserActivityPanel, leads, assignableUsers]);
+  }, [showUserActivityPanel]);
 
   // Data Loading - Now using TanStack Query (cached and optimized)
   const loadLeads = async () => {
