@@ -586,10 +586,47 @@ const LeadsManagement: React.FC = () => {
     loadUsers();
   }, []);
 
-  // Update user activity stats when leads or users change
+  // Update user activity stats - fetch from backend for accurate data
   useEffect(() => {
-    setUserActivityStats(calculateUserActivityStats());
-  }, [leads, assignableUsers]);
+    const fetchUserActivityStats = async () => {
+      try {
+        const apiClient = getApiClient();
+        const response: any = await apiClient.getUserActivityStats();
+        
+        if (response?.success && response?.data?.userStats) {
+          // Transform backend data to match UserActivityStats interface
+          const stats: UserActivityStats[] = response.data.userStats.map((stat: any) => ({
+            userId: stat.userId || stat.username,
+            username: stat.username,
+            role: stat.role || 'counselor',
+            totalLeads: stat.totalLeads || 0,
+            updatedToday: stat.todayUpdates || stat.totalUpdates || 0,
+            updatedThisWeek: stat.weekUpdates || stat.totalUpdates || 0,
+            updatedThisMonth: stat.monthUpdates || stat.totalUpdates || 0,
+            hotLeads: stat.hotLeads || 0,
+            warmLeads: stat.warmLeads || 0,
+            enrolledLeads: stat.enrolledLeads || 0,
+            totalRevenue: stat.totalRevenue || 0,
+            estimatedRevenue: stat.estimatedRevenue || 0
+          }));
+          setUserActivityStats(stats);
+          console.log('✅ User activity stats loaded from backend:', stats.length, 'users');
+        } else {
+          // Fallback to local calculation if backend fails
+          console.log('⚠️ Backend user activity not available, using local calculation');
+          setUserActivityStats(calculateUserActivityStats());
+        }
+      } catch (error) {
+        console.error('❌ Error fetching user activity stats:', error);
+        // Fallback to local calculation
+        setUserActivityStats(calculateUserActivityStats());
+      }
+    };
+
+    if (showUserActivityPanel) {
+      fetchUserActivityStats();
+    }
+  }, [showUserActivityPanel, leads, assignableUsers]);
 
   // Data Loading - Now using TanStack Query (cached and optimized)
   const loadLeads = async () => {
@@ -1240,7 +1277,9 @@ const LeadsManagement: React.FC = () => {
         }]
       };
 
-      // Query will auto-update via cache invalidation after backend save
+      // Immediately refresh leads list to show the new lead
+      await refetchLeads();
+      console.log('✅ Leads list refreshed after creating new lead');
 
       // Track as updated today with persistence
       const newUpdatedList = [...leadsUpdatedToday, leadToAdd.id];

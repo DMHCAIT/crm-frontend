@@ -41,10 +41,11 @@ export const useLeads = (page: number = 1, pageSize: number = 100, filters?: any
       
       return data;
     },
-    staleTime: 1000 * 60 * 2, // Cache for 2 minutes
-    gcTime: 1000 * 60 * 10, // Keep in cache for 10 minutes
-    refetchInterval: false, // No automatic background refetching
-    refetchOnMount: false, // Use cache on mount if available
+    staleTime: 1000 * 30, // Cache for 30 seconds (reduced for faster updates)
+    gcTime: 1000 * 60 * 5, // Keep in cache for 5 minutes
+    refetchInterval: 1000 * 60, // Auto-refetch every 60 seconds for real-time updates
+    refetchOnWindowFocus: true, // Refetch when window regains focus
+    refetchOnMount: 'always', // Always refetch on mount to get latest data
   });
 };
 

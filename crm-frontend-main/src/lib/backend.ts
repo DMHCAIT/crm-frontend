@@ -587,6 +587,11 @@ class ProductionApiClient {
     return this.request('/api/users/me');
   }
 
+  // Get user activity stats for team/all users
+  async getUserActivityStats() {
+    return this.request('/api/super-admin?action=user-activity');
+  }
+
   // Communications API - New endpoints
   async getCommunications(filters?: any) {
     const params = new URLSearchParams(filters).toString();
