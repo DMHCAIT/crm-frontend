@@ -1892,7 +1892,9 @@ const LeadsManagement: React.FC = () => {
 
         console.log('✅ Bulk transfer saved to backend successfully');
         
-        // Query will auto-update via cache invalidation after backend save
+        // Immediately refresh leads list to show the transfer
+        await refetchLeads();
+        console.log('✅ Leads list refreshed after transfer');
         
         // Track transferred leads as updated today with persistence
         const newUpdatedLeads = selectedLeads.filter((id: string) => !leadsUpdatedToday.includes(id));
@@ -1947,7 +1949,9 @@ const LeadsManagement: React.FC = () => {
         
         console.log('✅ Bulk company change saved to backend successfully');
 
-        // Query will auto-update via cache invalidation
+        // Immediately refresh leads list to show the company change
+        await refetchLeads();
+        console.log('✅ Leads list refreshed after company change');
         
         // Show success message
         notify.success(`Successfully changed ${selectedLeads.length} lead(s) to ${bulkCompanyTarget} company`);
