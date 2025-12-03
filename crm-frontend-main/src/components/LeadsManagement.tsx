@@ -4867,18 +4867,38 @@ const LeadsManagement: React.FC = () => {
                         <div className="col-span-2">
                           <label className="block text-sm font-medium text-gray-700 mb-1">Source</label>
                           {editingLead === selectedLead.id ? (
-                            <select
-                              value={editedLead.source || selectedLead.source}
-                              onChange={(e) => setEditedLead(prev => ({ ...prev, source: e.target.value }))}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            >
-                              <option value="Website">Website</option>
-                              <option value="Facebook Ads">Facebook Ads</option>
-                              <option value="Google Ads">Google Ads</option>
-                              <option value="Referral">Referral</option>
-                              <option value="Walk-in">Walk-in</option>
-                              <option value="Phone Call">Phone Call</option>
-                            </select>
+                            <>
+                              <select
+                                value={editedLead.source || selectedLead.source}
+                                onChange={(e) => setEditedLead(prev => ({ ...prev, source: e.target.value }))}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              >
+                                <option value="Website">Website</option>
+                                <option value="WhatsApp API">WhatsApp API</option>
+                                <option value="Referral">Referral</option>
+                                <option value="Facebook">Facebook</option>
+                                <option value="Instagram">Instagram</option>
+                                <option value="Google Ads">Google Ads</option>
+                                <option value="Walk-in">Walk-in</option>
+                                <option value="Phone Inquiry">Phone Inquiry</option>
+                                <option value="Email Campaign">Email Campaign</option>
+                                <option value="Manual Entry">Manual Entry</option>
+                                <option value="CSV Import">CSV Import</option>
+                                {user?.role === 'super_admin' && (
+                                  <option value="__custom__">➕ Add Custom...</option>
+                                )}
+                                <option value="Other">Other</option>
+                              </select>
+                              {user?.role === 'super_admin' && editedLead.source === '__custom__' && (
+                                <input
+                                  type="text"
+                                  placeholder="Enter custom source"
+                                  onChange={(e) => setEditedLead(prev => ({ ...prev, source: e.target.value }))}
+                                  className="mt-2 w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-blue-50"
+                                  autoFocus
+                                />
+                              )}
+                            </>
                           ) : (
                             <span className="text-gray-700">{selectedLead.source}</span>
                           )}
@@ -5679,15 +5699,31 @@ const LeadsManagement: React.FC = () => {
                   >
                     <option value="">Select Source</option>
                     <option value="Website">Website</option>
-                    <option value="Facebook Ads">Facebook Ads</option>
-                    <option value="Google Ads">Google Ads</option>
+                    <option value="WhatsApp API">WhatsApp API</option>
                     <option value="Referral">Referral</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Google Ads">Google Ads</option>
                     <option value="Walk-in">Walk-in</option>
-                    <option value="Phone Call">Phone Call</option>
-                    <option value="Email">Email</option>
+                    <option value="Phone Inquiry">Phone Inquiry</option>
+                    <option value="Email Campaign">Email Campaign</option>
                     <option value="Manual Entry">Manual Entry</option>
+                    <option value="CSV Import">CSV Import</option>
+                    {user?.role === 'super_admin' && (
+                      <option value="__custom__">➕ Add Custom Source...</option>
+                    )}
                     <option value="Other">Other</option>
                   </select>
+                  {/* Custom source input for super admin */}
+                  {user?.role === 'super_admin' && newLead.source === '__custom__' && (
+                    <input
+                      type="text"
+                      placeholder="Enter custom source name"
+                      onChange={(e) => setNewLead({...newLead, source: e.target.value})}
+                      className="mt-2 w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-blue-50"
+                      autoFocus
+                    />
+                  )}
                 </div>
 
                 {/* Course */}
@@ -5713,7 +5749,22 @@ const LeadsManagement: React.FC = () => {
                         ))}
                       </optgroup>
                     )}
+                    {user?.role === 'super_admin' && (
+                      <optgroup label="Super Admin Options">
+                        <option value="__custom__">➕ Add Custom Course...</option>
+                      </optgroup>
+                    )}
                   </select>
+                  {/* Custom course input for super admin */}
+                  {user?.role === 'super_admin' && newLead.course === '__custom__' && (
+                    <input
+                      type="text"
+                      placeholder="Enter custom course name"
+                      onChange={(e) => setNewLead({...newLead, course: e.target.value})}
+                      className="mt-2 w-full px-3 py-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-purple-50"
+                      autoFocus
+                    />
+                  )}
                 </div>
 
                 {/* Status */}

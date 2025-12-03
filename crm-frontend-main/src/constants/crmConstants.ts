@@ -65,11 +65,20 @@ export const QUALIFICATION_OPTIONS = [
 
 // Source options  
 export const SOURCE_OPTIONS = [
-  'website',
-  'social_media',
-  'referral',
-  'manual',
-  'advertisement'
+  'Website',
+  'Social Media',
+  'Referral',
+  'WhatsApp API',
+  'Facebook',
+  'Instagram',
+  'Google Ads',
+  'Manual Entry',
+  'CSV Import',
+  'Advertisement',
+  'Walk-in',
+  'Phone Inquiry',
+  'Email Campaign',
+  'Other'
 ] as const;
 
 export default {
