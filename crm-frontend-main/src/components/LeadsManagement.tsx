@@ -3849,9 +3849,48 @@ const LeadsManagement: React.FC = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="all">All Sources</option>
-                  {getUniqueValues('source').map(source => (
-                    <option key={source} value={source}>{source}</option>
-                  ))}
+                  <optgroup label="Standard Sources">
+                    <option value="Website">Website</option>
+                    <option value="WhatsApp API">WhatsApp API</option>
+                    <option value="Referral">Referral</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Google Ads">Google Ads</option>
+                    <option value="Walk-in">Walk-in</option>
+                    <option value="Phone Inquiry">Phone Inquiry</option>
+                    <option value="Email Campaign">Email Campaign</option>
+                    <option value="Manual Entry">Manual Entry</option>
+                    <option value="CSV Import">CSV Import</option>
+                    <option value="Other">Other</option>
+                  </optgroup>
+                  {/* Include any additional sources from leads data not in predefined list */}
+                  {(() => {
+                    const predefinedSources = ['Website', 'WhatsApp API', 'Referral', 'Facebook', 'Instagram', 'Google Ads', 'Walk-in', 'Phone Inquiry', 'Email Campaign', 'Manual Entry', 'CSV Import', 'Other', 'website', 'social_media', 'referral', 'manual', 'advertisement'];
+                    const customSources = getUniqueValues('source').filter(source => 
+                      source && !predefinedSources.includes(source) && source !== 'all'
+                    );
+                    if (customSources.length > 0) {
+                      return (
+                        <optgroup label="Custom Sources (from database)">
+                          {customSources.map(source => (
+                            <option key={`custom-${source}`} value={source}>{source}</option>
+                          ))}
+                        </optgroup>
+                      );
+                    }
+                    return null;
+                  })()}
+                  {/* Legacy source values for backwards compatibility */}
+                  <optgroup label="Legacy Sources">
+                    <option value="website">website (legacy)</option>
+                    <option value="social_media">social_media (legacy)</option>
+                    <option value="referral">referral (legacy)</option>
+                    <option value="manual">manual (legacy)</option>
+                    <option value="advertisement">advertisement (legacy)</option>
+                    <option value="Facebook Ads">Facebook Ads</option>
+                    <option value="Phone Call">Phone Call</option>
+                    <option value="Email">Email</option>
+                  </optgroup>
                 </select>
               </div>
 
@@ -3957,7 +3996,23 @@ const LeadsManagement: React.FC = () => {
                       <option key={`pgdiploma-${course}`} value={course}>{course}</option>
                     ))}
                   </optgroup>
-                  {/* No fallback to database values - always use proper course options */}
+                  {/* Include any additional courses from leads data not in predefined list */}
+                  {(() => {
+                    const allPredefinedCourses = [...(courseOptions.fellowship || []), ...(courseOptions.pgDiploma || [])];
+                    const customCourses = getUniqueValues('course').filter(course => 
+                      course && !allPredefinedCourses.includes(course) && course !== 'all'
+                    );
+                    if (customCourses.length > 0) {
+                      return (
+                        <optgroup label="Custom Courses (from database)">
+                          {customCourses.map(course => (
+                            <option key={`custom-${course}`} value={course}>{course}</option>
+                          ))}
+                        </optgroup>
+                      );
+                    }
+                    return null;
+                  })()}
                 </select>
               </div>
             </div>
