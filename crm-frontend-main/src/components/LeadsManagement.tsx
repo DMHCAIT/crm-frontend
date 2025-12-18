@@ -967,21 +967,11 @@ const LeadsManagement: React.FC = () => {
       
       console.log(`✅ Lead update completed successfully - Detail panel remains open for notes on page ${currentPage}`);
       
-      // Check if the updated lead still matches current filters after a brief delay
+      // Reset flag after brief delay (cache is updated directly, no refetch needed)
       setTimeout(() => {
-        // Check if lead is still in the filtered results
-        const leadStillExists = leads.some((l: Lead) => l.id === editingLead);
-        
-        if (!leadStillExists) {
-          // Lead no longer matches filter - close panel and show notification
-          setSelectedLeadId(null);
-          console.log(`🔄 Lead ${editingLead} no longer matches current filter - panel closed`);
-          notify.info('Lead Moved', 'Lead has been updated and moved out of the current filter view.');
-        }
-        
         isUpdatingLeadRef.current = false;
         console.log(`📄 Page preserved after save: ${currentPage}`);
-      }, 500); // Check after cache update completes
+      }, 500);
     } catch (error) {
       console.error('❌ Error saving lead:', error);
       // Reset flag on error
