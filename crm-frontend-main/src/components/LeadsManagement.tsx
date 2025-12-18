@@ -228,6 +228,7 @@ const LeadsManagement: React.FC = () => {
   
   // New states for compact view and detail panel
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
+  const [selectedLeadCache, setSelectedLeadCache] = useState<Lead | null>(null); // Cache to persist lead data
   const [showDetailPanel, setShowDetailPanel] = useState(false);
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [showBulkTransferModal, setShowBulkTransferModal] = useState(false);
@@ -947,6 +948,12 @@ const LeadsManagement: React.FC = () => {
       
       await updateLeadMutation.mutateAsync({ id: editingLead, data: updateData });
       console.log('✅ Lead saved to backend successfully with cache invalidation');
+      
+      // Update the cached lead data with the new values
+      if (selectedLeadCache && selectedLeadCache.id === editingLead) {
+        setSelectedLeadCache({ ...selectedLeadCache, ...updateData });
+        console.log('📦 Updated cached lead data');
+      }
       
       // Track this lead as updated today with persistence
       if (editingLead && !leadsUpdatedToday.includes(editingLead)) {
@@ -4888,7 +4895,14 @@ const LeadsManagement: React.FC = () => {
         {showDetailPanel && selectedLeadId && (
           <div className="w-1/3 bg-white rounded-xl shadow-lg border border-gray-200 sticky top-1 mb-6 overflow-y-auto" style={{height: 'calc(80vh - 2rem)', maxHeight: 'calc(80vh - 2rem)'}}>
             {(() => {
-              const selectedLead = leads.find((l: Lead) => l.id === selectedLeadId);
+              // Try to find lead in current filtered list first
+              let selectedLead = leads.find((l: Lead) => l.id === selectedLeadId);
+              
+              // If not found (lead moved out of filter), use cached version
+              if (!selectedLead && selectedLeadCache && selectedLeadCache.id === selectedLeadId) {
+                selectedLead = selectedLeadCache;
+                console.log(`📦 Using cached lead data (lead moved out of filter)`);
+              }
               
               console.log(`🎯 Lead details render - Lead ID: ${selectedLeadId}`);
               console.log(`🎯 Found selectedLead:`, !!selectedLead);
@@ -6344,6 +6358,7 @@ const LeadsManagement: React.FC = () => {
                         onClick={() => {
                           // Open lead details
                           setSelectedLeadId(lead.id);
+                          setSelectedLeadCache(lead); // Cache the lead data
                           setShowDetailPanel(true);
                           setShowTeamMemberModal(false);
                           // Load notes and activities for the lead
@@ -6430,6 +6445,7 @@ const LeadsManagement: React.FC = () => {
                               onClick={() => {
                                 // Open edit modal for this specific lead
                                 setSelectedLeadId(lead.id);
+                                setSelectedLeadCache(lead); // Cache the lead data
                                 setShowDetailPanel(true);
                                 // Close the team member modal to show the edit panel
                                 setShowTeamMemberModal(false);
@@ -6527,6 +6543,7 @@ const LeadsManagement: React.FC = () => {
                         <button
                           onClick={() => {
                             setSelectedLeadId(lead.id);
+                            setSelectedLeadCache(lead); // Cache the lead data
                             setShowDetailPanel(true);
                             setShowOverduePopup(false);
                             // Load notes and activities for the lead
