@@ -422,6 +422,23 @@ class ProductionApiClient {
         if (filters.createdDateTo) params.append('createdDateTo', filters.createdDateTo);
         if (filters.createdDateFilterType && filters.createdDateFilterType !== 'on') params.append('createdDateFilterType', filters.createdDateFilterType);
         if (filters.createdSpecificDate) params.append('createdSpecificDate', filters.createdSpecificDate);
+        
+        // Add follow-up date filter parameters
+        if (filters.followUpFilter && filters.followUpFilter !== 'all') params.append('followUpFilter', filters.followUpFilter);
+        if (filters.followUpDateFrom) params.append('followUpDateFrom', filters.followUpDateFrom);
+        if (filters.followUpDateTo) params.append('followUpDateTo', filters.followUpDateTo);
+        if (filters.followUpDateType) params.append('followUpDateType', filters.followUpDateType);
+        if (filters.followUpSpecificDate) params.append('followUpSpecificDate', filters.followUpSpecificDate);
+        if (filters.showOverdueFollowUp === true) params.append('showOverdueFollowUp', 'true');
+        
+        console.log('📊 Follow-up filters being sent:', {
+          followUpFilter: filters.followUpFilter,
+          followUpDateFrom: filters.followUpDateFrom,
+          followUpDateTo: filters.followUpDateTo,
+          followUpDateType: filters.followUpDateType,
+          followUpSpecificDate: filters.followUpSpecificDate,
+          showOverdueFollowUp: filters.showOverdueFollowUp
+        });
       }
       
       const queryString = params.toString();
