@@ -83,20 +83,43 @@ export const useUpdateLead = () => {
       const apiClient = getApiClient();
       return apiClient.updateLead(id, data);
     },
-    onSuccess: (data, variables) => {
-      // Use refetchQueries instead of invalidateQueries to preserve data during refetch
-      // This prevents the "Lead not found" flash during update
-      queryClient.refetchQueries({ 
-        queryKey: queryKeys.leads,
-        type: 'active' // Only refetch active queries
-      });
-      queryClient.refetchQueries({ 
-        queryKey: queryKeys.lead(variables.id),
-        type: 'active'
-      });
-      queryClient.refetchQueries({ 
+    onSuccess: (responseData, variables) => {
+      // Update cache directly without refetching to prevent page reset
+      // This is more efficient and preserves UI state (current page, selected lead)
+      
+      // Update all active leads queries in the cache
+      queryClient.setQueriesData(
+        { queryKey: queryKeys.leads },
+        (oldData: any) => {
+          if (!oldData) return oldData;
+          
+          // Handle different response structures
+          const leads = oldData.leads || oldData.data || [];
+          const updatedLeads = leads.map((lead: any) => 
+            lead.id === variables.id ? { ...lead, ...variables.data } : lead
+          );
+          
+          return {
+            ...oldData,
+            leads: updatedLeads,
+            data: updatedLeads
+          };
+        }
+      );
+      
+      // Update individual lead query if it exists
+      queryClient.setQueryData(
+        queryKeys.lead(variables.id),
+        (oldData: any) => {
+          if (!oldData) return oldData;
+          return { ...oldData, ...variables.data };
+        }
+      );
+      
+      // Only invalidate dashboard (doesn't affect pagination)
+      queryClient.invalidateQueries({ 
         queryKey: queryKeys.dashboard,
-        type: 'active'
+        refetchType: 'none' // Don't trigger immediate refetch
       });
     },
   });

@@ -967,11 +967,11 @@ const LeadsManagement: React.FC = () => {
       
       console.log(`✅ Lead update completed successfully - Detail panel remains open for notes on page ${currentPage}`);
       
-      // Reset flag after sufficient delay to allow refetch to complete without triggering page reset
+      // Reset flag after brief delay (cache is updated directly, no refetch needed)
       setTimeout(() => {
         isUpdatingLeadRef.current = false;
         console.log(`📄 Page preserved after save: ${currentPage}`);
-      }, 2000); // Increased from 1000ms to 2000ms for better reliability
+      }, 500); // Reduced timeout since we're using optimistic updates
     } catch (error) {
       console.error('❌ Error saving lead:', error);
       // Reset flag on error
