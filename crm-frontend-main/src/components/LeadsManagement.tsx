@@ -1058,24 +1058,25 @@ const LeadsManagement: React.FC = () => {
 
     try {
       console.log(`🔍 Adding note to lead ${leadId}...`);
+      console.log(`📄 Current page before adding note: ${currentPage}`);
       
-      // Use React Query mutation for proper cache invalidation
+      // Set flag to prevent page reset during note add
+      isUpdatingLeadRef.current = true;
+      
+      // Use React Query mutation for proper cache updates
       await addNoteMutation.mutateAsync({
         leadId: leadId,
         content: noteContent,
         noteType: 'general'
       });
 
-      console.log('✅ Note saved successfully with cache invalidation');
+      console.log('✅ Note saved successfully - Panel remains open');
       
-      // Force immediate refresh of the leads data
-      await loadLeads();
-      
-      // Also force reload notes for this specific lead
+      // Reload notes for this specific lead (doesn't affect pagination)
       await loadNotesForLead(leadId);
       
       // Show success notification
-      notify.success('Note Saved', 'Your note has been added successfully');
+      notify.success('Note Saved', 'Your note has been added successfully. Panel stays open for more notes.');
       
       // Track this lead as updated today when note is added
       if (!leadsUpdatedToday.includes(leadId)) {
@@ -1090,8 +1091,18 @@ const LeadsManagement: React.FC = () => {
       
       setNewNote((prev: {[key: string]: string}) => ({ ...prev, [leadId]: '' }));
       
+      console.log(`✅ Note add completed - Detail panel remains open on page ${currentPage}`);
+      
+      // Reset flag after brief delay
+      setTimeout(() => {
+        isUpdatingLeadRef.current = false;
+        console.log(`📄 Page preserved after adding note: ${currentPage}`);
+      }, 500);
+      
     } catch (error) {
       console.error('❌ Error saving note:', error);
+      // Reset flag on error
+      isUpdatingLeadRef.current = false;
       notify.error('Note Save Failed', 'Unable to save your note. Please check your connection and try again.');
     }
   };

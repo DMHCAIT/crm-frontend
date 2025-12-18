@@ -327,10 +327,60 @@ export const useAddNote = () => {
       
       return result;
     },
-    onSuccess: (_, variables) => {
-      // Invalidate relevant queries to trigger re-fetch
-      queryClient.invalidateQueries({ queryKey: queryKeys.leads });
-      queryClient.invalidateQueries({ queryKey: queryKeys.lead(variables.leadId) });
+    onSuccess: (result, variables) => {
+      // Update cache directly without refetch to preserve UI state (page, panel)
+      // This prevents panel closure when adding notes
+      
+      // Update all leads queries - add the note to the lead's notes array
+      queryClient.setQueriesData(
+        { queryKey: queryKeys.leads },
+        (oldData: any) => {
+          if (!oldData) return oldData;
+          
+          const leads = oldData.leads || oldData.data || [];
+          const updatedLeads = leads.map((lead: any) => {
+            if (lead.id === variables.leadId) {
+              const newNote = result.note || {
+                id: Date.now().toString(),
+                content: variables.content,
+                noteType: variables.noteType,
+                createdAt: new Date().toISOString(),
+                leadId: variables.leadId
+              };
+              return {
+                ...lead,
+                notes: [...(lead.notes || []), newNote]
+              };
+            }
+            return lead;
+          });
+          
+          return {
+            ...oldData,
+            leads: updatedLeads,
+            data: updatedLeads
+          };
+        }
+      );
+      
+      // Update individual lead query
+      queryClient.setQueryData(
+        queryKeys.lead(variables.leadId),
+        (oldData: any) => {
+          if (!oldData) return oldData;
+          const newNote = result.note || {
+            id: Date.now().toString(),
+            content: variables.content,
+            noteType: variables.noteType,
+            createdAt: new Date().toISOString(),
+            leadId: variables.leadId
+          };
+          return {
+            ...oldData,
+            notes: [...(oldData.notes || []), newNote]
+          };
+        }
+      );
     },
   });
 };
