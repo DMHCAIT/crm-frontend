@@ -2,6 +2,9 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* Import responsive CSS styles */
+@import './styles/responsive.css';
+
 /* Ensure proper body styling for full-page layouts */
 * {
   box-sizing: border-box;
