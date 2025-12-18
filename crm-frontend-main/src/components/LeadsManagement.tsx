@@ -954,13 +954,14 @@ const LeadsManagement: React.FC = () => {
       setLastUpdateTime(newUpdateTime);
       localStorage.setItem('crm-last-update-time', newUpdateTime.toISOString());
       
+      // Exit edit mode but keep the detail panel open with the lead still selected
       setEditingLead(null);
       setEditedLead({});
       
       // Show success notification
-      notify.success('Lead Updated', 'Lead information has been saved successfully');
+      notify.success('Lead Updated', 'Lead information has been saved successfully. You can continue adding notes.');
       
-      console.log('✅ Lead update completed successfully');
+      console.log('✅ Lead update completed successfully - Detail panel remains open for notes');
       
       // Reset flag after a short delay to allow refetch to complete
       setTimeout(() => {
