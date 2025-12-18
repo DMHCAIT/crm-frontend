@@ -5461,16 +5461,25 @@ const LeadsManagement: React.FC = () => {
                           newValue: activity.new_value
                         }));
                         
-                        // Transform notes to include type
+                        // Transform notes to include type and normalize timestamp field
                         const noteItems: CombinedItem[] = notes.map((note: any) => ({
                           ...note,
+                          // Normalize timestamp - handle multiple field names
+                          timestamp: note.timestamp || note.createdAt || note.created_at || note.date || new Date().toISOString(),
+                          author: note.author || note.created_by || 'Unknown',
                           type: 'note' as const
                         }));
                         
                         // Sort each type by timestamp (newest first)
-                        const sortedNotes = noteItems.sort((a, b) => 
-                          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-                        );
+                        const sortedNotes = noteItems.sort((a, b) => {
+                          const timeA = new Date(a.timestamp).getTime();
+                          const timeB = new Date(b.timestamp).getTime();
+                          // Handle invalid dates
+                          if (isNaN(timeA) && isNaN(timeB)) return 0;
+                          if (isNaN(timeA)) return 1;
+                          if (isNaN(timeB)) return -1;
+                          return timeB - timeA;
+                        });
                         const sortedActivities = activityItems.sort((a, b) => 
                           new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
                         );
@@ -5520,7 +5529,19 @@ const LeadsManagement: React.FC = () => {
                                           <span className="text-sm font-medium text-gray-900">{note.author}</span>
                                         </div>
                                         <span className="text-xs text-gray-500">
-                                          {new Date(note.timestamp).toLocaleString()}
+                                          {(() => {
+                                            const date = new Date(note.timestamp);
+                                            if (isNaN(date.getTime())) {
+                                              return 'Invalid Date';
+                                            }
+                                            return date.toLocaleString('en-US', {
+                                              year: 'numeric',
+                                              month: 'short',
+                                              day: 'numeric',
+                                              hour: '2-digit',
+                                              minute: '2-digit'
+                                            });
+                                          })()}
                                         </span>
                                       </div>
                                       <p className="text-sm text-gray-700 leading-relaxed">{note.content}</p>
@@ -5565,7 +5586,19 @@ const LeadsManagement: React.FC = () => {
                                           <span className="text-xs text-gray-500">by {activity.author}</span>
                                         </div>
                                         <span className="text-xs text-gray-500">
-                                          {new Date(activity.timestamp).toLocaleString()}
+                                          {(() => {
+                                            const date = new Date(activity.timestamp);
+                                            if (isNaN(date.getTime())) {
+                                              return 'Invalid Date';
+                                            }
+                                            return date.toLocaleString('en-US', {
+                                              year: 'numeric',
+                                              month: 'short',
+                                              day: 'numeric',
+                                              hour: '2-digit',
+                                              minute: '2-digit'
+                                            });
+                                          })()}
                                         </span>
                                       </div>
                                       
