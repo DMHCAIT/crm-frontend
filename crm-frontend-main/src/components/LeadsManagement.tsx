@@ -940,20 +940,24 @@ const LeadsManagement: React.FC = () => {
       // Set flag to prevent page reset during update
       isUpdatingLeadRef.current = true;
       
+      // Store the current lead data before update
+      const currentLeadData = leads.find((l: Lead) => l.id === editingLead) || selectedLeadCache;
+      
       // Use React Query mutation for proper cache invalidation
       const updateData = {
         ...editedLead,
         updatedAt: new Date().toISOString()
       };
       
+      // Update the cached lead BEFORE mutation to ensure continuity
+      if (currentLeadData) {
+        const updatedCachedLead = { ...currentLeadData, ...updateData };
+        setSelectedLeadCache(updatedCachedLead);
+        console.log('📦 Pre-updated cached lead data to maintain panel state');
+      }
+      
       await updateLeadMutation.mutateAsync({ id: editingLead, data: updateData });
       console.log('✅ Lead saved to backend successfully with cache invalidation');
-      
-      // Update the cached lead data with the new values
-      if (selectedLeadCache && selectedLeadCache.id === editingLead) {
-        setSelectedLeadCache({ ...selectedLeadCache, ...updateData });
-        console.log('📦 Updated cached lead data');
-      }
       
       // Track this lead as updated today with persistence
       if (editingLead && !leadsUpdatedToday.includes(editingLead)) {
@@ -4902,6 +4906,11 @@ const LeadsManagement: React.FC = () => {
               if (!selectedLead && selectedLeadCache && selectedLeadCache.id === selectedLeadId) {
                 selectedLead = selectedLeadCache;
                 console.log(`📦 Using cached lead data (lead moved out of filter)`);
+              }
+              
+              // If editing this lead, merge in the edited changes for immediate display
+              if (selectedLead && editingLead === selectedLead.id && editedLead) {
+                selectedLead = { ...selectedLead, ...editedLead };
               }
               
               console.log(`🎯 Lead details render - Lead ID: ${selectedLeadId}`);
