@@ -4883,8 +4883,24 @@ const LeadsManagement: React.FC = () => {
               console.log(`🎯 Found selectedLead:`, !!selectedLead);
               console.log(`🎯 Selected lead notes:`, selectedLead?.notes?.length || 0);
               console.log(`🎯 Last update time:`, lastUpdateTime?.getTime());
+              console.log(`🎯 Is updating lead:`, isUpdatingLeadRef.current);
               
+              // Show loading state during update instead of "Lead not found"
               if (!selectedLead) {
+                // If we're currently updating, show loading instead of "not found"
+                if (isUpdatingLeadRef.current) {
+                  return (
+                    <div className="p-4 text-center">
+                      <div className="text-blue-600">
+                        <div className="w-8 h-8 mx-auto mb-2 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                        <p className="font-medium">Updating lead...</p>
+                        <p className="text-sm text-gray-600">Please wait while we save your changes</p>
+                      </div>
+                    </div>
+                  );
+                }
+                
+                // Only show "not found" if we're not updating
                 return (
                   <div className="p-4 text-center">
                     <div className="text-gray-500">

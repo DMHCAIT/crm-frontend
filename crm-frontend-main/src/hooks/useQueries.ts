@@ -83,10 +83,21 @@ export const useUpdateLead = () => {
       const apiClient = getApiClient();
       return apiClient.updateLead(id, data);
     },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.leads });
-      queryClient.invalidateQueries({ queryKey: queryKeys.lead(variables.id) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard });
+    onSuccess: (data, variables) => {
+      // Use refetchQueries instead of invalidateQueries to preserve data during refetch
+      // This prevents the "Lead not found" flash during update
+      queryClient.refetchQueries({ 
+        queryKey: queryKeys.leads,
+        type: 'active' // Only refetch active queries
+      });
+      queryClient.refetchQueries({ 
+        queryKey: queryKeys.lead(variables.id),
+        type: 'active'
+      });
+      queryClient.refetchQueries({ 
+        queryKey: queryKeys.dashboard,
+        type: 'active'
+      });
     },
   });
 };
