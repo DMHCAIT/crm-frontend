@@ -604,7 +604,10 @@ const LeadsManagement: React.FC = () => {
   useEffect(() => {
     // Skip page reset if we're currently updating a lead
     if (!isUpdatingLeadRef.current) {
+      console.log('🔄 Filters changed - Resetting to page 1');
       setCurrentPage(1);
+    } else {
+      console.log('⏸️ Page reset skipped - Lead update in progress, staying on page', currentPage);
     }
   }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, dateFilter, dateFrom, dateTo, dateFilterType, specificDate, qualificationFilter, courseFilter, companyFilter, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate, followUpFilter, followUpDateFrom, followUpDateTo, followUpDateType, followUpSpecificDate, showOverdueFollowUp]);
 
@@ -931,6 +934,7 @@ const LeadsManagement: React.FC = () => {
       }
 
       console.log(`🔍 Saving lead ${editingLead} to backend...`);
+      console.log(`📄 Current page before save: ${currentPage}`);
       
       // Set flag to prevent page reset during update
       isUpdatingLeadRef.current = true;
@@ -961,12 +965,13 @@ const LeadsManagement: React.FC = () => {
       // Show success notification
       notify.success('Lead Updated', 'Lead information has been saved successfully. You can continue adding notes.');
       
-      console.log('✅ Lead update completed successfully - Detail panel remains open for notes');
+      console.log(`✅ Lead update completed successfully - Detail panel remains open for notes on page ${currentPage}`);
       
-      // Reset flag after a short delay to allow refetch to complete
+      // Reset flag after sufficient delay to allow refetch to complete without triggering page reset
       setTimeout(() => {
         isUpdatingLeadRef.current = false;
-      }, 1000);
+        console.log(`📄 Page preserved after save: ${currentPage}`);
+      }, 2000); // Increased from 1000ms to 2000ms for better reliability
     } catch (error) {
       console.error('❌ Error saving lead:', error);
       // Reset flag on error
