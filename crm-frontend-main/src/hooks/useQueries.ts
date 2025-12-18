@@ -87,25 +87,91 @@ export const useUpdateLead = () => {
       // Update cache directly without refetching to prevent page reset
       // This is more efficient and preserves UI state (current page, selected lead)
       
-      // Update all active leads queries in the cache
-      queryClient.setQueriesData(
-        { queryKey: queryKeys.leads },
-        (oldData: any) => {
+      // Helper function to check if lead matches filter criteria
+      const leadMatchesFilter = (lead: any, filters: any) => {
+        if (!filters) return true;
+        
+        // Check status filter - most important for this fix
+        if (filters.status && Array.isArray(filters.status) && filters.status.length > 0) {
+          const statusFilters = filters.status;
+          // If filter is not 'all' and lead status doesn't match, exclude it
+          if (!statusFilters.includes('all') && !statusFilters.includes(lead.status)) {
+            return false;
+          }
+        }
+        
+        // Check assignedTo filter
+        if (filters.assignedTo && filters.assignedTo !== 'all' && lead.assignedTo !== filters.assignedTo) {
+          return false;
+        }
+        
+        // Check country filter
+        if (filters.country && filters.country !== 'all' && lead.country !== filters.country) {
+          return false;
+        }
+        
+        // Check source filter
+        if (filters.source && filters.source !== 'all' && lead.source !== filters.source) {
+          return false;
+        }
+        
+        // Check qualification filter
+        if (filters.qualification && filters.qualification !== 'all' && lead.qualification !== filters.qualification) {
+          return false;
+        }
+        
+        return true;
+      };
+      
+      // Get all leads queries from cache
+      const leadsQueries = queryClient.getQueryCache().findAll({ queryKey: queryKeys.leads });
+      
+      // Update each query individually based on its filters
+      leadsQueries.forEach((query) => {
+        const queryKey = query.queryKey as any[];
+        // Query key format: ['leads', page, pageSize, filters]
+        const filters = queryKey[3];
+        
+        queryClient.setQueryData(queryKey, (oldData: any) => {
           if (!oldData) return oldData;
           
-          // Handle different response structures
           const leads = oldData.leads || oldData.data || [];
-          const updatedLeads = leads.map((lead: any) => 
-            lead.id === variables.id ? { ...lead, ...variables.data } : lead
-          );
+          
+          // Find the lead being updated
+          const existingLead = leads.find((l: any) => l.id === variables.id);
+          if (!existingLead) return oldData; // Lead not in this query
+          
+          // Create updated lead with new data
+          const updatedLead = { ...existingLead, ...variables.data };
+          
+          // Check if updated lead still matches this query's filters
+          const matchesFilter = leadMatchesFilter(updatedLead, filters);
+          
+          let updatedLeads;
+          let newTotal;
+          
+          if (matchesFilter) {
+            // Lead still matches filter - update it in place
+            updatedLeads = leads.map((lead: any) => 
+              lead.id === variables.id ? updatedLead : lead
+            );
+            newTotal = oldData.total;
+            console.log(`✅ Lead ${variables.id} updated in current filter view`);
+          } else {
+            // Lead no longer matches filter - remove it from results
+            updatedLeads = leads.filter((lead: any) => lead.id !== variables.id);
+            newTotal = Math.max(0, (oldData.total || leads.length) - 1);
+            console.log(`🔄 Lead ${variables.id} removed from filter (status: ${existingLead.status} → ${variables.data.status})`);
+          }
           
           return {
             ...oldData,
             leads: updatedLeads,
-            data: updatedLeads
+            data: updatedLeads,
+            total: newTotal
           };
-        }
-      );
+        });
+      });
       
       // Update individual lead query if it exists
       queryClient.setQueryData(
@@ -116,10 +182,10 @@ export const useUpdateLead = () => {
         }
       );
       
-      // Only invalidate dashboard (doesn't affect pagination)
+      // Invalidate dashboard to refresh status counts
       queryClient.invalidateQueries({ 
         queryKey: queryKeys.dashboard,
-        refetchType: 'none' // Don't trigger immediate refetch
+        refetchType: 'active'
       });
     },
   });
