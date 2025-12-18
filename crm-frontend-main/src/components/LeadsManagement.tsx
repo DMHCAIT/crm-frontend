@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
 import { TokenManager } from '../lib/productionAuth';
@@ -203,6 +203,9 @@ const getDefaultCoursePrice = (company: string, course: string): number => {
 const LeadsManagement: React.FC = () => {
   const { user } = useAuth();
   const notify = useNotify();
+  
+  // Ref to track if we're currently updating a lead (to prevent page reset)
+  const isUpdatingLeadRef = useRef(false);
   
   // Pagination States (must come first)
   const [currentPage, setCurrentPage] = useState(1);
@@ -416,6 +419,14 @@ const LeadsManagement: React.FC = () => {
   const [createdDateFilterType, setCreatedDateFilterType] = useState<'on' | 'after' | 'before' | 'between'>('on');
   const [createdSpecificDate, setCreatedSpecificDate] = useState('');
   
+  // Follow-Up Date Filter States
+  const [followUpFilter, setFollowUpFilter] = useState('all');
+  const [followUpDateFrom, setFollowUpDateFrom] = useState('');
+  const [followUpDateTo, setFollowUpDateTo] = useState('');
+  const [followUpDateType, setFollowUpDateType] = useState<'on' | 'after' | 'before' | 'between'>('on');
+  const [followUpSpecificDate, setFollowUpSpecificDate] = useState('');
+  const [showOverdueFollowUp, setShowOverdueFollowUp] = useState(false);
+  
   const [statusFilter, setStatusFilter] = useState<string[]>(['all']);
   const [countryFilter, setCountryFilter] = useState('all');
   const [sourceFilter, setSourceFilter] = useState('all');
@@ -494,7 +505,14 @@ const LeadsManagement: React.FC = () => {
       createdDateFrom: createdDateFrom,
       createdDateTo: createdDateTo,
       createdDateFilterType: createdDateFilterType,
-      createdSpecificDate: createdSpecificDate
+      createdSpecificDate: createdSpecificDate,
+      // Follow-up date filter parameters
+      followUpFilter: followUpFilter,
+      followUpDateFrom: followUpDateFrom,
+      followUpDateTo: followUpDateTo,
+      followUpDateType: followUpDateType,
+      followUpSpecificDate: followUpSpecificDate,
+      showOverdueFollowUp: showOverdueFollowUp
     };
     
     // DEBUG: Log filter parameters
@@ -517,11 +535,17 @@ const LeadsManagement: React.FC = () => {
       createdDateTo,
       createdDateFilterType,
       createdSpecificDate,
+      followUpFilter,
+      followUpDateFrom,
+      followUpDateTo,
+      followUpDateType,
+      followUpSpecificDate,
+      showOverdueFollowUp,
       finalFilters: filters
     });
     
     return filters;
-  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, companyFilter, dateFilter, dateFrom, dateTo, dateFilterType, specificDate, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate]);
+  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, companyFilter, dateFilter, dateFrom, dateTo, dateFilterType, specificDate, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate, followUpFilter, followUpDateFrom, followUpDateTo, followUpDateType, followUpSpecificDate, showOverdueFollowUp]);
 
   // TanStack Query hooks with server-side pagination and filtering
   const { data: leadsData, isLoading: leadsLoading, refetch: refetchLeads } = useLeads(currentPage, itemsPerPage, filterParams);
@@ -576,10 +600,13 @@ const LeadsManagement: React.FC = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + paginatedLeads.length, totalItems);
 
-  // Reset to page 1 when filters change
+  // Reset to page 1 when filters change (but not during lead updates)
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, dateFilter, dateFrom, dateTo, dateFilterType, specificDate, qualificationFilter, courseFilter, companyFilter, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate]);
+    // Skip page reset if we're currently updating a lead
+    if (!isUpdatingLeadRef.current) {
+      setCurrentPage(1);
+    }
+  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, dateFilter, dateFrom, dateTo, dateFilterType, specificDate, qualificationFilter, courseFilter, companyFilter, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate, followUpFilter, followUpDateFrom, followUpDateTo, followUpDateType, followUpSpecificDate, showOverdueFollowUp]);
 
   // Refetch data when pagination changes
   useEffect(() => {
@@ -905,6 +932,9 @@ const LeadsManagement: React.FC = () => {
 
       console.log(`🔍 Saving lead ${editingLead} to backend...`);
       
+      // Set flag to prevent page reset during update
+      isUpdatingLeadRef.current = true;
+      
       // Use React Query mutation for proper cache invalidation
       const updateData = {
         ...editedLead,
@@ -931,8 +961,15 @@ const LeadsManagement: React.FC = () => {
       notify.success('Lead Updated', 'Lead information has been saved successfully');
       
       console.log('✅ Lead update completed successfully');
+      
+      // Reset flag after a short delay to allow refetch to complete
+      setTimeout(() => {
+        isUpdatingLeadRef.current = false;
+      }, 1000);
     } catch (error) {
       console.error('❌ Error saving lead:', error);
+      // Reset flag on error
+      isUpdatingLeadRef.current = false;
       // Show error notification
       notify.error('Save Failed', 'Unable to save lead updates. Please try again.');
     }
@@ -1168,6 +1205,13 @@ const LeadsManagement: React.FC = () => {
     setCreatedDateTo('');
     setCreatedDateFilterType('on');
     setCreatedSpecificDate('');
+    // Clear follow-up date filters
+    setFollowUpFilter('all');
+    setFollowUpDateFrom('');
+    setFollowUpDateTo('');
+    setFollowUpDateType('on');
+    setFollowUpSpecificDate('');
+    setShowOverdueFollowUp(false);
     setExcludeSystemUpdates(true); // Reset to default (exclude system updates)
     
     // Also clear any temporary filter states if they exist
@@ -1190,6 +1234,14 @@ const LeadsManagement: React.FC = () => {
            dateTo !== '' ||
            specificDate !== '' ||
            createdDateFilter !== 'all' ||
+           createdDateFrom !== '' ||
+           createdDateTo !== '' ||
+           createdSpecificDate !== '' ||
+           followUpFilter !== 'all' ||
+           followUpDateFrom !== '' ||
+           followUpDateTo !== '' ||
+           followUpSpecificDate !== '' ||
+           showOverdueFollowUp;
            createdDateFrom !== '' ||
            createdDateTo !== '' ||
            createdSpecificDate !== '';
@@ -3779,6 +3831,126 @@ const LeadsManagement: React.FC = () => {
                         type="date"
                         value={createdSpecificDate}
                         onChange={(e) => setCreatedSpecificDate(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Follow-Up Date Filter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  📅 Follow-Up Date Filter
+                </label>
+                <select
+                  value={followUpFilter}
+                  onChange={(e) => setFollowUpFilter(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                >
+                  <option value="all">🌐 All Follow-Up Dates</option>
+                  <optgroup label="⚠️ Urgent">
+                    <option value="overdue">🚨 Overdue Follow-Ups</option>
+                    <option value="today">📍 Follow-Up Today</option>
+                    <option value="tomorrow">📅 Follow-Up Tomorrow</option>
+                  </optgroup>
+                  <optgroup label="📅 Upcoming">
+                    <option value="this_week">📆 This Week</option>
+                    <option value="next_week">📋 Next Week</option>
+                    <option value="this_month">🗓️ This Month</option>
+                    <option value="next_month">📊 Next Month</option>
+                  </optgroup>
+                  <optgroup label="🔧 Advanced">
+                    <option value="custom">📊 Custom Date Range</option>
+                    <option value="advanced">⚙️ Advanced Filter</option>
+                    <option value="no_followup">❌ No Follow-Up Set</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              {/* Show Overdue Follow-Up Checkbox */}
+              <div className="flex items-center space-x-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <input
+                  type="checkbox"
+                  id="overdue-followup"
+                  checked={showOverdueFollowUp}
+                  onChange={(e) => setShowOverdueFollowUp(e.target.checked)}
+                  className="h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                />
+                <label htmlFor="overdue-followup" className="text-sm font-medium text-red-700 cursor-pointer">
+                  🚨 Show Only Overdue Follow-Ups
+                </label>
+              </div>
+
+              {followUpFilter === 'custom' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">From Date (Follow-Up)</label>
+                    <input
+                      type="date"
+                      value={followUpDateFrom}
+                      onChange={(e) => setFollowUpDateFrom(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">To Date (Follow-Up)</label>
+                    <input
+                      type="date"
+                      value={followUpDateTo}
+                      onChange={(e) => setFollowUpDateTo(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </>
+              )}
+
+              {followUpFilter === 'advanced' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Follow-Up Filter Type</label>
+                    <select
+                      value={followUpDateType}
+                      onChange={(e) => setFollowUpDateType(e.target.value as 'on' | 'after' | 'before' | 'between')}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="on">Follow-Up On Specific Date</option>
+                      <option value="after">Follow-Up After Date</option>
+                      <option value="before">Follow-Up Before Date</option>
+                      <option value="between">Follow-Up Between Dates</option>
+                    </select>
+                  </div>
+                  {followUpDateType === 'between' ? (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">From Date (Follow-Up)</label>
+                        <input
+                          type="date"
+                          value={followUpDateFrom}
+                          onChange={(e) => setFollowUpDateFrom(e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">To Date (Follow-Up)</label>
+                        <input
+                          type="date"
+                          value={followUpDateTo}
+                          onChange={(e) => setFollowUpDateTo(e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {followUpDateType === 'on' ? 'Select Follow-Up Date' : 
+                         followUpDateType === 'after' ? 'Follow-Up After Date' : 'Follow-Up Before Date'}
+                      </label>
+                      <input
+                        type="date"
+                        value={followUpSpecificDate}
+                        onChange={(e) => setFollowUpSpecificDate(e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     </div>
