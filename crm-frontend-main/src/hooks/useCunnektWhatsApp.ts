@@ -22,6 +22,14 @@ interface SendTemplateParams {
   leadId?: string;
 }
 
+interface SaveCampaignParams {
+  name: string;
+  template: string;
+  segmentFilters?: any;
+  leadCount?: number;
+  userId?: string;
+}
+
 export const useCunnektWhatsApp = () => {
   // Test API connection
   const testConnection = useQuery({
@@ -33,6 +41,44 @@ export const useCunnektWhatsApp = () => {
       return response.data;
     },
     enabled: false // Only run when explicitly called
+  });
+
+  // Get all campaigns
+  const campaigns = useQuery({
+    queryKey: ['cunnekt-campaigns'],
+    queryFn: async () => {
+      const response = await axios.get(`${API_URL}/api/cunnekt-whatsapp?action=get-campaigns`, {
+        withCredentials: true
+      });
+      return response.data;
+    }
+  });
+
+  // Get WhatsApp responses
+  const responses = useQuery({
+    queryKey: ['cunnekt-responses'],
+    queryFn: async () => {
+      const response = await axios.get(`${API_URL}/api/cunnekt-whatsapp?action=get-responses`, {
+        withCredentials: true
+      });
+      return response.data;
+    }
+  });
+
+  // Save campaign
+  const saveCampaign = useMutation({
+    mutationFn: async (params: SaveCampaignParams) => {
+      const response = await axios.post(
+        `${API_URL}/api/cunnekt-whatsapp?action=save-campaign`,
+        params,
+        { withCredentials: true }
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      // Refetch campaigns after saving
+      campaigns.refetch();
+    }
   });
 
   // Send single message
@@ -85,6 +131,9 @@ export const useCunnektWhatsApp = () => {
     sendMessage,
     sendBulk,
     sendTemplate,
-    getMessageStatus
+    getMessageStatus,
+    campaigns,
+    responses,
+    saveCampaign
   };
 };

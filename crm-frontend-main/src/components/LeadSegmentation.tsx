@@ -22,7 +22,9 @@ import {
   Zap,
   MessageSquare,
   FileText,
-  Plus
+  Plus,
+  MessageCircle,
+  RefreshCw
 } from 'lucide-react';
 import { useNotify } from './NotificationSystem';
 
@@ -76,7 +78,7 @@ interface Campaign {
 
 const LeadSegmentation: React.FC = () => {
   const notify = useNotify();
-  const { sendBulk, testConnection } = useCunnektWhatsApp();
+  const { sendBulk, testConnection, campaigns, responses, saveCampaign } = useCunnektWhatsApp();
   
   // Fetch ALL leads without pagination for accurate segmentation
   // Use 50000 as the maximum safe page size (server-capped)
@@ -98,7 +100,7 @@ const LeadSegmentation: React.FC = () => {
   
   // Advanced Marketing States
   const [showAdvancedSection, setShowAdvancedSection] = useState(false);
-  const [activeTab, setActiveTab] = useState<'templates' | 'campaigns'>('templates');
+  const [activeTab, setActiveTab] = useState<'templates' | 'campaigns' | 'responses'>('templates');
   const [templates, setTemplates] = useState<MessageTemplate[]>([
     {
       id: '1',
@@ -117,7 +119,6 @@ const LeadSegmentation: React.FC = () => {
       createdAt: new Date().toISOString()
     }
   ]);
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<MessageTemplate | null>(null);
   const [newTemplate, setNewTemplate] = useState({
@@ -905,6 +906,22 @@ const LeadSegmentation: React.FC = () => {
                     <Zap className="w-4 h-4 inline mr-2" />
                     Campaigns
                   </button>
+                  <button
+                    onClick={() => setActiveTab('responses')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                      activeTab === 'responses'
+                        ? 'bg-purple-600 text-white'
+                        : 'bg-white text-gray-700 hover:bg-purple-100'
+                    }`}
+                  >
+                    <MessageCircle className="w-4 h-4 inline mr-2" />
+                    Responses
+                    {responses?.data?.responses?.length > 0 && (
+                      <span className="ml-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                        {responses.data.responses.length}
+                      </span>
+                    )}
+                  </button>
                 </div>
               </div>
 
@@ -978,7 +995,12 @@ const LeadSegmentation: React.FC = () => {
                     </button>
                   </div>
 
-                  {campaigns.length === 0 ? (
+                  {campaigns.isLoading ? (
+                    <div className="text-center py-12">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+                      <p className="mt-4 text-gray-600">Loading campaigns...</p>
+                    </div>
+                  ) : (campaigns.data?.campaigns || []).length === 0 ? (
                     <div className="bg-white rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
                       <Zap className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                       <p className="text-gray-600 mb-2">No campaigns created yet</p>
@@ -986,7 +1008,7 @@ const LeadSegmentation: React.FC = () => {
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      {campaigns.map(campaign => {
+                      {(campaigns.data?.campaigns || []).map((campaign: any) => {
                         const template = templates.find(t => t.id === campaign.templateId);
                         return (
                           <div key={campaign.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
@@ -1036,6 +1058,74 @@ const LeadSegmentation: React.FC = () => {
                           </div>
                         );
                       })}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Responses Tab */}
+              {activeTab === 'responses' && (
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">WhatsApp Responses</h3>
+                    <button
+                      onClick={() => responses.refetch()}
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                    >
+                      <RefreshCw className="w-4 h-4 inline mr-2" />
+                      Refresh
+                    </button>
+                  </div>
+
+                  {responses.isLoading ? (
+                    <div className="text-center py-12">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+                      <p className="mt-4 text-gray-600">Loading responses...</p>
+                    </div>
+                  ) : responses.data?.responses?.length > 0 ? (
+                    <div className="space-y-4">
+                      {responses.data.responses.map((response: any) => (
+                        <div key={response.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-3 mb-2">
+                                <MessageCircle className="w-5 h-5 text-green-600" />
+                                <span className="font-semibold text-gray-900">Lead ID: {response.lead_id}</span>
+                                <span className="text-sm text-gray-500">
+                                  {new Date(response.sent_at).toLocaleString()}
+                                </span>
+                              </div>
+                              <div className="bg-gray-50 rounded-lg p-3 mb-2">
+                                <p className="text-gray-800 whitespace-pre-wrap">{response.content}</p>
+                              </div>
+                              <div className="flex items-center space-x-4 text-sm text-gray-600">
+                                <span>📱 {response.recipient}</span>
+                                {response.campaign_id && (
+                                  <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded">
+                                    Campaign #{response.campaign_id}
+                                  </span>
+                                )}
+                                <span className={`px-2 py-1 rounded ${
+                                  response.status === 'sent' ? 'bg-green-100 text-green-700' :
+                                  response.status === 'delivered' ? 'bg-blue-100 text-blue-700' :
+                                  response.status === 'read' ? 'bg-purple-100 text-purple-700' :
+                                  'bg-gray-100 text-gray-700'
+                                }`}>
+                                  {response.status}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <MessageCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                      <p className="text-gray-600">No responses yet</p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        Responses from leads will appear here when they reply to your messages
+                      </p>
                     </div>
                   )}
                 </div>
