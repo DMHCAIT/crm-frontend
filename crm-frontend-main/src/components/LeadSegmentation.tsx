@@ -84,7 +84,7 @@ interface Campaign {
 
 const LeadSegmentation: React.FC = () => {
   const notify = useNotify();
-  const { sendBulk, testConnection, campaigns, responses, saveCampaign } = useCunnektWhatsApp();
+  const { sendBulk, testConnection, campaigns, responses, saveCampaign, deleteCampaign, updateCampaignStatus } = useCunnektWhatsApp();
   
   // Fetch ALL leads without pagination for accurate segmentation
   // Use 50000 as the maximum safe page size (server-capped)
@@ -560,12 +560,33 @@ const LeadSegmentation: React.FC = () => {
 
     notify.info('Sending Campaign', `Sending messages to ${leadsWithPhone.length} leads...`);
 
+    // Update campaign status to 'sending'
+    try {
+      await updateCampaignStatus.mutateAsync({
+        campaignId: campaignId,
+        status: 'sending'
+      });
+    } catch (error) {
+      console.error('Failed to update campaign status to sending:', error);
+    }
+
     try {
       // Send via Cunnekt API using the saved template text
       const result = await sendBulk.mutateAsync({
         leads: leadsWithPhone,
         message: campaign.template, // Use the template text saved in the campaign
         campaignId: campaignId
+      });
+
+      // Update campaign status to 'sent' with statistics
+      await updateCampaignStatus.mutateAsync({
+        campaignId: campaignId,
+        status: 'sent',
+        stats: {
+          success: result.results.success,
+          failed: result.results.failed,
+          delivered: result.results.success // Initially, sent = delivered
+        }
       });
 
       // Refetch campaigns to get updated status
@@ -587,6 +608,16 @@ const LeadSegmentation: React.FC = () => {
     } catch (error: any) {
       console.error('Campaign publish error:', error);
       
+      // Update campaign status to 'failed'
+      try {
+        await updateCampaignStatus.mutateAsync({
+          campaignId: campaignId,
+          status: 'failed'
+        });
+      } catch (statusError) {
+        console.error('Failed to update campaign status to failed:', statusError);
+      }
+      
       // Refetch to update status
       campaigns.refetch();
 
@@ -594,11 +625,17 @@ const LeadSegmentation: React.FC = () => {
     }
   };
 
-  const deleteCampaign = async (id: string) => {
-    if (confirm('Are you sure you want to delete this campaign?')) {
-      // TODO: Add delete campaign API endpoint
-      notify.success('Campaign deleted');
-      campaigns.refetch();
+  const deleteCampaignHandler = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this campaign?')) {
+      return;
+    }
+
+    try {
+      await deleteCampaign.mutateAsync(id);
+      notify.success('Campaign deleted successfully');
+    } catch (error: any) {
+      console.error('Delete campaign error:', error);
+      notify.error('Failed to delete campaign', error.message);
     }
   };
 
@@ -1042,7 +1079,6 @@ const LeadSegmentation: React.FC = () => {
                   ) : (
                     <div className="space-y-4">
                       {(campaigns.data?.campaigns || []).map((campaign: any) => {
-                        const template = templates.find(t => t.id === campaign.templateId);
                         return (
                           <div key={campaign.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
                             <div className="flex justify-between items-start">
@@ -1051,6 +1087,7 @@ const LeadSegmentation: React.FC = () => {
                                   <h4 className="font-semibold text-gray-900">{campaign.name}</h4>
                                   <span className={`text-xs px-2 py-1 rounded-full ${
                                     campaign.status === 'sent' ? 'bg-green-100 text-green-700' :
+                                    campaign.status === 'sending' ? 'bg-yellow-100 text-yellow-700' :
                                     campaign.status === 'scheduled' ? 'bg-blue-100 text-blue-700' :
                                     campaign.status === 'failed' ? 'bg-red-100 text-red-700' :
                                     'bg-gray-100 text-gray-700'
@@ -1058,13 +1095,36 @@ const LeadSegmentation: React.FC = () => {
                                     {campaign.status}
                                   </span>
                                 </div>
-                                <p className="text-sm text-gray-600">Template: {template?.name || 'Unknown'}</p>
-                                <p className="text-sm text-gray-600">Target Leads: {campaign.targetLeads}</p>
-                                {campaign.successCount !== undefined && (
-                                  <div className="mt-2 space-y-1">
-                                    <p className="text-sm text-green-600">✅ Sent: {campaign.successCount}</p>
-                                    {campaign.failedCount !== undefined && campaign.failedCount > 0 && (
-                                      <p className="text-sm text-red-600">❌ Failed: {campaign.failedCount}</p>
+                                <p className="text-sm text-gray-600 mb-1">
+                                  <span className="font-medium">Template:</span> {campaign.template?.substring(0, 60)}...
+                                </p>
+                                <p className="text-sm text-gray-600 mb-1">
+                                  <span className="font-medium">Target Leads:</span> {campaign.lead_count || 0}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  Created: {new Date(campaign.created_at).toLocaleDateString()}
+                                </p>
+                                {(campaign.total_sent > 0 || campaign.total_failed > 0) && (
+                                  <div className="mt-3 flex items-center space-x-4 text-sm">
+                                    {campaign.total_sent > 0 && (
+                                      <span className="text-green-600 flex items-center">
+                                        ✅ Sent: {campaign.total_sent}
+                                      </span>
+                                    )}
+                                    {campaign.total_delivered > 0 && (
+                                      <span className="text-blue-600 flex items-center">
+                                        📬 Delivered: {campaign.total_delivered}
+                                      </span>
+                                    )}
+                                    {campaign.total_failed > 0 && (
+                                      <span className="text-red-600 flex items-center">
+                                        ❌ Failed: {campaign.total_failed}
+                                      </span>
+                                    )}
+                                    {campaign.total_replied > 0 && (
+                                      <span className="text-purple-600 flex items-center">
+                                        💬 Replied: {campaign.total_replied}
+                                      </span>
                                     )}
                                   </div>
                                 )}
@@ -1081,7 +1141,7 @@ const LeadSegmentation: React.FC = () => {
                                   </button>
                                 ) : null}
                                 <button
-                                  onClick={() => deleteCampaign(campaign.id)}
+                                  onClick={() => deleteCampaignHandler(campaign.id)}
                                   className="text-red-600 hover:text-red-800"
                                 >
                                   <Trash2 className="w-4 h-4" />

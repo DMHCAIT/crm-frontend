@@ -81,6 +81,36 @@ export const useCunnektWhatsApp = () => {
     }
   });
 
+  // Delete campaign
+  const deleteCampaign = useMutation({
+    mutationFn: async (campaignId: string) => {
+      const response = await axios.post(
+        `${API_URL}/api/cunnekt-whatsapp?action=delete-campaign`,
+        { campaignId },
+        { withCredentials: true }
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      campaigns.refetch();
+    }
+  });
+
+  // Update campaign status
+  const updateCampaignStatus = useMutation({
+    mutationFn: async ({ campaignId, status, stats }: { campaignId: string; status: string; stats?: any }) => {
+      const response = await axios.post(
+        `${API_URL}/api/cunnekt-whatsapp?action=update-campaign-status`,
+        { campaignId, status, stats },
+        { withCredentials: true }
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      campaigns.refetch();
+    }
+  });
+
   // Send single message
   const sendMessage = useMutation({
     mutationFn: async (params: SendMessageParams) => {
@@ -134,6 +164,8 @@ export const useCunnektWhatsApp = () => {
     getMessageStatus,
     campaigns,
     responses,
-    saveCampaign
+    saveCampaign,
+    deleteCampaign,
+    updateCampaignStatus
   };
 };
