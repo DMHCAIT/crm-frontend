@@ -77,8 +77,8 @@ const LeadSegmentation: React.FC = () => {
   const notify = useNotify();
   
   // Fetch ALL leads without pagination for accurate segmentation
-  // Use a very large page size to get all leads at once
-  const { data: leadsData, isLoading } = useLeads(1, 999999, {});
+  // Use 50000 as the maximum safe page size (server-capped)
+  const { data: leadsData, isLoading } = useLeads(1, 50000, {});
   const allLeads = (leadsData?.leads || leadsData?.data || []) as Lead[];
 
   // Filter states
