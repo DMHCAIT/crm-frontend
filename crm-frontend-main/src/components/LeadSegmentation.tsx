@@ -39,17 +39,23 @@ interface Lead {
   country?: string;
   qualification?: string;
   course?: string;
+  courseInterest?: string;
   status?: string;
+  dateOfBirth?: string;
   createdAt?: string;
   created_at?: string;
 }
 
 interface SegmentFilters {
-  countries: string[];
-  qualifications: string[];
-  courses: string[];
-  leadAge: string; // '0-7', '8-30', '31-90', '90+', 'all'
-  status: string[];
+  countries?: string[];
+  qualifications?: string[];
+  courses?: string[];
+  courseInterests?: string[];
+  leadAge?: string; // '0-7', '8-30', '31-90', '90+', 'all'
+  statuses?: string[];
+  ageMin?: number;
+  ageMax?: number;
+  status?: string[];
 }
 
 interface MessageTemplate {
@@ -140,6 +146,19 @@ const LeadSegmentation: React.FC = () => {
     const diffTime = Math.abs(now.getTime() - createdDate.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
+  };
+
+  // Calculate age from date of birth
+  const calculateAge = (dateOfBirth?: string): number => {
+    if (!dateOfBirth) return 0;
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
   };
 
   // Get unique values for filters
@@ -484,48 +503,70 @@ const LeadSegmentation: React.FC = () => {
   };
   const publishCampaign = async (campaignId: string) => {
     const campaign = (campaigns.data?.campaigns || []).find((c: any) => c.id === campaignId);
-    if (!campaign) return;
-
-    // Get leads with valid phone/WhatsApp numbers
-    const selectedLeadsData = filteredLeads.filter(lead => {
-      if (!selectedLeads.includes(lead.id)) return false;
-      // Include if they have WhatsApp, phone, or alternate phone
-      return lead.whatsapp || lead.phone || lead.alternatePhone;
-    });
-    
-    const template = templates.find(t => t.id === campaign.templateId);
-    
-    if (!template) {
-      notify.error('Template not found');
+    if (!campaign) {
+      notify.error('Campaign not found');
       return;
     }
 
-    if (selectedLeadsData.length === 0) {
-      notify.error('No leads with valid phone numbers');
+    // Apply the saved segment filters to get leads
+    const segmentFilters = campaign.segment_filters || {};
+    
+    // Filter leads based on saved segment filters
+    let campaignLeads = allLeads.filter(lead => {
+      // Age filter
+      if (segmentFilters.ageMin || segmentFilters.ageMax) {
+        const age = calculateAge(lead.dateOfBirth);
+        if (segmentFilters.ageMin && age < segmentFilters.ageMin) return false;
+        if (segmentFilters.ageMax && age > segmentFilters.ageMax) return false;
+      }
+
+      // Country filter
+      if (segmentFilters.countries?.length > 0) {
+        if (!segmentFilters.countries.includes(lead.country)) return false;
+      }
+
+      // Qualification filter
+      if (segmentFilters.qualifications?.length > 0) {
+        if (!segmentFilters.qualifications.includes(lead.qualification)) return false;
+      }
+
+      // Status filter
+      if (segmentFilters.statuses?.length > 0) {
+        if (!segmentFilters.statuses.includes(lead.status)) return false;
+      }
+
+      // Course Interest filter
+      if (segmentFilters.courseInterests?.length > 0) {
+        if (!segmentFilters.courseInterests.includes(lead.courseInterest)) return false;
+      }
+
+      return true;
+    });
+
+    // Get leads with valid phone/WhatsApp numbers
+    const leadsWithPhone = campaignLeads.filter(lead => 
+      lead.whatsapp || lead.phone || lead.alternatePhone
+    );
+    
+    if (leadsWithPhone.length === 0) {
+      notify.error('No leads with valid phone numbers match this campaign\'s filters');
       return;
     }
 
     // Show confirmation
-    if (!confirm(`Send WhatsApp campaign to ${selectedLeadsData.length} leads via Cunnekt API?`)) {
+    if (!confirm(`Send WhatsApp campaign "${campaign.name}" to ${leadsWithPhone.length} leads via Cunnekt API?`)) {
       return;
     }
 
-    notify.info('Sending Campaign', `Sending messages to ${selectedLeadsData.length} leads...`);
+    notify.info('Sending Campaign', `Sending messages to ${leadsWithPhone.length} leads...`);
 
     try {
-      // Send via Cunnekt API
+      // Send via Cunnekt API using the saved template text
       const result = await sendBulk.mutateAsync({
-        leads: selectedLeadsData,
-        message: template.message,
+        leads: leadsWithPhone,
+        message: campaign.template, // Use the template text saved in the campaign
         campaignId: campaignId
       });
-
-      // Update template last used
-      setTemplates(templates.map(t => 
-        t.id === campaign.templateId 
-          ? { ...t, lastUsed: new Date().toISOString() }
-          : t
-      ));
 
       // Refetch campaigns to get updated status
       campaigns.refetch();

@@ -1,6 +1,46 @@
 -- Create WhatsApp Campaigns Table
 -- Run this in Supabase SQL Editor to persist campaigns
 
+-- First, ensure communications table has all required columns
+DO $$ 
+BEGIN
+  -- Add sent_at if it doesn't exist
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'communications' AND column_name = 'sent_at'
+  ) THEN
+    ALTER TABLE communications 
+    ADD COLUMN sent_at TIMESTAMPTZ DEFAULT NOW();
+  END IF;
+
+  -- Add direction if it doesn't exist
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'communications' AND column_name = 'direction'
+  ) THEN
+    ALTER TABLE communications 
+    ADD COLUMN direction TEXT DEFAULT 'outbound' CHECK (direction IN ('inbound', 'outbound'));
+  END IF;
+
+  -- Add lead_id if it doesn't exist
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'communications' AND column_name = 'lead_id'
+  ) THEN
+    ALTER TABLE communications 
+    ADD COLUMN lead_id BIGINT;
+  END IF;
+
+  -- Add type if it doesn't exist
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'communications' AND column_name = 'type'
+  ) THEN
+    ALTER TABLE communications 
+    ADD COLUMN type TEXT DEFAULT 'whatsapp' CHECK (type IN ('whatsapp', 'email', 'call', 'sms'));
+  END IF;
+END $$;
+
 CREATE TABLE IF NOT EXISTS whatsapp_campaigns (
   id BIGSERIAL PRIMARY KEY,
   name TEXT NOT NULL,
@@ -92,6 +132,13 @@ ON CONFLICT DO NOTHING;
 -- Add RLS policies (if using Row Level Security)
 ALTER TABLE whatsapp_campaigns ENABLE ROW LEVEL SECURITY;
 ALTER TABLE whatsapp_templates ENABLE ROW LEVEL SECURITY;
+
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS campaigns_select_own ON whatsapp_campaigns;
+DROP POLICY IF EXISTS campaigns_insert ON whatsapp_campaigns;
+DROP POLICY IF EXISTS campaigns_update_own ON whatsapp_campaigns;
+DROP POLICY IF EXISTS templates_select_active ON whatsapp_templates;
+DROP POLICY IF EXISTS templates_all_admin ON whatsapp_templates;
 
 -- Policy: Users can view campaigns they created
 CREATE POLICY campaigns_select_own ON whatsapp_campaigns
