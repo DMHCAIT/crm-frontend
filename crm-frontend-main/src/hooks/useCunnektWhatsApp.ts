@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://crm-backend-vvpn.onrender.com';
+const API_URL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_BACKEND_URL?.replace('/api', '') || 'https://crm-backend-vvpn.onrender.com';
 
 interface SendMessageParams {
   phone: string;
