@@ -74,6 +74,9 @@ JWT_EXPIRES_IN=24h
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_KEY=your-service-role-key-here
 
+# Cunnekt WhatsApp API - REQUIRED for WhatsApp Features
+CUNNEKT_API_KEY=4d776c1d10d186e225f1985095d201eb9cc41ad4
+
 # Optional: Default Admin Credentials
 DEFAULT_ADMIN_USERNAME=admin
 DEFAULT_ADMIN_PASSWORD=admin123
@@ -89,6 +92,7 @@ DEFAULT_ADMIN_PASSWORD=admin123
 | `JWT_EXPIRES_IN` | ❌ No | JWT token expiration | `24h` (default) |
 | `SUPABASE_URL` | ✅ Yes | Supabase project URL | `https://abc123.supabase.co` |
 | `SUPABASE_SERVICE_KEY` | ✅ Yes | Supabase service role key | `eyJhbGciOiJIUzI1NiIsInR5cCI6...` |
+| `CUNNEKT_API_KEY` | ✅ Yes | Cunnekt WhatsApp API key | `4d776c1d10d186e225f1985095d201eb9cc41ad4` |
 | `DEFAULT_ADMIN_USERNAME` | ❌ No | Default admin username | `admin` |
 | `DEFAULT_ADMIN_PASSWORD` | ❌ No | Default admin password | `admin123` |
 
