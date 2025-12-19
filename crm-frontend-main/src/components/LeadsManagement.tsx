@@ -1083,6 +1083,30 @@ const LeadsManagement: React.FC = () => {
 
       console.log('✅ Note saved successfully - Panel remains open');
       
+      // Update cached lead with new note for immediate display
+      if (selectedLeadCache && selectedLeadCache.id === leadId) {
+        // Get the real name from user object or default
+        const authorName = user?.name || user?.username || 'You';
+        
+        const newNote = {
+          id: Date.now().toString(),
+          content: noteContent,
+          author: authorName,
+          timestamp: new Date().toISOString(),
+          noteType: 'general',
+          note_type: 'general'
+        };
+        
+        const updatedNotes = [...(selectedLeadCache.notes || []), newNote];
+        setSelectedLeadCache({
+          ...selectedLeadCache,
+          notes: updatedNotes
+        });
+        console.log('📦 Updated cached lead with new note for immediate display');
+        console.log('📝 New note:', newNote);
+        console.log('📝 Total notes now:', updatedNotes.length);
+      }
+      
       // Reload notes for this specific lead (doesn't affect pagination)
       await loadNotesForLead(leadId);
       
