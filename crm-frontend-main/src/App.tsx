@@ -22,6 +22,7 @@ const Settings = lazy(() => import('./components/Settings'));
 const DataExport = lazy(() => import('./components/DataExport'));
 const ScheduledExports = lazy(() => import('./components/ScheduledExports'));
 const AdvancedAnalyticsCharts = lazy(() => import('./components/AdvancedAnalyticsCharts'));
+const LeadSegmentation = lazy(() => import('./components/LeadSegmentation'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -78,6 +79,7 @@ const App: React.FC = () => {
     'crm-pipeline': 1,
     'leads': 1,
     'leads-monitoring': 1,
+    'lead-segmentation': 1,
     'facebook-leads': 3,
     'students': 1,
     'analytics': 2,
@@ -114,6 +116,8 @@ const App: React.FC = () => {
           return <Suspense fallback={<PageLoader />}><LeadsManagement /></Suspense>;
         case 'leads-monitoring':
           return <Suspense fallback={<PageLoader />}><LeadsMonitoring /></Suspense>;
+        case 'lead-segmentation':
+          return <Suspense fallback={<PageLoader />}><LeadSegmentation /></Suspense>;
         case 'facebook-leads':
           return <Suspense fallback={<PageLoader />}><FacebookLeadIntegration /></Suspense>;
         case 'students':
