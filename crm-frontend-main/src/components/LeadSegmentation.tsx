@@ -23,7 +23,7 @@ import {
   FileText,
   Plus
 } from 'lucide-react';
-import { useNotify } from '../hooks/useNotify';
+import { useNotify } from './NotificationSystem';
 
 interface Lead {
   id: string;
@@ -937,23 +937,6 @@ const LeadSegmentation: React.FC = () => {
               )}
             </div>
           )}
-                disabled={selectedLeads.length === 0}
-                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Copy className="w-4 h-4 mr-2" />
-                Copy Phone Numbers
-              </button>
-
-              <button
-                onClick={() => setShowWhatsAppModal(true)}
-                disabled={selectedLeads.length === 0}
-                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Send className="w-4 h-4 mr-2" />
-                WhatsApp Campaign ({selectedLeads.filter(id => filteredLeads.find(l => l.id === id)?.phone).length})
-              </button>
-            </div>
-          </div>
 
           {/* Leads Table */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200">
