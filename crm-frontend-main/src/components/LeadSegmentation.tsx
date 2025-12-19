@@ -465,14 +465,26 @@ const LeadSegmentation: React.FC = () => {
       scheduledAt: newCampaign.scheduledAt || undefined
     };
 
-    setCampaigns([...campaigns, campaign]);
-    notify.success('Campaign created successfully');
+    // Save campaign to database
+    try {
+      await saveCampaign.mutateAsync({
+        name: campaign.name,
+        template: templates.find(t => t.id === campaign.templateId)?.message || '',
+        segmentFilters: campaign.segmentFilters,
+        leadCount: campaign.targetLeads
+      });
+      notify.success('Campaign created successfully');
+    } catch (error) {
+      console.error('Save campaign error:', error);
+      notify.error('Failed to save campaign');
+    }
+    
     setShowCampaignModal(false);
     setNewCampaign({ name: '', templateId: '', scheduledAt: '' });
   };
 
   const publishCampaign = async (campaignId: string) => {
-    const campaign = campaigns.find(c => c.id === campaignId);
+    const campaign = (campaigns.data?.campaigns || []).find((c: any) => c.id === campaignId);
     if (!campaign) return;
 
     // Get leads with valid phone/WhatsApp numbers
@@ -499,13 +511,6 @@ const LeadSegmentation: React.FC = () => {
       return;
     }
 
-    // Update campaign status to sending
-    setCampaigns(campaigns.map(c => 
-      c.id === campaignId 
-        ? { ...c, status: 'scheduled' }
-        : c
-    ));
-
     notify.info('Sending Campaign', `Sending messages to ${selectedLeadsData.length} leads...`);
 
     try {
@@ -516,25 +521,15 @@ const LeadSegmentation: React.FC = () => {
         campaignId: campaignId
       });
 
-      // Update campaign with results
-      setCampaigns(campaigns.map(c => 
-        c.id === campaignId 
-          ? { 
-              ...c, 
-              status: 'sent', 
-              sentAt: new Date().toISOString(),
-              successCount: result.results.success,
-              failedCount: result.results.failed
-            }
-          : c
-      ));
-
       // Update template last used
       setTemplates(templates.map(t => 
         t.id === campaign.templateId 
           ? { ...t, lastUsed: new Date().toISOString() }
           : t
       ));
+
+      // Refetch campaigns to get updated status
+      campaigns.refetch();
 
       notify.success(
         'Campaign Published!', 
@@ -552,20 +547,18 @@ const LeadSegmentation: React.FC = () => {
     } catch (error: any) {
       console.error('Campaign publish error:', error);
       
-      setCampaigns(campaigns.map(c => 
-        c.id === campaignId 
-          ? { ...c, status: 'failed' }
-          : c
-      ));
+      // Refetch to update status
+      campaigns.refetch();
 
       notify.error('Campaign Failed', error.message || 'Failed to send messages');
     }
   };
 
-  const deleteCampaign = (id: string) => {
+  const deleteCampaign = async (id: string) => {
     if (confirm('Are you sure you want to delete this campaign?')) {
-      setCampaigns(campaigns.filter(c => c.id !== id));
+      // TODO: Add delete campaign API endpoint
       notify.success('Campaign deleted');
+      campaigns.refetch();
     }
   };
 
