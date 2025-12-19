@@ -30,6 +30,8 @@ interface Lead {
   name?: string;
   fullName?: string;
   phone?: string;
+  whatsapp?: string;
+  alternatePhone?: string;
   email?: string;
   country?: string;
   qualification?: string;
@@ -74,8 +76,9 @@ interface Campaign {
 const LeadSegmentation: React.FC = () => {
   const notify = useNotify();
   
-  // Fetch all leads
-  const { data: leadsData, isLoading } = useLeads(1, 10000, {});
+  // Fetch ALL leads without pagination for accurate segmentation
+  // Use a very large page size to get all leads at once
+  const { data: leadsData, isLoading } = useLeads(1, 999999, {});
   const allLeads = (leadsData?.leads || leadsData?.data || []) as Lead[];
 
   // Filter states
@@ -347,8 +350,21 @@ const LeadSegmentation: React.FC = () => {
   // Copy phone numbers for WhatsApp
   const copyPhoneNumbers = () => {
     const leadsToExport = filteredLeads.filter(l => selectedLeads.includes(l.id));
+    
+    // Get all available phone numbers (WhatsApp preferred, then phone, then alternate)
     const phoneNumbers = leadsToExport
-      .map(l => l.phone)
+      .map(l => {
+        const phones = [];
+        // Priority 1: WhatsApp number (most likely to work)
+        if (l.whatsapp) phones.push(l.whatsapp);
+        // Priority 2: Primary phone
+        if (l.phone && l.phone !== l.whatsapp) phones.push(l.phone);
+        // Priority 3: Alternate phone
+        if (l.alternatePhone && l.alternatePhone !== l.phone && l.alternatePhone !== l.whatsapp) {
+          phones.push(l.alternatePhone);
+        }
+        return phones.length > 0 ? phones.join(', ') : null;
+      })
       .filter(Boolean)
       .join('\n');
 
@@ -358,7 +374,8 @@ const LeadSegmentation: React.FC = () => {
     }
 
     navigator.clipboard.writeText(phoneNumbers);
-    notify.success('Copied!', `${leadsToExport.length} phone numbers copied to clipboard`);
+    const leadCount = phoneNumbers.split('\n').length;
+    notify.success('Copied!', `${leadCount} phone numbers copied to clipboard (WhatsApp numbers prioritized)`);
   };
 
   // Clear all filters
@@ -455,8 +472,13 @@ const LeadSegmentation: React.FC = () => {
     const campaign = campaigns.find(c => c.id === campaignId);
     if (!campaign) return;
 
-    // Simulate campaign execution
-    const selectedLeadsData = filteredLeads.filter(lead => selectedLeads.includes(lead.id) && lead.phone);
+    // Get leads with valid phone/WhatsApp numbers
+    const selectedLeadsData = filteredLeads.filter(lead => {
+      if (!selectedLeads.includes(lead.id)) return false;
+      // Include if they have WhatsApp, phone, or alternate phone
+      return lead.whatsapp || lead.phone || lead.alternatePhone;
+    });
+    
     const template = templates.find(t => t.id === campaign.templateId);
     
     if (!template) {
@@ -464,14 +486,19 @@ const LeadSegmentation: React.FC = () => {
       return;
     }
 
-    // Copy personalized messages
+    // Copy personalized messages with proper WhatsApp formatting
     const personalizedMessages = selectedLeadsData.map(lead => {
       let message = template.message;
       message = message.replace(/\{name\}/g, lead.name || lead.fullName || 'there');
       message = message.replace(/\{course\}/g, lead.course || 'our courses');
       message = message.replace(/\{qualification\}/g, lead.qualification || 'your qualification');
       message = message.replace(/\{country\}/g, lead.country || 'your country');
-      return `${lead.phone}: ${message}`;
+      
+      // Get best phone number (WhatsApp preferred)
+      const phoneNumber = lead.whatsapp || lead.phone || lead.alternatePhone;
+      const phoneType = lead.whatsapp ? '(WhatsApp)' : lead.phone ? '(Phone)' : '(Alt)';
+      
+      return `${phoneNumber} ${phoneType}:\n${message}`;
     }).join('\n\n---\n\n');
 
     navigator.clipboard.writeText(personalizedMessages);
@@ -551,9 +578,12 @@ const LeadSegmentation: React.FC = () => {
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">With Phone</p>
+              <p className="text-sm text-gray-600">With Contact</p>
               <p className="text-2xl font-bold text-purple-600">
-                {filteredLeads.filter(l => selectedLeads.includes(l.id) && l.phone).length}
+                {filteredLeads.filter(l => selectedLeads.includes(l.id) && (l.whatsapp || l.phone || l.alternatePhone)).length}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                WhatsApp: {filteredLeads.filter(l => selectedLeads.includes(l.id) && l.whatsapp).length}
               </p>
             </div>
             <Smartphone className="w-10 h-10 text-purple-500 opacity-20" />
@@ -1020,9 +1050,17 @@ const LeadSegmentation: React.FC = () => {
             </div>
             <div className="p-6">
               <div className="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <p className="text-sm text-blue-900">
-                  <strong>{selectedLeads.filter(id => filteredLeads.find(l => l.id === id)?.phone).length}</strong> leads with phone numbers selected
+                <p className="text-sm text-blue-900 mb-2">
+                  <strong>{selectedLeads.filter(id => {
+                    const lead = filteredLeads.find(l => l.id === id);
+                    return lead && (lead.whatsapp || lead.phone || lead.alternatePhone);
+                  }).length}</strong> leads with contact numbers selected
                 </p>
+                <div className="text-xs text-blue-700 space-y-1">
+                  <p>• WhatsApp: {selectedLeads.filter(id => filteredLeads.find(l => l.id === id)?.whatsapp).length}</p>
+                  <p>• Phone: {selectedLeads.filter(id => filteredLeads.find(l => l.id === id)?.phone).length}</p>
+                  <p>• Alternate: {selectedLeads.filter(id => filteredLeads.find(l => l.id === id)?.alternatePhone).length}</p>
+                </div>
               </div>
 
               <div className="mb-4">
@@ -1043,7 +1081,7 @@ const LeadSegmentation: React.FC = () => {
 
               <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200 mb-4">
                 <p className="text-sm text-yellow-900">
-                  <strong>Note:</strong> WhatsApp Business API integration required. Phone numbers will be copied to clipboard for manual sending or bulk API usage.
+                  <strong>Note:</strong> Phone numbers will be copied with priority: WhatsApp → Phone → Alternate. Perfect for WhatsApp Business API or bulk messaging tools.
                 </p>
               </div>
 
