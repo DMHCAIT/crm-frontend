@@ -448,7 +448,7 @@ const LeadSegmentation: React.FC = () => {
   };
 
   // Campaign Management Functions
-  const createCampaign = () => {
+  const createCampaign = async () => {
     if (!newCampaign.name || !newCampaign.templateId) {
       notify.error('Please fill in campaign name and select a template');
       return;
@@ -482,7 +482,6 @@ const LeadSegmentation: React.FC = () => {
     setShowCampaignModal(false);
     setNewCampaign({ name: '', templateId: '', scheduledAt: '' });
   };
-
   const publishCampaign = async (campaignId: string) => {
     const campaign = (campaigns.data?.campaigns || []).find((c: any) => c.id === campaignId);
     if (!campaign) return;
