@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useLeads } from '../hooks/useQueries';
+import { useCunnektWhatsApp } from '../hooks/useCunnektWhatsApp';
 import { 
   Filter, 
   Download, 
@@ -75,6 +76,7 @@ interface Campaign {
 
 const LeadSegmentation: React.FC = () => {
   const notify = useNotify();
+  const { sendBulk, testConnection } = useCunnektWhatsApp();
   
   // Fetch ALL leads without pagination for accurate segmentation
   // Use 50000 as the maximum safe page size (server-capped)
@@ -468,7 +470,7 @@ const LeadSegmentation: React.FC = () => {
     setNewCampaign({ name: '', templateId: '', scheduledAt: '' });
   };
 
-  const publishCampaign = (campaignId: string) => {
+  const publishCampaign = async (campaignId: string) => {
     const campaign = campaigns.find(c => c.id === campaignId);
     if (!campaign) return;
 
@@ -486,35 +488,77 @@ const LeadSegmentation: React.FC = () => {
       return;
     }
 
-    // Copy personalized messages with proper WhatsApp formatting
-    const personalizedMessages = selectedLeadsData.map(lead => {
-      let message = template.message;
-      message = message.replace(/\{name\}/g, lead.name || lead.fullName || 'there');
-      message = message.replace(/\{course\}/g, lead.course || 'our courses');
-      message = message.replace(/\{qualification\}/g, lead.qualification || 'your qualification');
-      message = message.replace(/\{country\}/g, lead.country || 'your country');
-      
-      // Get best phone number (WhatsApp preferred)
-      const phoneNumber = lead.whatsapp || lead.phone || lead.alternatePhone;
-      const phoneType = lead.whatsapp ? '(WhatsApp)' : lead.phone ? '(Phone)' : '(Alt)';
-      
-      return `${phoneNumber} ${phoneType}:\n${message}`;
-    }).join('\n\n---\n\n');
+    if (selectedLeadsData.length === 0) {
+      notify.error('No leads with valid phone numbers');
+      return;
+    }
 
-    navigator.clipboard.writeText(personalizedMessages);
+    // Show confirmation
+    if (!confirm(`Send WhatsApp campaign to ${selectedLeadsData.length} leads via Cunnekt API?`)) {
+      return;
+    }
 
+    // Update campaign status to sending
     setCampaigns(campaigns.map(c => 
       c.id === campaignId 
-        ? { 
-            ...c, 
-            status: 'sent', 
-            sentAt: new Date().toISOString(),
-            successCount: selectedLeadsData.length
-          }
+        ? { ...c, status: 'scheduled' }
         : c
     ));
 
-    notify.success(`Campaign published! ${selectedLeadsData.length} personalized messages copied to clipboard`);
+    notify.info('Sending Campaign', `Sending messages to ${selectedLeadsData.length} leads...`);
+
+    try {
+      // Send via Cunnekt API
+      const result = await sendBulk.mutateAsync({
+        leads: selectedLeadsData,
+        message: template.message,
+        campaignId: campaignId
+      });
+
+      // Update campaign with results
+      setCampaigns(campaigns.map(c => 
+        c.id === campaignId 
+          ? { 
+              ...c, 
+              status: 'sent', 
+              sentAt: new Date().toISOString(),
+              successCount: result.results.success,
+              failedCount: result.results.failed
+            }
+          : c
+      ));
+
+      // Update template last used
+      setTemplates(templates.map(t => 
+        t.id === campaign.templateId 
+          ? { ...t, lastUsed: new Date().toISOString() }
+          : t
+      ));
+
+      notify.success(
+        'Campaign Published!', 
+        `✅ ${result.results.success} sent, ❌ ${result.results.failed} failed`
+      );
+
+      // Copy results for user review
+      const resultText = result.results.details
+        .map((d: any) => `${d.name} (${d.phone}): ${d.status}${d.error ? ' - ' + d.error : ''}`)
+        .join('\n');
+      
+      navigator.clipboard.writeText(resultText);
+      notify.info('Results copied to clipboard');
+
+    } catch (error: any) {
+      console.error('Campaign publish error:', error);
+      
+      setCampaigns(campaigns.map(c => 
+        c.id === campaignId 
+          ? { ...c, status: 'failed' }
+          : c
+      ));
+
+      notify.error('Campaign Failed', error.message || 'Failed to send messages');
+    }
   };
 
   const deleteCampaign = (id: string) => {
@@ -796,6 +840,15 @@ const LeadSegmentation: React.FC = () => {
               </button>
 
               <button
+                onClick={() => testConnection.refetch()}
+                disabled={testConnection.isFetching}
+                className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors flex items-center disabled:opacity-50"
+              >
+                <Smartphone className="w-4 h-4 mr-2" />
+                {testConnection.isFetching ? 'Testing...' : 'Test Cunnekt API'}
+              </button>
+
+              <button
                 onClick={() => setShowAdvancedSection(!showAdvancedSection)}
                 className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all flex items-center ml-auto"
               >
@@ -803,6 +856,22 @@ const LeadSegmentation: React.FC = () => {
                 Advanced Marketing
               </button>
             </div>
+            
+            {/* Connection Status */}
+            {testConnection.data && (
+              <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-sm text-green-800">
+                  ✅ {testConnection.data.message}
+                </p>
+              </div>
+            )}
+            {testConnection.error && (
+              <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-800">
+                  ❌ Connection failed: {(testConnection.error as any).message}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Advanced Marketing Section */}
@@ -936,18 +1005,24 @@ const LeadSegmentation: React.FC = () => {
                                 </div>
                                 <p className="text-sm text-gray-600">Template: {template?.name || 'Unknown'}</p>
                                 <p className="text-sm text-gray-600">Target Leads: {campaign.targetLeads}</p>
-                                {campaign.successCount && (
-                                  <p className="text-sm text-green-600">Sent: {campaign.successCount} messages</p>
+                                {campaign.successCount !== undefined && (
+                                  <div className="mt-2 space-y-1">
+                                    <p className="text-sm text-green-600">✅ Sent: {campaign.successCount}</p>
+                                    {campaign.failedCount !== undefined && campaign.failedCount > 0 && (
+                                      <p className="text-sm text-red-600">❌ Failed: {campaign.failedCount}</p>
+                                    )}
+                                  </div>
                                 )}
                               </div>
                               <div className="flex space-x-2">
                                 {campaign.status === 'draft' || campaign.status === 'scheduled' ? (
                                   <button
                                     onClick={() => publishCampaign(campaign.id)}
-                                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center"
+                                    disabled={sendBulk.isPending}
+                                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
                                   >
                                     <Send className="w-4 h-4 mr-2" />
-                                    Publish
+                                    {sendBulk.isPending ? 'Sending...' : 'Publish via Cunnekt'}
                                   </button>
                                 ) : null}
                                 <button
