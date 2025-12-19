@@ -13,7 +13,15 @@ import {
   CheckSquare,
   Copy,
   ExternalLink,
-  Smartphone
+  Smartphone,
+  Sparkles,
+  Save,
+  Trash2,
+  Edit2,
+  Zap,
+  MessageSquare,
+  FileText,
+  Plus
 } from 'lucide-react';
 import { useNotify } from '../hooks/useNotify';
 
@@ -39,6 +47,30 @@ interface SegmentFilters {
   status: string[];
 }
 
+interface MessageTemplate {
+  id: string;
+  name: string;
+  message: string;
+  category: string;
+  variables: string[];
+  createdAt: string;
+  lastUsed?: string;
+}
+
+interface Campaign {
+  id: string;
+  name: string;
+  templateId: string;
+  segmentFilters: SegmentFilters;
+  targetLeads: number;
+  status: 'draft' | 'scheduled' | 'sent' | 'failed';
+  createdAt: string;
+  scheduledAt?: string;
+  sentAt?: string;
+  successCount?: number;
+  failedCount?: number;
+}
+
 const LeadSegmentation: React.FC = () => {
   const notify = useNotify();
   
@@ -58,6 +90,42 @@ const LeadSegmentation: React.FC = () => {
   const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
   const [whatsappMessage, setWhatsappMessage] = useState('');
+  
+  // Advanced Marketing States
+  const [showAdvancedSection, setShowAdvancedSection] = useState(false);
+  const [activeTab, setActiveTab] = useState<'templates' | 'campaigns'>('templates');
+  const [templates, setTemplates] = useState<MessageTemplate[]>([
+    {
+      id: '1',
+      name: 'Course Interest Follow-up',
+      message: 'Hi {name}! 👋\n\nWe noticed you showed interest in {course}. Our program is perfect for {qualification} graduates.\n\nWould you like to schedule a free consultation?',
+      category: 'follow-up',
+      variables: ['name', 'course', 'qualification'],
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: '2',
+      name: 'Re-engagement Campaign',
+      message: 'Hello {name},\n\nIt\'s been a while since we last connected. We have exciting updates about {course} that might interest you!\n\nLet us know if you\'d like more information.',
+      category: 'reengagement',
+      variables: ['name', 'course'],
+      createdAt: new Date().toISOString()
+    }
+  ]);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [showTemplateModal, setShowTemplateModal] = useState(false);
+  const [editingTemplate, setEditingTemplate] = useState<MessageTemplate | null>(null);
+  const [newTemplate, setNewTemplate] = useState({
+    name: '',
+    message: '',
+    category: 'general'
+  });
+  const [showCampaignModal, setShowCampaignModal] = useState(false);
+  const [newCampaign, setNewCampaign] = useState({
+    name: '',
+    templateId: '',
+    scheduledAt: ''
+  });
 
   // Calculate lead age in days
   const getLeadAgeDays = (lead: Lead): number => {
@@ -303,6 +371,130 @@ const LeadSegmentation: React.FC = () => {
       status: []
     });
     setSelectedLeads([]);
+  };
+
+  // Template Management Functions
+  const saveTemplate = () => {
+    if (!newTemplate.name || !newTemplate.message) {
+      notify.error('Please fill in template name and message');
+      return;
+    }
+
+    const variables = extractVariables(newTemplate.message);
+    
+    if (editingTemplate) {
+      setTemplates(templates.map(t => 
+        t.id === editingTemplate.id 
+          ? { ...t, ...newTemplate, variables }
+          : t
+      ));
+      notify.success('Template updated successfully');
+    } else {
+      const template: MessageTemplate = {
+        id: Date.now().toString(),
+        ...newTemplate,
+        variables,
+        createdAt: new Date().toISOString()
+      };
+      setTemplates([...templates, template]);
+      notify.success('Template created successfully');
+    }
+    
+    setShowTemplateModal(false);
+    setEditingTemplate(null);
+    setNewTemplate({ name: '', message: '', category: 'general' });
+  };
+
+  const deleteTemplate = (id: string) => {
+    if (confirm('Are you sure you want to delete this template?')) {
+      setTemplates(templates.filter(t => t.id !== id));
+      notify.success('Template deleted');
+    }
+  };
+
+  const editTemplate = (template: MessageTemplate) => {
+    setEditingTemplate(template);
+    setNewTemplate({
+      name: template.name,
+      message: template.message,
+      category: template.category
+    });
+    setShowTemplateModal(true);
+  };
+
+  const extractVariables = (message: string): string[] => {
+    const matches = message.match(/\{([^}]+)\}/g);
+    return matches ? matches.map(m => m.slice(1, -1)) : [];
+  };
+
+  // Campaign Management Functions
+  const createCampaign = () => {
+    if (!newCampaign.name || !newCampaign.templateId) {
+      notify.error('Please fill in campaign name and select a template');
+      return;
+    }
+
+    const campaign: Campaign = {
+      id: Date.now().toString(),
+      name: newCampaign.name,
+      templateId: newCampaign.templateId,
+      segmentFilters: { ...filters },
+      targetLeads: selectedLeads.length,
+      status: newCampaign.scheduledAt ? 'scheduled' : 'draft',
+      createdAt: new Date().toISOString(),
+      scheduledAt: newCampaign.scheduledAt || undefined
+    };
+
+    setCampaigns([...campaigns, campaign]);
+    notify.success('Campaign created successfully');
+    setShowCampaignModal(false);
+    setNewCampaign({ name: '', templateId: '', scheduledAt: '' });
+  };
+
+  const publishCampaign = (campaignId: string) => {
+    const campaign = campaigns.find(c => c.id === campaignId);
+    if (!campaign) return;
+
+    // Simulate campaign execution
+    const selectedLeadsData = filteredLeads.filter(lead => selectedLeads.includes(lead.id) && lead.phone);
+    const template = templates.find(t => t.id === campaign.templateId);
+    
+    if (!template) {
+      notify.error('Template not found');
+      return;
+    }
+
+    // Copy personalized messages
+    const personalizedMessages = selectedLeadsData.map(lead => {
+      let message = template.message;
+      message = message.replace(/\{name\}/g, lead.name || lead.fullName || 'there');
+      message = message.replace(/\{course\}/g, lead.course || 'our courses');
+      message = message.replace(/\{qualification\}/g, lead.qualification || 'your qualification');
+      message = message.replace(/\{country\}/g, lead.country || 'your country');
+      return `${lead.phone}: ${message}`;
+    }).join('\n\n---\n\n');
+
+    navigator.clipboard.writeText(personalizedMessages);
+
+    setCampaigns(campaigns.map(c => 
+      c.id === campaignId 
+        ? { 
+            ...c, 
+            status: 'sent', 
+            sentAt: new Date().toISOString(),
+            successCount: selectedLeadsData.length
+          }
+        : c
+    ));
+
+    notify.success(`Campaign published! ${selectedLeadsData.length} personalized messages copied to clipboard`);
+  };
+
+  const deleteCampaign = (id: string) => {
+    if (confirm('Are you sure you want to delete this campaign?')) {
+      setCampaigns(campaigns.filter(c => c.id !== id));
+      notify.success('Campaign deleted');
+    }
   };
 
   if (isLoading) {
@@ -570,6 +762,185 @@ const LeadSegmentation: React.FC = () => {
                 className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Copy className="w-4 h-4 mr-2" />
+                Copy Phones
+              </button>
+
+              <button
+                onClick={() => setShowAdvancedSection(!showAdvancedSection)}
+                className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all flex items-center ml-auto"
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                Advanced Marketing
+              </button>
+            </div>
+          </div>
+
+          {/* Advanced Marketing Section */}
+          {showAdvancedSection && (
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg shadow-lg border-2 border-purple-200 p-6 mb-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center">
+                  <Sparkles className="w-6 h-6 text-purple-600 mr-2" />
+                  <h2 className="text-2xl font-bold text-gray-900">Advanced Marketing Hub</h2>
+                </div>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => setActiveTab('templates')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                      activeTab === 'templates'
+                        ? 'bg-purple-600 text-white'
+                        : 'bg-white text-gray-700 hover:bg-purple-100'
+                    }`}
+                  >
+                    <MessageSquare className="w-4 h-4 inline mr-2" />
+                    Templates
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('campaigns')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                      activeTab === 'campaigns'
+                        ? 'bg-purple-600 text-white'
+                        : 'bg-white text-gray-700 hover:bg-purple-100'
+                    }`}
+                  >
+                    <Zap className="w-4 h-4 inline mr-2" />
+                    Campaigns
+                  </button>
+                </div>
+              </div>
+
+              {/* Templates Tab */}
+              {activeTab === 'templates' && (
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Message Templates</h3>
+                    <button
+                      onClick={() => {
+                        setEditingTemplate(null);
+                        setNewTemplate({ name: '', message: '', category: 'general' });
+                        setShowTemplateModal(true);
+                      }}
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      New Template
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {templates.map(template => (
+                      <div key={template.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <h4 className="font-semibold text-gray-900">{template.name}</h4>
+                            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">{template.category}</span>
+                          </div>
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => editTemplate(template)}
+                              className="text-blue-600 hover:text-blue-800"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => deleteTemplate(template.id)}
+                              className="text-red-600 hover:text-red-800"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-2 whitespace-pre-wrap line-clamp-3">{template.message}</p>
+                        <div className="mt-3 flex flex-wrap gap-1">
+                          {template.variables.map(v => (
+                            <span key={v} className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
+                              {'{'+v+'}'}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Campaigns Tab */}
+              {activeTab === 'campaigns' && (
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Marketing Campaigns</h3>
+                    <button
+                      onClick={() => setShowCampaignModal(true)}
+                      disabled={selectedLeads.length === 0}
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Create Campaign
+                    </button>
+                  </div>
+
+                  {campaigns.length === 0 ? (
+                    <div className="bg-white rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
+                      <Zap className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-600 mb-2">No campaigns created yet</p>
+                      <p className="text-sm text-gray-500">Create your first campaign to start remarketing</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {campaigns.map(campaign => {
+                        const template = templates.find(t => t.id === campaign.templateId);
+                        return (
+                          <div key={campaign.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-3 mb-2">
+                                  <h4 className="font-semibold text-gray-900">{campaign.name}</h4>
+                                  <span className={`text-xs px-2 py-1 rounded-full ${
+                                    campaign.status === 'sent' ? 'bg-green-100 text-green-700' :
+                                    campaign.status === 'scheduled' ? 'bg-blue-100 text-blue-700' :
+                                    campaign.status === 'failed' ? 'bg-red-100 text-red-700' :
+                                    'bg-gray-100 text-gray-700'
+                                  }`}>
+                                    {campaign.status}
+                                  </span>
+                                </div>
+                                <p className="text-sm text-gray-600">Template: {template?.name || 'Unknown'}</p>
+                                <p className="text-sm text-gray-600">Target Leads: {campaign.targetLeads}</p>
+                                {campaign.successCount && (
+                                  <p className="text-sm text-green-600">Sent: {campaign.successCount} messages</p>
+                                )}
+                              </div>
+                              <div className="flex space-x-2">
+                                {campaign.status === 'draft' || campaign.status === 'scheduled' ? (
+                                  <button
+                                    onClick={() => publishCampaign(campaign.id)}
+                                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center"
+                                  >
+                                    <Send className="w-4 h-4 mr-2" />
+                                    Publish
+                                  </button>
+                                ) : null}
+                                <button
+                                  onClick={() => deleteCampaign(campaign.id)}
+                                  className="text-red-600 hover:text-red-800"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+                disabled={selectedLeads.length === 0}
+                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Copy className="w-4 h-4 mr-2" />
                 Copy Phone Numbers
               </button>
 
@@ -709,6 +1080,192 @@ const LeadSegmentation: React.FC = () => {
                 >
                   <Copy className="w-4 h-4 mr-2" />
                   Copy Phone Numbers
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Template Modal */}
+      {showTemplateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-xl font-semibold text-gray-900 flex items-center">
+                <MessageSquare className="w-6 h-6 mr-2 text-purple-600" />
+                {editingTemplate ? 'Edit Template' : 'Create New Template'}
+              </h3>
+            </div>
+            <div className="p-6">
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Template Name *
+                </label>
+                <input
+                  type="text"
+                  value={newTemplate.name}
+                  onChange={(e) => setNewTemplate({ ...newTemplate, name: e.target.value })}
+                  placeholder="e.g., Follow-up Campaign"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Category
+                </label>
+                <select
+                  value={newTemplate.category}
+                  onChange={(e) => setNewTemplate({ ...newTemplate, category: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                >
+                  <option value="general">General</option>
+                  <option value="follow-up">Follow-up</option>
+                  <option value="reengagement">Re-engagement</option>
+                  <option value="promotion">Promotion</option>
+                  <option value="reminder">Reminder</option>
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Message Template *
+                </label>
+                <textarea
+                  value={newTemplate.message}
+                  onChange={(e) => setNewTemplate({ ...newTemplate, message: e.target.value })}
+                  placeholder="Hi {name}! We noticed you showed interest in {course}..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  rows={8}
+                />
+                <p className="mt-2 text-xs text-gray-500">
+                  Available variables: {'{name}'}, {'{course}'}, {'{qualification}'}, {'{country}'}
+                </p>
+              </div>
+
+              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200 mb-4">
+                <p className="text-sm text-purple-900">
+                  <strong>Preview Variables:</strong> {extractVariables(newTemplate.message).map(v => '{'+v+'}').join(', ') || 'None detected'}
+                </p>
+              </div>
+
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => {
+                    setShowTemplateModal(false);
+                    setEditingTemplate(null);
+                    setNewTemplate({ name: '', message: '', category: 'general' });
+                  }}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={saveTemplate}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center"
+                >
+                  <Save className="w-4 h-4 mr-2" />
+                  {editingTemplate ? 'Update' : 'Create'} Template
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Campaign Modal */}
+      {showCampaignModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-xl font-semibold text-gray-900 flex items-center">
+                <Zap className="w-6 h-6 mr-2 text-purple-600" />
+                Create Marketing Campaign
+              </h3>
+            </div>
+            <div className="p-6">
+              <div className="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <p className="text-sm text-blue-900">
+                  <strong>{selectedLeads.length}</strong> leads selected from current segment
+                </p>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Campaign Name *
+                </label>
+                <input
+                  type="text"
+                  value={newCampaign.name}
+                  onChange={(e) => setNewCampaign({ ...newCampaign, name: e.target.value })}
+                  placeholder="e.g., Q4 Course Promotion"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Select Message Template *
+                </label>
+                <select
+                  value={newCampaign.templateId}
+                  onChange={(e) => setNewCampaign({ ...newCampaign, templateId: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                >
+                  <option value="">-- Select Template --</option>
+                  {templates.map(template => (
+                    <option key={template.id} value={template.id}>
+                      {template.name} ({template.category})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {newCampaign.templateId && (
+                <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Template Preview:</h4>
+                  <p className="text-sm text-gray-600 whitespace-pre-wrap">
+                    {templates.find(t => t.id === newCampaign.templateId)?.message}
+                  </p>
+                </div>
+              )}
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Schedule Campaign (Optional)
+                </label>
+                <input
+                  type="datetime-local"
+                  value={newCampaign.scheduledAt}
+                  onChange={(e) => setNewCampaign({ ...newCampaign, scheduledAt: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                />
+                <p className="mt-1 text-xs text-gray-500">Leave empty to create as draft</p>
+              </div>
+
+              <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200 mb-4">
+                <p className="text-sm text-yellow-900">
+                  <strong>Note:</strong> Campaign will use current segment filters ({filters.countries.length} countries, {filters.qualifications.length} qualifications, {filters.courses.length} courses)
+                </p>
+              </div>
+
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => {
+                    setShowCampaignModal(false);
+                    setNewCampaign({ name: '', templateId: '', scheduledAt: '' });
+                  }}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={createCampaign}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center"
+                >
+                  <Zap className="w-4 h-4 mr-2" />
+                  Create Campaign
                 </button>
               </div>
             </div>
