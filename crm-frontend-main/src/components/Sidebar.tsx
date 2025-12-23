@@ -40,7 +40,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
     { id: 'crm-pipeline', label: 'CRM Pipeline', icon: Target, minLevel: 1 },
     { id: 'leads', label: 'Lead Management', icon: Users, minLevel: 1 },
     { id: 'leads-monitoring', label: 'Lead Monitoring', icon: Activity, minLevel: 2 },
-    { id: 'lead-segmentation', label: 'Lead Segmentation', icon: Filter, minLevel: 1 },
+    { id: 'lead-segmentation', label: 'Lead Segmentation', icon: Filter, minLevel: 5 }, // Super Admin only
     { id: 'facebook-leads', label: 'Facebook Integration', icon: Facebook, minLevel: 3 },
     { id: 'students', label: 'Course Enrollments', icon: GraduationCap, minLevel: 1 },
     { id: 'analytics', label: 'CRM Analytics', icon: BarChart3, minLevel: 2 },

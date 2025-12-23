@@ -79,7 +79,7 @@ const App: React.FC = () => {
     'crm-pipeline': 1,
     'leads': 1,
     'leads-monitoring': 1,
-    'lead-segmentation': 1,
+    'lead-segmentation': 5, // Super Admin only - Advanced Marketing & Bulk WhatsApp
     'facebook-leads': 3,
     'students': 1,
     'analytics': 2,
