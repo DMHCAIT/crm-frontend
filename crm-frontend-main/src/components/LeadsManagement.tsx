@@ -3682,18 +3682,18 @@ const LeadsManagement: React.FC = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                 >
                   <option value="all">🌐 All Time</option>
-                  <optgroup label="📊 Updated Leads">
+                  <optgroup label="📊 Updated Leads (Calendar Periods)">
                     <option value="updated_today">✏️ Updated Today ({getLeadsUpdatedTodayCount()})</option>
                     <option value="updated_yesterday">📝 Updated Yesterday ({getUpdatedYesterdayCount()})</option>
                     <option value="updated_this_week">📅 Updated This Week ({getUpdatedThisWeekCount()})</option>
                     <option value="updated_last_week">📋 Updated Last Week</option>
                     <option value="updated_this_month">📆 Updated This Month ({getUpdatedThisMonthCount()})</option>
                   </optgroup>
-                  <optgroup label="🗓️ General Date Filters">
-                    <option value="today">📍 Updated Today</option>
-                    <option value="yesterday">⏮️ Updated Yesterday</option>
-                    <option value="week">🗓️ Updated Last 7 Days</option>
-                    <option value="month">📅 Updated Last 30 Days</option>
+                  <optgroup label="🗓️ Rolling Date Ranges">
+                    <option value="today">📍 Last 24 Hours</option>
+                    <option value="yesterday">⏮️ Previous 24 Hours</option>
+                    <option value="week">🗓️ Last 7 Days</option>
+                    <option value="month">📅 Last 30 Days</option>
                   </optgroup>
                   <optgroup label="🔧 Advanced">
                     <option value="custom">📊 Custom Last Updated Range</option>
