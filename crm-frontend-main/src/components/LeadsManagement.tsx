@@ -3821,7 +3821,10 @@ const LeadsManagement: React.FC = () => {
                     <input
                       type="date"
                       value={createdDateFrom}
-                      onChange={(e) => setCreatedDateFrom(e.target.value)}
+                      onChange={(e) => {
+                        setCreatedDateFrom(e.target.value);
+                        setCreatedDateFilterType('between'); // Automatically set to 'between' for custom range
+                      }}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
@@ -3830,7 +3833,10 @@ const LeadsManagement: React.FC = () => {
                     <input
                       type="date"
                       value={createdDateTo}
-                      onChange={(e) => setCreatedDateTo(e.target.value)}
+                      onChange={(e) => {
+                        setCreatedDateTo(e.target.value);
+                        setCreatedDateFilterType('between'); // Automatically set to 'between' for custom range
+                      }}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
@@ -3881,8 +3887,20 @@ const LeadsManagement: React.FC = () => {
                       </label>
                       <input
                         type="date"
-                        value={createdSpecificDate}
-                        onChange={(e) => setCreatedSpecificDate(e.target.value)}
+                        value={
+                          createdDateFilterType === 'on' ? createdSpecificDate :
+                          createdDateFilterType === 'after' ? createdDateFrom :
+                          createdDateTo
+                        }
+                        onChange={(e) => {
+                          if (createdDateFilterType === 'on') {
+                            setCreatedSpecificDate(e.target.value);
+                          } else if (createdDateFilterType === 'after') {
+                            setCreatedDateFrom(e.target.value);
+                          } else {
+                            setCreatedDateTo(e.target.value);
+                          }
+                        }}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     </div>
