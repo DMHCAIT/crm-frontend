@@ -77,9 +77,14 @@ const Analytics: React.FC = () => {
       if (statusLower === 'enrolled' || statusLower === 'won') {
         current.converted += 1;
         current.revenue += lead.salePrice || lead.sale_price || 0;
-      } else if (statusLower === 'warm' || statusLower === 'hot') {
+      } else {
+        // For non-enrolled leads, use estimated value with probability factor
         const estimatedVal = lead.estimatedValue || lead.estimated_value || 0;
-        current.revenue += estimatedVal * 0.3; // 30% probability
+        if (estimatedVal > 0) {
+          // Higher probability for hot/warm leads
+          const probability = (statusLower === 'hot' || statusLower === 'warm') ? 0.3 : 0.1;
+          current.revenue += estimatedVal * probability;
+        }
       }
       
       sourceMap.set(source, current);
@@ -122,10 +127,14 @@ const Analytics: React.FC = () => {
         convertedCount++;
         // Use sale_price for enrolled leads
         revenue = lead.salePrice || lead.sale_price || 0;
-      } else if (statusLower === 'warm' || statusLower === 'hot') {
-        // For warm/hot leads, use estimated value with probability factor
+      } else {
+        // For non-enrolled leads, use estimated value with probability factor
         const estimatedVal = lead.estimatedValue || lead.estimated_value || 0;
-        revenue = estimatedVal * 0.3; // 30% probability
+        if (estimatedVal > 0) {
+          // Higher probability for hot/warm leads
+          const probability = (statusLower === 'hot' || statusLower === 'warm') ? 0.3 : 0.1;
+          revenue = estimatedVal * probability;
+        }
       }
       
       totalRevenue += revenue;
