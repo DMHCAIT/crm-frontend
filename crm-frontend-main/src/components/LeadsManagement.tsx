@@ -855,7 +855,7 @@ const LeadsManagement: React.FC = () => {
       // Calculate revenue (actual from enrolled + estimated from hot/warm)
       const actualRevenue = userLeads
         .filter((lead: Lead) => lead.status === 'Enrolled')
-        .reduce((sum: number, lead: Lead) => sum + (lead.salePrice || lead.sale_price || lead.fees || 0), 0);
+        .reduce((sum: number, lead: Lead) => sum + (lead.salePrice || lead.sale_price || 0), 0);
 
       const estimatedRevenue = userLeads
         .filter((lead: Lead) => lead.status !== 'Enrolled')
@@ -5334,39 +5334,6 @@ const LeadsManagement: React.FC = () => {
                             ))}
                           </select>
                         </div>
-
-                        {/* Fees Field - Only show when status is Enrolled */}
-                        {(editedLead.status || selectedLead.status) === 'Enrolled' && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              💰 Course Fees ({getCurrencyByCompany(editedLead.company || selectedLead.company) === 'USD' ? '$' : '₹'})
-                            </label>
-                            <input
-                              type="number"
-                              value={editedLead.fees || selectedLead.fees || ''}
-                              onChange={(e) => {
-                                const feesValue = e.target.value ? parseFloat(e.target.value) : undefined;
-                                const currency = getCurrencyByCompany(editedLead.company || selectedLead.company);
-                                setEditedLead(prev => ({ 
-                                  ...prev, 
-                                  fees: feesValue,
-                                  actualRevenue: feesValue,
-                                  currency: currency
-                                }));
-                              }}
-                              placeholder={`Enter course fees amount in ${getCurrencyByCompany(editedLead.company || selectedLead.company)}`}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                              min="0"
-                              step={getCurrencyByCompany(editedLead.company || selectedLead.company) === 'USD' ? '1' : '100'}
-                            />
-                            <div className="mt-1 flex justify-between text-xs text-gray-500">
-                              <span>Amount paid for course enrollment in {getCurrencyByCompany(editedLead.company || selectedLead.company)}</span>
-                              <span className="text-green-600 font-medium">
-                                Revenue: {formatCurrency(editedLead.fees || selectedLead.fees || 0, getCurrencyByCompany(editedLead.company || selectedLead.company))}
-                              </span>
-                            </div>
-                          </div>
-                        )}
 
                         {/* Estimated Value Field - Show for ALL leads */}
                         <div>

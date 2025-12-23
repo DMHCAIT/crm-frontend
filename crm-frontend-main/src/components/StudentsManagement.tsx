@@ -80,11 +80,11 @@ const StudentsManagement: React.FC = () => {
             year: 'Module 1 of 1', // Default for newly enrolled
             status: 'active', // Enrolled leads are active students
             enrollmentDate: lead.updatedAt?.split('T')[0] || new Date().toISOString().split('T')[0],
-            feeStatus: lead.fees ? 'paid' : 'pending',
+            feeStatus: (lead.salePrice || lead.sale_price) ? 'paid' : 'pending',
             documents: 'incomplete', // Default for new enrollments
             nextPayment: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            amount: lead.fees ? 
-              (lead.company === 'IBMP' ? `$${lead.fees.toLocaleString()}` : `₹${lead.fees.toLocaleString()}`) : 
+            amount: (lead.salePrice || lead.sale_price) ? 
+              (lead.company === 'IBMP' ? `$${(lead.salePrice || lead.sale_price).toLocaleString()}` : `₹${(lead.salePrice || lead.sale_price).toLocaleString()}`) : 
               (lead.company === 'IBMP' ? '$0' : '₹0'),
             assignedTo: lead.assignedTo || '',
             qualification: lead.qualification || '',
