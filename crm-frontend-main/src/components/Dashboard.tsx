@@ -109,8 +109,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       if (status === 'Enrolled') {
         activeStudents++;
         enrolled++;
-        // Calculate actual revenue from fees
-        totalRevenue += lead.fees || lead.actualRevenue || 0;
+        // Calculate actual revenue from sale_price
+        totalRevenue += lead.salePrice || lead.sale_price || 0;
       }
       
       // Count leads updated today
@@ -157,9 +157,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       if (lead.status === 'Hot') hotLeads++;
       if (lead.status === 'Warm') warmLeads++;
       
-      // Calculate pipeline value from estimated values
-      if (lead.estimatedValue) {
-        totalEstimatedValue += lead.estimatedValue;
+      // Calculate pipeline value from estimated values (all non-enrolled leads)
+      if (lead.status !== 'Enrolled' && (lead.estimatedValue || lead.estimated_value)) {
+        totalEstimatedValue += lead.estimatedValue || lead.estimated_value || 0;
       }
       
       // Count overdue follow-ups

@@ -76,9 +76,9 @@ const Analytics: React.FC = () => {
       const statusLower = (lead.status || '').toLowerCase();
       if (statusLower === 'enrolled' || statusLower === 'won') {
         current.converted += 1;
-        current.revenue += lead.fees || lead.value || lead.actualRevenue || lead.estimatedValue || 0;
+        current.revenue += lead.salePrice || lead.sale_price || 0;
       } else if (statusLower === 'warm' || statusLower === 'hot') {
-        const estimatedVal = lead.estimatedValue || lead.fees || lead.value || 0;
+        const estimatedVal = lead.estimatedValue || lead.estimated_value || 0;
         current.revenue += estimatedVal * 0.3; // 30% probability
       }
       
@@ -120,11 +120,11 @@ const Analytics: React.FC = () => {
       const statusLower = status.toLowerCase();
       if (statusLower === 'enrolled' || statusLower === 'won') {
         convertedCount++;
-        // Try multiple field names for revenue
-        revenue = lead.fees || lead.value || lead.actualRevenue || lead.estimatedValue || 0;
+        // Use sale_price for enrolled leads
+        revenue = lead.salePrice || lead.sale_price || 0;
       } else if (statusLower === 'warm' || statusLower === 'hot') {
         // For warm/hot leads, use estimated value with probability factor
-        const estimatedVal = lead.estimatedValue || lead.fees || lead.value || 0;
+        const estimatedVal = lead.estimatedValue || lead.estimated_value || 0;
         revenue = estimatedVal * 0.3; // 30% probability
       }
       

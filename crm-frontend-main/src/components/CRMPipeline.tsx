@@ -151,8 +151,8 @@ const CRMPipeline: React.FC = () => {
       }
       if (convertedStatuses.has(status)) {
         convertedLeadsCount++;
-        // Calculate revenue from converted leads
-        totalRevenue += lead.fees || lead.actualRevenue || lead.value || 0;
+        // Calculate revenue from converted leads using sale_price
+        totalRevenue += lead.salePrice || lead.sale_price || 0;
       }
       
       // Calculate response time
