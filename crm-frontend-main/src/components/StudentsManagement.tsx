@@ -19,7 +19,12 @@ import {
   Building,
   Award,
   DollarSign,
-  Activity
+  Activity,
+  Upload,
+  Download,
+  Trash2,
+  Save,
+  Edit
 } from 'lucide-react';
 
 const StudentsManagement: React.FC = () => {
@@ -29,6 +34,18 @@ const StudentsManagement: React.FC = () => {
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [originalLeadData, setOriginalLeadData] = useState<any>(null);
+  const [studentDocuments, setStudentDocuments] = useState<any[]>([]);
+  const [uploadingDocument, setUploadingDocument] = useState(false);
+  const [editingNotes, setEditingNotes] = useState(false);
+  const [editingPayment, setEditingPayment] = useState(false);
+  const [studentNotes, setStudentNotes] = useState('');
+  const [paymentDetails, setPaymentDetails] = useState({
+    amount: '',
+    status: 'pending',
+    date: '',
+    method: '',
+    transactionId: ''
+  });
   const currentUser = user?.name || 'Unknown User';
   const currentUserRole = user?.role || 'team_leader';
 
@@ -170,6 +187,93 @@ const StudentsManagement: React.FC = () => {
     }
   };
 
+  const loadStudentDocuments = async (studentId: string) => {
+    try {
+      const apiClient = getApiClient();
+      const response = await apiClient.getDocuments('student', studentId);
+      setStudentDocuments(response.documents || []);
+    } catch (error) {
+      console.error('Error loading documents:', error);
+      setStudentDocuments([]);
+    }
+  };
+
+  const handleDocumentUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !selectedStudent) return;
+
+    setUploadingDocument(true);
+    try {
+      const apiClient = getApiClient();
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('entityType', 'student');
+      formData.append('entityId', selectedStudent.originalLeadId || selectedStudent.id);
+      formData.append('documentType', 'enrollment');
+
+      await apiClient.uploadDocument(formData);
+      await loadStudentDocuments(selectedStudent.originalLeadId || selectedStudent.id);
+      alert('Document uploaded successfully!');
+    } catch (error) {
+      console.error('Error uploading document:', error);
+      alert('Failed to upload document');
+    } finally {
+      setUploadingDocument(false);
+    }
+  };
+
+  const handleDeleteDocument = async (documentId: string) => {
+    if (!confirm('Are you sure you want to delete this document?')) return;
+
+    try {
+      const apiClient = getApiClient();
+      await apiClient.deleteDocument(documentId);
+      await loadStudentDocuments(selectedStudent.originalLeadId || selectedStudent.id);
+      alert('Document deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting document:', error);
+      alert('Failed to delete document');
+    }
+  };
+
+  const handleSaveNotes = async () => {
+    if (!selectedStudent) return;
+
+    try {
+      const apiClient = getApiClient();
+      await apiClient.updateLead(selectedStudent.originalLeadId, {
+        notes: studentNotes
+      });
+      setEditingNotes(false);
+      alert('Notes saved successfully!');
+      await loadStudentsData();
+    } catch (error) {
+      console.error('Error saving notes:', error);
+      alert('Failed to save notes');
+    }
+  };
+
+  const handleSavePaymentDetails = async () => {
+    if (!selectedStudent) return;
+
+    try {
+      const apiClient = getApiClient();
+      await apiClient.updateLead(selectedStudent.originalLeadId, {
+        sale_price: parseFloat(paymentDetails.amount),
+        payment_status: paymentDetails.status,
+        payment_date: paymentDetails.date,
+        payment_method: paymentDetails.method,
+        transaction_id: paymentDetails.transactionId
+      });
+      setEditingPayment(false);
+      alert('Payment details saved successfully!');
+      await loadStudentsData();
+    } catch (error) {
+      console.error('Error saving payment details:', error);
+      alert('Failed to save payment details');
+    }
+  };
+
   const tabs = [
     { id: 'all', label: 'All Enrolled', count: accessibleStudents.length },
     { id: 'active', label: 'Currently Learning', count: accessibleStudents.filter(s => s.status === 'active').length },
@@ -196,12 +300,27 @@ const StudentsManagement: React.FC = () => {
         const leadsArray = leadData?.leads || leadData || [];
         const originalLead = leadsArray.find((lead: any) => lead.id === student.originalLeadId);
         setOriginalLeadData(originalLead);
+        
+        // Load documents for this student
+        await loadStudentDocuments(student.originalLeadId);
+        
+        // Initialize notes and payment details
+        setStudentNotes(student.notes || '');
+        setPaymentDetails({
+          amount: student.amount ? student.amount.replace(/[$₹,]/g, '') : '',
+          status: student.feeStatus || 'pending',
+          date: student.enrollmentDate || '',
+          method: student.originalLead?.payment_method || '',
+          transactionId: student.originalLead?.transaction_id || ''
+        });
       } catch (error) {
         console.error('Error loading original lead data:', error);
         setOriginalLeadData(null);
       }
     } else {
       setOriginalLeadData(null);
+      setStudentDocuments([]);
+      setStudentNotes('');
     }
     
     setShowProfileModal(true);
@@ -518,39 +637,244 @@ const StudentsManagement: React.FC = () => {
 
               {/* Enrollment & Financial Details */}
               <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-center">
-                  <DollarSign className="w-5 h-5 mr-2 text-purple-600" />
-                  Enrollment & Financial Information
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Enrollment Date</label>
-                    <p className="text-gray-900 flex items-center">
-                      <Calendar className="w-4 h-4 mr-1 text-gray-500" />
-                      {formatDate(selectedStudent.enrollmentDate)}
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-semibold text-gray-900 text-lg flex items-center">
+                    <DollarSign className="w-5 h-5 mr-2 text-purple-600" />
+                    Payment & Financial Details
+                  </h4>
+                  {!editingPayment && (
+                    <button
+                      onClick={() => setEditingPayment(true)}
+                      className="text-blue-600 hover:text-blue-800 flex items-center text-sm"
+                    >
+                      <Edit className="w-4 h-4 mr-1" />
+                      Edit
+                    </button>
+                  )}
+                </div>
+                
+                {editingPayment ? (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Amount</label>
+                        <input
+                          type="number"
+                          value={paymentDetails.amount}
+                          onChange={(e) => setPaymentDetails({...paymentDetails, amount: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                          placeholder="Enter amount"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select
+                          value={paymentDetails.status}
+                          onChange={(e) => setPaymentDetails({...paymentDetails, status: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                        >
+                          <option value="pending">Pending</option>
+                          <option value="paid">Paid</option>
+                          <option value="partial">Partial</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Payment Date</label>
+                        <input
+                          type="date"
+                          value={paymentDetails.date}
+                          onChange={(e) => setPaymentDetails({...paymentDetails, date: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Payment Method</label>
+                        <select
+                          value={paymentDetails.method}
+                          onChange={(e) => setPaymentDetails({...paymentDetails, method: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                        >
+                          <option value="">Select method</option>
+                          <option value="bank_transfer">Bank Transfer</option>
+                          <option value="credit_card">Credit Card</option>
+                          <option value="debit_card">Debit Card</option>
+                          <option value="cash">Cash</option>
+                          <option value="cheque">Cheque</option>
+                        </select>
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Transaction ID</label>
+                        <input
+                          type="text"
+                          value={paymentDetails.transactionId}
+                          onChange={(e) => setPaymentDetails({...paymentDetails, transactionId: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                          placeholder="Enter transaction/reference ID"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={handleSavePaymentDetails}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm flex items-center"
+                      >
+                        <Save className="w-4 h-4 mr-1" />
+                        Save Payment Details
+                      </button>
+                      <button
+                        onClick={() => setEditingPayment(false)}
+                        className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 text-sm"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Enrollment Date</label>
+                      <p className="text-gray-900 flex items-center">
+                        <Calendar className="w-4 h-4 mr-1 text-gray-500" />
+                        {formatDate(selectedStudent.enrollmentDate)}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Fee Status</label>
+                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                        selectedStudent.feeStatus === 'paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}>
+                        {selectedStudent.feeStatus === 'paid' ? '✅ Paid' : '⏰ Pending'}
+                      </span>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Course Fee</label>
+                      <p className="text-gray-900 font-medium">{selectedStudent.amount}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Payment Method</label>
+                      <p className="text-gray-900">{paymentDetails.method || 'Not specified'}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Transaction ID</label>
+                      <p className="text-gray-900 text-sm">{paymentDetails.transactionId || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Documents Status</label>
+                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                        selectedStudent.documents === 'complete' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {selectedStudent.documents === 'complete' ? '✅ Complete' : '📄 Incomplete'}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Student Documents Section */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-semibold text-gray-900 text-lg flex items-center">
+                    <FileText className="w-5 h-5 mr-2 text-indigo-600" />
+                    Uploaded Documents ({studentDocuments.length})
+                  </h4>
+                  <label className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 cursor-pointer text-sm flex items-center">
+                    <Upload className="w-4 h-4 mr-1" />
+                    {uploadingDocument ? 'Uploading...' : 'Upload Document'}
+                    <input
+                      type="file"
+                      onChange={handleDocumentUpload}
+                      className="hidden"
+                      disabled={uploadingDocument}
+                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                    />
+                  </label>
+                </div>
+                
+                {studentDocuments.length > 0 ? (
+                  <div className="space-y-2">
+                    {studentDocuments.map((doc: any) => (
+                      <div key={doc.id} className="flex items-center justify-between p-3 bg-white rounded border border-gray-200">
+                        <div className="flex items-center space-x-3">
+                          <FileText className="w-5 h-5 text-indigo-500" />
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">{doc.fileName || doc.name}</p>
+                            <p className="text-xs text-gray-500">
+                              Uploaded {doc.uploadedAt ? formatDate(doc.uploadedAt) : 'Unknown date'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => window.open(doc.url, '_blank')}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                          >
+                            <Download className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteDocument(doc.id)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-center py-4 text-sm">No documents uploaded yet</p>
+                )}
+              </div>
+
+              {/* Student Notes Section */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-semibold text-gray-900 text-lg flex items-center">
+                    <FileText className="w-5 h-5 mr-2 text-green-600" />
+                    Student Notes & Details
+                  </h4>
+                  {!editingNotes && (
+                    <button
+                      onClick={() => setEditingNotes(true)}
+                      className="text-blue-600 hover:text-blue-800 flex items-center text-sm"
+                    >
+                      <Edit className="w-4 h-4 mr-1" />
+                      Edit Notes
+                    </button>
+                  )}
+                </div>
+                
+                {editingNotes ? (
+                  <div className="space-y-3">
+                    <textarea
+                      value={studentNotes}
+                      onChange={(e) => setStudentNotes(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                      rows={6}
+                      placeholder="Add notes about student progress, payment schedules, special requirements, etc..."
+                    />
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={handleSaveNotes}
+                        className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm flex items-center"
+                      >
+                        <Save className="w-4 h-4 mr-1" />
+                        Save Notes
+                      </button>
+                      <button
+                        onClick={() => setEditingNotes(false)}
+                        className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 text-sm"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-white p-3 rounded border border-gray-200">
+                    <p className="text-gray-700 whitespace-pre-wrap text-sm">
+                      {studentNotes || 'No notes added yet. Click "Edit Notes" to add details about this student.'}
                     </p>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Fee Status</label>
-                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                      selectedStudent.feeStatus === 'paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    }`}>
-                      {selectedStudent.feeStatus === 'paid' ? '✅ Paid' : '⏰ Pending'}
-                    </span>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Course Fee</label>
-                    <p className="text-gray-900 font-medium">{selectedStudent.amount}</p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Documents Status</label>
-                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                      selectedStudent.documents === 'complete' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {selectedStudent.documents === 'complete' ? '✅ Complete' : '📄 Incomplete'}
-                    </span>
-                  </div>
-                </div>
+                )}
               </div>
 
               {/* Sales & Lead Information */}
