@@ -19,7 +19,7 @@ interface AnalyticsData {
 }
 
 const Analytics: React.FC = () => {
-  const { data: leadsData, isLoading: loadingLeads, refetch } = useLeads(1, 10000); // Fetch all leads for analytics
+  const { data: leadsData, isLoading: loadingLeads, refetch } = useLeads(1, 30000); // Fetch all leads for analytics (increased from 10K)
   const [dateRange, setDateRange] = useState('30');
   const [companyFilter, setCompanyFilter] = useState('all');
 

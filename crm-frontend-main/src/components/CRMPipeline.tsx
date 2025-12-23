@@ -65,7 +65,7 @@ const getRelativeTime = (dateString: string): string => {
 
 const CRMPipeline: React.FC = () => {
   const { user } = useAuth();
-  const { data: leadsData, isLoading: loadingLeads } = useLeads();
+  const { data: leadsData, isLoading: loadingLeads } = useLeads(1, 30000); // Fetch all leads for pipeline analysis
   const [timeRange, setTimeRange] = useState('7d');
 
   // ==========================================
