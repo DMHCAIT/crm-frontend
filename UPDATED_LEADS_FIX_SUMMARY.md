@@ -1,13 +1,19 @@
 # Updated Leads Date Filter - Fix Summary
 
-## Issue Identified
-The "Updated Leads" date filters (Updated Today, Updated Yesterday, Updated This Week, Updated This Month) were not working properly.
+## Issues Identified
+
+### 1. Updated Leads Date Filters
+The "Updated Leads" date filters (Updated Today, Updated Yesterday, Updated This Week, Updated This Month) were not working properly in the Leads Management page.
+
+### 2. User Activity & Lead Updates Table
+The "User Activity & Lead Updates" table was showing incorrect counts - all date columns (Updated Today, This Week, This Month) displayed the same count as Total Leads for each user.
 
 ## Root Cause
 The `updated_at` column exists in the leads table, but there was **no database trigger** to automatically update this column when a lead record is modified. This meant:
 - The `updated_at` column remained at its initial value (same as `created_at`)
 - When users modified leads, the `updated_at` timestamp was not being updated
-- Date filters checking `updated_at` showed incorrect/no results
+- Date filters checking `updated_at` showed ALL leads created in that time period, not just updated ones
+- User Activity table counted ALL leads assigned to users instead of only those modified in the time period
 
 ## Solution Applied
 
@@ -33,17 +39,36 @@ This helps verify the filter is working correctly.
 ## How the Fix Works
 
 ### Before Fix:
+
+**Updated Leads Filters:**
 1. User clicks "Updated Today"
 2. Backend receives filter correctly
 3. Queries `updated_at` column
-4. ❌ Column never changes, so no results match
+4. ❌ Column never changes, so shows ALL leads created today
+
+**User Activity Table:**
+1. Calculates leads updated by each user
+2. Filters by `updated_at >= todayStart`
+3. ❌ Since `updated_at = created_at`, shows ALL leads assigned to user created today
+4. ❌ Result: All date columns show same count (total leads in that time period)
 
 ### After Fix:
+
+**Updated Leads Filters:**
 1. User clicks "Updated Today"
 2. Backend receives filter correctly
 3. Queries `updated_at` column
 4. ✅ Column automatically updates on every lead modification
-5. ✅ Correct leads are returned
+5. ✅ Correct leads are returned (only those modified today)
+
+**User Activity Table:**
+1. Calculates leads updated by each user
+2. Filters by `updated_at >= todayStart`
+3. ✅ `updated_at` reflects actual modification time
+4. ✅ Result: Accurate counts showing actual activity
+   - Updated Today: Leads modified today only
+   - This Week: Leads modified this week only  
+   - This Month: Leads modified this month only
 
 ## Implementation Steps
 
@@ -142,19 +167,34 @@ The backend correctly handles these filter values:
 - [ ] SQL migration executed successfully
 - [ ] Trigger exists in database (verified via query)
 - [ ] Modify a test lead and verify `updated_at` changes
-- [ ] "Updated Today" filter shows recently modified leads
-- [ ] "Updated Yesterday" filter works correctly
-- [ ] "Updated This Week" filter works correctly
-- [ ] "Updated This Month" filter works correctly
+- [ ] **Updated Leads Filters (Leads Management page):**
+  - [ ] "Updated Today" filter shows recently modified leads
+  - [ ] "Updated Yesterday" filter works correctly
+  - [ ] "Updated This Week" filter works correctly
+  - [ ] "Updated This Month" filter works correctly
+- [ ] **User Activity & Lead Updates Table:**
+  - [ ] "Updated Today" column shows different values per user
+  - [ ] "This Week" column shows accurate counts
+  - [ ] "This Month" column shows accurate counts
+  - [ ] Counts are different from "Total Leads" (unless all leads were actually updated)
 - [ ] Backend debug logs show correct date ranges
 
 ## Success Criteria
 
 ✅ When a lead is modified, `updated_at` automatically updates to current timestamp
+
+**Updated Leads Filters:**
 ✅ "Updated Today" shows all leads modified today
 ✅ "Updated Yesterday" shows all leads modified yesterday
 ✅ "Updated This Week" shows all leads modified this week
 ✅ "Updated This Month" shows all leads modified this month
+
+**User Activity & Lead Updates Table:**
+✅ "Updated Today" column shows accurate per-user activity
+✅ "This Week" column shows different counts than "Total Leads"
+✅ "This Month" column shows different counts than "Total Leads"  
+✅ Counts reflect actual lead modification activity, not creation dates
+
 ✅ Debug logs confirm filters are applying correct date ranges
 
 ## Next Steps
@@ -166,7 +206,12 @@ The backend correctly handles these filter values:
 
 ---
 
-**Issue:** Updated Leads date filters not working
+**Issues Fixed:**
+1. Updated Leads date filters showing incorrect results
+2. User Activity & Lead Updates table showing same counts for all date columns
+
 **Root Cause:** Missing database trigger for `updated_at` column
+
 **Solution:** Created trigger to auto-update `updated_at` on modifications
+
 **Status:** ✅ Fix ready to deploy (awaiting SQL migration execution)
