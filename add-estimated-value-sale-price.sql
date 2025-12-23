@@ -66,15 +66,6 @@ BEGIN
   END IF;
 END $$;
 
--- Set default estimated values for leads without one (based on company)
--- DMHCA default: ₹50,000, IBMP default: $2,000
-UPDATE leads 
-SET estimated_value = CASE 
-  WHEN company = 'IBMP' THEN 2000
-  ELSE 50000
-END
-WHERE estimated_value IS NULL;
-
 COMMENT ON TABLE leads IS 'CRM leads with estimated values and sale prices';
 
 -- Show summary of changes
