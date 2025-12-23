@@ -53,15 +53,18 @@ SET currency = CASE
 END
 WHERE currency IS NULL;
 
--- Migrate existing data: actualRevenue -> sale_price for enrolled leads
-UPDATE leads 
-SET sale_price = actual_revenue
-WHERE status = 'Enrolled' AND actual_revenue IS NOT NULL AND sale_price IS NULL;
-
--- Migrate existing data: fees -> sale_price for enrolled leads (if fees exists)
-UPDATE leads 
-SET sale_price = fees
-WHERE status = 'Enrolled' AND fees IS NOT NULL AND sale_price IS NULL;
+-- Migrate existing data: fees -> sale_price for enrolled leads (if fees column exists)
+DO $$ 
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'leads' AND column_name = 'fees'
+  ) THEN
+    UPDATE leads 
+    SET sale_price = fees
+    WHERE status = 'Enrolled' AND fees IS NOT NULL AND sale_price IS NULL;
+  END IF;
+END $$;
 
 -- Set default estimated values for leads without one (based on company)
 -- DMHCA default: ₹50,000, IBMP default: $2,000
