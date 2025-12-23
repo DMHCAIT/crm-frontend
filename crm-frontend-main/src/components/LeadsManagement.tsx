@@ -63,9 +63,13 @@ interface Lead {
   updatedAt: string;
   updated_by?: string; // Who last updated the lead (username)
   notes: Note[];
-  fees?: number; // Optional fees field for enrolled students
-  estimatedValue?: number; // Estimated value for warm/hot leads
-  actualRevenue?: number; // Actual revenue when enrolled
+  fees?: number; // Deprecated - use sale_price instead
+  estimatedValue?: number; // Estimated value for all leads
+  estimated_value?: number; // Database field name
+  actualRevenue?: number; // Deprecated - use sale_price instead
+  actual_revenue?: number; // Deprecated database field
+  salePrice?: number; // Actual sale price when enrolled
+  sale_price?: number; // Database field name
   currency?: 'USD' | 'INR'; // Currency based on company (IBMP = USD, DMHCA = INR)
 }
 
@@ -850,14 +854,14 @@ const LeadsManagement: React.FC = () => {
 
       // Calculate revenue (actual from enrolled + estimated from hot/warm)
       const actualRevenue = userLeads
-        .filter((lead: Lead) => lead.status === 'Enrolled' && lead.fees)
-        .reduce((sum: number, lead: Lead) => sum + (lead.fees || 0), 0);
+        .filter((lead: Lead) => lead.status === 'Enrolled')
+        .reduce((sum: number, lead: Lead) => sum + (lead.salePrice || lead.sale_price || lead.fees || 0), 0);
 
       const estimatedRevenue = userLeads
-        .filter((lead: Lead) => (lead.status === 'Hot' || lead.status === 'Warm') && lead.estimatedValue)
-        .reduce((sum: number, lead: Lead) => sum + (lead.estimatedValue || 0), 0);
+        .filter((lead: Lead) => lead.status !== 'Enrolled')
+        .reduce((sum: number, lead: Lead) => sum + (lead.estimatedValue || lead.estimated_value || 0), 0);
 
-      const totalRevenue = actualRevenue + (estimatedRevenue * 0.3); // 30% probability for warm/hot leads
+      const totalRevenue = actualRevenue + (estimatedRevenue * 0.3); // 30% probability for non-enrolled leads
 
       return {
         userId: user.id,
@@ -5364,36 +5368,63 @@ const LeadsManagement: React.FC = () => {
                           </div>
                         )}
 
-                        {/* Estimated Value Field - Show for Warm and Hot leads */}
-                        {((editedLead.status || selectedLead.status) === 'Hot' || (editedLead.status || selectedLead.status) === 'Warm') && (
+                        {/* Estimated Value Field - Show for ALL leads */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            📊 Estimated Value ({getCurrencyByCompany(editedLead.company || selectedLead.company) === 'USD' ? '$' : '₹'})
+                          </label>
+                          <input
+                            type="number"
+                            value={editedLead.estimatedValue || editedLead.estimated_value || selectedLead.estimatedValue || selectedLead.estimated_value || ''}
+                            onChange={(e) => {
+                              const estimatedValue = e.target.value ? parseFloat(e.target.value) : undefined;
+                              setEditedLead(prev => ({ ...prev, estimatedValue, estimated_value: estimatedValue }));
+                            }}
+                            placeholder={`Estimated potential value in ${getCurrencyByCompany(editedLead.company || selectedLead.company)}`}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            min="0"
+                            step={getCurrencyByCompany(editedLead.company || selectedLead.company) === 'USD' ? '1' : '100'}
+                          />
+                          <div className="mt-1 flex justify-between text-xs text-gray-500">
+                            <span>Potential revenue from this lead</span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const defaultValue = getDefaultCoursePrice(editedLead.company || selectedLead.company, editedLead.course || selectedLead.course);
+                                setEditedLead(prev => ({ ...prev, estimatedValue: defaultValue, estimated_value: defaultValue }));
+                              }}
+                              className="text-blue-600 hover:text-blue-800"
+                            >
+                              Use default for {editedLead.course || selectedLead.course}
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Sale Price Field - Show ONLY for Enrolled status */}
+                        {((editedLead.status || selectedLead.status) === 'Enrolled') && (
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              📈 Estimated Value ({getCurrencyByCompany(editedLead.company || selectedLead.company) === 'USD' ? '$' : '₹'})
+                              💰 Sale Price ({getCurrencyByCompany(editedLead.company || selectedLead.company) === 'USD' ? '$' : '₹'})
                             </label>
                             <input
                               type="number"
-                              value={editedLead.estimatedValue || selectedLead.estimatedValue || ''}
+                              value={editedLead.salePrice || editedLead.sale_price || selectedLead.salePrice || selectedLead.sale_price || ''}
                               onChange={(e) => {
-                                const estimatedValue = e.target.value ? parseFloat(e.target.value) : undefined;
-                                setEditedLead(prev => ({ ...prev, estimatedValue }));
+                                const salePrice = e.target.value ? parseFloat(e.target.value) : undefined;
+                                setEditedLead(prev => ({ ...prev, salePrice, sale_price: salePrice }));
                               }}
-                              placeholder={`Estimated course value in ${getCurrencyByCompany(editedLead.company || selectedLead.company)}`}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                              placeholder={`Actual sale price in ${getCurrencyByCompany(editedLead.company || selectedLead.company)}`}
+                              className="w-full px-3 py-2 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-green-50"
                               min="0"
                               step={getCurrencyByCompany(editedLead.company || selectedLead.company) === 'USD' ? '1' : '100'}
                             />
-                            <div className="mt-1 flex justify-between text-xs text-gray-500">
-                              <span>Potential revenue from this lead</span>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  const defaultValue = getDefaultCoursePrice(editedLead.company || selectedLead.company, editedLead.course || selectedLead.course);
-                                  setEditedLead(prev => ({ ...prev, estimatedValue: defaultValue }));
-                                }}
-                                className="text-blue-600 hover:text-blue-800"
-                              >
-                                Use default for {editedLead.course || selectedLead.course}
-                              </button>
+                            <div className="mt-1 flex justify-between text-xs">
+                              <span className="text-green-600 font-medium">Actual revenue from enrolled student</span>
+                              {(editedLead.salePrice || editedLead.sale_price || selectedLead.salePrice || selectedLead.sale_price) && (
+                                <span className="text-green-700 font-bold">
+                                  {formatCurrency(editedLead.salePrice || editedLead.sale_price || selectedLead.salePrice || selectedLead.sale_price || 0, getCurrencyByCompany(editedLead.company || selectedLead.company))}
+                                </span>
+                              )}
                             </div>
                           </div>
                         )}
@@ -6455,32 +6486,29 @@ const LeadsManagement: React.FC = () => {
                             </div>
                             
                             {/* Revenue Information */}
-                            <div className="mb-3">
-                              {lead.status === 'Enrolled' && lead.actualRevenue ? (
-                                <div className="flex items-center space-x-2">
-                                  <p className="text-xs text-green-600 font-medium">Revenue:</p>
+                            <div className="mb-3 space-y-2">
+                              {/* Show Sale Price for Enrolled leads */}
+                              {lead.status === 'Enrolled' && (lead.salePrice || lead.sale_price) && (
+                                <div className="flex items-center space-x-2 bg-green-50 px-3 py-2 rounded-lg">
+                                  <p className="text-xs text-green-600 font-medium">💰 Sale Price:</p>
                                   <p className="text-sm text-green-800 font-bold">
-                                    {formatCurrency(lead.actualRevenue, getCurrencyByCompany(lead.company))}
-                                  </p>
-                                  <span className="text-xs text-gray-500">({lead.company})</span>
-                                </div>
-                              ) : (lead.status === 'Hot' || lead.status === 'Warm') && lead.estimatedValue ? (
-                                <div className="flex items-center space-x-2">
-                                  <p className="text-xs text-orange-600 font-medium">Estimated Value:</p>
-                                  <p className="text-sm text-orange-800 font-bold">
-                                    {formatCurrency(lead.estimatedValue, getCurrencyByCompany(lead.company))}
-                                  </p>
-                                  <span className="text-xs text-gray-500">({lead.company})</span>
-                                </div>
-                              ) : (
-                                <div className="flex items-center space-x-2">
-                                  <p className="text-xs text-gray-500">Potential Value:</p>
-                                  <p className="text-sm text-gray-700">
-                                    {formatCurrency(getDefaultCoursePrice(lead.company, lead.course), getCurrencyByCompany(lead.company))}
+                                    {formatCurrency(lead.salePrice || lead.sale_price || 0, getCurrencyByCompany(lead.company))}
                                   </p>
                                   <span className="text-xs text-gray-500">({lead.company})</span>
                                 </div>
                               )}
+                              
+                              {/* Show Estimated Value for all leads */}
+                              <div className="flex items-center space-x-2 bg-blue-50 px-3 py-2 rounded-lg">
+                                <p className="text-xs text-blue-600 font-medium">📊 Est. Value:</p>
+                                <p className="text-sm text-blue-800 font-semibold">
+                                  {formatCurrency(
+                                    lead.estimatedValue || lead.estimated_value || getDefaultCoursePrice(lead.company, lead.course), 
+                                    getCurrencyByCompany(lead.company)
+                                  )}
+                                </p>
+                                <span className="text-xs text-gray-500">({lead.company})</span>
+                              </div>
                             </div>
                             
                             {lead.followUp && (
