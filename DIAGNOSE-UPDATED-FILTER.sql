@@ -15,7 +15,7 @@ WHERE
 -- Step 2: Check sample data comparing created_at vs updated_at
 SELECT 
     id,
-    fullName,
+    "fullName",
     status,
     TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI:SS') as created_date,
     TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI:SS') as updated_date,
@@ -82,7 +82,7 @@ WHERE
 -- Step 6: Show actual leads in your date range with details
 SELECT 
     id,
-    fullName,
+    "fullName",
     email,
     status,
     TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI') as created,

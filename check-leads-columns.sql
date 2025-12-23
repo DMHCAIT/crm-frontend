@@ -29,7 +29,7 @@ ORDER BY
 -- Sample data to see actual column values
 SELECT 
     id,
-    fullName,
+    "fullName",
     created_at,
     updated_at,
     status
