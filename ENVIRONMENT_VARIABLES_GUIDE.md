@@ -77,9 +77,16 @@ SUPABASE_SERVICE_KEY=your-service-role-key-here
 # Cunnekt WhatsApp API - REQUIRED for WhatsApp Features
 CUNNEKT_API_KEY=4d776c1d10d186e225f1985095d201eb9cc41ad4
 
-# Optional: Default Admin Credentials
-DEFAULT_ADMIN_USERNAME=admin
-DEFAULT_ADMIN_PASSWORD=admin123
+# Email Configuration - REQUIRED for Email Features
+EMAIL_PROVIDER=sendgrid
+SENDGRID_API_KEY=your-sendgrid-api-key-here
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-email@domain.com
+SMTP_PASSWORD=your-email-password
+EMAIL_FROM_NAME=CRM System
+EMAIL_FROM_ADDRESS=noreply@yourdomain.com
 ```
 
 ### **Variable Descriptions:**
@@ -93,8 +100,15 @@ DEFAULT_ADMIN_PASSWORD=admin123
 | `SUPABASE_URL` | ✅ Yes | Supabase project URL | `https://abc123.supabase.co` |
 | `SUPABASE_SERVICE_KEY` | ✅ Yes | Supabase service role key | `eyJhbGciOiJIUzI1NiIsInR5cCI6...` |
 | `CUNNEKT_API_KEY` | ✅ Yes | Cunnekt WhatsApp API key | `4d776c1d10d186e225f1985095d201eb9cc41ad4` |
-| `DEFAULT_ADMIN_USERNAME` | ❌ No | Default admin username | `admin` |
-| `DEFAULT_ADMIN_PASSWORD` | ❌ No | Default admin password | `admin123` |
+| `EMAIL_PROVIDER` | ❌ No | Email service provider (sendgrid or smtp) | `sendgrid` |
+| `SENDGRID_API_KEY` | ✅ Yes (if using SendGrid) | SendGrid API key | `SG.abc123...` |
+| `SMTP_HOST` | ✅ Yes (if using SMTP) | SMTP server hostname | `smtp.gmail.com` |
+| `SMTP_PORT` | ✅ Yes (if using SMTP) | SMTP server port | `587` |
+| `SMTP_SECURE` | ❌ No | Use TLS for SMTP | `false` |
+| `SMTP_USER` | ✅ Yes (if using SMTP) | SMTP username | `your-email@domain.com` |
+| `SMTP_PASSWORD` | ✅ Yes (if using SMTP) | SMTP password | `your-password` |
+| `EMAIL_FROM_NAME` | ❌ No | Sender name for emails | `CRM System` |
+| `EMAIL_FROM_ADDRESS` | ❌ No | Sender email address | `noreply@yourdomain.com` |
 
 ### **Where to Use:**
 ```javascript
