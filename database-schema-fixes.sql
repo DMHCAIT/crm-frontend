@@ -149,6 +149,30 @@ BEGIN
 END $$;
 
 -- 6. ADD: Check constraints
+-- First, clean up any invalid event types
+DO $$
+DECLARE
+    v_invalid_count INTEGER;
+BEGIN
+    -- Check for invalid event types
+    SELECT COUNT(*) INTO v_invalid_count
+    FROM analytics_events
+    WHERE event_type NOT IN ('page_view', 'lead_created', 'lead_updated', 'lead_converted', 'user_login', 'export', 'search', 'filter');
+    
+    IF v_invalid_count > 0 THEN
+        RAISE NOTICE 'Found % rows with invalid event_type values', v_invalid_count;
+        
+        -- Update invalid event types to 'page_view' or delete them
+        -- Option 1: Update to a valid default
+        UPDATE analytics_events 
+        SET event_type = 'page_view' 
+        WHERE event_type NOT IN ('page_view', 'lead_created', 'lead_updated', 'lead_converted', 'user_login', 'export', 'search', 'filter');
+        
+        RAISE NOTICE 'Updated % invalid event_type values to page_view', v_invalid_count;
+    END IF;
+END $$;
+
+-- Now add the constraint
 ALTER TABLE analytics_events 
 DROP CONSTRAINT IF EXISTS check_event_type,
 ADD CONSTRAINT check_event_type 
@@ -229,6 +253,17 @@ END $$;
 
 -- 10. CLEANUP: Remove old test/debug data
 DELETE FROM analytics_events WHERE event_type = 'test' OR event_type = 'debug';
+
+-- Additional cleanup: Show what event types exist
+DO $$
+DECLARE
+    event_types_summary TEXT;
+BEGIN
+    SELECT string_agg(DISTINCT event_type, ', ') INTO event_types_summary
+    FROM analytics_events;
+    
+    RAISE NOTICE 'Current event types in analytics_events: %', COALESCE(event_types_summary, 'none');
+END $$;
 
 -- Success message
 DO $$
