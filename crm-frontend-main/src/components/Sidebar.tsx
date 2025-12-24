@@ -14,7 +14,9 @@ import {
   Download,
   Facebook,
   Shield,
-  Filter
+  Filter,
+  TrendingUp,
+  Calendar
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -44,6 +46,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
     { id: 'facebook-leads', label: 'Facebook Integration', icon: Facebook, minLevel: 3 },
     { id: 'students', label: 'Course Enrollments', icon: GraduationCap, minLevel: 1 },
     { id: 'analytics', label: 'CRM Analytics', icon: BarChart3, minLevel: 2 },
+    { id: 'advanced-analytics-new', label: '🚀 Advanced Analytics', icon: TrendingUp, minLevel: 2 },
+    { id: 'cohort-analysis', label: '📊 Cohort Analysis', icon: Calendar, minLevel: 2 },
     { id: 'integrations', label: 'Integrations', icon: Link, minLevel: 3 },
     { id: 'data-export', label: 'Data Export', icon: Download, minLevel: 2 },
     { id: 'profile', label: 'Profile', icon: User, minLevel: 1 },

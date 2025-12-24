@@ -14,6 +14,12 @@ export const queryKeys = {
   assignableUsers: ['assignableUsers'] as const,
   communications: ['communications'] as const,
   notifications: ['notifications'] as const,
+  leadScores: ['leadScores'] as const,
+  leadScore: (id: string) => ['leadScores', id] as const,
+  revenueForecast: ['revenueForecast'] as const,
+  pipelineVelocity: ['pipelineVelocity'] as const,
+  cohortAnalysis: ['cohortAnalysis'] as const,
+  analyticsEvents: ['analyticsEvents'] as const,
 };
 
 // Leads Hooks - Optimized for performance with pagination support
@@ -461,5 +467,162 @@ export const useNotifications = () => {
     },
     staleTime: 1000 * 60 * 1, // 1 minute
     refetchInterval: 1000 * 60 * 1, // Auto-refetch every 1 minute
+  });
+};
+
+// =====================================================
+// ADVANCED ANALYTICS HOOKS
+// =====================================================
+
+// Lead Scoring Hook - Get scores for all leads or single lead
+export const useLeadScores = (leadId?: string) => {
+  return useQuery({
+    queryKey: leadId ? queryKeys.leadScore(leadId) : queryKeys.leadScores,
+    queryFn: async () => {
+      const apiClient = getApiClient();
+      const endpoint = leadId 
+        ? `/api/lead-scoring?lead_id=${leadId}`
+        : `/api/lead-scoring`;
+      
+      const response = await fetch(endpoint, {
+        headers: {
+          'Authorization': `Bearer ${apiClient.getToken()}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) throw new Error('Failed to fetch lead scores');
+      return response.json();
+    },
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: true,
+  });
+};
+
+// Track Analytics Event
+export const useTrackEvent = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (eventData: {
+      event_type: string;
+      lead_id?: string;
+      student_id?: string;
+      duration_seconds?: number;
+      metadata?: any;
+    }) => {
+      const apiClient = getApiClient();
+      const response = await fetch('/api/analytics-tracking', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiClient.getToken()}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData)
+      });
+      
+      if (!response.ok) throw new Error('Failed to track event');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.analyticsEvents });
+      queryClient.invalidateQueries({ queryKey: queryKeys.leadScores });
+    },
+  });
+};
+
+// Revenue Forecast Hook
+export const useRevenueForecast = () => {
+  return useQuery({
+    queryKey: queryKeys.revenueForecast,
+    queryFn: async () => {
+      const apiClient = getApiClient();
+      const response = await fetch('/api/revenue-forecast?endpoint=forecast', {
+        headers: {
+          'Authorization': `Bearer ${apiClient.getToken()}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) throw new Error('Failed to fetch revenue forecast');
+      return response.json();
+    },
+    staleTime: 1000 * 60 * 10, // Cache for 10 minutes
+  });
+};
+
+// Pipeline Velocity Hook
+export const usePipelineVelocity = () => {
+  return useQuery({
+    queryKey: queryKeys.pipelineVelocity,
+    queryFn: async () => {
+      const apiClient = getApiClient();
+      const response = await fetch('/api/revenue-forecast?endpoint=velocity', {
+        headers: {
+          'Authorization': `Bearer ${apiClient.getToken()}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) throw new Error('Failed to fetch pipeline velocity');
+      return response.json();
+    },
+    staleTime: 1000 * 60 * 10, // Cache for 10 minutes
+  });
+};
+
+// Cohort Analysis Hook
+export const useCohortAnalysis = () => {
+  return useQuery({
+    queryKey: queryKeys.cohortAnalysis,
+    queryFn: async () => {
+      const apiClient = getApiClient();
+      const response = await fetch('/api/revenue-forecast?endpoint=cohort', {
+        headers: {
+          'Authorization': `Bearer ${apiClient.getToken()}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) throw new Error('Failed to fetch cohort analysis');
+      return response.json();
+    },
+    staleTime: 1000 * 60 * 15, // Cache for 15 minutes
+  });
+};
+
+// Get Analytics Events
+export const useAnalyticsEvents = (filters?: {
+  event_type?: string;
+  lead_id?: string;
+  user_id?: string;
+  start_date?: string;
+  end_date?: string;
+  limit?: number;
+}) => {
+  return useQuery({
+    queryKey: [...queryKeys.analyticsEvents, filters],
+    queryFn: async () => {
+      const apiClient = getApiClient();
+      const params = new URLSearchParams();
+      
+      if (filters) {
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value) params.append(key, value.toString());
+        });
+      }
+      
+      const response = await fetch(`/api/analytics-tracking?${params.toString()}`, {
+        headers: {
+          'Authorization': `Bearer ${apiClient.getToken()}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) throw new Error('Failed to fetch analytics events');
+      return response.json();
+    },
+    staleTime: 1000 * 60 * 2, // Cache for 2 minutes
+    enabled: !!filters, // Only fetch if filters provided
   });
 };

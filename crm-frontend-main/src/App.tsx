@@ -23,6 +23,8 @@ const DataExport = lazy(() => import('./components/DataExport'));
 const ScheduledExports = lazy(() => import('./components/ScheduledExports'));
 const AdvancedAnalyticsCharts = lazy(() => import('./components/AdvancedAnalyticsCharts'));
 const LeadSegmentation = lazy(() => import('./components/LeadSegmentation'));
+const AdvancedAnalytics = lazy(() => import('./components/AdvancedAnalytics'));
+const CohortAnalysis = lazy(() => import('./components/CohortAnalysis'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -90,7 +92,9 @@ const App: React.FC = () => {
     'settings': 3,
     'data-export': 2,
     'scheduled-exports': 2,
-    'advanced-analytics': 2
+    'advanced-analytics': 2,
+    'advanced-analytics-new': 2, // New advanced analytics dashboard
+    'cohort-analysis': 2 // Cohort analysis page
   };
 
   const renderActiveSection = () => {
@@ -140,6 +144,10 @@ const App: React.FC = () => {
           return <Suspense fallback={<PageLoader />}><ScheduledExports /></Suspense>;
         case 'advanced-analytics':
           return <Suspense fallback={<PageLoader />}><AdvancedAnalyticsCharts /></Suspense>;
+        case 'advanced-analytics-new':
+          return <Suspense fallback={<PageLoader />}><AdvancedAnalytics /></Suspense>;
+        case 'cohort-analysis':
+          return <Suspense fallback={<PageLoader />}><CohortAnalysis /></Suspense>;
         default:
           return <Suspense fallback={<PageLoader />}><Dashboard onNavigate={setActiveSection} /></Suspense>;
       }

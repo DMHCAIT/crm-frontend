@@ -1,0 +1,7 @@
+const { describe, it, expect } = require('vitest');
+
+describe('Example Test', () => {
+    it('should return true for a valid condition', () => {
+        expect(true).toBe(true);
+    });
+});

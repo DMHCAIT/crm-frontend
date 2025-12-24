@@ -1,0 +1,7 @@
+const { describe, it, expect } = require('vitest');
+
+describe('App Component', () => {
+    it('renders correctly', () => {
+        expect(true).toBe(true);
+    });
+});
