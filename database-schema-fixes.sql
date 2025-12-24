@@ -103,8 +103,11 @@ BEGIN
         RAISE NOTICE 'Added foreign key: analytics_events.lead_id → leads.id';
     END IF;
 
-    -- lead_scoring.lead_id → leads.id
-    IF NOT EXISTS (
+    -- lead_scoring.lead_id → leads.id (only if table exists)
+    IF EXISTS (
+        SELECT 1 FROM information_schema.tables 
+        WHERE table_name = 'lead_scoring'
+    ) AND NOT EXISTS (
         SELECT 1 FROM information_schema.table_constraints 
         WHERE constraint_name = 'fk_lead_scoring_lead'
     ) THEN
@@ -114,8 +117,11 @@ BEGIN
         RAISE NOTICE 'Added foreign key: lead_scoring.lead_id → leads.id';
     END IF;
 
-    -- lead_scoring.updated_by → users.id
-    IF NOT EXISTS (
+    -- lead_scoring.updated_by → users.id (only if table exists)
+    IF EXISTS (
+        SELECT 1 FROM information_schema.tables 
+        WHERE table_name = 'lead_scoring'
+    ) AND NOT EXISTS (
         SELECT 1 FROM information_schema.table_constraints 
         WHERE constraint_name = 'fk_lead_scoring_user'
     ) THEN
@@ -131,8 +137,16 @@ CREATE INDEX IF NOT EXISTS idx_analytics_events_user_id ON analytics_events(user
 CREATE INDEX IF NOT EXISTS idx_analytics_events_lead_id ON analytics_events(lead_id);
 CREATE INDEX IF NOT EXISTS idx_analytics_events_event_type ON analytics_events(event_type);
 CREATE INDEX IF NOT EXISTS idx_analytics_events_timestamp ON analytics_events(event_timestamp);
-CREATE INDEX IF NOT EXISTS idx_lead_scoring_lead_id ON lead_scoring(lead_id);
-CREATE INDEX IF NOT EXISTS idx_lead_scoring_score ON lead_scoring(score);
+
+-- Only create lead_scoring indexes if table exists
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'lead_scoring') THEN
+        CREATE INDEX IF NOT EXISTS idx_lead_scoring_lead_id ON lead_scoring(lead_id);
+        CREATE INDEX IF NOT EXISTS idx_lead_scoring_score ON lead_scoring(score);
+        RAISE NOTICE 'Created lead_scoring indexes';
+    END IF;
+END $$;
 
 -- 6. ADD: Check constraints
 ALTER TABLE analytics_events 
@@ -140,10 +154,17 @@ DROP CONSTRAINT IF EXISTS check_event_type,
 ADD CONSTRAINT check_event_type 
 CHECK (event_type IN ('page_view', 'lead_created', 'lead_updated', 'lead_converted', 'user_login', 'export', 'search', 'filter'));
 
-ALTER TABLE lead_scoring 
-DROP CONSTRAINT IF EXISTS check_score_range,
-ADD CONSTRAINT check_score_range 
-CHECK (score >= 0 AND score <= 100);
+-- Only add lead_scoring constraints if table exists
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'lead_scoring') THEN
+        ALTER TABLE lead_scoring 
+        DROP CONSTRAINT IF EXISTS check_score_range,
+        ADD CONSTRAINT check_score_range 
+        CHECK (score >= 0 AND score <= 100);
+        RAISE NOTICE 'Added lead_scoring constraints';
+    END IF;
+END $$;
 
 -- 7. FIX: Ensure student_id consistency
 DO $$
