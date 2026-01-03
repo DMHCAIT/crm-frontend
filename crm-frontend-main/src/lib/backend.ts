@@ -100,6 +100,7 @@ export interface DatabaseUser {
   created_at: string;
   updated_at: string;
   name: string;
+  fullName?: string; // Added for backend compatibility
   username: string;
   email: string;
   phone?: string;

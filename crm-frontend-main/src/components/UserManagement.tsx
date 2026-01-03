@@ -84,6 +84,12 @@ const UserManagement: React.FC = () => {
         processedUsers = userData.users || userData.result || [];
       }
       
+      // Fix name field mapping - use fullName if name is empty/null
+      processedUsers = processedUsers.map((user: any) => ({
+        ...user,
+        name: user.name || user.fullName || user.username || 'Unknown'
+      }));
+      
       // Users loaded successfully
       
       setUsers(processedUsers);
