@@ -25,6 +25,7 @@ const AdvancedAnalyticsCharts = lazy(() => import('./components/AdvancedAnalytic
 const LeadSegmentation = lazy(() => import('./components/LeadSegmentation'));
 const AdvancedAnalytics = lazy(() => import('./components/AdvancedAnalytics'));
 const CohortAnalysis = lazy(() => import('./components/CohortAnalysis'));
+const AdminUserRestrictions = lazy(() => import('./components/AdminUserRestrictions'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -68,6 +69,7 @@ const App: React.FC = () => {
 
   // Role hierarchy for access control
   const roleHierarchy = {
+    'admin': { level: 6 },                // NEW: Highest level admin
     'super_admin': { level: 5 },
     'senior_manager': { level: 4 },
     'manager': { level: 3 },
@@ -94,7 +96,8 @@ const App: React.FC = () => {
     'scheduled-exports': 2,
     'advanced-analytics': 2,
     'advanced-analytics-new': 2, // New advanced analytics dashboard
-    'cohort-analysis': 2 // Cohort analysis page
+    'cohort-analysis': 2, // Cohort analysis page
+    'admin-user-restrictions': 6 // Admin only - User restriction management
   };
 
   const renderActiveSection = () => {
@@ -148,6 +151,8 @@ const App: React.FC = () => {
           return <Suspense fallback={<PageLoader />}><AdvancedAnalytics /></Suspense>;
         case 'cohort-analysis':
           return <Suspense fallback={<PageLoader />}><CohortAnalysis /></Suspense>;
+        case 'admin-user-restrictions':
+          return <Suspense fallback={<PageLoader />}><AdminUserRestrictions /></Suspense>;
         default:
           return <Suspense fallback={<PageLoader />}><Dashboard onNavigate={setActiveSection} /></Suspense>;
       }

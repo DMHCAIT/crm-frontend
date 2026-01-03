@@ -3,12 +3,40 @@ import React, { useState, useEffect } from 'react';
 import { getApiClient } from '../lib/backend';
 import { useAuth } from '../hooks/useAuth';
 
-const AdminUserRestrictions = () => {
+// Type definitions
+interface UserRestriction {
+  id: string;
+  restriction_type: string;
+  notes?: string;
+  created_at: string;
+  users?: {
+    fullName: string;
+    username: string;
+    role: string;
+    department: string;
+  };
+}
+
+interface SuperAdmin {
+  id: string;
+  fullName: string;
+  username: string;
+  department: string;
+  role: string;
+}
+
+interface RestrictionData {
+  restricted_user_id: string;
+  restriction_type: string;
+  notes: string;
+}
+
+const AdminUserRestrictions: React.FC = () => {
   const { user } = useAuth();
-  const [restrictions, setRestrictions] = useState([]);
-  const [superAdmins, setSuperAdmins] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [restrictions, setRestrictions] = useState<UserRestriction[]>([]);
+  const [superAdmins, setSuperAdmins] = useState<SuperAdmin[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [showAddModal, setShowAddModal] = useState<boolean>(false);
   
   // Only show this component to admins
   if (user?.role !== 'admin') {
@@ -22,16 +50,35 @@ const AdminUserRestrictions = () => {
   const loadData = async () => {
     try {
       setLoading(true);
-      const apiClient = getApiClient();
       
-      // Load current restrictions
-      const restrictionsData = await apiClient.getUserRestrictions();
-      setRestrictions(restrictionsData.data || []);
+      // Load current restrictions using fetch directly
+      const token = localStorage.getItem('authToken');
+      
+      const restrictionsResponse = await fetch('/api/user-restrictions', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (restrictionsResponse.ok) {
+        const restrictionsData = await restrictionsResponse.json();
+        setRestrictions(restrictionsData.restrictions || []);
+      }
       
       // Load super admin users
-      const usersData = await apiClient.getUsers();
-      const superAdminUsers = usersData.data?.filter(u => u.role === 'super_admin') || [];
-      setSuperAdmins(superAdminUsers);
+      const usersResponse = await fetch('/api/users-supabase', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (usersResponse.ok) {
+        const usersData = await usersResponse.json();
+        const superAdminUsers = usersData.users?.filter(u => u.role === 'super_admin') || [];
+        setSuperAdmins(superAdminUsers);
+      }
       
     } catch (error) {
       console.error('Error loading data:', error);
@@ -40,23 +87,48 @@ const AdminUserRestrictions = () => {
     }
   };
 
-  const createRestriction = async (restrictionData) => {
+  const createRestriction = async (restrictionData: RestrictionData) => {
     try {
-      const apiClient = getApiClient();
-      await apiClient.createUserRestriction(restrictionData);
-      loadData(); // Reload data
-      setShowAddModal(false);
+      const token = localStorage.getItem('authToken');
+      
+      const response = await fetch('/api/user-restrictions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(restrictionData)
+      });
+      
+      if (response.ok) {
+        loadData(); // Reload data
+        setShowAddModal(false);
+      } else {
+        throw new Error('Failed to create restriction');
+      }
     } catch (error) {
       console.error('Error creating restriction:', error);
       alert('Failed to create restriction');
     }
   };
 
-  const removeRestriction = async (restrictionId) => {
+  const removeRestriction = async (restrictionId: string) => {
     try {
-      const apiClient = getApiClient();
-      await apiClient.deleteUserRestriction(restrictionId);
-      loadData(); // Reload data
+      const token = localStorage.getItem('authToken');
+      
+      const response = await fetch(`/api/user-restrictions?id=${restrictionId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        loadData(); // Reload data
+      } else {
+        throw new Error('Failed to remove restriction');
+      }
     } catch (error) {
       console.error('Error removing restriction:', error);
       alert('Failed to remove restriction');
@@ -123,13 +195,14 @@ const AdminUserRestrictions = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-96">
             <h3 className="text-lg font-semibold mb-4">Add User Restriction</h3>
-            <form onSubmit={(e) => {
+            <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
-              const formData = new FormData(e.target);
+              const form = e.target as HTMLFormElement;
+              const formData = new FormData(form);
               createRestriction({
-                restricted_user_id: formData.get('user_id'),
-                restriction_type: formData.get('restriction_type'),
-                notes: formData.get('notes')
+                restricted_user_id: formData.get('user_id') as string,
+                restriction_type: formData.get('restriction_type') as string,
+                notes: formData.get('notes') as string
               });
             }}>
               <div className="space-y-4">

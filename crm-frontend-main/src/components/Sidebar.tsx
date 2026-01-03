@@ -29,6 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
   
   // Role hierarchy for access control
   const roleHierarchy = {
+    'admin': { level: 6, label: 'Administrator' },           // NEW: Highest level admin
     'super_admin': { level: 5, label: 'Super Admin' },
     'senior_manager': { level: 4, label: 'Senior Manager' },
     'manager': { level: 3, label: 'Manager' },
@@ -48,6 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
     { id: 'analytics', label: 'CRM Analytics', icon: BarChart3, minLevel: 2 },
     { id: 'advanced-analytics-new', label: '🚀 Advanced Analytics', icon: TrendingUp, minLevel: 2 },
     { id: 'cohort-analysis', label: '📊 Cohort Analysis', icon: Calendar, minLevel: 2 },
+    { id: 'admin-user-restrictions', label: '⚡ Admin Controls', icon: Shield, minLevel: 6 }, // Admin only
     { id: 'integrations', label: 'Integrations', icon: Link, minLevel: 3 },
     { id: 'data-export', label: 'Data Export', icon: Download, minLevel: 2 },
     { id: 'profile', label: 'Profile', icon: User, minLevel: 1 },
