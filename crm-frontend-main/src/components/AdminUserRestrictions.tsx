@@ -27,6 +27,7 @@ const AdminUserRestrictions: React.FC = () => {
 
   // Load data on component mount
   useEffect(() => {
+    console.log('🔧 AdminUserRestrictions: Component mounted, starting data load');
     loadData();
   }, []);
 
@@ -35,21 +36,31 @@ const AdminUserRestrictions: React.FC = () => {
       setLoading(true);
       setError('');
       
+      console.log('🔧 AdminUserRestrictions: Starting to load data...');
+      
       const apiClient = getApiClient();
+      console.log('🔧 AdminUserRestrictions: Got API client:', !!apiClient);
       
       // Fetch restrictions and super admins in parallel
+      console.log('🔧 AdminUserRestrictions: Fetching restrictions and users...');
       const [restrictionsData, usersData] = await Promise.all([
         apiClient.getUserRestrictions(),
         apiClient.getUsers()
       ]);
 
+      console.log('🔧 AdminUserRestrictions: Received restrictions data:', restrictionsData);
+      console.log('🔧 AdminUserRestrictions: Received users data:', usersData);
+
       setRestrictions((restrictionsData as Restriction[]) || []);
       
       // Filter for super admins only
       const superAdminUsers = (usersData as User[]).filter((user: User) => user.role === 'super_admin');
+      console.log('🔧 AdminUserRestrictions: Filtered super admins:', superAdminUsers);
       setSuperAdmins(superAdminUsers || []);
+      
+      console.log('🔧 AdminUserRestrictions: Data loaded successfully');
     } catch (err) {
-      console.error('Error loading data:', err);
+      console.error('🚨 AdminUserRestrictions: Error loading data:', err);
       setError(err instanceof Error ? err.message : 'Failed to load data');
     } finally {
       setLoading(false);
