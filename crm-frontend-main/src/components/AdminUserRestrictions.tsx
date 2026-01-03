@@ -45,6 +45,17 @@ const AdminUserRestrictions: React.FC = () => {
       console.log('🔧 AdminUserRestrictions: Filtered super admins:', superAdminUsers);
       setSuperAdmins(superAdminUsers || []);
       
+      // Fetch existing restrictions
+      console.log('🔧 AdminUserRestrictions: Fetching restrictions...');
+      try {
+        const restrictionsData = await apiClient.getUserRestrictions();
+        console.log('🔧 AdminUserRestrictions: Received restrictions data:', restrictionsData);
+        setRestrictions(Array.isArray(restrictionsData) ? restrictionsData : []);
+      } catch (err) {
+        console.log('🔧 AdminUserRestrictions: No restrictions found or error fetching:', err);
+        setRestrictions([]);
+      }
+      
       console.log('🔧 AdminUserRestrictions: Data loaded successfully');
     } catch (err) {
       console.error('🚨 AdminUserRestrictions: Error loading data:', err);
@@ -56,13 +67,15 @@ const AdminUserRestrictions: React.FC = () => {
 
   const createRestriction = async (restrictionData: any) => {
     try {
+      console.log('🔧 AdminUserRestrictions: Creating restriction:', restrictionData);
       const apiClient = getApiClient();
-      await apiClient.createUserRestriction(restrictionData);
+      const response = await apiClient.createUserRestriction(restrictionData);
+      console.log('🔧 AdminUserRestrictions: Restriction created successfully:', response);
       await loadData(); // Reload data
       setShowAddModal(false);
     } catch (error) {
-      console.error('Error creating restriction:', error);
-      setError('Failed to create restriction');
+      console.error('🚨 AdminUserRestrictions: Error creating restriction:', error);
+      setError(error instanceof Error ? error.message : 'Failed to create restriction');
     }
   };
 
@@ -223,6 +236,51 @@ const AdminUserRestrictions: React.FC = () => {
         )}
       </div>
 
+      {/* Current Restrictions */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-3">🔒 Active Restrictions</h3>
+        {restrictions.length === 0 ? (
+          <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+            <p className="text-gray-600">No restrictions currently applied. All super administrators have full access.</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {restrictions.map((restriction: any) => (
+              <div key={restriction.id} className="border border-red-200 p-4 rounded-lg bg-red-50">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <span className="text-red-600">🔒</span>
+                      <h4 className="font-semibold text-red-900">
+                        {restriction.users?.fullName || restriction.users?.username || 'Unknown User'}
+                      </h4>
+                      <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
+                        {restriction.restriction_type.replace('_', ' ').toUpperCase()}
+                      </span>
+                    </div>
+                    <p className="text-sm text-red-700 mb-2">
+                      @{restriction.users?.username} - {restriction.users?.department || 'No Department'}
+                    </p>
+                    {restriction.notes && (
+                      <p className="text-sm text-gray-600 italic">"{restriction.notes}"</p>
+                    )}
+                    <p className="text-xs text-gray-500 mt-2">
+                      Applied on: {new Date(restriction.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => removeRestriction(restriction.id)}
+                    className="text-red-600 hover:text-red-800 text-sm font-medium"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Information Box */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <div className="flex items-start space-x-3">
@@ -252,11 +310,20 @@ const AdminUserRestrictions: React.FC = () => {
               e.preventDefault();
               const form = e.target as HTMLFormElement;
               const formData = new FormData(form);
-              createRestriction({
+              
+              const restrictionType = formData.get('restriction_type') as string;
+              const restrictionData = {
                 restricted_user_id: formData.get('user_id') as string,
-                restriction_type: formData.get('restriction_type') as string,
+                restriction_type: restrictionType,
+                restriction_scope: {
+                  type: restrictionType,
+                  description: `Admin restriction applied to super admin user`
+                },
                 notes: formData.get('notes') as string
-              });
+              };
+              
+              console.log('🔧 AdminUserRestrictions: Form submitted with data:', restrictionData);
+              createRestriction(restrictionData);
             }}>
               <div className="space-y-4">
                 <div>
@@ -285,9 +352,9 @@ const AdminUserRestrictions: React.FC = () => {
                     name="restriction_type"
                     className="w-full p-2 border border-gray-300 rounded-md"
                   >
-                    <option value="user_visibility">User Visibility (Hide specific users)</option>
-                    <option value="limited_access">Limited Access (Specific sections)</option>
-                    <option value="view_only">View Only (No Edit/Delete)</option>
+                    <option value="user_access">User Access (Hide specific users)</option>
+                    <option value="branch_access">Branch Access (Restrict branch visibility)</option>
+                    <option value="lead_access">Lead Access (Restrict lead visibility)</option>
                   </select>
                 </div>
 
