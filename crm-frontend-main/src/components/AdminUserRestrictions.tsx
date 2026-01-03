@@ -14,6 +14,8 @@ const AdminUserRestrictions: React.FC = () => {
   const [superAdmins, setSuperAdmins] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [restrictions, setRestrictions] = useState<any[]>([]);
 
   // Load data on component mount
   useEffect(() => {
@@ -37,8 +39,9 @@ const AdminUserRestrictions: React.FC = () => {
 
       console.log('🔧 AdminUserRestrictions: Received users data:', usersData);
 
-      // Filter for super admins only
-      const superAdminUsers = (usersData as User[]).filter((user: User) => user.role === 'super_admin');
+      // Filter for super admins only - handle null/undefined data
+      const usersArray = Array.isArray(usersData) ? usersData : [];
+      const superAdminUsers = usersArray.filter((user: User) => user.role === 'super_admin');
       console.log('🔧 AdminUserRestrictions: Filtered super admins:', superAdminUsers);
       setSuperAdmins(superAdminUsers || []);
       
@@ -48,6 +51,29 @@ const AdminUserRestrictions: React.FC = () => {
       setError(err instanceof Error ? err.message : 'Failed to load data');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const createRestriction = async (restrictionData: any) => {
+    try {
+      const apiClient = getApiClient();
+      await apiClient.createUserRestriction(restrictionData);
+      await loadData(); // Reload data
+      setShowAddModal(false);
+    } catch (error) {
+      console.error('Error creating restriction:', error);
+      setError('Failed to create restriction');
+    }
+  };
+
+  const removeRestriction = async (restrictionId: string) => {
+    try {
+      const apiClient = getApiClient();
+      await apiClient.deleteUserRestriction(restrictionId);
+      await loadData(); // Reload data
+    } catch (error) {
+      console.error('Error removing restriction:', error);
+      setError('Failed to remove restriction');
     }
   };
 
@@ -68,9 +94,17 @@ const AdminUserRestrictions: React.FC = () => {
     <div className="p-6 bg-white rounded-lg shadow">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">🏢 Branch Access Control</h2>
-          <p className="text-gray-600 mt-1">Control which branches super administrators can access</p>
+          <h2 className="text-2xl font-bold text-gray-900">👥 User Visibility Control</h2>
+          <p className="text-gray-600 mt-1">Control which users super administrators can see and access</p>
         </div>
+        <button
+          onClick={() => setShowAddModal(true)}
+          disabled={superAdmins.length === 0}
+          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center space-x-2"
+        >
+          <span>🔒</span>
+          <span>Add Restriction</span>
+        </button>
       </div>
 
       {/* Error display */}
@@ -89,9 +123,9 @@ const AdminUserRestrictions: React.FC = () => {
         </div>
       )}
 
-      {/* Current Branch Access Rules */}
+      {/* Current User Access Rules */}
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">🔒 Branch Access Rules</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">🔒 User Access Rules</h3>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Rubeena - All Access */}
@@ -106,37 +140,36 @@ const AdminUserRestrictions: React.FC = () => {
               </div>
             </div>
             <div className="bg-white p-3 rounded border">
-              <h5 className="font-semibold text-gray-900 mb-2">✅ All Branches Access</h5>
+              <h5 className="font-semibold text-gray-900 mb-2">✅ All Users Access</h5>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Delhi Branch</li>
-                <li>• Hyderabad Branch</li>
-                <li>• Mumbai Branch</li>
-                <li>• Bangalore Branch</li>
-                <li>• Main Branch</li>
-                <li>• All Future Branches</li>
+                <li>• Can see all users in the system</li>
+                <li>• Can manage all user accounts</li>
+                <li>• Can see all leads and data</li>
+                <li>• Can access all system features</li>
+                <li>• No restrictions applied</li>
               </ul>
             </div>
           </div>
 
-          {/* Other Super Admins - Restricted */}
-          <div className="border rounded-lg p-4 bg-yellow-50 border-yellow-200">
+          {/* Other Super Admins - Configurable */}
+          <div className="border rounded-lg p-4 bg-blue-50 border-blue-200">
             <div className="flex items-center space-x-3 mb-3">
-              <div className="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
                 SA
               </div>
               <div>
-                <h4 className="font-bold text-yellow-800">Other Super Admins</h4>
-                <p className="text-sm text-yellow-600">Restricted Access</p>
+                <h4 className="font-bold text-blue-800">Other Super Admins</h4>
+                <p className="text-sm text-blue-600">Configurable Access</p>
               </div>
             </div>
             <div className="bg-white p-3 rounded border">
-              <h5 className="font-semibold text-gray-900 mb-2">🔐 Limited Branches Access</h5>
+              <h5 className="font-semibold text-gray-900 mb-2">🔐 Configurable User Access</h5>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li className="text-green-600">• Delhi Branch ✅</li>
-                <li className="text-green-600">• Hyderabad Branch ✅</li>
-                <li className="text-red-600">• Mumbai Branch ❌</li>
-                <li className="text-red-600">• Bangalore Branch ❌</li>
-                <li className="text-red-600">• Main Branch ❌</li>
+                <li>• Currently: Can see all users</li>
+                <li>• Can be restricted via Admin Controls</li>
+                <li>• Restrictions apply to user visibility</li>
+                <li>• Lead access remains unchanged</li>
+                <li>• Restrictions managed by Rubeena</li>
               </ul>
             </div>
           </div>
@@ -154,13 +187,13 @@ const AdminUserRestrictions: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {superAdmins.map(admin => {
               const isRubeena = admin.username?.toLowerCase() === 'rubeena';
-              const bgColor = isRubeena ? 'bg-green-50 hover:bg-green-100 border-green-200' : 'bg-yellow-50 hover:bg-yellow-100 border-yellow-200';
-              const badgeColor = isRubeena ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
+              const bgColor = isRubeena ? 'bg-green-50 hover:bg-green-100 border-green-200' : 'bg-blue-50 hover:bg-blue-100 border-blue-200';
+              const badgeColor = isRubeena ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800';
               
               return (
                 <div key={admin.id} className={`border p-4 rounded-lg transition-colors ${bgColor}`}>
                   <div className="flex items-center space-x-3">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold ${isRubeena ? 'bg-green-600' : 'bg-yellow-600'}`}>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold ${isRubeena ? 'bg-green-600' : 'bg-blue-600'}`}>
                       {admin.fullName?.charAt(0) || admin.username?.charAt(0) || 'U'}
                     </div>
                     <div>
@@ -173,12 +206,12 @@ const AdminUserRestrictions: React.FC = () => {
                   </div>
                   <div className="mt-3 text-center">
                     <span className={`inline-block text-xs px-2 py-1 rounded-full ${badgeColor}`}>
-                      {isRubeena ? 'All Branches Access' : 'Delhi + Hyderabad Only'}
+                      {isRubeena ? 'All Users Access' : 'Configurable Access'}
                     </span>
                   </div>
                   {isRubeena && (
                     <div className="mt-2 text-center">
-                      <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                      <span className="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">
                         👑 System Administrator
                       </span>
                     </div>
@@ -197,17 +230,99 @@ const AdminUserRestrictions: React.FC = () => {
             <span className="text-2xl">ℹ️</span>
           </div>
           <div>
-            <h4 className="font-semibold text-blue-900 mb-2">How Branch Access Control Works</h4>
+            <h4 className="font-semibold text-blue-900 mb-2">How User Visibility Control Works</h4>
             <ul className="text-sm text-blue-800 space-y-1">
-              <li>• <strong>Rubeena:</strong> Has unrestricted access to all branches and all system features</li>
-              <li>• <strong>Other Super Admins:</strong> Can only view/manage data from Delhi and Hyderabad branches</li>
-              <li>• <strong>Lead Management:</strong> Restricted users only see leads from their allowed branches</li>
-              <li>• <strong>User Management:</strong> Restricted users only see users from their allowed branches</li>
-              <li>• <strong>Reports & Analytics:</strong> Data is automatically filtered by branch access</li>
+              <li>• <strong>Rubeena:</strong> Has unrestricted access to see all users and system features</li>
+              <li>• <strong>Other Super Admins:</strong> Currently can see all users, but restrictions can be added</li>
+              <li>• <strong>Lead Management:</strong> All super admins can see all leads (unchanged)</li>
+              <li>• <strong>User Management:</strong> Restrictions only apply to which users they can see</li>
+              <li>• <strong>Configurable:</strong> Use "Add Restriction" button to limit specific super admins</li>
             </ul>
           </div>
         </div>
       </div>
+
+      {/* Add Restriction Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <h3 className="text-lg font-semibold mb-4">Add User Restriction</h3>
+            
+            <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault();
+              const form = e.target as HTMLFormElement;
+              const formData = new FormData(form);
+              createRestriction({
+                restricted_user_id: formData.get('user_id') as string,
+                restriction_type: formData.get('restriction_type') as string,
+                notes: formData.get('notes') as string
+              });
+            }}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Select Super Administrator
+                  </label>
+                  <select
+                    name="user_id"
+                    required
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="">Select a super administrator...</option>
+                    {superAdmins.filter(admin => admin.username?.toLowerCase() !== 'rubeena').map(admin => (
+                      <option key={admin.id} value={admin.id}>
+                        {admin.fullName || admin.username} (@{admin.username})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Restriction Type
+                  </label>
+                  <select
+                    name="restriction_type"
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="user_visibility">User Visibility (Hide specific users)</option>
+                    <option value="limited_access">Limited Access (Specific sections)</option>
+                    <option value="view_only">View Only (No Edit/Delete)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Notes (Optional)
+                  </label>
+                  <textarea
+                    name="notes"
+                    placeholder="Reason for restriction..."
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    rows={3}
+                  />
+                </div>
+              </div>
+
+              <div className="flex space-x-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="flex-1 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700"
+                >
+                  Apply Restriction
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
