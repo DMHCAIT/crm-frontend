@@ -599,6 +599,31 @@ class ProductionApiClient {
     });
   }
 
+  // User Restrictions API (Admin Only)
+  async getUserRestrictions() {
+    return this.request('/user-restrictions');
+  }
+
+  async createUserRestriction(restrictionData: any) {
+    return this.request('/user-restrictions', {
+      method: 'POST',
+      body: JSON.stringify(restrictionData)
+    });
+  }
+
+  async updateUserRestriction(id: string, restrictionData: any) {
+    return this.request(`/user-restrictions?id=${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(restrictionData)
+    });
+  }
+
+  async deleteUserRestriction(id: string) {
+    return this.request(`/user-restrictions?id=${id}`, {
+      method: 'DELETE'
+    });
+  }
+
   // Get current user profile
   async getCurrentUser() {
     return this.request('/api/users/me');
