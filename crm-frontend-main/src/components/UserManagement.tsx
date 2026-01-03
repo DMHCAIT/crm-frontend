@@ -100,6 +100,12 @@ const UserManagement: React.FC = () => {
   };
 
   const roleHierarchy = {
+    'admin': { 
+      level: 6, 
+      label: 'Administrator', 
+      icon: Crown, 
+      color: 'bg-purple-600'
+    },
     'super_admin': { 
       level: 5, 
       label: 'Super Admin', 
@@ -238,7 +244,10 @@ const UserManagement: React.FC = () => {
   const canAccessUser = (targetUser: DatabaseUser, currentUserId?: string) => {
     if (!currentUserId || !targetUser) return false;
     
-    // Super admins can see everyone
+    // Admins can see everyone
+    if (currentUser?.role === 'admin') return true;
+    
+    // Super admins can see everyone (except restricted by admin)
     if (currentUser?.role === 'super_admin') return true;
     
     // Users can always see themselves
@@ -277,7 +286,7 @@ const UserManagement: React.FC = () => {
     return {
       canAddUsers: currentUserLevel >= 3, // Manager level and above
       canEditUsers: currentUserLevel >= 2, // Team Leader level and above
-      canDeleteUsers: currentUserLevel >= 4, // Senior Manager level and above
+      canDeleteUsers: currentUserLevel >= 5, // Super Admin and Admin levels
       level: currentUserLevel,
       role: currentUserRole
     };
