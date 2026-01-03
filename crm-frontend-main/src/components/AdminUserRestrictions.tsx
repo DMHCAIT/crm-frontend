@@ -16,6 +16,7 @@ const AdminUserRestrictions: React.FC = () => {
   const [error, setError] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [restrictions, setRestrictions] = useState<any[]>([]);
+  const [bulkProcessing, setBulkProcessing] = useState(false);
 
   // Load data on component mount
   useEffect(() => {
@@ -35,9 +36,12 @@ const AdminUserRestrictions: React.FC = () => {
       
       // Fetch users
       console.log('🔧 AdminUserRestrictions: Fetching users...');
-      const usersData = await apiClient.getUsers();
+      const usersResponse = await apiClient.getUsers();
+      console.log('🔧 AdminUserRestrictions: Received users response:', usersResponse);
 
-      console.log('🔧 AdminUserRestrictions: Received users data:', usersData);
+      // Extract data from API response - the API returns {success: true, data: [...]}
+      const usersData = usersResponse?.data || usersResponse;
+      console.log('🔧 AdminUserRestrictions: Extracted users data:', usersData);
 
       // Filter for super admins only - handle null/undefined data
       const usersArray = Array.isArray(usersData) ? usersData : [];
@@ -48,8 +52,11 @@ const AdminUserRestrictions: React.FC = () => {
       // Fetch existing restrictions
       console.log('🔧 AdminUserRestrictions: Fetching restrictions...');
       try {
-        const restrictionsData = await apiClient.getUserRestrictions();
-        console.log('🔧 AdminUserRestrictions: Received restrictions data:', restrictionsData);
+        const restrictionsResponse = await apiClient.getUserRestrictions();
+        console.log('🔧 AdminUserRestrictions: Received restrictions response:', restrictionsResponse);
+        
+        // Extract data from API response
+        const restrictionsData = restrictionsResponse?.data || restrictionsResponse;
         setRestrictions(Array.isArray(restrictionsData) ? restrictionsData : []);
       } catch (err) {
         console.log('🔧 AdminUserRestrictions: No restrictions found or error fetching:', err);
@@ -90,6 +97,82 @@ const AdminUserRestrictions: React.FC = () => {
     }
   };
 
+  const createBulkRestrictionsForKashmir = async () => {
+    try {
+      setBulkProcessing(true);
+      setError('');
+      
+      console.log('🔧 AdminUserRestrictions: Creating bulk restrictions for Kashmir branch users');
+      
+      const apiClient = getApiClient();
+      
+      // Get all users from Kashmir branch
+      const usersResponse = await apiClient.getUsers();
+      const usersData = usersResponse?.data || usersResponse;
+      const usersArray = Array.isArray(usersData) ? usersData : [];
+      
+      // Filter for Kashmir branch users (check both branch and location fields)
+      const kashmirUsers = usersArray.filter((user: User) => 
+        user.branch === 'Kashmir' || user.location === 'Kashmir'
+      );
+      
+      console.log('🔧 AdminUserRestrictions: Found', kashmirUsers.length, 'Kashmir branch users');
+      
+      // Get all super admins (excluding Rubeena)
+      const targetSuperAdmins = superAdmins.filter(admin => 
+        admin.username?.toLowerCase() !== 'rubeena'
+      );
+      
+      console.log('🔧 AdminUserRestrictions: Creating restrictions for', targetSuperAdmins.length, 'super admins');
+      
+      let successCount = 0;
+      let errorCount = 0;
+      
+      // Create restrictions for each super admin to hide Kashmir users
+      for (const superAdmin of targetSuperAdmins) {
+        try {
+          const restrictionData = {
+            restricted_user_id: superAdmin.id,
+            restriction_type: 'user_access',
+            restriction_scope: {
+              type: 'branch_restriction',
+              branch: 'Kashmir',
+              description: `Bulk restriction: Hide all Kashmir branch users from ${superAdmin.fullName || superAdmin.username}`,
+              kashmirUserIds: kashmirUsers.map(u => u.id)
+            },
+            notes: `Auto-created bulk restriction for Kashmir branch users (${kashmirUsers.length} users hidden)`
+          };
+          
+          console.log(`🔧 Creating restriction for ${superAdmin.username}:`, restrictionData);
+          await apiClient.createUserRestriction(restrictionData);
+          successCount++;
+        } catch (error: any) {
+          console.error(`Failed to create restriction for ${superAdmin.username}:`, error);
+          // Don't stop the process for individual failures
+          if (!error.message?.includes('already exists')) {
+            errorCount++;
+          }
+        }
+      }
+      
+      console.log(`🔧 AdminUserRestrictions: Bulk restriction creation completed. Success: ${successCount}, Errors: ${errorCount}`);
+      
+      // Reload data to show new restrictions
+      await loadData();
+      
+      // Show success message
+      if (successCount > 0) {
+        setError(`✅ Successfully created ${successCount} restrictions to hide ${kashmirUsers.length} Kashmir branch users from super administrators.`);
+      }
+      
+    } catch (error) {
+      console.error('🚨 AdminUserRestrictions: Error creating bulk restrictions:', error);
+      setError(error instanceof Error ? error.message : 'Failed to create bulk restrictions for Kashmir branch');
+    } finally {
+      setBulkProcessing(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="p-6 bg-white rounded-lg shadow">
@@ -110,27 +193,37 @@ const AdminUserRestrictions: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-900">👥 User Visibility Control</h2>
           <p className="text-gray-600 mt-1">Control which users super administrators can see and access</p>
         </div>
-        <button
-          onClick={() => setShowAddModal(true)}
-          disabled={superAdmins.length === 0}
-          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center space-x-2"
-        >
-          <span>🔒</span>
-          <span>Add Restriction</span>
-        </button>
+        <div className="flex space-x-3">
+          <button
+            onClick={createBulkRestrictionsForKashmir}
+            disabled={superAdmins.length === 0 || bulkProcessing}
+            className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center space-x-2"
+          >
+            <span>🏔️</span>
+            <span>{bulkProcessing ? 'Processing...' : 'Hide Kashmir Users'}</span>
+          </button>
+          <button
+            onClick={() => setShowAddModal(true)}
+            disabled={superAdmins.length === 0}
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center space-x-2"
+          >
+            <span>🔒</span>
+            <span>Add Restriction</span>
+          </button>
+        </div>
       </div>
 
-      {/* Error display */}
+      {/* Error/Success display */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <div className="text-red-700">
-            <h3 className="font-semibold">Error</h3>
+        <div className={`mb-6 p-4 border rounded-lg ${error.startsWith('✅') ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+          <div className={error.startsWith('✅') ? 'text-green-700' : 'text-red-700'}>
+            <h3 className="font-semibold">{error.startsWith('✅') ? 'Success' : 'Error'}</h3>
             <p className="mt-1">{error}</p>
             <button
-              onClick={loadData}
-              className="mt-2 text-sm bg-red-100 hover:bg-red-200 px-3 py-1 rounded"
+              onClick={() => setError('')}
+              className={`mt-2 text-sm px-3 py-1 rounded ${error.startsWith('✅') ? 'bg-green-100 hover:bg-green-200' : 'bg-red-100 hover:bg-red-200'}`}
             >
-              Try Again
+              {error.startsWith('✅') ? 'Dismiss' : 'Try Again'}
             </button>
           </div>
         </div>
@@ -292,9 +385,9 @@ const AdminUserRestrictions: React.FC = () => {
             <ul className="text-sm text-blue-800 space-y-1">
               <li>• <strong>Rubeena:</strong> Has unrestricted access to see all users and system features</li>
               <li>• <strong>Other Super Admins:</strong> Currently can see all users, but restrictions can be added</li>
-              <li>• <strong>Lead Management:</strong> All super admins can see all leads (unchanged)</li>
+              <li>• <strong>Kashmir Branch Restriction:</strong> Use "Hide Kashmir Users" to bulk restrict all Kashmir branch users from super admins</li>
+              <li>• <strong>Individual Restrictions:</strong> Use "Add Restriction" button to limit specific super admins</li>
               <li>• <strong>User Management:</strong> Restrictions only apply to which users they can see</li>
-              <li>• <strong>Configurable:</strong> Use "Add Restriction" button to limit specific super admins</li>
             </ul>
           </div>
         </div>
