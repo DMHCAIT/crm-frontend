@@ -7,23 +7,13 @@ interface User {
   fullName?: string;
   role: string;
   department?: string;
-}
-
-interface Restriction {
-  id: string;
-  restricted_user_id: string;
-  restriction_type: string;
-  notes?: string;
-  created_at: string;
-  users?: User;
+  branch?: string;
 }
 
 const AdminUserRestrictions: React.FC = () => {
-  const [restrictions, setRestrictions] = useState<Restriction[]>([]);
   const [superAdmins, setSuperAdmins] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [showAddModal, setShowAddModal] = useState(false);
 
   // Load data on component mount
   useEffect(() => {
@@ -41,18 +31,12 @@ const AdminUserRestrictions: React.FC = () => {
       const apiClient = getApiClient();
       console.log('🔧 AdminUserRestrictions: Got API client:', !!apiClient);
       
-      // Fetch restrictions and super admins in parallel
-      console.log('🔧 AdminUserRestrictions: Fetching restrictions and users...');
-      const [restrictionsData, usersData] = await Promise.all([
-        apiClient.getUserRestrictions(),
-        apiClient.getUsers()
-      ]);
+      // Fetch users
+      console.log('🔧 AdminUserRestrictions: Fetching users...');
+      const usersData = await apiClient.getUsers();
 
-      console.log('🔧 AdminUserRestrictions: Received restrictions data:', restrictionsData);
       console.log('🔧 AdminUserRestrictions: Received users data:', usersData);
 
-      setRestrictions((restrictionsData as Restriction[]) || []);
-      
       // Filter for super admins only
       const superAdminUsers = (usersData as User[]).filter((user: User) => user.role === 'super_admin');
       console.log('🔧 AdminUserRestrictions: Filtered super admins:', superAdminUsers);
@@ -64,33 +48,6 @@ const AdminUserRestrictions: React.FC = () => {
       setError(err instanceof Error ? err.message : 'Failed to load data');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const createRestriction = async (restrictionData: any) => {
-    try {
-      const apiClient = getApiClient();
-      
-      await apiClient.createUserRestriction(restrictionData);
-      
-      await loadData(); // Reload data
-      setShowAddModal(false);
-    } catch (error) {
-      console.error('Error creating restriction:', error);
-      setError('Failed to create restriction');
-    }
-  };
-
-  const removeRestriction = async (restrictionId: string) => {
-    try {
-      const apiClient = getApiClient();
-      
-      await apiClient.deleteUserRestriction(restrictionId);
-      
-      await loadData(); // Reload data
-    } catch (error) {
-      console.error('Error removing restriction:', error);
-      setError('Failed to remove restriction');
     }
   };
 
@@ -111,17 +68,9 @@ const AdminUserRestrictions: React.FC = () => {
     <div className="p-6 bg-white rounded-lg shadow">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">🔐 Super Admin Restrictions</h2>
-          <p className="text-gray-600 mt-1">Control what super administrators can see and access</p>
+          <h2 className="text-2xl font-bold text-gray-900">🏢 Branch Access Control</h2>
+          <p className="text-gray-600 mt-1">Control which branches super administrators can access</p>
         </div>
-        <button
-          onClick={() => setShowAddModal(true)}
-          disabled={superAdmins.length === 0}
-          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center space-x-2"
-        >
-          <span>🔒</span>
-          <span>Add Restriction</span>
-        </button>
       </div>
 
       {/* Error display */}
@@ -140,169 +89,125 @@ const AdminUserRestrictions: React.FC = () => {
         </div>
       )}
 
+      {/* Current Branch Access Rules */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">🔒 Branch Access Rules</h3>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Rubeena - All Access */}
+          <div className="border rounded-lg p-4 bg-green-50 border-green-200">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                R
+              </div>
+              <div>
+                <h4 className="font-bold text-green-800">Rubeena (Admin)</h4>
+                <p className="text-sm text-green-600">Full System Administrator</p>
+              </div>
+            </div>
+            <div className="bg-white p-3 rounded border">
+              <h5 className="font-semibold text-gray-900 mb-2">✅ All Branches Access</h5>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• Delhi Branch</li>
+                <li>• Hyderabad Branch</li>
+                <li>• Mumbai Branch</li>
+                <li>• Bangalore Branch</li>
+                <li>• Main Branch</li>
+                <li>• All Future Branches</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Other Super Admins - Restricted */}
+          <div className="border rounded-lg p-4 bg-yellow-50 border-yellow-200">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                SA
+              </div>
+              <div>
+                <h4 className="font-bold text-yellow-800">Other Super Admins</h4>
+                <p className="text-sm text-yellow-600">Restricted Access</p>
+              </div>
+            </div>
+            <div className="bg-white p-3 rounded border">
+              <h5 className="font-semibold text-gray-900 mb-2">🔐 Limited Branches Access</h5>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li className="text-green-600">• Delhi Branch ✅</li>
+                <li className="text-green-600">• Hyderabad Branch ✅</li>
+                <li className="text-red-600">• Mumbai Branch ❌</li>
+                <li className="text-red-600">• Bangalore Branch ❌</li>
+                <li className="text-red-600">• Main Branch ❌</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Super Admins List */}
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-3">Available Super Administrators</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-3">👨‍💼 Super Administrators</h3>
         {superAdmins.length === 0 ? (
-          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <p className="text-yellow-800">No super administrators found in the system.</p>
+          <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+            <p className="text-gray-600">No super administrators found in the system.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {superAdmins.map(admin => (
-              <div key={admin.id} className="border p-4 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
-                    {admin.fullName?.charAt(0) || admin.username?.charAt(0) || 'U'}
+            {superAdmins.map(admin => {
+              const isRubeena = admin.username?.toLowerCase() === 'rubeena';
+              const bgColor = isRubeena ? 'bg-green-50 hover:bg-green-100 border-green-200' : 'bg-yellow-50 hover:bg-yellow-100 border-yellow-200';
+              const badgeColor = isRubeena ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
+              
+              return (
+                <div key={admin.id} className={`border p-4 rounded-lg transition-colors ${bgColor}`}>
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold ${isRubeena ? 'bg-green-600' : 'bg-yellow-600'}`}>
+                      {admin.fullName?.charAt(0) || admin.username?.charAt(0) || 'U'}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">
+                        {admin.fullName || admin.username}
+                      </h4>
+                      <p className="text-sm text-gray-600">@{admin.username}</p>
+                      <p className="text-xs text-gray-500">{admin.department || 'No Department'}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">
-                      {admin.fullName || admin.username}
-                    </h4>
-                    <p className="text-sm text-gray-600">@{admin.username}</p>
-                    <p className="text-xs text-blue-600">{admin.department || 'No Department'}</p>
+                  <div className="mt-3 text-center">
+                    <span className={`inline-block text-xs px-2 py-1 rounded-full ${badgeColor}`}>
+                      {isRubeena ? 'All Branches Access' : 'Delhi + Hyderabad Only'}
+                    </span>
                   </div>
-                </div>
-                <div className="mt-2 text-center">
-                  <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                    Active • No Restrictions
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Current Restrictions */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Active Restrictions</h3>
-        {restrictions.length === 0 ? (
-          <div className="p-6 bg-gray-50 border border-gray-200 rounded-lg text-center">
-            <div className="text-gray-400 mb-2">
-              <span className="text-4xl">🔓</span>
-            </div>
-            <p className="text-gray-600">No restrictions currently applied</p>
-            <p className="text-sm text-gray-500 mt-1">All super administrators have full access</p>
-          </div>
-        ) : (
-          restrictions.map(restriction => (
-            <div key={restriction.id} className="border p-4 rounded-lg bg-red-50">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-semibold text-red-800">
-                    🚫 {restriction.users?.fullName || 'Unknown User'}
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    Username: {restriction.users?.username} | 
-                    Role: {restriction.users?.role} |
-                    Department: {restriction.users?.department}
-                  </p>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Restriction Type: {restriction.restriction_type}
-                  </p>
-                  {restriction.notes && (
-                    <p className="text-sm text-gray-600 mt-1">
-                      Notes: {restriction.notes}
-                    </p>
+                  {isRubeena && (
+                    <div className="mt-2 text-center">
+                      <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                        👑 System Administrator
+                      </span>
+                    </div>
                   )}
-                  <p className="text-xs text-gray-400 mt-2">
-                    Created: {new Date(restriction.created_at).toLocaleDateString()}
-                  </p>
                 </div>
-                <button
-                  onClick={() => removeRestriction(restriction.id)}
-                  className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
-                >
-                  Remove
-                </button>
-              </div>
-            </div>
-          ))
+              );
+            })}
+          </div>
         )}
       </div>
 
-      {/* Add Restriction Modal */}
-      {showAddModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-md">
-            <h3 className="text-lg font-semibold mb-4">Add New Restriction</h3>
-            
-            <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-              e.preventDefault();
-              const form = e.target as HTMLFormElement;
-              const formData = new FormData(form);
-              createRestriction({
-                restricted_user_id: formData.get('user_id') as string,
-                restriction_type: formData.get('restriction_type') as string,
-                notes: formData.get('notes') as string
-              });
-            }}>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Select Super Administrator
-                  </label>
-                  <select
-                    name="user_id"
-                    required
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  >
-                    <option value="">Select a super administrator...</option>
-                    {superAdmins.map(admin => (
-                      <option key={admin.id} value={admin.id}>
-                        {admin.fullName || admin.username} (@{admin.username})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Restriction Type
-                  </label>
-                  <select
-                    name="restriction_type"
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  >
-                    <option value="view_only">View Only (No Edit/Delete)</option>
-                    <option value="limited_access">Limited Access (Specific Sections)</option>
-                    <option value="temporary_suspend">Temporary Suspend (No Access)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Notes (Optional)
-                  </label>
-                  <textarea
-                    name="notes"
-                    placeholder="Reason for restriction..."
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                    rows={3}
-                  />
-                </div>
-              </div>
-
-              <div className="flex space-x-3 mt-6">
-                <button
-                  type="button"
-                  onClick={() => setShowAddModal(false)}
-                  className="flex-1 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700"
-                >
-                  Apply Restriction
-                </button>
-              </div>
-            </form>
+      {/* Information Box */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="flex items-start space-x-3">
+          <div className="flex-shrink-0">
+            <span className="text-2xl">ℹ️</span>
+          </div>
+          <div>
+            <h4 className="font-semibold text-blue-900 mb-2">How Branch Access Control Works</h4>
+            <ul className="text-sm text-blue-800 space-y-1">
+              <li>• <strong>Rubeena:</strong> Has unrestricted access to all branches and all system features</li>
+              <li>• <strong>Other Super Admins:</strong> Can only view/manage data from Delhi and Hyderabad branches</li>
+              <li>• <strong>Lead Management:</strong> Restricted users only see leads from their allowed branches</li>
+              <li>• <strong>User Management:</strong> Restricted users only see users from their allowed branches</li>
+              <li>• <strong>Reports & Analytics:</strong> Data is automatically filtered by branch access</li>
+            </ul>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
