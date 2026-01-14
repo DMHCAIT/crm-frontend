@@ -1475,7 +1475,7 @@ const LeadsManagement: React.FC = () => {
 
   // Check if user has manager permissions or above
   const isManager = () => {
-    return user?.role === 'manager' || user?.role === 'senior_manager' || user?.role === 'super_admin';
+    return user?.role === 'manager' || user?.role === 'senior_manager' || user?.role === 'super_admin' || user?.role === 'admin';
   };
 
   // Handle lead selection for detail view
