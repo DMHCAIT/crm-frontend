@@ -238,7 +238,7 @@ const UserManagement: React.FC = () => {
                            (user.branch && user.branch.toLowerCase() === selectedBranch.toLowerCase()) ||
                            (user.location && user.location.toLowerCase().includes(selectedBranch.toLowerCase()));
       const matchesCompany = selectedCompany === 'all' || user.company === selectedCompany;
-      const matchesSearch = (user.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      const matchesSearch = (user.fullName || user.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                            (user.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                            (user.username || '').toLowerCase().includes(searchTerm.toLowerCase());
       
@@ -338,7 +338,7 @@ const UserManagement: React.FC = () => {
         loading: false
       });
       
-      console.log(`📊 Loaded ${subordinates.length} subordinates and ${leads.length} leads for ${user.name}`);
+      console.log(`📊 Loaded ${subordinates.length} subordinates and ${leads.length} leads for ${user.fullName || user.name}`);
       
     } catch (error) {
       console.error('❌ Error loading user details:', error);
@@ -361,7 +361,7 @@ const UserManagement: React.FC = () => {
       // Reload users to show updated status
       await loadUsers();
       
-      alert(`User ${user.name} status changed to ${newStatus}`);
+      alert(`User ${user.fullName || user.name} status changed to ${newStatus}`);
     } catch (err) {
       console.error('Error updating user status:', err);
       alert('Failed to update user status');
@@ -371,7 +371,7 @@ const UserManagement: React.FC = () => {
   };
 
   const handleDeleteUser = async (user: DatabaseUser) => {
-    if (!window.confirm(`Are you sure you want to delete user ${user.name}?`)) {
+    if (!window.confirm(`Are you sure you want to delete user ${user.fullName || user.name}?`)) {
       return;
     }
 
@@ -383,7 +383,7 @@ const UserManagement: React.FC = () => {
       // Reload users to show updated list
       await loadUsers();
       
-      alert(`User ${user.name} has been deleted`);
+      alert(`User ${user.fullName || user.name} has been deleted`);
     } catch (err) {
       console.error('Error deleting user:', err);
       alert('Failed to delete user');
@@ -833,7 +833,7 @@ const UserManagement: React.FC = () => {
                             
                             {/* User Info */}
                             <div>
-                              <h4 className="text-lg font-medium text-gray-900">{user.name}</h4>
+                              <h4 className="text-lg font-medium text-gray-900">{user.fullName || user.name}</h4>
                               <p className="text-sm text-gray-600">{user.designation || roleHierarchy[user.role as keyof typeof roleHierarchy]?.label}</p>
                               <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500">
                                 <span className="flex items-center">
@@ -988,14 +988,14 @@ const UserManagement: React.FC = () => {
                           level === 2 ? 'bg-green-500' : 
                           level === 3 ? 'bg-yellow-500' : 'bg-gray-500'
                         } text-white font-semibold`}>
-                          {user.name?.charAt(0) || 'U'}
+                          {(user.fullName || user.name)?.charAt(0) || 'U'}
                         </div>
                       </div>
                       
                       <div className="flex-grow">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h4 className="font-semibold text-gray-900">{user.name}</h4>
+                            <h4 className="font-semibold text-gray-900">{user.fullName || user.name}</h4>
                             <p className="text-sm text-blue-600 font-medium">@{user.username}</p>
                             <p className="text-sm text-gray-600">
                               {roleHierarchy[user.role as keyof typeof roleHierarchy]?.label || user.role}
@@ -1099,7 +1099,7 @@ const UserManagement: React.FC = () => {
                     
                     {/* User Info */}
                     <div>
-                      <h4 className="text-lg font-medium text-gray-900">{user.name}</h4>
+                      <h4 className="text-lg font-medium text-gray-900">{user.fullName || user.name}</h4>
                       <p className="text-sm text-gray-600">{user.designation || roleHierarchy[user.role as keyof typeof roleHierarchy]?.label}</p>
                       <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500">
                         <span className="flex items-center">
@@ -1272,7 +1272,7 @@ const UserModal: React.FC<UserModalProps> = ({
   roleHierarchy
 }) => {
   const [formData, setFormData] = useState({
-    name: user?.name || '',
+    fullName: user?.fullName || user?.name || '',
     username: user?.username || '',
     email: user?.email || '',
     phone: user?.phone || '',
@@ -1302,7 +1302,7 @@ const UserModal: React.FC<UserModalProps> = ({
   useEffect(() => {
     if (user) {
       setFormData({
-        name: user.name || '',
+        fullName: user.fullName || user.name || '',
         username: user.username || '',
         email: user.email || '',
         phone: user.phone || '',
@@ -1380,11 +1380,11 @@ const UserModal: React.FC<UserModalProps> = ({
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
+            <label className="block text-sm font-medium text-gray-700">Full Name</label>
             <input
               type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              value={formData.fullName}
+              onChange={(e) => setFormData({...formData, fullName: e.target.value})}
               className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
               required
             />
@@ -1679,11 +1679,11 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
               <div className="flex items-center">
                 <div className="flex-shrink-0 mr-4">
                   <div className="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xl">
-                    {user.name.charAt(0)}
+                    {(user.fullName || user.name).charAt(0)}
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900">{user.name}</h3>
+                  <h3 className="text-lg font-medium text-gray-900">{user.fullName || user.name}</h3>
                   <p className="text-md text-blue-600 font-semibold">@{user.username}</p>
                   <p className="text-sm text-gray-600">{user.email}</p>
                   <p className="text-sm text-blue-600 font-medium">
