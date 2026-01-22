@@ -1320,8 +1320,8 @@ const LeadsManagement: React.FC = () => {
     console.log('🔍 Assignment value (newLead.assignedTo):', newLead.assignedTo);
     try {
       // Validate required fields
-      if (!newLead.fullName || !newLead.email || !newLead.phone || !newLead.company) {
-        alert('Please fill in all required fields (Full Name, Email, Phone, Company)');
+      if (!newLead.fullName || !newLead.phone || !newLead.company) {
+        alert('Please fill in all required fields (Full Name, Phone, Company)');
         return;
       }
 
@@ -1331,18 +1331,20 @@ const LeadsManagement: React.FC = () => {
         return;
       }
 
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(newLead.email || '')) {
-        alert('Please enter a valid email address');
-        return;
-      }
+      // Validate email format if provided
+      if (newLead.email && newLead.email.trim()) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(newLead.email)) {
+          alert('Please enter a valid email address');
+          return;
+        }
 
-      // Check for duplicate email
-      const existingLead = leads.find((lead: Lead) => lead.email.toLowerCase() === (newLead.email || '').toLowerCase());
-      if (existingLead) {
-        alert('A lead with this email already exists!');
-        return;
+        // Check for duplicate email
+        const existingLead = leads.find((lead: Lead) => lead.email && lead.email.toLowerCase() === newLead.email.toLowerCase());
+        if (existingLead) {
+          alert('A lead with this email already exists!');
+          return;
+        }
       }
 
       // Prepare lead data for database insertion - include ALL fields
@@ -1647,9 +1649,9 @@ const LeadsManagement: React.FC = () => {
           notes: getColumnIndex(['notes', 'note', 'comments', 'comment', 'remarks', 'remark'])
         };
 
-        // Validate that we have at least name and email
-        if (columnMap.fullName === -1 || columnMap.email === -1) {
-          alert('CSV must contain at least "Full Name" and "Email" columns.\n\nFound columns: ' + headerValues.join(', '));
+        // Validate that we have at least name
+        if (columnMap.fullName === -1) {
+          alert('CSV must contain at least "Full Name" column.\n\nFound columns: ' + headerValues.join(', '));
           setImportLoading(false);
           return;
         }
@@ -1685,9 +1687,9 @@ const LeadsManagement: React.FC = () => {
             const fullName = columnMap.fullName >= 0 ? values[columnMap.fullName] || '' : '';
             const email = columnMap.email >= 0 ? values[columnMap.email] || '' : '';
 
-            // Skip if no name or email
-            if (!fullName || !email) {
-              parseErrors.push(`Row ${i + 1}: Missing name or email`);
+            // Skip if no name
+            if (!fullName) {
+              parseErrors.push(`Row ${i + 1}: Missing name`);
               continue;
             }
 
@@ -1757,6 +1759,60 @@ const LeadsManagement: React.FC = () => {
           return;
         }
 
+        // Check for duplicate emails in existing leads
+        const duplicateLeads: Array<{name: string, email: string, rowNumber: number}> = [];
+        const uniqueLeads: any[] = [];
+        
+        for (let i = 0; i < leadsToImport.length; i++) {
+          const importLead = leadsToImport[i];
+          
+          // Only check for duplicates if email is provided
+          if (importLead.email && importLead.email.trim()) {
+            const existingLead = leads.find((lead: Lead) => 
+              lead.email && lead.email.toLowerCase() === importLead.email.toLowerCase()
+            );
+            
+            if (existingLead) {
+              duplicateLeads.push({
+                name: importLead.fullName,
+                email: importLead.email,
+                rowNumber: i + 2 // +2 because of header row and 0-based index
+              });
+            } else {
+              uniqueLeads.push(importLead);
+            }
+          } else {
+            // No email provided, can't check for duplicates, add to unique leads
+            uniqueLeads.push(importLead);
+          }
+        }
+
+        // Show brief duplicate information if any found
+        if (duplicateLeads.length > 0) {
+          if (uniqueLeads.length === 0) {
+            alert(`All ${duplicateLeads.length} lead(s) already exist in the CRM.\n\nNo new leads to import.`);
+            setImportLoading(false);
+            return;
+          }
+          
+          const proceed = confirm(
+            `Found ${duplicateLeads.length} duplicate lead(s) that will be skipped.\n\n` +
+            `• ${uniqueLeads.length} new lead(s) will be imported\n` +
+            `• ${duplicateLeads.length} duplicate(s) will be skipped\n\n` +
+            `Continue with import?\n\n` +
+            `(Detailed report with duplicate names will be shown after import)`
+          );
+          
+          if (!proceed) {
+            setImportLoading(false);
+            return;
+          }
+          
+          // Continue with only unique leads
+          leadsToImport.length = 0;
+          leadsToImport.push(...uniqueLeads);
+        }
+
         // Send to backend for bulk import
         try {
           const apiClient = getApiClient();
@@ -1818,11 +1874,40 @@ const LeadsManagement: React.FC = () => {
           if (result.success) {
             const { success, failed, errors } = result.results;
             
-            let message = `Import completed!\n✅ ${success} leads imported successfully`;
+            // Refresh leads list to show imported data
+            await loadLeads();
+            
+            // Build detailed import report
+            let message = `📊 IMPORT COMPLETE\n\n`;
+            message += `✅ ${success} lead(s) imported successfully\n`;
+            
+            // Show duplicate information if any
+            if (duplicateLeads.length > 0) {
+              message += `⚠️ ${duplicateLeads.length} duplicate lead(s) already existed (skipped)\n\n`;
+              message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+              message += `DUPLICATE LEADS (Already in CRM):\n`;
+              message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+              
+              // Show all duplicates (or first 15)
+              const showCount = Math.min(15, duplicateLeads.length);
+              for (let i = 0; i < showCount; i++) {
+                const dup = duplicateLeads[i];
+                message += `${i + 1}. ${dup.name}\n   📧 ${dup.email}\n   📄 Row ${dup.rowNumber} in CSV\n\n`;
+              }
+              
+              if (duplicateLeads.length > 15) {
+                message += `... and ${duplicateLeads.length - 15} more duplicate(s)\n\n`;
+              }
+              
+              message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+              message += `💡 TIP: Use the search box to find these leads\n`;
+              message += `or filter by email to view existing records.`;
+            }
+            
             if (failed > 0) {
-              message += `\n❌ ${failed} leads failed to import`;
+              message += `\n\n❌ ${failed} lead(s) failed to import`;
               if (errors && errors.length > 0) {
-                message += '\n\nFirst few errors:\n' + errors.slice(0, 5).join('\n');
+                message += '\n\nErrors:\n' + errors.slice(0, 5).join('\n');
                 if (errors.length > 5) {
                   message += `\n... and ${errors.length - 5} more errors`;
                 }
@@ -1831,8 +1916,18 @@ const LeadsManagement: React.FC = () => {
             
             alert(message);
             
-            // Refresh leads list to show imported data
-            await loadLeads();
+            // If there are duplicates, offer to highlight them
+            if (duplicateLeads.length > 0 && duplicateLeads.length <= 5) {
+              const viewDuplicates = confirm(
+                `Would you like to search for one of the duplicate leads?\n\n` +
+                `This will help you view the existing record in your CRM.`
+              );
+              
+              if (viewDuplicates && duplicateLeads[0].email) {
+                // Set search term to first duplicate's email
+                setSearchTerm(duplicateLeads[0].email);
+              }
+            }
           } else {
             throw new Error(result.message || 'Import failed');
           }
@@ -2717,9 +2812,9 @@ const LeadsManagement: React.FC = () => {
                   'CSV/Excel Import Instructions:\n\n' +
                   '✅ FLEXIBLE IMPORT - Column order doesn\'t matter!\n\n' +
                   '📋 REQUIRED COLUMNS:\n' +
-                  '   • Full Name (or "Name")\n' +
-                  '   • Email (must be unique)\n\n' +
+                  '   • Full Name (or "Name")\n\n' +
                   '📋 OPTIONAL COLUMNS (use exact data from your file):\n' +
+                  '   • Email (checked for uniqueness if provided)\n' +
                   '   • Phone, Country, Branch, Qualification\n' +
                   '   • Source, Course, Status, Assigned To\n' +
                   '   • Follow Up Date, Company (DMHCA/IBMP)\n' +
@@ -2730,7 +2825,7 @@ const LeadsManagement: React.FC = () => {
                   '⚙️ HOW IT WORKS:\n' +
                   '   • Uses whatever data you provide\n' +
                   '   • Empty fields stay empty (no defaults)\n' +
-                  '   • Duplicate emails are skipped\n' +
+                  '   • Duplicate emails are skipped (if email provided)\n' +
                   '   • All data saved to database\n\n' +
                   '💡 TIP: Export leads first to see the format!'
                 )}
@@ -6027,14 +6122,14 @@ const LeadsManagement: React.FC = () => {
                 {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email <span className="text-red-500">*</span>
+                    Email
                   </label>
                   <input
                     type="email"
                     value={newLead.email || ''}
                     onChange={(e) => setNewLead({...newLead, email: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Enter email address"
+                    placeholder="Enter email address (optional)"
                   />
                 </div>
 
