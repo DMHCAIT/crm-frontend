@@ -13,6 +13,7 @@ const CRMPipeline = lazy(() => import('./components/CRMPipeline'));
 const LeadsManagement = lazy(() => import('./components/LeadsManagement'));
 const LeadsMonitoring = lazy(() => import('./components/LeadsMonitoring'));
 const FacebookLeadIntegration = lazy(() => import('./components/FacebookLeadIntegration'));
+const GoogleSheetsIntegration = lazy(() => import('./components/GoogleSheetsIntegration'));
 const StudentsManagement = lazy(() => import('./components/StudentsManagement'));
 const Analytics = lazy(() => import('./components/Analytics'));
 const Integrations = lazy(() => import('./components/Integrations'));
@@ -85,6 +86,7 @@ const App: React.FC = () => {
     'leads-monitoring': 1,
     'lead-segmentation': 5, // Super Admin only - Advanced Marketing & Bulk WhatsApp
     'facebook-leads': 3,
+    'google-sheets': 3, // Google Sheets Integration
     'students': 1,
     'analytics': 2,
     'integrations': 3,
@@ -127,6 +129,8 @@ const App: React.FC = () => {
           return <Suspense fallback={<PageLoader />}><LeadSegmentation /></Suspense>;
         case 'facebook-leads':
           return <Suspense fallback={<PageLoader />}><FacebookLeadIntegration /></Suspense>;
+        case 'google-sheets':
+          return <Suspense fallback={<PageLoader />}><GoogleSheetsIntegration /></Suspense>;
         case 'students':
           return <Suspense fallback={<PageLoader />}><StudentsManagement /></Suspense>;
         case 'analytics':

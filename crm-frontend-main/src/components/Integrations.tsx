@@ -16,7 +16,8 @@ import {
   AlertCircle,
   Activity,
   Wifi,
-  RefreshCw
+  RefreshCw,
+  FileSpreadsheet
 } from 'lucide-react';
 
 interface Integration {
@@ -92,6 +93,16 @@ const Integrations: React.FC = () => {
       color: 'bg-blue-600',
       features: ['Auto-import leads', 'Campaign tracking', 'Lead scoring'],
       lastSync: '15 minutes ago'
+    },
+    {
+      id: 'google-sheets',
+      name: 'Google Sheets',
+      description: 'Import leads automatically from Google Sheets spreadsheets',
+      category: 'lead-capture',
+      status: 'available',
+      icon: FileSpreadsheet,
+      color: 'bg-green-600',
+      features: ['Auto-sync leads', 'Field mapping', 'Real-time import']
     },
     {
       id: 'payment-gateway',

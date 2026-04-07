@@ -16,7 +16,8 @@ import {
   Shield,
   Filter,
   TrendingUp,
-  Calendar
+  Calendar,
+  FileSpreadsheet
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -45,6 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
     { id: 'leads-monitoring', label: 'Lead Monitoring', icon: Activity, minLevel: 2 },
     { id: 'lead-segmentation', label: 'Lead Segmentation', icon: Filter, minLevel: 5 }, // Super Admin only
     { id: 'facebook-leads', label: 'Facebook Integration', icon: Facebook, minLevel: 3 },
+    { id: 'google-sheets', label: 'Google Sheets', icon: FileSpreadsheet, minLevel: 3 },
     { id: 'students', label: 'Course Enrollments', icon: GraduationCap, minLevel: 1 },
     { id: 'analytics', label: 'CRM Analytics', icon: BarChart3, minLevel: 2 },
     { id: 'advanced-analytics-new', label: '🚀 Advanced Analytics', icon: TrendingUp, minLevel: 2 },
