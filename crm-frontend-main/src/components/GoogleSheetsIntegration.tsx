@@ -44,6 +44,7 @@ interface SyncStats {
   errorCount: number;
   lastSync: string;
   isRunning: boolean;
+  errorDetails?: string[];
 }
 
 const GoogleSheetsIntegration: React.FC = () => {
@@ -66,7 +67,8 @@ const GoogleSheetsIntegration: React.FC = () => {
     successCount: 0,
     errorCount: 0,
     lastSync: '',
-    isRunning: false
+    isRunning: false,
+    errorDetails: []
   });
 
   // Default field mapping - Google Sheet columns to CRM fields
@@ -338,6 +340,7 @@ const GoogleSheetsIntegration: React.FC = () => {
 
     let totalSuccessCount = 0;
     let totalErrorCount = 0;
+    const errorDetails: string[] = [];
     const api = getApiClient();
 
     try {
@@ -424,7 +427,10 @@ const GoogleSheetsIntegration: React.FC = () => {
 
               totalSuccessCount++;
             } catch (err) {
+              const errorMsg = err instanceof Error ? err.message : 'Unknown error';
               console.error('Error importing lead:', err);
+              console.error('Lead data:', leadData);
+              errorDetails.push(`Row error: ${errorMsg}`);
               totalErrorCount++;
             }
           }
@@ -439,10 +445,17 @@ const GoogleSheetsIntegration: React.FC = () => {
         successCount: totalSuccessCount,
         errorCount: totalErrorCount,
         lastSync: new Date().toLocaleString(),
-        isRunning: false
+        isRunning: false,
+        errorDetails: errorDetails.slice(0, 10) // Keep only first 10 errors for display
       });
 
-      setSuccess(`Successfully imported ${totalSuccessCount} leads from ${selectedSheets.length} sheet(s)! (${totalErrorCount} errors)`);
+      if (totalSuccessCount > 0) {
+        setSuccess(`Successfully imported ${totalSuccessCount} leads from ${selectedSheets.length} sheet(s)! ${totalErrorCount > 0 ? `(${totalErrorCount} errors)` : ''}`);
+      }
+      
+      if (totalErrorCount > 0 && totalSuccessCount === 0) {
+        setError(`Failed to import leads. Common issues: Backend API not responding, missing required fields, or authentication error. Check console for details.`);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sync failed');
       setSyncStats(prev => ({ ...prev, isRunning: false }));
@@ -839,6 +852,28 @@ const GoogleSheetsIntegration: React.FC = () => {
               <div className="mb-6 p-4 bg-gray-50 rounded-lg">
                 <p className="text-sm text-gray-600">
                   <strong>Last Sync:</strong> {syncStats.lastSync}
+                </p>
+              </div>
+            )}
+
+            {/* Error Details */}
+            {syncStats.errorDetails && syncStats.errorDetails.length > 0 && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <h3 className="text-sm font-semibold text-red-800 mb-2 flex items-center">
+                  <AlertCircle className="w-4 h-4 mr-2" />
+                  Recent Errors (showing first 10)
+                </h3>
+                <div className="max-h-60 overflow-y-auto">
+                  <ul className="text-xs text-red-700 space-y-1">
+                    {syncStats.errorDetails.map((error, index) => (
+                      <li key={index} className="border-b border-red-100 pb-1">
+                        {index + 1}. {error}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <p className="text-xs text-red-600 mt-3">
+                  <strong>Tip:</strong> Open browser console (F12) for full error details
                 </p>
               </div>
             )}
