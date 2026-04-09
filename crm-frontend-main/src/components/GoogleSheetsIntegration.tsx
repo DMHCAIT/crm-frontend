@@ -22,6 +22,14 @@ interface GoogleSheetColumn {
   mappedTo: string;
 }
 
+interface SheetInfo {
+  sheetId: number;
+  title: string;
+  index: number;
+  rowCount: number;
+  columnCount: number;
+}
+
 interface SheetData {
   spreadsheetId: string;
   spreadsheetName: string;
@@ -44,6 +52,8 @@ const GoogleSheetsIntegration: React.FC = () => {
   const [spreadsheetUrl, setSpreadsheetUrl] = useState<string>('');
   const [spreadsheetId, setSpreadsheetId] = useState<string>('');
   const [sheetName, setSheetName] = useState<string>('Sheet1');
+  const [availableSheets, setAvailableSheets] = useState<SheetInfo[]>([]);
+  const [selectedSheets, setSelectedSheets] = useState<string[]>([]);
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [autoSync, setAutoSync] = useState<boolean>(false);
   const [syncInterval, setSyncInterval] = useState<number>(5);
@@ -140,6 +150,7 @@ const GoogleSheetsIntegration: React.FC = () => {
     const savedAutoSync = localStorage.getItem('google_sheets_auto_sync');
     const savedSyncInterval = localStorage.getItem('google_sheets_sync_interval');
     const savedMapping = localStorage.getItem('google_sheets_field_mapping');
+    const savedSelectedSheets = localStorage.getItem('google_sheets_selected_sheets');
     
     if (savedToken) {
       setGoogleAccessToken(savedToken);
@@ -153,6 +164,7 @@ const GoogleSheetsIntegration: React.FC = () => {
     if (savedAutoSync) setAutoSync(savedAutoSync === 'true');
     if (savedSyncInterval) setSyncInterval(Number(savedSyncInterval));
     if (savedMapping) setFieldMapping(JSON.parse(savedMapping));
+    if (savedSelectedSheets) setSelectedSheets(JSON.parse(savedSelectedSheets));
   };
 
   const saveSettings = () => {
@@ -162,6 +174,7 @@ const GoogleSheetsIntegration: React.FC = () => {
     localStorage.setItem('google_sheets_auto_sync', autoSync.toString());
     localStorage.setItem('google_sheets_sync_interval', syncInterval.toString());
     localStorage.setItem('google_sheets_field_mapping', JSON.stringify(fieldMapping));
+    localStorage.setItem('google_sheets_selected_sheets', JSON.stringify(selectedSheets));
   };
 
   const extractSpreadsheetId = (url: string): string => {
@@ -252,9 +265,26 @@ const GoogleSheetsIntegration: React.FC = () => {
 
       const data = await response.json();
       
-      // Fetch sheet data with headers
+      // Extract all sheets information
+      const sheets: SheetInfo[] = data.sheets.map((sheet: any) => ({
+        sheetId: sheet.properties.sheetId,
+        title: sheet.properties.title,
+        index: sheet.properties.index,
+        rowCount: sheet.properties.gridProperties?.rowCount || 0,
+        columnCount: sheet.properties.gridProperties?.columnCount || 0
+      }));
+      
+      setAvailableSheets(sheets);
+      
+      // Auto-select all sheets by default if none selected
+      if (selectedSheets.length === 0) {
+        setSelectedSheets(sheets.map(s => s.title));
+      }
+      
+      // Fetch sheet data with headers from first sheet or selected sheet
+      const firstSheet = sheets[0]?.title || sheetName;
       const sheetResponse = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A1:Z1`,
+        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${firstSheet}!A1:Z1`,
         {
           headers: {
             'Authorization': `Bearer ${googleAccessToken}`
@@ -274,13 +304,13 @@ const GoogleSheetsIntegration: React.FC = () => {
       setSheetData({
         spreadsheetId: data.spreadsheetId,
         spreadsheetName: data.properties.title,
-        sheetName: sheetName,
+        sheetName: firstSheet,
         columns: columns,
-        rowCount: data.sheets[0]?.properties?.gridProperties?.rowCount || 0
+        rowCount: sheets[0]?.rowCount || 0
       });
 
       setIsConnected(true);
-      setSuccess(`Successfully connected to "${data.properties.title}"`);
+      setSuccess(`Successfully connected to "${data.properties.title}" - Found ${sheets.length} sheet(s)`);
       saveSettings();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Connection failed');
@@ -296,109 +326,123 @@ const GoogleSheetsIntegration: React.FC = () => {
       return;
     }
 
+    if (selectedSheets.length === 0) {
+      setError('Please select at least one sheet to sync');
+      return;
+    }
+
     setSyncStats(prev => ({ ...prev, isRunning: true }));
     setLoading(true);
     setError('');
     setSuccess('');
 
+    let totalSuccessCount = 0;
+    let totalErrorCount = 0;
+    const api = getApiClient();
+
     try {
-      // Fetch all data from sheet
-      const response = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${googleAccessToken}`
-          }
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch sheet data');
-      }
-
-      const data = await response.json();
-      const rows = data.values || [];
-      
-      if (rows.length < 2) {
-        throw new Error('No data found in sheet');
-      }
-
-      const headers = rows[0];
-      const dataRows = rows.slice(1); // Skip header row
-
-      let successCount = 0;
-      let errorCount = 0;
-
-      // Import leads to CRM
-      const api = getApiClient();
-
-      for (const row of dataRows) {
+      // Loop through all selected sheets
+      for (const sheetName of selectedSheets) {
         try {
-          // Map row data to CRM lead format
-          const leadData: any = {
-            source: 'google_sheets',
-            status: 'new',
-            score: 0
-          };
-
-          headers.forEach((header: string, index: number) => {
-            const crmField = fieldMapping[header];
-            if (crmField && row[index]) {
-              let value = row[index];
-              
-              // Clean phone number - remove "p:" prefix from Facebook leads
-              if (crmField === 'phone' && value.startsWith('p:')) {
-                value = value.substring(2).trim();
+          // Fetch all data from the current sheet
+          const response = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${googleAccessToken}`
               }
-              
-              // Skip test leads with dummy data
-              if (value.includes('<test lead:') || value.includes('dummy data')) {
-                return; // Skip this row
-              }
-              
-              leadData[crmField] = value;
             }
-          });
-          
-          // Skip if this is a test lead
-          if (!leadData.name || leadData.name.includes('<test lead:')) {
+          );
+
+          if (!response.ok) {
+            console.error(`Failed to fetch data from sheet: ${sheetName}`);
             continue;
           }
 
-          // Check if lead already exists (by email or phone)
-          if (leadData.email) {
-            const existingLeads = await api.get('/leads', {
-              params: { email: leadData.email }
-            });
-            
-            if (existingLeads.data && existingLeads.data.length > 0) {
-              // Update existing lead
-              await api.put(`/leads/${existingLeads.data[0].id}`, leadData);
-            } else {
-              // Create new lead
-              await api.post('/leads', leadData);
-            }
-          } else {
-            // Create new lead without email check
-            await api.post('/leads', leadData);
+          const data = await response.json();
+          const rows = data.values || [];
+          
+          if (rows.length < 2) {
+            console.log(`No data found in sheet: ${sheetName}`);
+            continue;
           }
 
-          successCount++;
-        } catch (err) {
-          console.error('Error importing lead:', err);
-          errorCount++;
+          const headers = rows[0];
+          const dataRows = rows.slice(1); // Skip header row
+
+          // Import leads from this sheet to CRM
+          for (const row of dataRows) {
+            try {
+              // Map row data to CRM lead format
+              const leadData: any = {
+                source: `google_sheets_${sheetName}`, // Track which sheet the lead came from
+                status: 'new',
+                score: 0
+              };
+
+              headers.forEach((header: string, index: number) => {
+                const crmField = fieldMapping[header];
+                if (crmField && row[index]) {
+                  let value = row[index];
+                  
+                  // Clean phone number - remove "p:" prefix from Facebook leads
+                  if (crmField === 'phone' && value.startsWith('p:')) {
+                    value = value.substring(2).trim();
+                  }
+                  
+                  // Skip test leads with dummy data
+                  if (value.includes('<test lead:') || value.includes('dummy data')) {
+                    return; // Skip this row
+                  }
+                  
+                  leadData[crmField] = value;
+                }
+              });
+              
+              // Skip if this is a test lead
+              if (!leadData.name || leadData.name.includes('<test lead:')) {
+                continue;
+              }
+
+              // Check if lead already exists (by email or phone)
+              if (leadData.email) {
+                const existingLeads = await api.get('/leads', {
+              params: { email: leadData.email }
+                });
+                
+                if (existingLeads.data && existingLeads.data.length > 0) {
+                  // Update existing lead
+                  await api.put(`/leads/${existingLeads.data[0].id}`, leadData);
+                } else {
+                  // Create new lead
+                  await api.post('/leads', leadData);
+                }
+              } else {
+                // Create new lead without email check
+                await api.post('/leads', leadData);
+              }
+
+              totalSuccessCount++;
+            } catch (err) {
+              console.error('Error importing lead:', err);
+              totalErrorCount++;
+            }
+          }
+        } catch (sheetError) {
+          console.error(`Error processing sheet ${sheetName}:`, sheetError);
+          totalErrorCount++;
         }
       }
 
       setSyncStats({
-        totalImported: successCount + errorCount,
-        successCount,
-        errorCount,
+        totalImported: totalSuccessCount + totalErrorCount,
+        successCount: totalSuccessCount,
+        errorCount: totalErrorCount,
         lastSync: new Date().toLocaleString(),
         isRunning: false
       });
 
-      setSuccess(`Successfully imported ${successCount} leads! (${errorCount} errors)`);
+      setSuccess(`Successfully imported ${totalSuccessCount} leads from ${selectedSheets.length} sheet(s)! (${totalErrorCount} errors)`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sync failed');
       setSyncStats(prev => ({ ...prev, isRunning: false }));
@@ -537,22 +581,73 @@ const GoogleSheetsIntegration: React.FC = () => {
                 </p>
               </div>
 
-              {/* Sheet Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Sheet Name
-                </label>
-                <input
-                  type="text"
-                  value={sheetName}
-                  onChange={(e) => setSheetName(e.target.value)}
-                  placeholder="Sheet1"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Name of the sheet tab (default: Sheet1)
-                </p>
-              </div>
+              {/* Sheet Selection - Show after connection */}
+              {isConnected && availableSheets.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Select Sheets to Import
+                  </label>
+                  <div className="border border-gray-300 rounded-lg p-4 space-y-2 max-h-60 overflow-y-auto">
+                    {availableSheets.map((sheet) => (
+                      <label key={sheet.sheetId} className="flex items-center space-x-3 hover:bg-gray-50 p-2 rounded cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={selectedSheets.includes(sheet.title)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedSheets([...selectedSheets, sheet.title]);
+                            } else {
+                              setSelectedSheets(selectedSheets.filter(s => s !== sheet.title));
+                            }
+                          }}
+                          className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                        />
+                        <div className="flex-1">
+                          <span className="text-sm font-medium text-gray-900">{sheet.title}</span>
+                          <span className="text-xs text-gray-500 ml-2">({sheet.rowCount} rows)</span>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                  <div className="flex items-center space-x-2 mt-2">
+                    <button
+                      onClick={() => setSelectedSheets(availableSheets.map(s => s.title))}
+                      className="text-xs text-green-600 hover:text-green-700 font-medium"
+                    >
+                      Select All
+                    </button>
+                    <span className="text-gray-400">|</span>
+                    <button
+                      onClick={() => setSelectedSheets([])}
+                      className="text-xs text-gray-600 hover:text-gray-700 font-medium"
+                    >
+                      Deselect All
+                    </button>
+                    <span className="text-xs text-gray-500 ml-auto">
+                      {selectedSheets.length} selected
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Sheet Name - Show before connection or as fallback */}
+              {(!isConnected || availableSheets.length === 0) && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Sheet Name
+                  </label>
+                  <input
+                    type="text"
+                    value={sheetName}
+                    onChange={(e) => setSheetName(e.target.value)}
+                    placeholder="Sheet1"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Name of the sheet tab (default: Sheet1)
+                  </p>
+                </div>
+              )}
 
               {/* Auto Sync Settings */}
               <div className="border-t pt-4">
