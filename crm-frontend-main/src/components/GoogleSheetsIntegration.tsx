@@ -61,14 +61,27 @@ const GoogleSheetsIntegration: React.FC = () => {
 
   // Default field mapping - Google Sheet columns to CRM fields
   const [fieldMapping, setFieldMapping] = useState<Record<string, string>>({
+    // Primary lead information
     'full_name': 'name',
     'email': 'email',
     'phone_number': 'phone',
     'country': 'country',
+    
+    // Course and qualification
     'your_highest_qualification': 'qualification',
     'in_which_program_are_you_interested_?': 'course',
+    
+    // Lead status and source
     'lead_status': 'status',
     'form_name': 'source',
+    
+    // Campaign tracking
+    'ad_name': 'ad_name',
+    'campaign_name': 'campaign_name',
+    'adset_name': 'notes',
+    'platform': 'notes',
+    
+    // Alternative column names (case variations)
     'Name': 'name',
     'Email': 'email',
     'Phone': 'phone',
