@@ -547,7 +547,7 @@ class ProductionApiClient {
 
   // Users API - New endpoints
   async getUsers() {
-    return this.request('/users-supabase');
+    return this.request('/api/users-supabase');
   }
 
   // Get users that current user can assign leads to (hierarchical filtering)
@@ -572,55 +572,55 @@ class ProductionApiClient {
 
   // Get subordinates for a specific user (reporting hierarchy)
   async getUserSubordinates(userId: string) {
-    return this.request(`/users/${userId}/subordinates`);
+    return this.request(`/api/users/${userId}/subordinates`);
   }
 
   // Get leads for a specific user and their team
   async getUserLeads(userId: string, includeTeam: boolean = true) {
-    return this.request(`/users/${userId}/leads?includeTeam=${includeTeam}`);
+    return this.request(`/api/users/${userId}/leads?includeTeam=${includeTeam}`);
   }
 
   async createUser(userData: any) {
-    return this.request('/users-supabase', {
+    return this.request('/api/users-supabase', {
       method: 'POST',
       body: JSON.stringify(userData)
     });
   }
 
   async updateUser(id: string, userData: any) {
-    return this.request(`/users-supabase?id=${id}`, {
+    return this.request(`/api/users-supabase?id=${id}`, {
       method: 'PUT',
       body: JSON.stringify(userData)
     });
   }
 
   async deleteUser(id: string) {
-    return this.request(`/users-supabase?id=${id}`, {
+    return this.request(`/api/users-supabase?id=${id}`, {
       method: 'DELETE'
     });
   }
 
   // User Restrictions API (Admin Only)
   async getUserRestrictions() {
-    return this.request('/user-restrictions');
+    return this.request('/api/user-restrictions');
   }
 
   async createUserRestriction(restrictionData: any) {
-    return this.request('/user-restrictions', {
+    return this.request('/api/user-restrictions', {
       method: 'POST',
       body: JSON.stringify(restrictionData)
     });
   }
 
   async updateUserRestriction(id: string, restrictionData: any) {
-    return this.request(`/user-restrictions?id=${id}`, {
+    return this.request(`/api/user-restrictions?id=${id}`, {
       method: 'PUT',
       body: JSON.stringify(restrictionData)
     });
   }
 
   async deleteUserRestriction(id: string) {
-    return this.request(`/user-restrictions?id=${id}`, {
+    return this.request(`/api/user-restrictions?id=${id}`, {
       method: 'DELETE'
     });
   }
@@ -638,11 +638,11 @@ class ProductionApiClient {
   // Communications API - New endpoints
   async getCommunications(filters?: any) {
     const params = new URLSearchParams(filters).toString();
-    return this.request(`/communications${params ? `?${params}` : ''}`);
+    return this.request(`/api/communications${params ? `?${params}` : ''}`);
   }
 
   async createCommunication(communicationData: any) {
-    return this.request('/communications', {
+    return this.request('/api/communications', {
       method: 'POST',
       body: JSON.stringify(communicationData)
     });
@@ -651,11 +651,11 @@ class ProductionApiClient {
   // Documents API - New endpoints
   async getDocuments(filters?: any) {
     const params = new URLSearchParams(filters).toString();
-    return this.request(`/documents${params ? `?${params}` : ''}`);
+    return this.request(`/api/documents${params ? `?${params}` : ''}`);
   }
 
   async uploadDocument(formData: FormData) {
-    return this.request('/documents', {
+    return this.request('/api/documents', {
       method: 'POST',
       body: formData,
       headers: {} // Remove Content-Type to let browser set it for FormData
@@ -665,11 +665,11 @@ class ProductionApiClient {
   // Payments API - Enhanced
   async getPayments(filters?: any) {
     const params = new URLSearchParams(filters).toString();
-    return this.request(`/payments${params ? `?${params}` : ''}`);
+    return this.request(`/api/payments${params ? `?${params}` : ''}`);
   }
 
   async createPaymentOrder(paymentData: any) {
-    return this.request('/payments/create-order', {
+    return this.request('/api/payments/create-order', {
       method: 'POST',
       body: JSON.stringify(paymentData)
     });
@@ -677,11 +677,11 @@ class ProductionApiClient {
 
   // Integrations API - New endpoints
   async getIntegrationStatus() {
-    return this.request('/integrations');
+    return this.request('/api/integrations');
   }
 
   async testIntegration(integration: string) {
-    return this.request('/integrations', {
+    return this.request('/api/integrations', {
       method: 'POST',
       body: JSON.stringify({ action: 'test', integration })
     });
@@ -694,120 +694,120 @@ class ProductionApiClient {
   // Analytics Events API
   async getAnalyticsEvents(filters?: any) {
     const params = new URLSearchParams(filters).toString();
-    return this.request(`/analytics/events${params ? `?${params}` : ''}`);
+    return this.request(`/api/analytics/events${params ? `?${params}` : ''}`);
   }
 
   async createAnalyticsEvent(eventData: any) {
-    return this.request('/analytics/events', {
+    return this.request('/api/analytics/events', {
       method: 'POST',
       body: JSON.stringify(eventData)
     });
   }
 
   async getAnalyticsDashboard(dateRange?: string) {
-    return this.request(`/analytics/dashboard${dateRange ? `?range=${dateRange}` : ''}`);
+    return this.request(`/api/analytics/dashboard${dateRange ? `?range=${dateRange}` : ''}`);
   }
 
   // Campaigns API
   async getCampaigns(filters?: any) {
     const params = new URLSearchParams(filters).toString();
-    return this.request(`/campaigns${params ? `?${params}` : ''}`);
+    return this.request(`/api/campaigns${params ? `?${params}` : ''}`);
   }
 
   async createCampaign(campaignData: any) {
-    return this.request('/campaigns', {
+    return this.request('/api/campaigns', {
       method: 'POST',
       body: JSON.stringify(campaignData)
     });
   }
 
   async updateCampaign(id: string, campaignData: any) {
-    return this.request(`/campaigns/${id}`, {
+    return this.request(`/api/campaigns/${id}`, {
       method: 'PUT',
       body: JSON.stringify(campaignData)
     });
   }
 
   async deleteCampaign(id: string) {
-    return this.request(`/campaigns/${id}`, {
+    return this.request(`/api/campaigns/${id}`, {
       method: 'DELETE'
     });
   }
 
   async launchCampaign(id: string) {
-    return this.request(`/campaigns/${id}/launch`, {
+    return this.request(`/api/campaigns/${id}/launch`, {
       method: 'POST'
     });
   }
 
   // Communications API - Enhanced
   async updateCommunication(id: string, communicationData: any) {
-    return this.request(`/communications/${id}`, {
+    return this.request(`/api/communications/${id}`, {
       method: 'PUT',
       body: JSON.stringify(communicationData)
     });
   }
 
   async deleteCommunication(id: string) {
-    return this.request(`/communications/${id}`, {
+    return this.request(`/api/communications/${id}`, {
       method: 'DELETE'
     });
   }
 
   async getCommunicationHistory(entityId: string, entityType: 'lead' | 'student') {
-    return this.request(`/communications/history?entityId=${entityId}&entityType=${entityType}`);
+    return this.request(`/api/communications/history?entityId=${entityId}&entityType=${entityType}`);
   }
 
   // Documents API - Enhanced
   async updateDocument(id: string, documentData: any) {
-    return this.request(`/documents/${id}`, {
+    return this.request(`/api/documents/${id}`, {
       method: 'PUT',
       body: JSON.stringify(documentData)
     });
   }
 
   async deleteDocument(id: string) {
-    return this.request(`/documents/${id}`, {
+    return this.request(`/api/documents/${id}`, {
       method: 'DELETE'
     });
   }
 
   async verifyDocument(id: string, verificationData: any) {
-    return this.request(`/documents/${id}/verify`, {
+    return this.request(`/api/documents/${id}/verify`, {
       method: 'POST',
       body: JSON.stringify(verificationData)
     });
   }
 
   async getDocumentsByStudent(studentId: string) {
-    return this.request(`/documents/student/${studentId}`);
+    return this.request(`/api/documents/student/${studentId}`);
   }
 
   async getDocumentsByLead(leadId: string) {
-    return this.request(`/documents/lead/${leadId}`);
+    return this.request(`/api/documents/lead/${leadId}`);
   }
 
   // Payments API - Enhanced
   async updatePayment(id: string, paymentData: any) {
-    return this.request(`/payments/${id}`, {
+    return this.request(`/api/payments/${id}`, {
       method: 'PUT',
       body: JSON.stringify(paymentData)
     });
   }
 
   async getPaymentsByStudent(studentId: string) {
-    return this.request(`/payments/student/${studentId}`);
+    return this.request(`/api/payments/student/${studentId}`);
   }
 
   async processPayment(paymentId: string, paymentDetails: any) {
-    return this.request(`/payments/${paymentId}/process`, {
+    return this.request(`/api/payments/${paymentId}/process`, {
       method: 'POST',
       body: JSON.stringify(paymentDetails)
     });
   }
 
   async refundPayment(paymentId: string, refundData: any) {
-    return this.request(`/payments/${paymentId}/refund`, {
+    return this.request(`/api/payments/${paymentId}/refund`, {
       method: 'POST',
       body: JSON.stringify(refundData)
     });
@@ -815,24 +815,24 @@ class ProductionApiClient {
 
   // Notifications API
   async getNotifications(userId?: string) {
-    return this.request(`/notifications${userId ? `?userId=${userId}` : ''}`);
+    return this.request(`/api/notifications${userId ? `?userId=${userId}` : ''}`);
   }
 
   async createNotification(notificationData: any) {
-    return this.request('/notifications', {
+    return this.request('/api/notifications', {
       method: 'POST',
       body: JSON.stringify(notificationData)
     });
   }
 
   async markNotificationAsRead(id: string) {
-    return this.request(`/notifications/${id}/read`, {
+    return this.request(`/api/notifications/${id}/read`, {
       method: 'PUT'
     });
   }
 
   async deleteNotification(id: string) {
-    return this.request(`/notifications/${id}`, {
+    return this.request(`/api/notifications/${id}`, {
       method: 'DELETE'
     });
   }
@@ -841,70 +841,70 @@ class ProductionApiClient {
   async getNotes(entityId?: string, entityType?: 'lead' | 'student') {
     if (entityType === 'lead' && entityId) {
       // Use the dedicated lead-notes API endpoint
-      return this.request(`/lead-notes/${entityId}`);
+      return this.request(`/api/lead-notes/${entityId}`);
     }
     // Fallback to generic notes API for other cases
     const params = new URLSearchParams();
     if (entityId) params.append('entityId', entityId);
     if (entityType) params.append('entityType', entityType);
-    return this.request(`/notes${params.toString() ? `?${params.toString()}` : ''}`);
+    return this.request(`/api/notes${params.toString() ? `?${params.toString()}` : ''}`);
   }
 
   async createNote(noteData: any) {
     // If it's a lead note, use the dedicated lead-notes API
     if (noteData.lead_id) {
-      return this.request(`/lead-notes/${noteData.lead_id}`, {
+      return this.request(`/api/lead-notes/${noteData.lead_id}`, {
         method: 'POST',
         body: JSON.stringify(noteData)
       });
     }
     // Fallback to generic notes API
-    return this.request('/notes', {
+    return this.request('/api/notes', {
       method: 'POST',
       body: JSON.stringify(noteData)
     });
   }
 
   async updateNote(id: string, noteData: any) {
-    return this.request(`/notes/${id}`, {
+    return this.request(`/api/notes/${id}`, {
       method: 'PUT',
       body: JSON.stringify(noteData)
     });
   }
 
   async deleteNote(id: string) {
-    return this.request(`/notes/${id}`, {
+    return this.request(`/api/notes/${id}`, {
       method: 'DELETE'
     });
   }
 
   // Automation Workflows API
   async getAutomationWorkflows() {
-    return this.request('/automation/workflows');
+    return this.request('/api/automations/workflows');
   }
 
   async createAutomationWorkflow(workflowData: any) {
-    return this.request('/automation/workflows', {
+    return this.request('/api/automations/workflows', {
       method: 'POST',
       body: JSON.stringify(workflowData)
     });
   }
 
   async updateAutomationWorkflow(id: string, workflowData: any) {
-    return this.request(`/automation/workflows/${id}`, {
+    return this.request(`/api/automations/workflows/${id}`, {
       method: 'PUT',
       body: JSON.stringify(workflowData)
     });
   }
 
   async deleteAutomationWorkflow(id: string) {
-    return this.request(`/automation/workflows/${id}`, {
+    return this.request(`/api/automations/workflows/${id}`, {
       method: 'DELETE'
     });
   }
 
   async executeWorkflow(id: string, triggerData?: any) {
-    return this.request(`/automation/workflows/${id}/execute`, {
+    return this.request(`/api/automations/workflows/${id}/execute`, {
       method: 'POST',
       body: JSON.stringify(triggerData || {})
     });
@@ -913,11 +913,11 @@ class ProductionApiClient {
   // Integration Logs API
   async getIntegrationLogs(filters?: any) {
     const params = new URLSearchParams(filters).toString();
-    return this.request(`/integration-logs${params ? `?${params}` : ''}`);
+    return this.request(`/api/integration-logs${params ? `?${params}` : ''}`);
   }
 
   async createIntegrationLog(logData: any) {
-    return this.request('/integration-logs', {
+    return this.request('/api/integration-logs', {
       method: 'POST',
       body: JSON.stringify(logData)
     });
@@ -925,11 +925,11 @@ class ProductionApiClient {
 
   // System Settings API
   async getSystemSettings(category?: string) {
-    return this.request(`/system/settings${category ? `?category=${category}` : ''}`);
+    return this.request(`/api/settings${category ? `?category=${category}` : ''}`);
   }
 
   async updateSystemSetting(key: string, value: any) {
-    return this.request('/system/settings', {
+    return this.request('/api/settings', {
       method: 'PUT',
       body: JSON.stringify({ key, value })
     });
@@ -937,11 +937,11 @@ class ProductionApiClient {
 
   // User Profiles API - Enhanced
   async getUserProfile(userId?: string) {
-    return this.request(`/users/profile${userId ? `?userId=${userId}` : ''}`);
+    return this.request(`/api/users/profile${userId ? `?userId=${userId}` : ''}`);
   }
 
   async updateUserProfile(userId: string, profileData: any) {
-    return this.request(`/users/profile/${userId}`, {
+    return this.request(`/api/users/profile/${userId}`, {
       method: 'PUT',
       body: JSON.stringify(profileData)
     });
@@ -949,11 +949,11 @@ class ProductionApiClient {
 
   // User Sessions API
   async getUserSessions(userId?: string) {
-    return this.request(`/users/sessions${userId ? `?userId=${userId}` : ''}`);
+    return this.request(`/api/users/sessions${userId ? `?userId=${userId}` : ''}`);
   }
 
   async revokeUserSession(sessionId: string) {
-    return this.request(`/users/sessions/${sessionId}/revoke`, {
+    return this.request(`/api/users/sessions/${sessionId}/revoke`, {
       method: 'DELETE'
     });
   }
