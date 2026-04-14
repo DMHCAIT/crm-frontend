@@ -229,8 +229,8 @@ const UserManagement: React.FC = () => {
         return false;
       }
 
-      // Hierarchical filtering: users can see themselves and users who report to them (directly or indirectly)
-      const canSeeUser = canAccessUser(user, currentUser?.id);
+      // All authenticated users can see all other users in the management page
+      const canSeeUser = true;
       
       const matchesRole = selectedRole === 'all' || user.role === selectedRole;
       const matchesTeam = selectedTeam === 'all' || user.department === selectedTeam;
