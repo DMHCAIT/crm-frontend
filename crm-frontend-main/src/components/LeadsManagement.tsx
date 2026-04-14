@@ -213,7 +213,7 @@ const LeadsManagement: React.FC = () => {
   
   // Pagination States (must come first)
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(50);
   const bulkUpdateMutation = useBulkUpdateLeads();
   const bulkDeleteMutation = useBulkDeleteLeads();
   const updateLeadMutation = useUpdateLead();
@@ -562,22 +562,18 @@ const LeadsManagement: React.FC = () => {
                 Array.isArray(leadsData) ? leadsData : [];
   const pagination = (serverResponse as any).pagination || null;
   const backendStats = (serverResponse as any).stats || null; // Extract backend statistics
-  
-  // DEBUG: Log server response structure
-  console.log('🔍 Server Response Debug:', {
-    hasLeads: !!((serverResponse as any).leads),
-    hasData: !!((serverResponse as any).data),
-    hasPagination: !!pagination,
-    hasBackendStats: !!backendStats,
-    backendStatusCounts: backendStats?.statusCounts,
-    paginationData: pagination,
-    leadsCount: leads.length,
-    serverResponseKeys: Object.keys(serverResponse),
-    totalRecordsFromPagination: pagination?.totalRecords,
-    fallbackToLeadsLength: leads.length
-  });
-  
-  const totalRecords = pagination?.totalRecords || leads.length;
+
+  // Extract total from multiple possible response fields
+  const totalRecords =
+    pagination?.totalRecords ??
+    pagination?.total ??
+    pagination?.count ??
+    pagination?.totalCount ??
+    (serverResponse as any).totalLeads ??
+    (serverResponse as any).total ??
+    (typeof pagination?.totalPages === 'number'
+      ? pagination.totalPages * (pagination?.pageSize || itemsPerPage)
+      : leads.length);
   const loading = leadsLoading;
 
   // ==========================================
@@ -587,23 +583,18 @@ const LeadsManagement: React.FC = () => {
   
   // For server-side pagination, we'll use leads directly from server
   const paginatedLeads = leads; // Server already returns paginated data
-  const totalItems = pagination?.totalRecords || totalRecords || 0;
-  
-  // DEBUG: Log total items calculation
-  console.log('📊 Total Items Debug:', {
-    paginationTotalRecords: pagination?.totalRecords,
-    fallbackTotalRecords: totalRecords,
-    finalTotalItems: totalItems,
-    paginatedLeadsLength: paginatedLeads.length,
-    currentPage: currentPage,
-    itemsPerPage: itemsPerPage
-  });
-  
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalItems = totalRecords || leads.length;
+
+  const totalPages = Math.max(
+    pagination?.totalPages || pagination?.pages || 0,
+    Math.ceil(totalItems / itemsPerPage),
+    1
+  );
   
   // Calculate display indices for pagination info
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + paginatedLeads.length, totalItems);
+  const displayStart = totalItems === 0 ? 0 : startIndex + 1;
 
   // Reset to page 1 when filters change (but not during lead updates)
   useEffect(() => {
@@ -2206,7 +2197,7 @@ const LeadsManagement: React.FC = () => {
       const currentYear = now.getFullYear();
 
       return {
-        total: backendStats.totalLeads || pagination?.totalRecords || (leads || []).length,
+        total: backendStats.totalLeads || pagination?.totalRecords || (serverResponse as any).totalLeads || (serverResponse as any).total || (leads || []).length,
         hot: backendStats.statusCounts['Hot'] || 0,
         warm: backendStats.statusCounts['Warm'] || 0,
         followup: backendStats.statusCounts['Follow Up'] || 0,
@@ -2225,7 +2216,7 @@ const LeadsManagement: React.FC = () => {
 
     // Use exact status values from backend: ['Fresh', 'Follow Up', 'Warm', 'Hot', 'Enrolled', 'Will Enroll Later', 'Not Answering', 'Not Interested', 'Junk']
     return {
-      total: pagination?.totalRecords || (leads || []).length,
+      total: (serverResponse as any).totalLeads || (serverResponse as any).total || pagination?.totalRecords || totalItems || (leads || []).length,
       hot: (leads || []).filter((lead: Lead) => lead.status === 'Hot').length,
       warm: (leads || []).filter((lead: Lead) => lead.status === 'Warm').length,
       followup: (leads || []).filter((lead: Lead) => lead.status === 'Follow Up').length,
@@ -4474,39 +4465,37 @@ const LeadsManagement: React.FC = () => {
             </div>
 
             {/* Pagination Controls - Top */}
-            {totalPages > 1 && (
-              <div className="border-t border-gray-200 px-4 py-4 bg-gray-50">
-                <div className="flex items-center justify-between">
-                  {/* Left: Showing info and page size selector */}
-                  <div className="flex items-center space-x-4">
-                    <p className="text-sm text-gray-700">
-                      Showing <span className="font-medium">{startIndex + 1}</span> to{' '}
-                      <span className="font-medium">{endIndex}</span> of{' '}
-                      <span className="font-medium">{totalItems}</span> leads
-                    </p>
-                    
-                    {/* Items per page selector */}
-                    <div className="flex items-center space-x-2">
-                      <label className="text-sm text-gray-600">Per page:</label>
-                      <select
-                        value={itemsPerPage}
-                        onChange={(e) => {
-                          setItemsPerPage(Number(e.target.value));
-                          setCurrentPage(1);
-                        }}
-                        className="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      >
-                        <option value={10}>10</option>
-                        <option value={25}>25</option>
-                        <option value={50}>50</option>
-                        <option value={100}>100</option>
-                        <option value={200}>200</option>
-                      </select>
-                    </div>
-                  </div>
+            <div className="border-t border-gray-200 px-4 py-4 bg-gray-50">
+              <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                {/* Left: Showing info and page size selector */}
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:space-x-4 sm:gap-0">
+                  <p className="text-sm text-gray-700">
+                    Showing <span className="font-medium">{displayStart}</span> to{' '}
+                    <span className="font-medium">{endIndex}</span> of{' '}
+                    <span className="font-medium">{totalItems}</span> leads
+                  </p>
 
-                  {/* Right: Page navigation */}
+                  {/* Items per page selector */}
                   <div className="flex items-center space-x-2">
+                    <label className="text-sm text-gray-600">Per page:</label>
+                    <select
+                      value={itemsPerPage}
+                      onChange={(e) => {
+                        setItemsPerPage(Number(e.target.value));
+                        setCurrentPage(1);
+                      }}
+                      className="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value={50}>50</option>
+                      <option value={100}>100</option>
+                      <option value={200}>200</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Right: Page navigation */}
+                {totalPages > 1 && (
+                  <div className="flex flex-wrap items-center gap-2">
                     {/* First page button */}
                     <button
                       onClick={() => setCurrentPage(1)}
@@ -4644,9 +4633,9 @@ const LeadsManagement: React.FC = () => {
                       <span className="text-sm text-gray-500">of {totalPages}</span>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
-            )}
+            </div>
 
             {/* Enhanced Systematic Leads List */}
             <div className="divide-y divide-gray-100">
