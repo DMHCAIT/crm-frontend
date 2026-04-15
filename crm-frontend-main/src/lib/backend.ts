@@ -403,7 +403,7 @@ class ProductionApiClient {
         }
         if (filters.country && filters.country !== 'all') params.append('country', filters.country);
         if (filters.source && filters.source !== 'all') params.append('source', filters.source);
-        if (filters.assignedTo && filters.assignedTo.length > 0) {
+        if (filters.assignedTo && filters.assignedTo.length > 0 && !filters.assignedTo.includes('all')) {
           params.append('assignedTo', filters.assignedTo.join(','));
         }
         if (filters.qualification && filters.qualification !== 'all') params.append('qualification', filters.qualification);
