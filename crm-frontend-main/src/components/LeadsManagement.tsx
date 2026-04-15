@@ -1684,16 +1684,16 @@ const LeadsManagement: React.FC = () => {
               continue;
             }
 
-            // Validate company value if provided
+            // Map company value — accept DMHCA/IBMP as org identifiers, pass anything else through as-is
             const companyValue = columnMap.company >= 0 ? values[columnMap.company] || '' : '';
             let validatedCompany = '';
             if (companyValue) {
               const normalizedCompany = companyValue.toUpperCase().trim();
+              // Normalize known org names; for anything else just store the raw value
               if (normalizedCompany === 'DMHCA' || normalizedCompany === 'IBMP') {
                 validatedCompany = normalizedCompany;
               } else {
-                parseErrors.push(`Row ${i + 1}: Invalid company value "${companyValue}". Must be either "DMHCA" or "IBMP"`);
-                continue;
+                validatedCompany = companyValue.trim();
               }
             }
             
