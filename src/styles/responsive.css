@@ -1,0 +1,421 @@
+/* Mobile Responsive Enhancements for CRM */
+
+/* Base responsive styles */
+@media (max-width: 768px) {
+  /* Layout adjustments */
+  .container {
+    padding: 1rem;
+  }
+
+  /* Navigation */
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+    width: 280px;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+  .mobile-menu-overlay.active {
+    display: block;
+  }
+
+  /* Tables - scroll horizontally */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 600px;
+    font-size: 0.875rem;
+  }
+
+  table th,
+  table td {
+    padding: 0.5rem;
+    white-space: nowrap;
+  }
+
+  /* Cards */
+  .card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-card h3 {
+    font-size: 0.875rem;
+  }
+
+  .stat-card .value {
+    font-size: 1.5rem;
+  }
+
+  /* Forms */
+  .form-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-group {
+    width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+
+  /* Modals */
+  .modal {
+    padding: 1rem;
+    margin: 0;
+    max-width: 100%;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    padding: 1rem;
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .modal-footer {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .modal-footer button {
+    width: 100%;
+  }
+
+  /* Filters */
+  .filter-group {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .filter-group > * {
+    width: 100%;
+  }
+
+  /* Dashboard */
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .chart-container {
+    min-height: 250px;
+  }
+
+  /* Lead/Student Cards */
+  .lead-card,
+  .student-card {
+    padding: 1rem;
+  }
+
+  .lead-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .lead-card-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Pipeline View */
+  .pipeline-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pipeline-column {
+    min-width: 280px;
+  }
+
+  /* Header */
+  .header {
+    padding: 1rem;
+  }
+
+  .header-title {
+    font-size: 1.25rem;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .header-actions button {
+    width: 100%;
+  }
+
+  /* Search and filters bar */
+  .search-filter-bar {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  /* Buttons */
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
+
+  /* Date range picker */
+  .date-range-picker {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  /* Export options */
+  .export-options {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* User profile dropdown */
+  .user-dropdown {
+    right: 0;
+    left: auto;
+    min-width: 200px;
+  }
+
+  /* Notifications panel */
+  .notifications-panel {
+    width: 100%;
+    max-width: 100%;
+    right: 0;
+    left: 0;
+  }
+
+  /* Communication tabs */
+  .tabs-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabs {
+    min-width: 100%;
+    justify-content: flex-start;
+  }
+
+  .tab {
+    flex-shrink: 0;
+    padding: 0.75rem 1rem;
+  }
+
+  /* Analytics charts */
+  .analytics-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Document list */
+  .document-list-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .document-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* Tablet specific (between mobile and desktop) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .export-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .analytics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pipeline-column {
+    min-width: 320px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .stat-card .value {
+    font-size: 1.25rem;
+  }
+
+  .pipeline-column {
+    min-width: 240px;
+  }
+
+  table {
+    min-width: 500px;
+    font-size: 0.75rem;
+  }
+
+  .button {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .modal {
+    border-radius: 0;
+  }
+
+  /* Stack elements vertically on very small screens */
+  .flex-row-mobile {
+    flex-direction: column !important;
+  }
+
+  .text-mobile-center {
+    text-align: center;
+  }
+
+  /* Hide non-essential columns in tables */
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+
+/* Landscape mobile devices */
+@media (max-width: 768px) and (orientation: landscape) {
+  .modal {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .sidebar {
+    width: 240px;
+  }
+}
+
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  /* Increase touch targets */
+  button,
+  a,
+  .clickable {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Remove hover states on touch devices */
+  .hover-effect:hover {
+    transform: none;
+  }
+
+  /* Better touch feedback */
+  button:active,
+  .button:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print,
+  .sidebar,
+  .header-actions,
+  button,
+  .modal-footer {
+    display: none !important;
+  }
+
+  .content {
+    width: 100%;
+    padding: 0;
+  }
+
+  table {
+    page-break-inside: avoid;
+  }
+}
+
+/* Utilities for responsive design */
+.hidden-mobile {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+
+  .visible-mobile {
+    display: block !important;
+  }
+}
+
+.visible-mobile {
+  display: none;
+}
+
+/* Responsive typography */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1.125rem;
+  }
+
+  p {
+    font-size: 0.9375rem;
+  }
+}
