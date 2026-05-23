@@ -461,9 +461,6 @@ const Settings: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
-};
 
       {/* Change Password Modal */}
       {showPasswordModal && (
