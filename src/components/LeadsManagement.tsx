@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import * as XLSX from 'xlsx';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
 import { TokenManager } from '../lib/productionAuth';
@@ -1565,397 +1566,261 @@ const LeadsManagement: React.FC = () => {
     window.URL.revokeObjectURL(url);
   };
 
-  // Import leads from CSV
+  // Import leads from CSV or Excel
   const handleImportLeads = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validate file type - only accept CSV files for now
     const fileName = file.name.toLowerCase();
-    if (!fileName.endsWith('.csv')) {
-      alert('Please select a CSV file (.csv). Excel files are not currently supported. Please convert your Excel file to CSV format first.');
-      event.target.value = ''; // Reset file input
+    const isExcel = fileName.endsWith('.xlsx') || fileName.endsWith('.xls');
+    const isCsv = fileName.endsWith('.csv');
+
+    if (!isExcel && !isCsv) {
+      alert('Please select a CSV (.csv) or Excel (.xlsx, .xls) file.');
+      event.target.value = '';
       return;
     }
 
     setImportLoading(true);
-    
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      try {
-        const csv = e.target?.result as string;
-        if (!csv || csv.trim() === '') {
-          throw new Error('File is empty or could not be read');
-        }
-        
-        const lines = csv.split('\n').filter(line => line.trim()); // Remove empty lines
-        
-        if (lines.length < 2) {
-          alert('CSV file must contain at least a header row and one data row');
-          setImportLoading(false);
-          return;
-        }
 
-        // Parse header row to understand column mapping
-        const headerValues: string[] = [];
-        let current = '';
-        let inQuotes = false;
-        const headerLine = lines[0];
-        
-        for (let j = 0; j < headerLine.length; j++) {
-          const char = headerLine[j];
-          if (char === '"') {
-            inQuotes = !inQuotes;
-          } else if (char === ',' && !inQuotes) {
-            headerValues.push(current.trim().toLowerCase());
-            current = '';
-          } else {
-            current += char;
-          }
-        }
-        headerValues.push(current.trim().toLowerCase());
+    try {
+      // ── Parse file into rows[][] ─────────────────────────────────────
+      let allRows: string[][] = [];
 
-        // Create column mapping
-        const getColumnIndex = (possibleNames: string[]) => {
-          for (const name of possibleNames) {
-            const index = headerValues.findIndex(h => h.includes(name.toLowerCase()));
-            if (index !== -1) return index;
-          }
-          return -1;
-        };
-
-        const columnMap = {
-          fullName: getColumnIndex(['full name', 'name', 'fullname']),
-          email: getColumnIndex(['email', 'e-mail']),
-          phone: getColumnIndex(['phone', 'mobile', 'contact']),
-          country: getColumnIndex(['country']),
-          branch: getColumnIndex(['branch']),
-          qualification: getColumnIndex(['qualification', 'education']),
-          source: getColumnIndex(['source']),
-          course: getColumnIndex(['course']),
-          status: getColumnIndex(['status']),
-          assignedTo: getColumnIndex(['assigned to', 'assigned', 'assignedto', 'counselor']),
-          followUp: getColumnIndex(['follow up', 'followup', 'follow-up']),
-          company: getColumnIndex(['company', 'organization', 'org']),
-          notes: getColumnIndex(['notes', 'note', 'comments', 'comment', 'remarks', 'remark'])
-        };
-
-        // Validate that we have at least name
-        if (columnMap.fullName === -1) {
-          alert('CSV must contain at least "Full Name" column.\n\nFound columns: ' + headerValues.join(', '));
-          setImportLoading(false);
-          return;
-        }
-        
-        // Parse all leads from CSV
-        const leadsToImport = [];
-        const parseErrors: string[] = [];
-
-        for (let i = 1; i < lines.length; i++) {
-          const line = lines[i];
+      if (isExcel) {
+        const buffer = await file.arrayBuffer();
+        const workbook = XLSX.read(buffer, { type: 'array', cellDates: true });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const raw = XLSX.utils.sheet_to_json<any[]>(sheet, { header: 1, raw: false, defval: '' });
+        allRows = raw.map((row: any[]) => row.map((cell: any) => String(cell ?? '').trim()));
+      } else {
+        // CSV: read as text then parse
+        const text = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = e => resolve((e.target?.result as string) || '');
+          reader.onerror = reject;
+          reader.readAsText(file);
+        });
+        if (!text.trim()) throw new Error('File is empty or could not be read');
+        for (const line of text.split('\n')) {
           if (!line.trim()) continue;
-
-          try {
-            // Better CSV parsing - handle quoted values with commas
-            const values: string[] = [];
-            let current = '';
-            let inQuotes = false;
-            
-            for (let j = 0; j < line.length; j++) {
-              const char = line[j];
-              if (char === '"') {
-                inQuotes = !inQuotes;
-              } else if (char === ',' && !inQuotes) {
-                values.push(current.trim());
-                current = '';
-              } else {
-                current += char;
-              }
-            }
-            values.push(current.trim()); // Add the last value
-            
-            // Get values using column mapping
-            const fullName = columnMap.fullName >= 0 ? values[columnMap.fullName] || '' : '';
-            const email = columnMap.email >= 0 ? values[columnMap.email] || '' : '';
-
-            // Skip if no name
-            if (!fullName) {
-              parseErrors.push(`Row ${i + 1}: Missing name`);
-              continue;
-            }
-
-            // Map company value — accept DMHCA/IBMP as org identifiers, pass anything else through as-is
-            const companyValue = columnMap.company >= 0 ? values[columnMap.company] || '' : '';
-            let validatedCompany = '';
-            if (companyValue) {
-              const normalizedCompany = companyValue.toUpperCase().trim();
-              // Normalize known org names; for anything else just store the raw value
-              if (normalizedCompany === 'DMHCA' || normalizedCompany === 'IBMP') {
-                validatedCompany = normalizedCompany;
-              } else {
-                validatedCompany = companyValue.trim();
-              }
-            }
-            
-            const leadData = {
-              fullName: fullName,
-              email: email,
-              phone: columnMap.phone >= 0 ? values[columnMap.phone] || '' : '',
-              country: columnMap.country >= 0 ? values[columnMap.country] || '' : '',
-              branch: columnMap.branch >= 0 ? values[columnMap.branch] || '' : '',
-              qualification: columnMap.qualification >= 0 ? values[columnMap.qualification] || '' : '',
-              source: columnMap.source >= 0 ? (values[columnMap.source] || 'CSV Import') : 'CSV Import',
-              course: columnMap.course >= 0 ? values[columnMap.course] || '' : '',
-              status: columnMap.status >= 0 ? values[columnMap.status] || '' : '',
-              assignedTo: columnMap.assignedTo >= 0 ? values[columnMap.assignedTo] || '' : '',
-              followUp: columnMap.followUp >= 0 ? values[columnMap.followUp] || '' : '',
-              company: validatedCompany,
-              notes: (() => {
-                const csvNotes = columnMap.notes >= 0 ? values[columnMap.notes] || '' : '';
-                const importNote = `Imported from CSV file "${file.name}" on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`;
-                
-                if (csvNotes.trim()) {
-                  return `${csvNotes.trim()}\n\n--- System Note ---\n${importNote}`;
-                } else {
-                  return importNote;
-                }
-              })()
-            };
-
-            leadsToImport.push(leadData);
-
-          } catch (error) {
-            parseErrors.push(`Row ${i + 1}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          const values: string[] = [];
+          let cur = '', inQ = false;
+          for (let j = 0; j < line.length; j++) {
+            const c = line[j];
+            if (c === '"') { inQ = !inQ; }
+            else if (c === ',' && !inQ) { values.push(cur.trim()); cur = ''; }
+            else { cur += c; }
           }
+          values.push(cur.trim());
+          allRows.push(values);
+        }
+      }
+
+      // Remove completely empty rows
+      allRows = allRows.filter(row => row.some(cell => cell !== ''));
+
+      if (allRows.length < 2) {
+        alert('File must contain at least a header row and one data row.');
+        setImportLoading(false);
+        return;
+      }
+
+      // ── Column mapping ───────────────────────────────────────────────
+      const headerValues = allRows[0].map(h => String(h || '').toLowerCase());
+
+      const getColumnIndex = (possibleNames: string[]) => {
+        for (const name of possibleNames) {
+          const idx = headerValues.findIndex(h => h.includes(name.toLowerCase()));
+          if (idx !== -1) return idx;
+        }
+        return -1;
+      };
+
+      const columnMap = {
+        fullName:      getColumnIndex(['full name', 'name', 'fullname']),
+        email:         getColumnIndex(['email', 'e-mail']),
+        phone:         getColumnIndex(['phone', 'mobile', 'contact']),
+        country:       getColumnIndex(['country']),
+        branch:        getColumnIndex(['branch']),
+        qualification: getColumnIndex(['qualification', 'education']),
+        source:        getColumnIndex(['source']),
+        course:        getColumnIndex(['course']),
+        status:        getColumnIndex(['status']),
+        assignedTo:    getColumnIndex(['assigned to', 'assigned', 'assignedto', 'counselor']),
+        followUp:      getColumnIndex(['follow up', 'followup', 'follow-up']),
+        company:       getColumnIndex(['company', 'organization', 'org']),
+        notes:         getColumnIndex(['notes', 'note', 'comments', 'comment', 'remarks', 'remark']),
+      };
+
+      if (columnMap.fullName === -1) {
+        alert('File must contain at least a "Full Name" (or "Name") column.\n\nFound columns: ' + headerValues.join(', '));
+        setImportLoading(false);
+        return;
+      }
+
+      // ── Build leadsToImport ──────────────────────────────────────────
+      const leadsToImport: any[] = [];
+      const parseErrors: string[] = [];
+
+      for (let i = 1; i < allRows.length; i++) {
+        const values = allRows[i];
+        const fullName = columnMap.fullName >= 0 ? values[columnMap.fullName] || '' : '';
+        if (!fullName) {
+          parseErrors.push(`Row ${i + 1}: Missing name`);
+          continue;
         }
 
-        // Show parse errors if any
-        if (parseErrors.length > 0) {
-          let errorMessage = `${parseErrors.length} rows had parsing errors:\n\n`;
-          errorMessage += parseErrors.slice(0, 5).join('\n');
-          if (parseErrors.length > 5) {
-            errorMessage += `\n... and ${parseErrors.length - 5} more errors`;
-          }
-          errorMessage += '\n\nDo you want to continue importing the valid leads?';
-          
-          if (!confirm(errorMessage)) {
-            setImportLoading(false);
-            return;
-          }
+        const companyValue = columnMap.company >= 0 ? values[columnMap.company] || '' : '';
+        let validatedCompany = '';
+        if (companyValue) {
+          const n = companyValue.toUpperCase().trim();
+          validatedCompany = (n === 'DMHCA' || n === 'IBMP') ? n : companyValue.trim();
         }
 
-        if (leadsToImport.length === 0) {
-          alert('No valid leads found to import');
+        const csvNotes = columnMap.notes >= 0 ? values[columnMap.notes] || '' : '';
+        const importNote = `Imported from "${file.name}" on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`;
+        const notesValue = csvNotes.trim()
+          ? `${csvNotes.trim()}\n\n--- System Note ---\n${importNote}`
+          : importNote;
+
+        leadsToImport.push({
+          fullName,
+          email:         columnMap.email >= 0         ? values[columnMap.email] || ''         : '',
+          phone:         columnMap.phone >= 0         ? values[columnMap.phone] || ''         : '',
+          country:       columnMap.country >= 0       ? values[columnMap.country] || ''       : '',
+          branch:        columnMap.branch >= 0        ? values[columnMap.branch] || ''        : '',
+          qualification: columnMap.qualification >= 0 ? values[columnMap.qualification] || '' : '',
+          source:        columnMap.source >= 0        ? (values[columnMap.source] || 'File Import') : 'File Import',
+          course:        columnMap.course >= 0        ? values[columnMap.course] || ''        : '',
+          status:        columnMap.status >= 0        ? values[columnMap.status] || ''        : '',
+          assignedTo:    columnMap.assignedTo >= 0    ? values[columnMap.assignedTo] || ''    : '',
+          followUp:      columnMap.followUp >= 0      ? values[columnMap.followUp] || ''      : '',
+          company:       validatedCompany,
+          notes:         notesValue,
+        });
+      }
+
+      if (parseErrors.length > 0) {
+        let msg = `${parseErrors.length} rows had errors:\n\n` + parseErrors.slice(0, 5).join('\n');
+        if (parseErrors.length > 5) msg += `\n... and ${parseErrors.length - 5} more`;
+        msg += '\n\nContinue importing valid leads?';
+        if (!confirm(msg)) { setImportLoading(false); return; }
+      }
+
+      if (leadsToImport.length === 0) {
+        alert('No valid leads found to import.');
+        setImportLoading(false);
+        return;
+      }
+
+      // ── Duplicate check (by email, then by phone if no email) ────────
+      const duplicateLeads: Array<{ name: string; email: string; phone: string; rowNumber: number }> = [];
+      const uniqueLeads: any[] = [];
+
+      for (let i = 0; i < leadsToImport.length; i++) {
+        const importLead = leadsToImport[i];
+        const emailKey = importLead.email?.trim().toLowerCase();
+        const phoneKey = importLead.phone?.trim();
+
+        const isDuplicate =
+          (emailKey && leads.some((l: Lead) => l.email?.trim().toLowerCase() === emailKey)) ||
+          (!emailKey && phoneKey && leads.some((l: Lead) => l.phone?.trim() === phoneKey));
+
+        if (isDuplicate) {
+          duplicateLeads.push({ name: importLead.fullName, email: importLead.email, phone: importLead.phone, rowNumber: i + 2 });
+        } else {
+          uniqueLeads.push(importLead);
+        }
+      }
+
+      if (duplicateLeads.length > 0) {
+        if (uniqueLeads.length === 0) {
+          alert(`All ${duplicateLeads.length} lead(s) already exist in the CRM.\n\nNo new leads to import.`);
           setImportLoading(false);
           return;
         }
-
-        // Check for duplicate emails in existing leads
-        const duplicateLeads: Array<{name: string, email: string, rowNumber: number}> = [];
-        const uniqueLeads: any[] = [];
-        
-        for (let i = 0; i < leadsToImport.length; i++) {
-          const importLead = leadsToImport[i];
-          
-          // Only check for duplicates if email is provided
-          if (importLead.email && importLead.email.trim()) {
-            const existingLead = leads.find((lead: Lead) => 
-              lead.email && lead.email.toLowerCase() === importLead.email.toLowerCase()
-            );
-            
-            if (existingLead) {
-              duplicateLeads.push({
-                name: importLead.fullName,
-                email: importLead.email,
-                rowNumber: i + 2 // +2 because of header row and 0-based index
-              });
-            } else {
-              uniqueLeads.push(importLead);
-            }
-          } else {
-            // No email provided, can't check for duplicates, add to unique leads
-            uniqueLeads.push(importLead);
-          }
-        }
-
-        // Show brief duplicate information if any found
-        if (duplicateLeads.length > 0) {
-          if (uniqueLeads.length === 0) {
-            alert(`All ${duplicateLeads.length} lead(s) already exist in the CRM.\n\nNo new leads to import.`);
-            setImportLoading(false);
-            return;
-          }
-          
-          const proceed = confirm(
-            `Found ${duplicateLeads.length} duplicate lead(s) that will be skipped.\n\n` +
-            `• ${uniqueLeads.length} new lead(s) will be imported\n` +
-            `• ${duplicateLeads.length} duplicate(s) will be skipped\n\n` +
-            `Continue with import?\n\n` +
-            `(Detailed report with duplicate names will be shown after import)`
-          );
-          
-          if (!proceed) {
-            setImportLoading(false);
-            return;
-          }
-          
-          // Continue with only unique leads
-          leadsToImport.length = 0;
-          leadsToImport.push(...uniqueLeads);
-        }
-
-        // Send to backend for bulk import
-        try {
-          const apiClient = getApiClient();
-          const backendUrl = apiClient.baseURL;
-          
-          if (!backendUrl) {
-            throw new Error('Backend URL not configured. Please check your environment settings.');
-          }
-          
-          // Build the URL - avoid duplicate /api if backendUrl already ends with /api
-          const endpoint = backendUrl.endsWith('/api') ? '/leads/bulk-create' : '/api/leads/bulk-create';
-          const fullUrl = `${backendUrl}${endpoint}`;
-          
-          console.log(`📤 Sending ${leadsToImport.length} leads to: ${fullUrl}`);
-          
-          // Create abort controller for timeout handling
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout for large imports
-          
-          // Get auth token - try both possible storage keys
-          const authToken = localStorage.getItem('crm_auth_token') || localStorage.getItem('token');
-          if (!authToken) {
-            throw new Error('Not authenticated. Please log in again.');
-          }
-          
-          const response = await fetch(fullUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${authToken}`
-            },
-            body: JSON.stringify({ leads: leadsToImport }),
-            signal: controller.signal
-          });
-          
-          clearTimeout(timeoutId);
-
-          // Check response status first
-          if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`❌ Import API error (${response.status}):`, errorText);
-            throw new Error(`Server error (${response.status}): ${errorText || response.statusText}`);
-          }
-
-          // Try to parse JSON response
-          const responseText = await response.text();
-          if (!responseText || responseText.trim() === '') {
-            throw new Error('Server returned empty response. The import may have timed out - please check if leads were imported.');
-          }
-          
-          let result;
-          try {
-            result = JSON.parse(responseText);
-          } catch (parseError) {
-            console.error('❌ Failed to parse response:', responseText);
-            throw new Error('Server returned invalid response. Please try again or contact support.');
-          }
-
-          if (result.success) {
-            const { success, failed, errors } = result.results;
-            
-            // Refresh leads list to show imported data
-            await loadLeads();
-            
-            // Build detailed import report
-            let message = `📊 IMPORT COMPLETE\n\n`;
-            message += `✅ ${success} lead(s) imported successfully\n`;
-            
-            // Show duplicate information if any
-            if (duplicateLeads.length > 0) {
-              message += `⚠️ ${duplicateLeads.length} duplicate lead(s) already existed (skipped)\n\n`;
-              message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-              message += `DUPLICATE LEADS (Already in CRM):\n`;
-              message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-              
-              // Show all duplicates (or first 15)
-              const showCount = Math.min(15, duplicateLeads.length);
-              for (let i = 0; i < showCount; i++) {
-                const dup = duplicateLeads[i];
-                message += `${i + 1}. ${dup.name}\n   📧 ${dup.email}\n   📄 Row ${dup.rowNumber} in CSV\n\n`;
-              }
-              
-              if (duplicateLeads.length > 15) {
-                message += `... and ${duplicateLeads.length - 15} more duplicate(s)\n\n`;
-              }
-              
-              message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-              message += `💡 TIP: Use the search box to find these leads\n`;
-              message += `or filter by email to view existing records.`;
-            }
-            
-            if (failed > 0) {
-              message += `\n\n❌ ${failed} lead(s) failed to import`;
-              if (errors && errors.length > 0) {
-                message += '\n\nErrors:\n' + errors.slice(0, 5).join('\n');
-                if (errors.length > 5) {
-                  message += `\n... and ${errors.length - 5} more errors`;
-                }
-              }
-            }
-            
-            alert(message);
-            
-            // If there are duplicates, offer to highlight them
-            if (duplicateLeads.length > 0 && duplicateLeads.length <= 5) {
-              const viewDuplicates = confirm(
-                `Would you like to search for one of the duplicate leads?\n\n` +
-                `This will help you view the existing record in your CRM.`
-              );
-              
-              if (viewDuplicates && duplicateLeads[0].email) {
-                // Set search term to first duplicate's email
-                setSearchTerm(duplicateLeads[0].email);
-              }
-            }
-          } else {
-            throw new Error(result.message || 'Import failed');
-          }
-
-        } catch (error) {
-          console.error('❌ Backend import error:', error);
-          
-          // Provide more helpful error messages
-          let errorMessage = 'Unknown error occurred during import';
-          if (error instanceof Error) {
-            if (error.name === 'AbortError') {
-              errorMessage = 'Import timed out. Try importing fewer leads at a time (max 100 recommended).';
-            } else {
-              errorMessage = error.message;
-            }
-          }
-          
-          alert(`Import failed: ${errorMessage}`);
-        }
-
-      } catch (error) {
-        console.error('❌ Import error:', error);
-        alert(`Import failed: ${error instanceof Error ? error.message : 'Unknown error occurred during import'}`);
-      } finally {
-        setImportLoading(false);
-        // Reset file input to allow re-importing the same file
-        event.target.value = '';
+        let dupMsg =
+          `Found ${duplicateLeads.length} duplicate lead(s) that will be skipped.\n\n` +
+          `• ${uniqueLeads.length} new lead(s) will be imported\n` +
+          `• ${duplicateLeads.length} duplicate(s) will be skipped\n\n`;
+        const showDups = duplicateLeads.slice(0, 10);
+        dupMsg += `Duplicates:\n` + showDups.map((d, idx) => `  ${idx + 1}. ${d.name} (${d.email || d.phone})`).join('\n');
+        if (duplicateLeads.length > 10) dupMsg += `\n  ... and ${duplicateLeads.length - 10} more`;
+        dupMsg += '\n\nContinue with import?';
+        if (!confirm(dupMsg)) { setImportLoading(false); return; }
       }
-    };
-    
-    reader.onerror = () => {
+
+      const finalLeads = duplicateLeads.length > 0 ? uniqueLeads : leadsToImport;
+
+      // ── Send to backend ──────────────────────────────────────────────
+      const apiClient = getApiClient();
+      const backendUrl = apiClient.baseURL;
+      if (!backendUrl) throw new Error('Backend URL not configured.');
+
+      const endpoint = backendUrl.endsWith('/api') ? '/leads/bulk-create' : '/api/leads/bulk-create';
+      const fullUrl = `${backendUrl}${endpoint}`;
+
+      const authToken = localStorage.getItem('crm_auth_token') || localStorage.getItem('token');
+      if (!authToken) throw new Error('Not authenticated. Please log in again.');
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 120000);
+
+      const response = await fetch(fullUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        body: JSON.stringify({ leads: finalLeads }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`Server error (${response.status}): ${errText || response.statusText}`);
+      }
+
+      const responseText = await response.text();
+      if (!responseText?.trim()) throw new Error('Server returned empty response.');
+
+      let result: any;
+      try { result = JSON.parse(responseText); } catch { throw new Error('Server returned invalid response.'); }
+
+      if (result.success) {
+        const { success, failed, errors } = result.results;
+
+        // Refresh leads list immediately so newly imported leads appear
+        await loadLeads();
+
+        let message = `📊 IMPORT COMPLETE\n\n`;
+        message += `✅ ${success} lead(s) imported successfully\n`;
+        if (duplicateLeads.length > 0) message += `⚠️  ${duplicateLeads.length} duplicate(s) skipped\n`;
+        if (failed > 0) {
+          message += `❌ ${failed} lead(s) failed\n`;
+          if (errors?.length > 0) {
+            message += '\nErrors:\n' + errors.slice(0, 5).join('\n');
+            if (errors.length > 5) message += `\n... and ${errors.length - 5} more`;
+          }
+        }
+        message += `\n\nImported leads are now visible in the table.\nUse the edit (✏️) icon on any lead to assign it to a counselor.`;
+        alert(message);
+      } else {
+        throw new Error(result.message || 'Import failed');
+      }
+
+    } catch (error) {
+      console.error('❌ Import error:', error);
+      let errorMessage = 'Unknown error occurred';
+      if (error instanceof Error) {
+        errorMessage = error.name === 'AbortError'
+          ? 'Import timed out. Try importing fewer leads (max 100 recommended).'
+          : error.message;
+      }
+      alert(`Import failed: ${errorMessage}`);
+    } finally {
       setImportLoading(false);
-      alert('Failed to read the file. Please ensure the file is not corrupted and try again.');
       event.target.value = '';
-    };
-    
-    reader.readAsText(file);
+    }
   };
 
   // Handle bulk status update - Using TanStack Query mutation
@@ -2791,7 +2656,7 @@ const LeadsManagement: React.FC = () => {
                 <span>{importLoading ? 'Importing...' : 'Import'}</span>
                 <input 
                   type="file" 
-                  accept=".csv" 
+                  accept=".csv,.xlsx,.xls" 
                   onChange={handleImportLeads}
                   disabled={importLoading}
                   className="hidden"
@@ -2812,13 +2677,14 @@ const LeadsManagement: React.FC = () => {
                   '   • Notes (imported and preserved)\n\n' +
                   '🔧 SUPPORTED FORMATS:\n' +
                   '   • CSV files (.csv)\n' +
-                  '   • Excel files (.xlsx, .xls)\n\n' +
+                  '   • Excel files (.xlsx, .xls) ✅\n\n' +
                   '⚙️ HOW IT WORKS:\n' +
                   '   • Uses whatever data you provide\n' +
                   '   • Empty fields stay empty (no defaults)\n' +
-                  '   • Duplicate emails are skipped (if email provided)\n' +
-                  '   • All data saved to database\n\n' +
-                  '💡 TIP: Export leads first to see the format!'
+                  '   • Duplicates skipped (checked by email, then phone)\n' +
+                  '   • All data saved to database\n' +
+                  '   • After import, assign leads via the edit (✏️) icon\n\n' +
+                  '💡 TIP: Export leads first to see the exact column format!'
                 )}
                 className="text-gray-500 hover:text-gray-700 p-2"
                 title="Import Help"
