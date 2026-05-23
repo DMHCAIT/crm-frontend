@@ -68,8 +68,8 @@ const Settings: React.FC = () => {
         return;
       }
 
-      // Step 2: Update password via users API
-      const updateRes = await fetch(`${apiConfig.baseUrl}/api/users?id=${storedUser.id}`, {
+      // Step 2: Update password via users-supabase API
+      const updateRes = await fetch(`${apiConfig.baseUrl}/api/users-supabase?id=${storedUser.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
