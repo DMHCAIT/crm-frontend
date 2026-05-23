@@ -274,7 +274,13 @@ class ProductionApiClient {
       if (!response.ok) {
         const errorText = await response.text();
         console.error(`❌ API Error ${response.status}:`, errorText);
-        throw new Error(`API Error: ${response.status} - ${response.statusText}`);
+        let errorMessage = `API Error: ${response.status} - ${response.statusText}`;
+        try {
+          const errorJson = JSON.parse(errorText);
+          if (errorJson.error) errorMessage = errorJson.error;
+          if (errorJson.details) errorMessage += ` (${errorJson.details})`;
+        } catch {}
+        throw new Error(errorMessage);
       }
 
       const result = await response.json();

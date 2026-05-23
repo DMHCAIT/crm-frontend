@@ -425,7 +425,8 @@ const UserManagement: React.FC = () => {
       alert(`User ${selectedUser ? 'updated' : 'created'} successfully`);
     } catch (err) {
       console.error('Error saving user:', err);
-      alert(`Failed to ${selectedUser ? 'update' : 'create'} user`);
+      const msg = err instanceof Error ? err.message : String(err);
+      alert(`Failed to ${selectedUser ? 'update' : 'create'} user: ${msg}`);
     } finally {
       setActionLoading(null);
     }
