@@ -1789,8 +1789,10 @@ const LeadsManagement: React.FC = () => {
       if (result.success) {
         const { success, failed, errors } = result.results;
 
-        // Refresh leads list immediately so newly imported leads appear
+        // Refresh leads list, then switch to Recently Imported filter so new leads show immediately
         await loadLeads();
+        setDateFilter('recently_imported');
+        setStatusFilter(['all']);
 
         let message = `📊 IMPORT COMPLETE\n\n`;
         message += `✅ ${success} lead(s) imported successfully\n`;
@@ -1802,7 +1804,7 @@ const LeadsManagement: React.FC = () => {
             if (errors.length > 5) message += `\n... and ${errors.length - 5} more`;
           }
         }
-        message += `\n\nImported leads are now visible in the table.\nUse the edit (✏️) icon on any lead to assign it to a counselor.`;
+        message += `\n\nThe table is now showing your recently imported leads.\nUse the edit (✏️) icon on any lead to assign it to a counselor.`;
         alert(message);
       } else {
         throw new Error(result.message || 'Import failed');
