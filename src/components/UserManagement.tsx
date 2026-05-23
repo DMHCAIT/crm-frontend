@@ -1372,12 +1372,14 @@ const UserModal: React.FC<UserModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">
-          {user ? 'Edit User' : 'Add New User'}
-        </h2>
-        
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg w-full max-w-md max-h-[90vh] flex flex-col">
+        <div className="px-6 pt-6 pb-4 border-b border-gray-200 flex-shrink-0">
+          <h2 className="text-xl font-bold">
+            {user ? 'Edit User' : 'Add New User'}
+          </h2>
+        </div>
+        <div className="px-6 py-4 overflow-y-auto flex-1">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Full Name</label>
@@ -1625,6 +1627,7 @@ const UserModal: React.FC<UserModalProps> = ({
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );
