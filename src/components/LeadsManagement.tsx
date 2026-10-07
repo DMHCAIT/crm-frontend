@@ -81,6 +81,7 @@ interface AssignableUser {
   role: string;
   username?: string;
   display_name?: string;
+  reports_to?: string | null;
 }
 
 interface NewLeadForm {
@@ -239,6 +240,7 @@ const LeadsManagement: React.FC = () => {
   const [showBulkTransferModal, setShowBulkTransferModal] = useState(false);
   const [bulkTransferCounselor, setBulkTransferCounselor] = useState('');
   const [bulkTransferReason, setBulkTransferReason] = useState('');
+  const [isTransferringLeads, setIsTransferringLeads] = useState(false);
   
   // Bulk Company Change states
   const [showBulkCompanyModal, setShowBulkCompanyModal] = useState(false);
@@ -708,6 +710,7 @@ const LeadsManagement: React.FC = () => {
           username: user.username,
           email: user.email,
           role: user.role || 'User',
+          reports_to: user.reports_to,
           display_name: user.display_name || `${user.name || user.username} (${user.role})`
         }));
         setAssignableUsers(assignableUsersList);
@@ -727,6 +730,7 @@ const LeadsManagement: React.FC = () => {
       }
     } catch (error) {
       console.error('❌ Error loading assignable users:', error);
+      notify.error('Team Loading Failed', error instanceof Error ? error.message : 'Unable to load your reporting team.');
       setUsers([]);
       setAssignableUsers([]);
     }
@@ -767,6 +771,7 @@ const LeadsManagement: React.FC = () => {
       
     } catch (error) {
       console.error('❌ Error loading team member leads:', error);
+      notify.error('Team Leads Loading Failed', error instanceof Error ? error.message : 'Unable to load this team member\'s leads.');
       setTeamMemberLeads([]);
     } finally {
       setLoadingTeamMemberLeads(false);
@@ -1472,6 +1477,8 @@ const LeadsManagement: React.FC = () => {
     return user?.role === 'manager' || user?.role === 'senior_manager' || user?.role === 'super_admin' || user?.role === 'admin';
   };
 
+  const canTransferLeads = isManager() || user?.role === 'team_leader';
+
   // Handle lead selection for detail view
   const handleLeadClick = async (leadId: string) => {
     try {
@@ -1950,24 +1957,32 @@ const LeadsManagement: React.FC = () => {
 
   // Handle bulk transfer
   const handleBulkTransfer = async () => {
-    if (!bulkTransferCounselor) {
-      alert('Please select a counselor to transfer leads to.');
+    if (isTransferringLeads) return;
+    if (!canTransferLeads || selectedLeads.length === 0) {
+      notify.error('Transfer Failed', 'Select leads that you have permission to transfer.');
+      return;
+    }
+    if (!bulkTransferCounselor || !assignableUsers.some(member => member.username === bulkTransferCounselor)) {
+      notify.error('Transfer Failed', 'Please select an available team member.');
       return;
     }
 
     if (window.confirm(`Are you sure you want to transfer ${selectedLeads.length} lead(s) to ${bulkTransferCounselor}?`)) {
+      setIsTransferringLeads(true);
       try {
         // Save to backend API first
         const apiClient = getApiClient();
         const updateData = { assignedTo: bulkTransferCounselor };
         
-        await apiClient.bulkUpdateLeads(
+        const result = await apiClient.bulkUpdateLeads(
           selectedLeads, 
           updateData, 
           'transfer', 
           bulkTransferReason
         );
-
+        if (!result.success || result.count !== new Set(selectedLeads).size) {
+          throw new Error(result.error || 'Not all selected leads were transferred. Refresh the list before retrying.');
+        }
 
         console.log('✅ Bulk transfer saved to backend successfully');
         
@@ -1989,8 +2004,10 @@ const LeadsManagement: React.FC = () => {
         
       } catch (error) {
         console.error('❌ Error during bulk transfer:', error);
-        alert('Failed to transfer leads. Please check your connection and try again.');
+        notify.error('Transfer Failed', error instanceof Error ? error.message : 'Failed to transfer leads. Please try again.');
         return; // Don't reset the form if there was an error
+      } finally {
+        setIsTransferringLeads(false);
       }
       
       // Reset form and close modal only after successful transfer
@@ -3110,13 +3127,14 @@ const LeadsManagement: React.FC = () => {
               // Determine if this is the current user or a subordinate
               const isCurrentUser = teamUser.username === user?.username || teamUser.email === user?.email;
               const isSubordinate = !isCurrentUser;
+              const supervisor = assignableUsers.find(member => member.id === teamUser.reports_to);
               
               return (
                 <div 
                   key={teamUser.id} 
                   className="text-center cursor-pointer hover:bg-gray-50 rounded-lg p-2 transition-colors duration-200"
                   onClick={() => handleTeamMemberClick(teamUser)}
-                  title={`Click to view ${teamUser.name}'s leads${isSubordinate ? ' (Reports to you)' : ' (You)'}`}
+                  title={`Click to view ${teamUser.name}'s leads${isSubordinate ? ` (Reports to ${supervisor?.name || 'your reporting hierarchy'})` : ' (You)'}`}
                 >
                   <div className={`rounded-lg p-4 mb-2 transition-colors ${
                     isCurrentUser 
@@ -3148,6 +3166,11 @@ const LeadsManagement: React.FC = () => {
                     {teamUser.role}
                     {isSubordinate && <span className="text-blue-600 ml-1">↳</span>}
                   </p>
+                  {isSubordinate && supervisor && (
+                    <p className="text-xs text-blue-600 truncate" title={`Reports to ${supervisor.name}`}>
+                      Reports to {supervisor.name}
+                    </p>
+                  )}
                 </div>
               );
             })}
@@ -4299,8 +4322,8 @@ const LeadsManagement: React.FC = () => {
                       <span>Delete ({selectedLeads.length})</span>
                     </button>
 
-                    {/* Bulk Transfer - Only for managers */}
-                    {isManager() && (
+                    {/* Bulk Transfer */}
+                    {canTransferLeads && (
                       <button
                         onClick={() => setShowBulkTransferModal(true)}
                         className="bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 flex items-center space-x-1 text-sm"
@@ -4834,7 +4857,7 @@ const LeadsManagement: React.FC = () => {
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
-                          {isManager() && (
+                          {canTransferLeads && (
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -5366,7 +5389,7 @@ const LeadsManagement: React.FC = () => {
                           ) : (
                             <div className="flex items-center justify-between">
                               <span className="text-gray-700 font-medium">{selectedLead.assignedTo}</span>
-                              {isManager() && (
+                              {canTransferLeads && (
                                 <button
                                   onClick={() => handleTransferLead(selectedLead.id)}
                                   className="text-blue-600 hover:text-blue-800 text-sm flex items-center space-x-1"
@@ -5744,12 +5767,13 @@ const LeadsManagement: React.FC = () => {
                     Bulk Transfer
                   </h3>
                   <p className="text-sm text-gray-500">
-                    Transfer {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} to another counselor
+                    Transfer {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} to {user?.role === 'team_leader' ? 'a member of your team' : 'another user'}
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setShowBulkTransferModal(false)}
+                disabled={isTransferringLeads}
                 className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100"
               >
                 <X className="w-5 h-5" />
@@ -5789,18 +5813,19 @@ const LeadsManagement: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   <span className="flex items-center space-x-1">
                     <UserCheck className="w-4 h-4" />
-                    <span>Transfer to Counselor</span>
+                    <span>Transfer to Team Member</span>
                     <span className="text-red-500">*</span>
                   </span>
                 </label>
                 <select 
                   value={bulkTransferCounselor}
+                  disabled={isTransferringLeads}
                   onChange={(e) => setBulkTransferCounselor(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="">Select Counselor</option>
-                  {assignableUsers.map((user) => (
-                    <option key={user.id} value={user.username || user.name || user.email}>
+                  <option value="">Select Team Member</option>
+                  {assignableUsers.filter(member => member.username).map((user) => (
+                    <option key={user.id} value={user.username}>
                       {user.name} ({user.role})
                     </option>
                   ))}
@@ -5817,6 +5842,7 @@ const LeadsManagement: React.FC = () => {
                 </label>
                 <textarea
                   value={bulkTransferReason}
+                  disabled={isTransferringLeads}
                   onChange={(e) => setBulkTransferReason(e.target.value)}
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -5828,6 +5854,7 @@ const LeadsManagement: React.FC = () => {
             {/* Actions */}
             <div className="flex items-center justify-end space-x-3 mt-6 pt-4 border-t border-gray-200">
               <button
+                disabled={isTransferringLeads}
                 onClick={() => {
                   setShowBulkTransferModal(false);
                   setBulkTransferCounselor('');
@@ -5839,15 +5866,15 @@ const LeadsManagement: React.FC = () => {
               </button>
               <button
                 onClick={handleBulkTransfer}
-                disabled={!bulkTransferCounselor}
+                disabled={!bulkTransferCounselor || isTransferringLeads || selectedLeads.length === 0}
                 className={`px-6 py-2 rounded-lg font-medium flex items-center space-x-2 ${
-                  bulkTransferCounselor 
+                  bulkTransferCounselor && !isTransferringLeads && selectedLeads.length > 0
                     ? 'bg-blue-600 text-white hover:bg-blue-700' 
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
                 <ArrowUpDown className="w-4 h-4" />
-                <span>Transfer {selectedLeads.length} Lead{selectedLeads.length > 1 ? 's' : ''}</span>
+                <span>{isTransferringLeads ? 'Transferring...' : `Transfer ${selectedLeads.length} Lead${selectedLeads.length > 1 ? 's' : ''}`}</span>
               </button>
             </div>
           </div>

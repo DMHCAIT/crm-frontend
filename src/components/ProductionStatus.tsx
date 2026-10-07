@@ -17,6 +17,8 @@ const ProductionStatus: React.FC = () => {
   const checkBackendConnection = async () => {
     try {
       const API_BASE = import.meta.env.VITE_API_BASE_URL;
+      const hostname = new URL(API_BASE).hostname;
+      const isLocalBackend = ['localhost', '127.0.0.1', '[::1]'].includes(hostname);
       
       // Test backend health first
       const healthResponse = await fetch(`${API_BASE}/health`);
@@ -33,9 +35,11 @@ const ProductionStatus: React.FC = () => {
       setStatus('connected');
       setBackendInfo({
         status: 'connected',
-        backend: 'Railway API Server',
+        backend: isLocalBackend ? 'Local API Server' : 'Production API Server',
         database: healthData.services?.database || 'Connected',
-        connection: 'Production API',
+        connection: isLocalBackend ? 'Local API' : 'Production API',
+        isLocalBackend,
+        environment: healthData.environment || (isLocalBackend ? 'development' : 'production'),
         leads_count: Array.isArray(leads) ? leads.length : 'Available',
         uptime: Math.floor(healthData.uptime || 0),
         version: healthData.version || '2.0.0'
@@ -66,7 +70,7 @@ const ProductionStatus: React.FC = () => {
   const getStatusText = () => {
     switch (status) {
       case 'connected':
-        return `Connected to Production (${backendInfo?.environment || 'production'})`;
+        return `Connected to ${backendInfo?.isLocalBackend ? 'Local Backend' : 'Production'} (${backendInfo?.environment || 'production'})`;
       case 'disconnected':
         return 'Backend Offline';
       case 'error':

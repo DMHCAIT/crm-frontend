@@ -490,7 +490,7 @@ class ProductionApiClient {
   }
 
   async bulkUpdateLeads(leadIds: string[], updateData: any, operationType: string = 'update', reason?: string) {
-    return this.request('/api/leads', {
+    return this.request<{ success: boolean; count: number; error?: string }>('/api/leads', {
       method: 'POST',
       body: JSON.stringify({
         operation: 'bulk_update',

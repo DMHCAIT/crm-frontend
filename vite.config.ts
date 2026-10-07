@@ -9,7 +9,6 @@ export default defineConfig({
       fastRefresh: true
     })
   ],
-  mode: 'production',
   optimizeDeps: {
     include: ['react', 'react-dom', 'axios'],
     exclude: ['lucide-react'],
