@@ -17,7 +17,14 @@ tests. Unit tests use mocked services and do not need production credentials.
 ## Deployment
 
 Deploy this repository as a Vite frontend (for example, using the included Vercel
-configuration). Set these build-time environment variables on the hosting platform:
+configuration). Node is pinned to `22.x` so Vercel does not automatically select a
+new major release. The install command is
+`npm ci --include=dev --include=optional`: TypeScript and other build tools are
+development dependencies but are required during production builds. The repository
+NPM configuration also includes them when a hosting override runs plain `npm ci`.
+Do not remove the typecheck from the build to work around missing dependencies.
+
+Set these build-time environment variables on the hosting platform:
 
 - `VITE_API_BASE_URL`: public backend origin
 - `VITE_API_BACKEND_URL`: public backend origin
