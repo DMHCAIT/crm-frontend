@@ -3,17 +3,6 @@ import React, { useMemo } from 'react';
 import { useLeads } from '../hooks/useQueries';
 import { Users, TrendingUp, Calendar, BarChart3, RefreshCw } from 'lucide-react';
 
-interface CohortData {
-  month: string;
-  totalLeads: number;
-  month1Conversions: number;
-  month2Conversions: number;
-  month3Conversions: number;
-  month1Rate: string;
-  month2Rate: string;
-  month3Rate: string;
-}
-
 const CohortAnalysis: React.FC = () => {
   const { data: leadsData, isLoading, refetch } = useLeads(1, 50000);
 

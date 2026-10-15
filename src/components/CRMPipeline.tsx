@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useLeads } from '../hooks/useQueries';
 import { STATUS_COLORS, STATUS_MESSAGES } from '../constants/crmConstants';
@@ -117,7 +117,6 @@ const CRMPipeline: React.FC = () => {
     
     // Use Sets for O(1) status checks
     const hotStatuses = new Set(['Hot', 'hot']);
-    const warmStatuses = new Set(['Warm', 'warm']);
     const qualifiedStatuses = new Set(['Qualified', 'qualified', 'Follow Up', 'follow_up', 'Warm', 'warm']);
     const convertedStatuses = new Set(['Enrolled', 'enrolled', 'won']);
     

@@ -5,6 +5,13 @@
  */
 
 import { createClient, SupabaseClient, RealtimeChannel } from '@supabase/supabase-js';
+import { LEADS_CHANGED_EVENT } from './leadEvents';
+import type { ScheduledCallLead } from './callSchedule';
+import type { DuplicateMatch, ImportLead, ImportReview, LeadDetails } from './leadDuplicates';
+import { fetchAllLeadPages, type LeadPageSize } from './leadPagination';
+import type { ApiResponse, DatabaseDocument, DatabaseScheduledExport, ScheduledExport } from '../types/api';
+import { buildAnalyticsCharts } from './analyticsCharts';
+import { mapDocument, mapScheduledExport, scheduledExportUpdates } from './apiAdapters';
 
 // ===========================
 // 1. ENVIRONMENT CONFIGURATION
@@ -24,6 +31,35 @@ interface ApiConfig {
   backendUrl: string;
   timeout: number;
   headers: Record<string, string>;
+}
+
+interface LeadListResponse {
+  success: boolean;
+  leads: LeadDetails[];
+  data?: LeadDetails[];
+  total: number;
+  totalLeads?: number;
+}
+
+export interface LeadBucketStats {
+  total: number;
+  totalLeads: number;
+  hot: number;
+  warm: number;
+  fresh: number;
+  followup: number;
+  converted: number;
+  thisMonth: number;
+  updatedToday: number;
+  updatedYesterday: number;
+  updatedThisWeek: number;
+  updatedThisMonth: number;
+  recentlyImported: number;
+  createdToday: number;
+  createdYesterday: number;
+  createdThisWeek: number;
+  createdLastMonth: number;
+  overdueFollowUps: number;
 }
 
 export const getApiConfig = (): ApiConfig => {
@@ -80,6 +116,8 @@ export interface DatabaseLead {
   notes?: string;
   assigned_to?: string;
   estimatedValue?: number;
+  scheduledCallAt?: string | null;
+  scheduledCallDismissedAt?: string | null;
 }
 
 export interface DatabaseStudent {
@@ -230,7 +268,21 @@ class ProductionApiClient {
     return this.config.backendUrl?.replace(/\/+$/, '') || '';
   }
 
-  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  getToken(): string | null {
+    return localStorage.getItem('crm_auth_token') || localStorage.getItem('token');
+  }
+
+  async get<T = unknown>(endpoint: string): Promise<{ data: T }> {
+    const path = endpoint.startsWith('/api/') ? endpoint : `/api${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
+    return { data: await this.request<T>(path) };
+  }
+
+  async post<T = unknown>(endpoint: string, body: unknown): Promise<{ data: T }> {
+    const path = endpoint.startsWith('/api/') ? endpoint : `/api${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
+    return { data: await this.request<T>(path, { method: 'POST', body: JSON.stringify(body) }) };
+  }
+
+  getRequestUrl(endpoint: string): string {
     // Normalize backendUrl and endpoint to avoid duplicated segments like `/api/api/...`
     const rawBase = this.config.backendUrl || '';
     // remove trailing slashes from base
@@ -242,13 +294,17 @@ class ProductionApiClient {
     if (base.endsWith('/api') && ep.startsWith('/api')) {
       ep = ep.replace(/^\/api/, '');
     }
-    const url = `${base}${ep}`;
+    return `${base}${ep}`;
+  }
+
+  private async request<T>(endpoint: string, options: RequestInit = {}, timeoutMs = this.config.timeout): Promise<T> {
+    const url = this.getRequestUrl(endpoint);
     
     const controller = new AbortController();
     const timeoutId = setTimeout(() => {
       console.warn(`⏰ Request timeout for ${endpoint}, aborting...`);
       controller.abort();
-    }, 60000); // Increased timeout to 60 seconds
+    }, timeoutMs);
 
     // Get authentication token from localStorage
     const token = localStorage.getItem('crm_auth_token') || localStorage.getItem('token');
@@ -265,7 +321,10 @@ class ProductionApiClient {
       // API request initiated
       console.log(`🔄 API Request: ${endpoint}`);
       
-      const response = await fetch(url, { ...defaultOptions, ...options });
+      const headers = new Headers(defaultOptions.headers);
+      new Headers(options.headers).forEach((value, key) => headers.set(key, value));
+      if (options.body instanceof FormData) headers.delete('Content-Type');
+      const response = await fetch(url, { ...defaultOptions, ...options, headers });
       clearTimeout(timeoutId);
       
       // API response received
@@ -284,6 +343,12 @@ class ProductionApiClient {
       }
 
       const result = await response.json();
+      if (options.method && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(options.method) &&
+          /^\/api\/(?:leads|leads-simple|lead-notes|notes|lead-activities)(?:[/?]|$)/.test(endpoint) &&
+          !/\/(?:duplicate-check|import-preview)$/.test(endpoint) &&
+          result.success !== false) {
+        window.dispatchEvent(new Event(LEADS_CHANGED_EVENT));
+      }
       // API request successful
       return result;
     } catch (error) {
@@ -392,7 +457,32 @@ class ProductionApiClient {
   }
 
   // Leads API - Direct connection to backend database with pagination support
-  async getLeads(page: number = 1, pageSize: number = 100, filters?: any) {
+  async getLeadBucketStats(): Promise<LeadBucketStats> {
+    const response = await this.request('/api/leads/stats') as {
+      success: boolean;
+      stats?: LeadBucketStats;
+      error?: string;
+    };
+    if (!response.success || !response.stats) {
+      throw new Error(response.error || 'Unable to load lead bucket totals');
+    }
+    const fields: (keyof LeadBucketStats)[] = [
+      'total', 'totalLeads', 'hot', 'warm', 'fresh', 'followup', 'converted',
+      'thisMonth', 'updatedToday', 'updatedYesterday', 'updatedThisWeek',
+      'updatedThisMonth', 'recentlyImported', 'createdToday', 'createdYesterday',
+      'createdThisWeek', 'createdLastMonth', 'overdueFollowUps'
+    ];
+    const stats = response.stats;
+    if (fields.some(field => !Number.isInteger(stats[field]) || stats[field] < 0)) {
+      throw new Error('The server returned incomplete lead bucket totals');
+    }
+    return stats;
+  }
+
+  async getLeads(page: number = 1, pageSize: LeadPageSize = 100, filters?: any, allowFallback = true): Promise<LeadListResponse> {
+    if (pageSize === 'all') {
+      return fetchAllLeadPages((batchPage, batchSize) => this.getLeads(batchPage, batchSize, filters, false));
+    }
     try {
       // Build query string with pagination and filters
       const params = new URLSearchParams({
@@ -450,16 +540,17 @@ class ProductionApiClient {
       
       const queryString = params.toString();
       console.log(`🔄 Attempting to fetch leads from backend (page ${page}, size ${pageSize}) with filters: ${queryString}`);
-      const response = await this.request(`/api/leads?${queryString}`);
+      const response = await this.request<LeadListResponse>(`/api/leads?${queryString}`);
       console.log('✅ Leads fetched successfully:', response);
       return response;
     } catch (error) {
       console.error('❌ Failed to fetch leads from database:', error);
+      if (!allowFallback || filters) throw error;
       
       // Try alternative endpoint if main fails (fallback without filters for now)
       try {
         console.log('🔄 Trying alternative leads endpoint...');
-        const fallbackResponse = await this.request(`/api/leads-simple?page=${page}&pageSize=${pageSize}`);
+        const fallbackResponse = await this.request<LeadListResponse>(`/api/leads-simple?page=${page}&pageSize=${pageSize}`);
         console.log('✅ Fallback leads fetched successfully:', fallbackResponse);
         return fallbackResponse;
       } catch (fallbackError) {
@@ -476,10 +567,56 @@ class ProductionApiClient {
     });
   }
 
+  async getLeadById(id: string): Promise<LeadDetails> {
+    const response = await this.request<LeadListResponse>(`/api/leads?id=${encodeURIComponent(id)}&pageSize=1`);
+    const lead = response.leads?.find(item => item.id === id);
+    if (!response.success || !lead) throw new Error('Lead not found or access denied');
+    return lead;
+  }
+
+  async checkLeadDuplicates(email: string, phone: string): Promise<DuplicateMatch[]> {
+    const response = await this.request<{ success: boolean; duplicates: DuplicateMatch[] }>('/api/leads/duplicate-check', {
+      method: 'POST', body: JSON.stringify({ email, phone })
+    });
+    if (!response.success || !Array.isArray(response.duplicates)) throw new Error('Invalid duplicate-check response');
+    return response.duplicates;
+  }
+
+  async previewLeadImport(leads: ImportLead[]): Promise<ImportReview> {
+    const response = await this.request<ImportReview & { success: boolean }>('/api/leads/import-preview', {
+      method: 'POST', body: JSON.stringify({ leads })
+    }, 120000);
+    if (!response.success || !Array.isArray(response.accepted) ||
+        !Array.isArray(response.duplicates) || !Array.isArray(response.invalid)) {
+      throw new Error('Invalid import review response');
+    }
+    return response;
+  }
+
+  async importLeads(leads: ImportLead[], assignedTo: string, status: string) {
+    return this.request<{
+      success: boolean;
+      results: { success: number; failed: number; duplicates: number; errors: string[] };
+    }>('/api/leads/bulk-create', {
+      method: 'POST', body: JSON.stringify({ leads, assignedTo, status })
+    }, 120000);
+  }
+
   async updateLead(id: string, leadData: any) {
-    return this.request(`/api/leads?id=${id}`, {
+    return this.request<{ success: boolean; data: ScheduledCallLead }>(`/api/leads?id=${id}`, {
       method: 'PUT',
       body: JSON.stringify(leadData)
+    });
+  }
+
+  async getScheduledCalls() {
+    return this.request<{ success: boolean; leads: ScheduledCallLead[] }>('/api/leads/call-reminders');
+  }
+
+  async dismissScheduledCall(leadId: string, scheduledCallAt: string) {
+    return this.request<{ success: boolean; data: ScheduledCallLead }>('/api/leads', {
+      method: 'POST',
+      body: JSON.stringify({ operation: 'dismiss_call', leadId, scheduledCallAt })
     });
   }
 
@@ -553,7 +690,7 @@ class ProductionApiClient {
 
   // Users API - New endpoints
   async getUsers() {
-    return this.request('/api/users-supabase');
+    return this.request<ApiResponse<DatabaseUser[]>>('/api/users-supabase');
   }
 
   // Get users that current user can assign leads to (hierarchical filtering)
@@ -608,7 +745,7 @@ class ProductionApiClient {
 
   // User Restrictions API (Admin Only)
   async getUserRestrictions() {
-    return this.request('/api/user-restrictions');
+    return this.request<ApiResponse<Record<string, unknown>[]>>('/api/user-restrictions');
   }
 
   async createUserRestriction(restrictionData: any) {
@@ -655,17 +792,37 @@ class ProductionApiClient {
   }
 
   // Documents API - New endpoints
-  async getDocuments(filters?: any) {
+  async getDocuments(filters?: Record<string, string>) {
     const params = new URLSearchParams(filters).toString();
-    return this.request(`/api/documents${params ? `?${params}` : ''}`);
+    const response = await this.request<{ success: boolean; documents: DatabaseDocument[] }>(`/api/documents${params ? `?${params}` : ''}`);
+    if (!response.success || !Array.isArray(response.documents)) throw new Error('Invalid document list response');
+    return { ...response, documents: response.documents.map(mapDocument) };
   }
 
   async uploadDocument(formData: FormData) {
-    return this.request('/api/documents', {
+    const body = new FormData();
+    formData.forEach((value, key) => body.append(key, value));
+    const entityType = body.get('entityType');
+    const entityId = body.get('entityId');
+    if (entityType) {
+      if (!['lead', 'student'].includes(String(entityType)) || typeof entityId !== 'string' || !entityId) {
+        throw new Error('A valid document entity type and ID are required');
+      }
+      body.set(`${entityType}_id`, entityId);
+      body.delete('entityType');
+      body.delete('entityId');
+    }
+    const file = body.get('file');
+    if (!body.has('document_name') && file instanceof File) body.set('document_name', file.name);
+    if (!body.has('document_type')) body.set('document_type', String(body.get('documentType') || 'other'));
+    body.delete('documentType');
+    const response = await this.request<{ success: boolean; document: DatabaseDocument }>('/api/documents', {
       method: 'POST',
-      body: formData,
+      body,
       headers: {} // Remove Content-Type to let browser set it for FormData
     });
+    if (!response.success) throw new Error('Document upload failed');
+    return { ...response, document: mapDocument(response.document) };
   }
 
   // Payments API - Enhanced
@@ -987,6 +1144,35 @@ class ProductionApiClient {
   // Enhanced Analytics API - Real-time analytics
   async getEnhancedAnalytics(timeframe: string = 'month') {
     return this.request(`/api/enhanced-analytics/realtime?timeframe=${timeframe}`);
+  }
+
+  async getAdvancedAnalytics({ range }: { range: string }) {
+    const response = await this.getLeads(1, 'all', {}, false);
+    return { success: true, data: buildAnalyticsCharts(response.leads, range) };
+  }
+
+  async getScheduledExports() {
+    const response = await this.request<{ schedules: DatabaseScheduledExport[] }>('/api/scheduled-exports');
+    if (!Array.isArray(response.schedules)) throw new Error('Invalid scheduled export list response');
+    return { ...response, schedules: response.schedules.map(mapScheduledExport) };
+  }
+
+  async createScheduledExport(schedule: Omit<ScheduledExport, 'id' | 'schedule'> & { time: string }) {
+    const response = await this.request<{ schedule: DatabaseScheduledExport }>('/api/scheduled-exports', {
+      method: 'POST', body: JSON.stringify(schedule)
+    });
+    return { ...response, schedule: mapScheduledExport(response.schedule) };
+  }
+
+  async updateScheduledExport(id: string, updates: Partial<ScheduledExport>) {
+    const response = await this.request<{ schedule: DatabaseScheduledExport }>(`/api/scheduled-exports/${encodeURIComponent(id)}`, {
+      method: 'PUT', body: JSON.stringify(scheduledExportUpdates(updates))
+    });
+    return { ...response, schedule: mapScheduledExport(response.schedule) };
+  }
+
+  async deleteScheduledExport(id: string) {
+    return this.request<{ message: string }>(`/api/scheduled-exports/${encodeURIComponent(id)}`, { method: 'DELETE' });
   }
 
   async createPaymentLink(_amount: number, _description: string) {

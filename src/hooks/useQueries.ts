@@ -1,5 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getApiClient } from '../lib/backend';
+import { LEADS_CHANGED_EVENT } from '../lib/leadEvents';
+import type { LeadPageSize } from '../lib/leadPagination';
 
 // Query Keys
 export const queryKeys = {
@@ -23,7 +25,7 @@ export const queryKeys = {
 };
 
 // Leads Hooks - Optimized for performance with pagination support
-export const useLeads = (page: number = 1, pageSize: number = 100, filters?: any) => {
+export const useLeads = (page: number = 1, pageSize: LeadPageSize = 100, filters?: any) => {
   return useQuery({
     queryKey: [...queryKeys.leads, page, pageSize, filters],
     queryFn: async () => {
@@ -52,6 +54,18 @@ export const useLeads = (page: number = 1, pageSize: number = 100, filters?: any
     refetchInterval: 1000 * 60, // Auto-refetch every 60 seconds for real-time updates
     refetchOnWindowFocus: true, // Refetch when window regains focus
     refetchOnMount: 'always', // Always refetch on mount to get latest data
+  });
+};
+
+export const useLeadBucketStats = (userId?: string, role?: string) => {
+  return useQuery({
+    queryKey: [...queryKeys.dashboard, 'leadBuckets', userId, role],
+    queryFn: () => getApiClient().getLeadBucketStats(),
+    enabled: !!userId,
+    staleTime: 1000 * 30,
+    refetchInterval: 1000 * 60,
+    refetchOnWindowFocus: true,
+    refetchOnMount: 'always',
   });
 };
 
@@ -148,7 +162,7 @@ export const useUpdateLead = () => {
           if (!existingLead) return oldData; // Lead not in this query
           
           // Create updated lead with new data
-          const updatedLead = { ...existingLead, ...variables.data };
+          const updatedLead = { ...existingLead, ...variables.data, ...responseData.data };
           
           // Check if updated lead still matches this query's filters
           const matchesFilter = leadMatchesFilter(updatedLead, filters);
@@ -184,7 +198,7 @@ export const useUpdateLead = () => {
         queryKeys.lead(variables.id),
         (oldData: any) => {
           if (!oldData) return oldData;
-          return { ...oldData, ...variables.data };
+          return { ...oldData, ...variables.data, ...responseData.data };
         }
       );
       
@@ -400,6 +414,8 @@ export const useAddNote = () => {
       return result;
     },
     onSuccess: (result, variables) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard });
+      window.dispatchEvent(new Event(LEADS_CHANGED_EVENT));
       // Update cache directly without refetch to preserve UI state (page, panel)
       // This prevents panel closure when adding notes
       
@@ -484,7 +500,7 @@ export const useLeadScores = (leadId?: string) => {
         ? `/api/lead-scoring?lead_id=${leadId}`
         : `/api/lead-scoring`;
       
-      const response = await fetch(endpoint, {
+      const response = await fetch(apiClient.getRequestUrl(endpoint), {
         headers: {
           'Authorization': `Bearer ${apiClient.getToken()}`,
           'Content-Type': 'application/json'
@@ -512,7 +528,7 @@ export const useTrackEvent = () => {
       metadata?: any;
     }) => {
       const apiClient = getApiClient();
-      const response = await fetch('/api/analytics-tracking', {
+      const response = await fetch(apiClient.getRequestUrl('/api/analytics-tracking'), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${apiClient.getToken()}`,
@@ -537,7 +553,7 @@ export const useRevenueForecast = () => {
     queryKey: queryKeys.revenueForecast,
     queryFn: async () => {
       const apiClient = getApiClient();
-      const response = await fetch('/api/revenue-forecast?endpoint=forecast', {
+      const response = await fetch(apiClient.getRequestUrl('/api/revenue-forecast?endpoint=forecast'), {
         headers: {
           'Authorization': `Bearer ${apiClient.getToken()}`,
           'Content-Type': 'application/json'
@@ -557,7 +573,7 @@ export const usePipelineVelocity = () => {
     queryKey: queryKeys.pipelineVelocity,
     queryFn: async () => {
       const apiClient = getApiClient();
-      const response = await fetch('/api/revenue-forecast?endpoint=velocity', {
+      const response = await fetch(apiClient.getRequestUrl('/api/revenue-forecast?endpoint=velocity'), {
         headers: {
           'Authorization': `Bearer ${apiClient.getToken()}`,
           'Content-Type': 'application/json'
@@ -577,7 +593,7 @@ export const useCohortAnalysis = () => {
     queryKey: queryKeys.cohortAnalysis,
     queryFn: async () => {
       const apiClient = getApiClient();
-      const response = await fetch('/api/revenue-forecast?endpoint=cohort', {
+      const response = await fetch(apiClient.getRequestUrl('/api/revenue-forecast?endpoint=cohort'), {
         headers: {
           'Authorization': `Bearer ${apiClient.getToken()}`,
           'Content-Type': 'application/json'
@@ -612,7 +628,7 @@ export const useAnalyticsEvents = (filters?: {
         });
       }
       
-      const response = await fetch(`/api/analytics-tracking?${params.toString()}`, {
+      const response = await fetch(apiClient.getRequestUrl(`/api/analytics-tracking?${params.toString()}`), {
         headers: {
           'Authorization': `Bearer ${apiClient.getToken()}`,
           'Content-Type': 'application/json'

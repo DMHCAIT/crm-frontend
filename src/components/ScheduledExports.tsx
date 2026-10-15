@@ -1,21 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
-import { Clock, Plus, Trash2, Edit, CheckCircle, AlertCircle } from 'lucide-react';
-
-interface ScheduledExport {
-  id: string;
-  name: string;
-  exportType: 'leads' | 'students' | 'analytics' | 'full';
-  format: 'csv' | 'pdf' | 'xlsx';
-  frequency: 'daily' | 'weekly' | 'monthly';
-  schedule: string; // Cron expression or simple time
-  email: string;
-  lastRun?: string;
-  nextRun: string;
-  status: 'active' | 'paused' | 'error';
-  filters?: any;
-}
+import { Clock, Plus, Trash2, CheckCircle } from 'lucide-react';
+import type { ScheduledExport } from '../types/api';
 
 const ScheduledExports: React.FC = () => {
   const { user } = useAuth();

@@ -190,7 +190,7 @@ const StudentsManagement: React.FC = () => {
   const loadStudentDocuments = async (studentId: string) => {
     try {
       const apiClient = getApiClient();
-      const response = await apiClient.getDocuments('student', studentId);
+      const response = await apiClient.getDocuments({ student_id: studentId });
       setStudentDocuments(response.documents || []);
     } catch (error) {
       console.error('Error loading documents:', error);

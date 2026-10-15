@@ -7,10 +7,8 @@ import {
   AlertCircle,
   RefreshCw,
   BookOpen,
-  Zap,
   Map,
   Link,
-  Upload,
   Play,
   Pause
 } from 'lucide-react';
@@ -352,23 +350,7 @@ const GoogleSheetsIntegration: React.FC = () => {
             continue;
           }
 
-          // Check if lead already exists (by email or phone)
-          if (leadData.email) {
-            const existingLeads = await api.get('/leads', {
-              params: { email: leadData.email }
-            });
-            
-            if (existingLeads.data && existingLeads.data.length > 0) {
-              // Update existing lead
-              await api.put(`/leads/${existingLeads.data[0].id}`, leadData);
-            } else {
-              // Create new lead
-              await api.post('/leads', leadData);
-            }
-          } else {
-            // Create new lead without email check
-            await api.post('/leads', leadData);
-          }
+          await api.createLead(leadData);
 
           successCount++;
         } catch (err) {

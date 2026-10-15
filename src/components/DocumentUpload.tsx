@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
-import { Upload, X, File, FileText, Image, CheckCircle, AlertCircle } from 'lucide-react';
+import { Upload, X, File, FileText, Image, AlertCircle } from 'lucide-react';
 
 interface DocumentUploadProps {
   entityType: 'lead' | 'student';
@@ -20,7 +20,7 @@ interface UploadedFile {
 }
 
 const DocumentUpload: React.FC<DocumentUploadProps> = ({ entityType, entityId, onUploadComplete }) => {
-  const { user } = useAuth();
+  useAuth();
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);

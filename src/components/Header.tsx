@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bell, Search, User, LogOut, ChevronDown } from 'lucide-react';
+import { Search, User, LogOut, ChevronDown } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
-import { useNotify } from './NotificationSystem';
 import ProductionStatus from './ProductionStatus';
+import FollowUpReminders from './FollowUpReminders';
+import ScheduledCallReminders from './ScheduledCallReminders';
 
-const Header: React.FC = () => {
+const Header: React.FC<{ onNavigate: (section: string) => void }> = ({ onNavigate }) => {
   const { user, signOut } = useAuth();
-  const notify = useNotify();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -49,16 +49,8 @@ const Header: React.FC = () => {
         </div>
         
         <div className="flex items-center space-x-4">
-          <button 
-            className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors"
-            onClick={() => notify.success('Notification Test', 'Notification system is working correctly! 🎉')}
-            title="Test Notifications"
-          >
-            <Bell className="w-6 h-6" />
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-xs rounded-full flex items-center justify-center">
-              ✓
-            </span>
-          </button>
+          <FollowUpReminders onNavigate={onNavigate} />
+          <ScheduledCallReminders onNavigate={onNavigate} />
           
           <div className="relative flex items-center space-x-3 border-l border-gray-200 pl-4">
             <div className="text-right">

@@ -13,7 +13,6 @@ import {
   Clock,
   CheckSquare,
   Copy,
-  ExternalLink,
   Smartphone,
   Sparkles,
   Save,
@@ -21,7 +20,6 @@ import {
   Edit2,
   Zap,
   MessageSquare,
-  FileText,
   Plus,
   MessageCircle,
   RefreshCw
@@ -47,15 +45,15 @@ interface Lead {
 }
 
 interface SegmentFilters {
-  countries?: string[];
-  qualifications?: string[];
-  courses?: string[];
+  countries: string[];
+  qualifications: string[];
+  courses: string[];
   courseInterests?: string[];
   leadAge?: string; // '0-7', '8-30', '31-90', '90+', 'all'
   statuses?: string[];
   ageMin?: number;
   ageMax?: number;
-  status?: string[];
+  status: string[];
 }
 
 interface MessageTemplate {
@@ -297,9 +295,9 @@ const LeadSegmentation: React.FC = () => {
   }, [filteredLeads]);
 
   // Toggle filter selection
-  const toggleFilter = (filterType: keyof SegmentFilters, value: string) => {
+  const toggleFilter = (filterType: 'countries' | 'qualifications' | 'courses' | 'status', value: string) => {
     setFilters(prev => {
-      const currentArray = prev[filterType] as string[];
+      const currentArray = prev[filterType];
       if (currentArray.includes(value)) {
         return {
           ...prev,

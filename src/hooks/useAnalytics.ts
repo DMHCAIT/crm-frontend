@@ -1,6 +1,8 @@
 // Hook for lead scoring and analytics
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getApiClient } from '../lib/backend';
+import type { ApiResponse, PipelineVelocity, RevenueForecast } from '../types/api';
+import type { LeadDetails } from '../lib/leadDuplicates';
 
 // Fetch lead score
 export const useLeadScore = (leadId: string | null) => {
@@ -9,7 +11,7 @@ export const useLeadScore = (leadId: string | null) => {
     queryFn: async () => {
       if (!leadId) return null;
       const apiClient = getApiClient();
-      const response = await apiClient.get(`/lead-scoring/${leadId}`);
+      const response = await apiClient.get<ApiResponse<unknown>>(`/lead-scoring/${leadId}`);
       return response.data.data;
     },
     enabled: !!leadId,
@@ -24,10 +26,10 @@ export const useCalculateLeadScore = () => {
   return useMutation({
     mutationFn: async (leadId: string) => {
       const apiClient = getApiClient();
-      const response = await apiClient.post('/lead-scoring/calculate', { leadId });
+      const response = await apiClient.post<ApiResponse<unknown>>('/lead-scoring/calculate', { leadId });
       return response.data.data;
     },
-    onSuccess: (data, leadId) => {
+    onSuccess: (_data, leadId) => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ['leadScore', leadId] });
     },
@@ -41,7 +43,7 @@ export const useCalculateAllScores = () => {
   return useMutation({
     mutationFn: async (limit: number = 1000) => {
       const apiClient = getApiClient();
-      const response = await apiClient.post('/lead-scoring/calculate-all', { limit });
+      const response = await apiClient.post<ApiResponse<unknown>>('/lead-scoring/calculate-all', { limit });
       return response.data.data;
     },
     onSuccess: () => {
@@ -59,7 +61,7 @@ export const useTopLeads = (limit: number = 50) => {
     queryKey: ['topLeads', limit],
     queryFn: async () => {
       const apiClient = getApiClient();
-      const response = await apiClient.get(`/lead-scoring/top-leads?limit=${limit}`);
+      const response = await apiClient.get<ApiResponse<LeadDetails[]>>(`/lead-scoring/top-leads?limit=${limit}`);
       return response.data.data;
     },
     staleTime: 5 * 60 * 1000,
@@ -72,7 +74,7 @@ export const useAtRiskLeads = (limit: number = 50) => {
     queryKey: ['atRiskLeads', limit],
     queryFn: async () => {
       const apiClient = getApiClient();
-      const response = await apiClient.get(`/lead-scoring/at-risk?limit=${limit}`);
+      const response = await apiClient.get<ApiResponse<LeadDetails[]>>(`/lead-scoring/at-risk?limit=${limit}`);
       return response.data.data;
     },
     staleTime: 5 * 60 * 1000,
@@ -89,7 +91,7 @@ export const useTrackEvent = () => {
       duration?: number;
     }) => {
       const apiClient = getApiClient();
-      const response = await apiClient.post('/analytics-events', eventData);
+      const response = await apiClient.post<ApiResponse<unknown>>('/analytics-events', eventData);
       return response.data.data;
     },
   });
@@ -100,7 +102,7 @@ export const useTrackEventBatch = () => {
   return useMutation({
     mutationFn: async (events: any[]) => {
       const apiClient = getApiClient();
-      const response = await apiClient.post('/analytics-events/batch', { events });
+      const response = await apiClient.post<ApiResponse<unknown>>('/analytics-events/batch', { events });
       return response.data.data;
     },
   });
@@ -142,7 +144,7 @@ export const useEventSummary = (days: number = 30) => {
     queryKey: ['eventSummary', days],
     queryFn: async () => {
       const apiClient = getApiClient();
-      const response = await apiClient.get(`/analytics-events/summary?days=${days}`);
+      const response = await apiClient.get<ApiResponse<unknown>>(`/analytics-events/summary?days=${days}`);
       return response.data.data;
     },
     staleTime: 5 * 60 * 1000,
@@ -155,7 +157,7 @@ export const useRecentActivities = (limit: number = 50) => {
     queryKey: ['recentActivities', limit],
     queryFn: async () => {
       const apiClient = getApiClient();
-      const response = await apiClient.get(`/analytics-events/recent?limit=${limit}`);
+      const response = await apiClient.get<ApiResponse<unknown>>(`/analytics-events/recent?limit=${limit}`);
       return response.data.data;
     },
     staleTime: 1 * 60 * 1000, // 1 minute
@@ -171,7 +173,7 @@ export const useUserActivity = (userId?: string, days: number = 7) => {
       const url = userId 
         ? `/analytics-events/user-activity?user_id=${userId}&days=${days}`
         : `/analytics-events/user-activity?days=${days}`;
-      const response = await apiClient.get(url);
+      const response = await apiClient.get<ApiResponse<unknown>>(url);
       return response.data.data;
     },
     enabled: !!userId || days > 0,
@@ -185,7 +187,7 @@ export const useRevenueForecast = () => {
     queryKey: ['revenueForecast'],
     queryFn: async () => {
       const apiClient = getApiClient();
-      const response = await apiClient.get('/enhanced-analytics/revenue-forecast');
+      const response = await apiClient.get<ApiResponse<RevenueForecast>>('/enhanced-analytics/revenue-forecast');
       return response.data.data;
     },
     staleTime: 10 * 60 * 1000, // 10 minutes
@@ -198,7 +200,7 @@ export const usePipelineVelocity = (days: number = 90) => {
     queryKey: ['pipelineVelocity', days],
     queryFn: async () => {
       const apiClient = getApiClient();
-      const response = await apiClient.get(`/enhanced-analytics/pipeline-velocity?days=${days}`);
+      const response = await apiClient.get<ApiResponse<PipelineVelocity>>(`/enhanced-analytics/pipeline-velocity?days=${days}`);
       return response.data.data;
     },
     staleTime: 10 * 60 * 1000,

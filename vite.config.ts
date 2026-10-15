@@ -4,10 +4,7 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react({
-      // Enable Fast Refresh
-      fastRefresh: true
-    })
+    react()
   ],
   optimizeDeps: {
     include: ['react', 'react-dom', 'axios'],

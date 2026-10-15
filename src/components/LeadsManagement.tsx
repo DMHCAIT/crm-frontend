@@ -1,11 +1,20 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import * as XLSX from 'xlsx';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
 import { TokenManager } from '../lib/productionAuth';
 import { useNotify } from './NotificationSystem';
-import { STATUS_OPTIONS, STATUS_COLORS, QUALIFICATION_OPTIONS } from '../constants/crmConstants';
-import { useLeads, useBulkUpdateLeads, useBulkDeleteLeads, useUpdateLead, useAddNote } from '../hooks/useQueries';
+import { OPEN_LEAD_EVENT, LEADS_CHANGED_EVENT, PENDING_LEAD_KEY } from './FollowUpReminders';
+import ScheduledCallField from './ScheduledCallField';
+import DuplicateLeadNotice from './DuplicateLeadNotice';
+import AutoSaveLeadForm from './AutoSaveLeadForm';
+import { useLeadDuplicateCheck } from '../hooks/useLeadDuplicateCheck';
+import type { LeadDetails as Lead, ImportLead, ImportReview, DuplicateMatch } from '../lib/leadDuplicates';
+import { isInternationalPhone } from '../lib/leadDuplicates';
+import { readLeadImportRows } from '../lib/leadImport';
+import { areAllLeadsSelected, toggleAllLeadSelection, type LeadPageSize } from '../lib/leadPagination';
+import { STATUS_OPTIONS, STATUS_COLORS, QUALIFICATION_OPTIONS, type StatusType } from '../constants/crmConstants';
+import { buildTransferUpdate } from '../lib/leadTransfer';
+import { useLeads, useLeadBucketStats, useBulkUpdateLeads, useBulkDeleteLeads, useUpdateLead, useAddNote } from '../hooks/useQueries';
 import { 
   Search, 
   Plus,
@@ -33,47 +42,13 @@ import {
   User,
   MessageSquare,
   BarChart3,
-  PieChart,
-  TrendingDown,
   AlertTriangle,
-  Timer,
-  Eye,
-  Bell,
-  Zap,
   RefreshCw,
   Bug,
   Building
 } from 'lucide-react';
 
 // Types and Interfaces
-interface Lead {
-  id: string;
-  fullName: string;
-  email: string;
-  phone: string;
-  country: string;
-  branch: string;
-  qualification: string;
-  source: string;
-  course: string;
-  status: string;
-  assignedTo: string;
-  followUp: string;
-  company: string;
-  createdAt: string;
-  updatedAt: string;
-  updated_by?: string; // Who last updated the lead (username)
-  notes: Note[];
-  fees?: number; // Deprecated - use sale_price instead
-  estimatedValue?: number; // Estimated value for all leads
-  estimated_value?: number; // Database field name
-  actualRevenue?: number; // Deprecated - use sale_price instead
-  actual_revenue?: number; // Deprecated database field
-  salePrice?: number; // Actual sale price when enrolled
-  sale_price?: number; // Database field name
-  currency?: 'USD' | 'INR'; // Currency based on company (IBMP = USD, DMHCA = INR)
-}
-
 interface AssignableUser {
   id: string;
   name: string;
@@ -96,6 +71,7 @@ interface NewLeadForm {
   status: string;
   assignedTo: string;
   followUp: string;
+  scheduledCallAt?: string | null;
   company: string;
 }
 
@@ -104,16 +80,6 @@ interface Note {
   content: string;
   timestamp: string;
   author: string;
-}
-
-interface Notification {
-  id: string;
-  type: string;
-  title: string;
-  message: string;
-  leadId: string;
-  timestamp: Date;
-  urgency: string;
 }
 
 interface LeadActivity {
@@ -136,12 +102,12 @@ interface CombinedItem extends Note {
 }
 
 interface LeadStats {
-  total: number;
-  hot: number;
-  warm: number;
-  followup: number;
-  converted: number;
-  thisMonth: number;
+  total: number | string;
+  hot: number | string;
+  warm: number | string;
+  followup: number | string;
+  converted: number | string;
+  thisMonth: number | string;
 }
 
 interface UserActivityStats {
@@ -215,7 +181,7 @@ const LeadsManagement: React.FC = () => {
   
   // Pagination States (must come first)
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(50);
+  const [itemsPerPage, setItemsPerPage] = useState<LeadPageSize>(50);
   const bulkUpdateMutation = useBulkUpdateLeads();
   const bulkDeleteMutation = useBulkDeleteLeads();
   const updateLeadMutation = useUpdateLead();
@@ -224,10 +190,19 @@ const LeadsManagement: React.FC = () => {
   // State Management
   const [users, setUsers] = useState<any[]>([]);
   const [importLoading, setImportLoading] = useState(false);
+  const [importReview, setImportReview] = useState<(ImportReview & { fileName: string }) | null>(null);
+  const [importAssignee, setImportAssignee] = useState('');
+  const [importStatus, setImportStatus] = useState<StatusType | ''>('');
+  const [savingNewLead, setSavingNewLead] = useState(false);
+  const [saveDuplicates, setSaveDuplicates] = useState<DuplicateMatch[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
   const [editingLead, setEditingLead] = useState<string | null>(null);
   const [editedLead, setEditedLead] = useState<Partial<Lead>>({});
+  const detailAutosaveRef = useRef<(() => Promise<boolean>) | null>(null);
+  const registerDetailAutosave = useCallback((flush: (() => Promise<boolean>) | null) => {
+    detailAutosaveRef.current = flush;
+  }, []);
   const [showFilters, setShowFilters] = useState(false);
   const [newNote, setNewNote] = useState<{[key: string]: string}>({});
   const [leadActivities, setLeadActivities] = useState<{[key: string]: LeadActivity[]}>({});
@@ -240,6 +215,7 @@ const LeadsManagement: React.FC = () => {
   const [showBulkTransferModal, setShowBulkTransferModal] = useState(false);
   const [bulkTransferCounselor, setBulkTransferCounselor] = useState('');
   const [bulkTransferReason, setBulkTransferReason] = useState('');
+  const [bulkTransferStatus, setBulkTransferStatus] = useState<StatusType | ''>('');
   const [isTransferringLeads, setIsTransferringLeads] = useState(false);
   
   // Bulk Company Change states
@@ -250,12 +226,8 @@ const LeadsManagement: React.FC = () => {
   const [selectedTeamMember, setSelectedTeamMember] = useState<any | null>(null);
   const [teamMemberLeads, setTeamMemberLeads] = useState<Lead[]>([]);
   
-  // Popup notification states - DISABLED
-  const [showOverduePopup, setShowOverduePopup] = useState(false); // Permanently disabled
-  const [overdueLeads, setOverdueLeads] = useState<Lead[]>([]);
-  const [popupNotifications, setPopupNotifications] = useState<Notification[]>([]);
   const [showTeamMemberModal, setShowTeamMemberModal] = useState(false);
-  const [loadingTeamMemberLeads, setLoadingTeamMemberLeads] = useState(false);
+  const [loadingTeamMemberLeads] = useState(false);
   const [activeTab, setActiveTab] = useState('notes');
 
   // User Activity Stats
@@ -299,6 +271,7 @@ const LeadsManagement: React.FC = () => {
     {code: 'KG', name: 'Kyrgyzstan', phoneCode: '+996'},
     {code: 'TJ', name: 'Tajikistan', phoneCode: '+992'},
     {code: 'TM', name: 'Turkmenistan', phoneCode: '+993'},
+    {code: 'GE', name: 'Georgia', phoneCode: '+995'},
     {code: 'AF', name: 'Afghanistan', phoneCode: '+93'},
     {code: 'BT', name: 'Bhutan', phoneCode: '+975'},
     {code: 'MV', name: 'Maldives', phoneCode: '+960'},
@@ -443,7 +416,6 @@ const LeadsManagement: React.FC = () => {
   const [showOverdueOnly, setShowOverdueOnly] = useState(false);
   const [excludeSystemUpdates, setExcludeSystemUpdates] = useState(true); // New: exclude system updates by default
   const [courseFilter, setCourseFilter] = useState('all');
-  const [companyFilter, setCompanyFilter] = useState('all');
   
   // Updated Today Tracking with persistence
   const [leadsUpdatedToday, setLeadsUpdatedToday] = useState<string[]>(() => {
@@ -471,9 +443,6 @@ const LeadsManagement: React.FC = () => {
   // Add Lead Modal States
   const [showAddLeadModal, setShowAddLeadModal] = useState(false);
   
-  // Expanded sections state
-  const [showExpandedAlerts, setShowExpandedAlerts] = useState(false);
-  const [showExpandedInsights, setShowExpandedInsights] = useState(false);
   const [newLead, setNewLead] = useState<NewLeadForm>({
     fullName: '',
     email: '',
@@ -488,6 +457,15 @@ const LeadsManagement: React.FC = () => {
     followUp: '',
     company: ''
   });
+  const duplicateCheck = useLeadDuplicateCheck(newLead.email, newLead.phone, showAddLeadModal, user?.id);
+  useEffect(() => {
+    setSaveDuplicates([]);
+  }, [newLead.email, newLead.phone, showAddLeadModal]);
+
+  const viewDuplicateLead = (lead: Lead) => {
+    setShowAddLeadModal(false);
+    void handleLeadClick(lead.id, lead);
+  };
 
   // ==========================================
   // SERVER-SIDE FILTERING - Build filter object
@@ -501,7 +479,6 @@ const LeadsManagement: React.FC = () => {
       assignedTo: assignedToFilter,
       qualification: qualificationFilter,
       course: courseFilter,
-      company: companyFilter,
       // Updated date filter parameters
       dateFilter: dateFilter,
       dateFrom: dateFrom,
@@ -532,7 +509,6 @@ const LeadsManagement: React.FC = () => {
       assignedToFilter,
       qualificationFilter,
       courseFilter,
-      companyFilter,
       dateFilter,
       dateFrom,
       dateTo,
@@ -553,10 +529,19 @@ const LeadsManagement: React.FC = () => {
     });
     
     return filters;
-  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, companyFilter, dateFilter, dateFrom, dateTo, dateFilterType, specificDate, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate, followUpFilter, followUpDateFrom, followUpDateTo, followUpDateType, followUpSpecificDate, showOverdueFollowUp]);
+  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, qualificationFilter, courseFilter, dateFilter, dateFrom, dateTo, dateFilterType, specificDate, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate, followUpFilter, followUpDateFrom, followUpDateTo, followUpDateType, followUpSpecificDate, showOverdueFollowUp]);
 
   // TanStack Query hooks with server-side pagination and filtering
-  const { data: leadsData, isLoading: leadsLoading, refetch: refetchLeads } = useLeads(currentPage, itemsPerPage, filterParams);
+  const { data: leadsData, refetch: refetchLeads, isFetching: loadingLeads, error: leadsError } = useLeads(currentPage, itemsPerPage, filterParams);
+  const {
+    data: bucketStats,
+    error: bucketStatsError,
+    refetch: refetchBucketStats
+  } = useLeadBucketStats(user?.id, user?.role);
+
+  useEffect(() => {
+    if (leadsData) void refetchBucketStats();
+  }, [leadsData, refetchBucketStats]);
 
   // Process server response to get leads array and pagination info
   const serverResponse = leadsData || {};
@@ -564,7 +549,8 @@ const LeadsManagement: React.FC = () => {
                 Array.isArray((serverResponse as any).data) ? (serverResponse as any).data : 
                 Array.isArray(leadsData) ? leadsData : [];
   const pagination = (serverResponse as any).pagination || null;
-  const backendStats = (serverResponse as any).stats || null; // Extract backend statistics
+
+  const overdueTotal = bucketStats?.overdueFollowUps ?? 0;
 
   // Extract total from multiple possible response fields
   const totalRecords =
@@ -575,9 +561,8 @@ const LeadsManagement: React.FC = () => {
     (serverResponse as any).totalLeads ??
     (serverResponse as any).total ??
     (typeof pagination?.totalPages === 'number'
-      ? pagination.totalPages * (pagination?.pageSize || itemsPerPage)
+      ? pagination.totalPages * (pagination?.pageSize || (itemsPerPage === 'all' ? leads.length : itemsPerPage))
       : leads.length);
-  const loading = leadsLoading;
 
   // ==========================================
   // SERVER-SIDE PAGINATION - No longer using client-side slice
@@ -588,16 +573,27 @@ const LeadsManagement: React.FC = () => {
   const paginatedLeads = leads; // Server already returns paginated data
   const totalItems = totalRecords || leads.length;
 
-  const totalPages = Math.max(
+  const totalPages = itemsPerPage === 'all' ? 1 : Math.max(
     pagination?.totalPages || pagination?.pages || 0,
     Math.ceil(totalItems / itemsPerPage),
     1
   );
   
   // Calculate display indices for pagination info
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const startIndex = itemsPerPage === 'all' ? 0 : (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + paginatedLeads.length, totalItems);
   const displayStart = totalItems === 0 ? 0 : startIndex + 1;
+
+  useEffect(() => {
+    setSelectedLeads([]);
+  }, [currentPage, itemsPerPage, filterParams, user?.id]);
+
+  useEffect(() => {
+    if (!loadingLeads && !leadsError) {
+      const visibleIds = new Set(leads.map((lead: Lead) => lead.id));
+      setSelectedLeads(previous => previous.filter(id => visibleIds.has(id)));
+    }
+  }, [leadsData, loadingLeads, leadsError]);
 
   // Reset to page 1 when filters change (but not during lead updates)
   useEffect(() => {
@@ -608,12 +604,39 @@ const LeadsManagement: React.FC = () => {
     } else {
       console.log('⏸️ Page reset skipped - Lead update in progress, staying on page', currentPage);
     }
-  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, dateFilter, dateFrom, dateTo, dateFilterType, specificDate, qualificationFilter, courseFilter, companyFilter, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate, followUpFilter, followUpDateFrom, followUpDateTo, followUpDateType, followUpSpecificDate, showOverdueFollowUp]);
+  }, [searchQuery, statusFilter, countryFilter, sourceFilter, assignedToFilter, dateFilter, dateFrom, dateTo, dateFilterType, specificDate, qualificationFilter, courseFilter, createdDateFilter, createdDateFrom, createdDateTo, createdDateFilterType, createdSpecificDate, followUpFilter, followUpDateFrom, followUpDateTo, followUpDateType, followUpSpecificDate, showOverdueFollowUp]);
 
   // Refetch data when pagination changes
   useEffect(() => {
     refetchLeads();
   }, [currentPage, itemsPerPage, refetchLeads]);
+
+  // Let the header reminders re-check whenever lead data refreshes (e.g. after an update)
+  useEffect(() => {
+    if (leadsData) window.dispatchEvent(new Event(LEADS_CHANGED_EVENT));
+  }, [leadsData]);
+
+  // Open a lead requested from a follow-up reminder
+  useEffect(() => {
+    const openFromReminder = (lead: any) => {
+      if (!lead?.id) return;
+      setSelectedLeadId(lead.id);
+      setSelectedLeadCache(lead);
+      setShowDetailPanel(true);
+      loadActivitiesForLead(lead.id);
+    };
+    const pending = sessionStorage.getItem(PENDING_LEAD_KEY);
+    if (pending) {
+      sessionStorage.removeItem(PENDING_LEAD_KEY);
+      try { openFromReminder(JSON.parse(pending)); } catch { /* ignore */ }
+    }
+    const handler = (e: Event) => {
+      sessionStorage.removeItem(PENDING_LEAD_KEY);
+      openFromReminder((e as CustomEvent).detail);
+    };
+    window.addEventListener(OPEN_LEAD_EVENT, handler);
+    return () => window.removeEventListener(OPEN_LEAD_EVENT, handler);
+  }, []);
 
   // Effects
   useEffect(() => {
@@ -737,78 +760,17 @@ const LeadsManagement: React.FC = () => {
   };
 
   // Team Member Functions
-  const handleTeamMemberClick = async (teamMember: any) => {
-    setSelectedTeamMember(teamMember);
-    setShowTeamMemberModal(true);
-    setLoadingTeamMemberLeads(true);
-    
-    try {
-      const apiClient = getApiClient();
-      // Get leads for this specific user and their team
-      const response = await apiClient.getUserLeads(teamMember.id, true);
-      
-      const leadsData = (response as any)?.leads || [];
-      const transformedLeads = leadsData.map((lead: any) => ({
-        id: lead.id || lead._id || String(Math.random()),
-        fullName: lead.name || lead.fullName || 'Unknown',
-        email: lead.email || '',
-        phone: lead.phone || '',
-        country: lead.country || 'Unknown',
-        branch: lead.branch || 'Main',
-        qualification: lead.qualification || '',
-        source: lead.source || 'manual',
-        course: lead.course || 'MBBS',
-        status: lead.status || 'Fresh',
-        assignedTo: lead.assigned_to || lead.assignedTo || 'Unassigned',
-        followUp: lead.follow_up || lead.followUp || '',
-        createdAt: lead.created_at || lead.createdAt || new Date().toISOString(),
-        updatedAt: lead.updated_at || lead.updatedAt || new Date().toISOString(),
-        notes: Array.isArray(lead.notes) ? lead.notes : []
-      }));
-      
-      setTeamMemberLeads(transformedLeads);
-      console.log(`📊 Loaded ${transformedLeads.length} leads for ${teamMember.name}`);
-      
-    } catch (error) {
-      console.error('❌ Error loading team member leads:', error);
-      notify.error('Team Leads Loading Failed', error instanceof Error ? error.message : 'Unable to load this team member\'s leads.');
-      setTeamMemberLeads([]);
-    } finally {
-      setLoadingTeamMemberLeads(false);
-    }
-  };
 
-  const handleTransferTeamMemberLead = async (leadId: string, targetUserId: string) => {
-    try {
-      const apiClient = getApiClient();
-      const targetUser = assignableUsers.find(u => u.id === targetUserId);
-      
-      if (!targetUser) {
-        alert('Target user not found');
-        return;
-      }
-      
-      // Update the lead assignment
-      await apiClient.updateLead(leadId, {
-        assignedTo: targetUser.username,
-        assigned_to: targetUser.username,
-        assignedcounselor: targetUser.username
-      });
-      
-      // Refresh the team member leads
-      if (selectedTeamMember) {
-        await handleTeamMemberClick(selectedTeamMember);
-      }
-      
-      // Refresh main leads list
-      await loadLeads();
-      
-      notify.success('Lead Transferred', `Lead transferred to ${targetUser.name} successfully`);
-      
-    } catch (error) {
-      console.error('❌ Error transferring lead:', error);
-      notify.error('Transfer Failed', 'Failed to transfer lead');
+  const handleTransferTeamMemberLead = (lead: Lead, targetUserId: string) => {
+    const targetUser = assignableUsers.find(u => u.id === targetUserId);
+    if (!targetUser?.username) {
+      notify.error('Transfer Failed', 'Please select an available team member.');
+      return;
     }
+    setSelectedLeadCache(lead);
+    handleTransferLead(lead.id);
+    setBulkTransferCounselor(targetUser.username);
+    setShowTeamMemberModal(false);
   };
 
   // Calculate User Activity Statistics
@@ -908,12 +870,9 @@ const LeadsManagement: React.FC = () => {
   // OPTIMIZED CALLBACKS - Prevent unnecessary re-renders
   // ==========================================
   const handleSelectAll = useCallback(() => {
-    if (selectedLeads.length === filteredLeads.length) {
-      setSelectedLeads([]);
-    } else {
-      setSelectedLeads(filteredLeads.map((lead: Lead) => lead.id));
-    }
-  }, [selectedLeads.length, filteredLeads]);
+    if (loadingLeads || leadsError) return;
+    setSelectedLeads(previous => toggleAllLeadSelection(filteredLeads, previous));
+  }, [filteredLeads, loadingLeads, leadsError]);
 
   const handleLeadSelect = useCallback((leadId: string) => {
     setSelectedLeads((prev: string[]) => 
@@ -949,15 +908,12 @@ const LeadsManagement: React.FC = () => {
         ...editedLead,
         updatedAt: new Date().toISOString()
       };
-      
-      // Update the cached lead BEFORE mutation to ensure continuity
-      if (currentLeadData) {
-        const updatedCachedLead = { ...currentLeadData, ...updateData };
-        setSelectedLeadCache(updatedCachedLead);
-        console.log('📦 Pre-updated cached lead data to maintain panel state');
+      if (updateData.scheduledCallAt === currentLeadData?.scheduledCallAt) {
+        delete updateData.scheduledCallAt;
       }
       
-      await updateLeadMutation.mutateAsync({ id: editingLead, data: updateData });
+      const saved = await updateLeadMutation.mutateAsync({ id: editingLead, data: updateData });
+      if (currentLeadData) setSelectedLeadCache({ ...currentLeadData, ...editedLead, ...saved.data });
       console.log('✅ Lead saved to backend successfully with cache invalidation');
       
       // Track this lead as updated today with persistence
@@ -989,7 +945,7 @@ const LeadsManagement: React.FC = () => {
       // Reset flag on error
       isUpdatingLeadRef.current = false;
       // Show error notification
-      notify.error('Save Failed', 'Unable to save lead updates. Please try again.');
+      notify.error('Save Failed', error instanceof Error ? error.message : 'Unable to save lead updates. Please try again.');
     }
   };
 
@@ -1164,20 +1120,6 @@ const LeadsManagement: React.FC = () => {
     }
   };
 
-  // Quick company filter function
-  const quickCompanyFilter = (company: string) => {
-    if (companyFilter === company && company !== 'all') {
-      // If already filtering by this company, switch back to all
-      setCompanyFilter('all');
-    } else {
-      // Apply the new company filter
-      setCompanyFilter(company);
-      if (company !== 'all') {
-        setDateFilter('all'); // Reset other filters when applying company filter
-      }
-    }
-  };
-
   // Filter to show only leads updated today (toggle on/off)
   const setFilterToUpdatedToday = () => {
     if (dateFilter === 'updated_today') {
@@ -1191,14 +1133,7 @@ const LeadsManagement: React.FC = () => {
   };
 
   // Reset the daily update counter
-  const resetDailyCounter = () => {
-    setLeadsUpdatedToday([]);
-    setLastUpdateTime(null);
-    localStorage.removeItem('crm-leads-updated-today');
-    localStorage.removeItem('crm-last-update-time');
-  };
-
-  // Filter to show only recently imported leads (last 24 hours)
+  // Use the existing server-side recently-imported filter.
   const setFilterToRecentlyImported = () => {
     if (dateFilter === 'recently_imported') {
       // If already filtering by recently imported, switch back to all
@@ -1210,30 +1145,7 @@ const LeadsManagement: React.FC = () => {
     }
   };
 
-  // Get count of recently imported leads (last 24 hours)
-  const getRecentlyImportedCount = () => {
-    const twentyFourHoursAgo = new Date();
-    twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
-    
-    return leads.filter((lead: Lead) => {
-      const createdAt = new Date(lead.createdAt);
-      return createdAt >= twentyFourHoursAgo && (
-        // Check if lead was created by import process
-        lead.source === 'Import' ||
-        lead.source === 'CSV Import' ||
-        lead.source === 'Excel Import' ||
-        lead.assignedTo === 'Import System' ||
-        // Check notes array for import-related content
-        lead.notes?.some((note: any) => 
-          note.content?.includes('Imported from CSV') ||
-          note.content?.includes('Imported from Excel') ||
-          note.content?.includes('Bulk import') ||
-          note.content?.includes('CSV file') ||
-          note.content?.includes('Excel file')
-        )
-      );
-    }).length;
-  };
+  const getRecentlyImportedCount = () => bucketStats?.recentlyImported ?? '-';
 
   // Clear all filters - Reset to default state
   const clearAllFilters = () => {
@@ -1245,8 +1157,8 @@ const LeadsManagement: React.FC = () => {
     setAssignedToFilter(['all']);
     setQualificationFilter('all');
     setCourseFilter('all');
-    setCompanyFilter('all');
     setShowOverdueOnly(false);
+    setShowOverdueFollowUp(false);
     // Clear updated date filters
     setDateFrom('');
     setDateTo('');
@@ -1281,7 +1193,6 @@ const LeadsManagement: React.FC = () => {
            !assignedToFilter.includes('all') ||
            qualificationFilter !== 'all' ||
            courseFilter !== 'all' ||
-           companyFilter !== 'all' ||
            showOverdueOnly ||
            dateFrom !== '' ||
            dateTo !== '' ||
@@ -1317,8 +1228,13 @@ const LeadsManagement: React.FC = () => {
     console.log('🔍 Assignment value (newLead.assignedTo):', newLead.assignedTo);
     try {
       // Validate required fields
-      if (!newLead.fullName || !newLead.phone || !newLead.company) {
-        alert('Please fill in all required fields (Full Name, Phone, Company)');
+      if (!newLead.fullName.trim() || !newLead.email.trim() || !newLead.phone.trim() || !newLead.company) {
+        alert('Please fill in all required fields (Full Name, Email, Phone, Company)');
+        return;
+      }
+
+      if (!isInternationalPhone(newLead.phone)) {
+        alert('Phone must include +country code and 7 to 15 digits (for example +91 9876543210)');
         return;
       }
 
@@ -1336,13 +1252,12 @@ const LeadsManagement: React.FC = () => {
           return;
         }
 
-        // Check for duplicate email
-        const existingLead = leads.find((lead: Lead) => lead.email && lead.email.toLowerCase() === newLead.email.toLowerCase());
-        if (existingLead) {
-          alert('A lead with this email already exists!');
-          return;
-        }
       }
+      if (savingNewLead) return;
+      setSavingNewLead(true);
+      const duplicateMatches = await getApiClient().checkLeadDuplicates(newLead.email, newLead.phone);
+      setSaveDuplicates(duplicateMatches);
+      if (duplicateMatches.length) return;
 
       // Prepare lead data for database insertion - include ALL fields
       // Custom source/course values from super admin are accepted as-is
@@ -1360,6 +1275,7 @@ const LeadsManagement: React.FC = () => {
         assignedTo: newLead.assignedTo || user?.username || user?.name || 'Unassigned',
         assigned_to: newLead.assignedTo || user?.username || user?.name || 'Unassigned',
         followUp: newLead.followUp,
+        ...(newLead.scheduledCallAt ? { scheduledCallAt: newLead.scheduledCallAt } : {}),
         score: 50,
         notes: `Lead created via manual entry by ${user?.name || 'System'}`,
       };
@@ -1385,6 +1301,8 @@ const LeadsManagement: React.FC = () => {
         status: createdLead.status || newLead.status || 'Fresh',
         assignedTo: createdLead.assignedTo || newLead.assignedTo || user?.username || user?.name || 'Unassigned',
         followUp: newLead.followUp || '',
+        scheduledCallAt: createdLead.scheduledCallAt,
+        scheduledCallDismissedAt: createdLead.scheduledCallDismissedAt,
         company: createdLead.company || newLead.company || '',
         createdAt: createdLead.createdAt || new Date().toISOString(),
         updatedAt: createdLead.updatedAt || new Date().toISOString(),
@@ -1435,6 +1353,13 @@ const LeadsManagement: React.FC = () => {
       
     } catch (error: any) {
       console.error('❌ Error adding lead:', error);
+      if (error instanceof Error && error.message.includes('Duplicate lead')) {
+        try {
+          setSaveDuplicates(await getApiClient().checkLeadDuplicates(newLead.email, newLead.phone));
+        } catch (checkError) {
+          notify.error('Duplicate Check Failed', checkError instanceof Error ? checkError.message : 'Unable to load duplicate ownership');
+        }
+      }
       
       // Show specific error message if available
       let errorMessage = 'Unable to create lead. Please try again.';
@@ -1448,6 +1373,8 @@ const LeadsManagement: React.FC = () => {
       
       // Show error notification
       notify.error('Lead Creation Failed', errorMessage);
+    } finally {
+      setSavingNewLead(false);
     }
   };
 
@@ -1480,8 +1407,16 @@ const LeadsManagement: React.FC = () => {
   const canTransferLeads = isManager() || user?.role === 'team_leader';
 
   // Handle lead selection for detail view
-  const handleLeadClick = async (leadId: string) => {
+  const handleLeadClick = async (leadId: string, cachedLead?: Lead) => {
     try {
+      if (selectedLeadId === leadId && showDetailPanel) return;
+      if (detailAutosaveRef.current && !(await detailAutosaveRef.current())) {
+        notify.error('Changes Not Saved', 'Correct the highlighted error before opening another lead.');
+        return;
+      }
+      setEditingLead(null);
+      setEditedLead({});
+      if (cachedLead) setSelectedLeadCache(cachedLead);
       console.log(`🔄 Lead clicked: ${leadId}`);
       
       // First set the selected lead and show panel
@@ -1513,7 +1448,6 @@ const LeadsManagement: React.FC = () => {
       console.log(`🔄 Notes and activities loading completed for lead: ${leadId}`);
       
       // Force a state update to ensure the UI re-renders with the updated notes
-      setLastUpdateTime(new Date());
     } catch (error) {
       console.error(`❌ Error in handleLeadClick for lead ${leadId}:`, error);
       // Show user-friendly error notification
@@ -1526,7 +1460,17 @@ const LeadsManagement: React.FC = () => {
   // Handle lead transfer (using bulk transfer modal for individual leads)
   const handleTransferLead = (leadId: string) => {
     setSelectedLeads([leadId]);
+    setBulkTransferCounselor('');
+    setBulkTransferReason('');
+    setBulkTransferStatus('');
     setShowBulkTransferModal(true);
+  };
+
+  const closeBulkTransfer = () => {
+    setShowBulkTransferModal(false);
+    setBulkTransferCounselor('');
+    setBulkTransferReason('');
+    setBulkTransferStatus('');
   };
 
   // Export leads to CSV
@@ -1592,51 +1536,23 @@ const LeadsManagement: React.FC = () => {
 
     try {
       // ── Parse file into rows[][] ─────────────────────────────────────
-      let allRows: string[][] = [];
+      const allRows = readLeadImportRows(await file.arrayBuffer());
+      const headerIndex = allRows.findIndex(row => row.some(cell => cell !== ''));
 
-      if (isExcel) {
-        const buffer = await file.arrayBuffer();
-        const workbook = XLSX.read(buffer, { type: 'array', cellDates: true });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const raw = XLSX.utils.sheet_to_json<any[]>(sheet, { header: 1, raw: false, defval: '' });
-        allRows = raw.map((row: any[]) => row.map((cell: any) => String(cell ?? '').trim()));
-      } else {
-        // CSV: read as text then parse
-        const text = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = e => resolve((e.target?.result as string) || '');
-          reader.onerror = reject;
-          reader.readAsText(file);
-        });
-        if (!text.trim()) throw new Error('File is empty or could not be read');
-        for (const line of text.split('\n')) {
-          if (!line.trim()) continue;
-          const values: string[] = [];
-          let cur = '', inQ = false;
-          for (let j = 0; j < line.length; j++) {
-            const c = line[j];
-            if (c === '"') { inQ = !inQ; }
-            else if (c === ',' && !inQ) { values.push(cur.trim()); cur = ''; }
-            else { cur += c; }
-          }
-          values.push(cur.trim());
-          allRows.push(values);
-        }
-      }
-
-      // Remove completely empty rows
-      allRows = allRows.filter(row => row.some(cell => cell !== ''));
-
-      if (allRows.length < 2) {
+      if (headerIndex < 0 || !allRows.slice(headerIndex + 1).some(row => row.some(cell => cell !== ''))) {
         alert('File must contain at least a header row and one data row.');
         setImportLoading(false);
         return;
       }
 
       // ── Column mapping ───────────────────────────────────────────────
-      const headerValues = allRows[0].map(h => String(h || '').toLowerCase());
+      const headerValues = allRows[headerIndex].map(h => String(h || '').toLowerCase());
 
       const getColumnIndex = (possibleNames: string[]) => {
+        for (const name of possibleNames) {
+          const idx = headerValues.findIndex(h => h.trim() === name.toLowerCase());
+          if (idx !== -1) return idx;
+        }
         for (const name of possibleNames) {
           const idx = headerValues.findIndex(h => h.includes(name.toLowerCase()));
           if (idx !== -1) return idx;
@@ -1653,30 +1569,23 @@ const LeadsManagement: React.FC = () => {
         qualification: getColumnIndex(['qualification', 'education']),
         source:        getColumnIndex(['source']),
         course:        getColumnIndex(['course']),
-        status:        getColumnIndex(['status']),
-        assignedTo:    getColumnIndex(['assigned to', 'assigned', 'assignedto', 'counselor']),
         followUp:      getColumnIndex(['follow up', 'followup', 'follow-up']),
         company:       getColumnIndex(['company', 'organization', 'org']),
         notes:         getColumnIndex(['notes', 'note', 'comments', 'comment', 'remarks', 'remark']),
       };
 
-      if (columnMap.fullName === -1) {
-        alert('File must contain at least a "Full Name" (or "Name") column.\n\nFound columns: ' + headerValues.join(', '));
+      if (columnMap.fullName === -1 || columnMap.email === -1 || columnMap.phone === -1) {
+        alert('File must contain Full Name, Email and Phone (or Mobile) columns.\n\nFound columns: ' + headerValues.join(', '));
         setImportLoading(false);
         return;
       }
 
       // ── Build leadsToImport ──────────────────────────────────────────
-      const leadsToImport: any[] = [];
-      const parseErrors: string[] = [];
-
-      for (let i = 1; i < allRows.length; i++) {
+      const leadsToImport: ImportLead[] = [];
+      for (let i = headerIndex + 1; i < allRows.length; i++) {
         const values = allRows[i];
+        if (!values.some(cell => cell !== '')) continue;
         const fullName = columnMap.fullName >= 0 ? values[columnMap.fullName] || '' : '';
-        if (!fullName) {
-          parseErrors.push(`Row ${i + 1}: Missing name`);
-          continue;
-        }
 
         const companyValue = columnMap.company >= 0 ? values[columnMap.company] || '' : '';
         let validatedCompany = '';
@@ -1700,19 +1609,11 @@ const LeadsManagement: React.FC = () => {
           qualification: columnMap.qualification >= 0 ? values[columnMap.qualification] || '' : '',
           source:        columnMap.source >= 0        ? (values[columnMap.source] || 'File Import') : 'File Import',
           course:        columnMap.course >= 0        ? values[columnMap.course] || ''        : '',
-          status:        columnMap.status >= 0        ? values[columnMap.status] || ''        : '',
-          assignedTo:    columnMap.assignedTo >= 0    ? values[columnMap.assignedTo] || ''    : '',
           followUp:      columnMap.followUp >= 0      ? values[columnMap.followUp] || ''      : '',
           company:       validatedCompany,
           notes:         notesValue,
+          rowNumber:     i + 1,
         });
-      }
-
-      if (parseErrors.length > 0) {
-        let msg = `${parseErrors.length} rows had errors:\n\n` + parseErrors.slice(0, 5).join('\n');
-        if (parseErrors.length > 5) msg += `\n... and ${parseErrors.length - 5} more`;
-        msg += '\n\nContinue importing valid leads?';
-        if (!confirm(msg)) { setImportLoading(false); return; }
       }
 
       if (leadsToImport.length === 0) {
@@ -1721,101 +1622,10 @@ const LeadsManagement: React.FC = () => {
         return;
       }
 
-      // ── Duplicate check (by email, then by phone if no email) ────────
-      const duplicateLeads: Array<{ name: string; email: string; phone: string; rowNumber: number }> = [];
-      const uniqueLeads: any[] = [];
-
-      for (let i = 0; i < leadsToImport.length; i++) {
-        const importLead = leadsToImport[i];
-        const emailKey = importLead.email?.trim().toLowerCase();
-        const phoneKey = importLead.phone?.trim();
-
-        const isDuplicate =
-          (emailKey && leads.some((l: Lead) => l.email?.trim().toLowerCase() === emailKey)) ||
-          (!emailKey && phoneKey && leads.some((l: Lead) => l.phone?.trim() === phoneKey));
-
-        if (isDuplicate) {
-          duplicateLeads.push({ name: importLead.fullName, email: importLead.email, phone: importLead.phone, rowNumber: i + 2 });
-        } else {
-          uniqueLeads.push(importLead);
-        }
-      }
-
-      if (duplicateLeads.length > 0) {
-        if (uniqueLeads.length === 0) {
-          alert(`All ${duplicateLeads.length} lead(s) already exist in the CRM.\n\nNo new leads to import.`);
-          setImportLoading(false);
-          return;
-        }
-        let dupMsg =
-          `Found ${duplicateLeads.length} duplicate lead(s) that will be skipped.\n\n` +
-          `• ${uniqueLeads.length} new lead(s) will be imported\n` +
-          `• ${duplicateLeads.length} duplicate(s) will be skipped\n\n`;
-        const showDups = duplicateLeads.slice(0, 10);
-        dupMsg += `Duplicates:\n` + showDups.map((d, idx) => `  ${idx + 1}. ${d.name} (${d.email || d.phone})`).join('\n');
-        if (duplicateLeads.length > 10) dupMsg += `\n  ... and ${duplicateLeads.length - 10} more`;
-        dupMsg += '\n\nContinue with import?';
-        if (!confirm(dupMsg)) { setImportLoading(false); return; }
-      }
-
-      const finalLeads = duplicateLeads.length > 0 ? uniqueLeads : leadsToImport;
-
-      // ── Send to backend ──────────────────────────────────────────────
-      const apiClient = getApiClient();
-      const backendUrl = apiClient.baseURL;
-      if (!backendUrl) throw new Error('Backend URL not configured.');
-
-      const endpoint = backendUrl.endsWith('/api') ? '/leads/bulk-create' : '/api/leads/bulk-create';
-      const fullUrl = `${backendUrl}${endpoint}`;
-
-      const authToken = localStorage.getItem('crm_auth_token') || localStorage.getItem('token');
-      if (!authToken) throw new Error('Not authenticated. Please log in again.');
-
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 120000);
-
-      const response = await fetch(fullUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-        body: JSON.stringify({ leads: finalLeads }),
-        signal: controller.signal,
-      });
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        const errText = await response.text();
-        throw new Error(`Server error (${response.status}): ${errText || response.statusText}`);
-      }
-
-      const responseText = await response.text();
-      if (!responseText?.trim()) throw new Error('Server returned empty response.');
-
-      let result: any;
-      try { result = JSON.parse(responseText); } catch { throw new Error('Server returned invalid response.'); }
-
-      if (result.success) {
-        const { success, failed, errors } = result.results;
-
-        // Refresh leads list, then switch to Recently Imported filter so new leads show immediately
-        await loadLeads();
-        setDateFilter('recently_imported');
-        setStatusFilter(['all']);
-
-        let message = `📊 IMPORT COMPLETE\n\n`;
-        message += `✅ ${success} lead(s) imported successfully\n`;
-        if (duplicateLeads.length > 0) message += `⚠️  ${duplicateLeads.length} duplicate(s) skipped\n`;
-        if (failed > 0) {
-          message += `❌ ${failed} lead(s) failed\n`;
-          if (errors?.length > 0) {
-            message += '\nErrors:\n' + errors.slice(0, 5).join('\n');
-            if (errors.length > 5) message += `\n... and ${errors.length - 5} more`;
-          }
-        }
-        message += `\n\nThe table is now showing your recently imported leads.\nUse the edit (✏️) icon on any lead to assign it to a counselor.`;
-        alert(message);
-      } else {
-        throw new Error(result.message || 'Import failed');
-      }
+      const review = await getApiClient().previewLeadImport(leadsToImport);
+      setImportReview({ ...review, fileName: file.name });
+      setImportAssignee('');
+      setImportStatus('');
 
     } catch (error) {
       console.error('❌ Import error:', error);
@@ -1829,6 +1639,33 @@ const LeadsManagement: React.FC = () => {
     } finally {
       setImportLoading(false);
       event.target.value = '';
+    }
+  };
+
+  const confirmLeadImport = async () => {
+    if (!importReview || importLoading) return;
+    if (!importAssignee || !importStatus) {
+      notify.error('Import Selection Required', 'Choose who should receive the leads and their status.');
+      return;
+    }
+    setImportLoading(true);
+    try {
+      const result = await getApiClient().importLeads(importReview.accepted, importAssignee, importStatus);
+      if (!result.success) throw new Error('Import failed');
+      const { success, duplicates, failed, errors } = result.results;
+      notify.success('Import Complete',
+        `${success} imported; ${importReview.duplicates.length + duplicates} duplicates skipped; ` +
+        `${importReview.invalid.length + failed} invalid/failed rows.` +
+        (errors.length ? ` ${errors.slice(0, 3).join('; ')}` : ''));
+      setImportReview(null);
+      await loadLeads();
+      await refetchBucketStats();
+      setDateFilter('recently_imported');
+      setStatusFilter(['all']);
+    } catch (error) {
+      notify.error('Import Failed', error instanceof Error ? error.message : 'Unable to import leads');
+    } finally {
+      setImportLoading(false);
     }
   };
 
@@ -1967,12 +1804,15 @@ const LeadsManagement: React.FC = () => {
       return;
     }
 
-    if (window.confirm(`Are you sure you want to transfer ${selectedLeads.length} lead(s) to ${bulkTransferCounselor}?`)) {
+    const stageSummary = bulkTransferStatus
+      ? `Change the stage of all selected leads to ${bulkTransferStatus}.`
+      : 'Keep each lead in its current stage.';
+    if (window.confirm(`Are you sure you want to transfer ${selectedLeads.length} lead(s) to ${bulkTransferCounselor}?\n${stageSummary}`)) {
       setIsTransferringLeads(true);
       try {
         // Save to backend API first
         const apiClient = getApiClient();
-        const updateData = { assignedTo: bulkTransferCounselor };
+        const updateData = buildTransferUpdate(bulkTransferCounselor, bulkTransferStatus);
         
         const result = await apiClient.bulkUpdateLeads(
           selectedLeads, 
@@ -2000,7 +1840,7 @@ const LeadsManagement: React.FC = () => {
         setLastUpdateTime(new Date());
         
         // Show success message
-        alert(`Successfully transferred ${selectedLeads.length} lead(s) to ${bulkTransferCounselor}`);
+        alert(`Successfully transferred ${selectedLeads.length} lead(s) to ${bulkTransferCounselor}. ${stageSummary}`);
         
       } catch (error) {
         console.error('❌ Error during bulk transfer:', error);
@@ -2011,9 +1851,7 @@ const LeadsManagement: React.FC = () => {
       }
       
       // Reset form and close modal only after successful transfer
-      setBulkTransferCounselor('');
-      setBulkTransferReason('');
-      setShowBulkTransferModal(false);
+      closeBulkTransfer();
       setSelectedLeads([]);
       
       // Close detail panel if selected lead was transferred
@@ -2074,476 +1912,51 @@ const LeadsManagement: React.FC = () => {
   };
 
   const calculateStats = (): LeadStats => {
-    // Use backend-provided statistics if available, otherwise fallback to client calculation
-    if (backendStats?.statusCounts) {
-      const now = new Date();
-      const currentMonth = now.getMonth();
-      const currentYear = now.getFullYear();
-
-      return {
-        total: backendStats.totalLeads || pagination?.totalRecords || (serverResponse as any).totalLeads || (serverResponse as any).total || (leads || []).length,
-        hot: backendStats.statusCounts['Hot'] || 0,
-        warm: backendStats.statusCounts['Warm'] || 0,
-        followup: backendStats.statusCounts['Follow Up'] || 0,
-        converted: backendStats.statusCounts['Enrolled'] || 0,
-        thisMonth: (leads || []).filter((lead: Lead) => {
-          const leadDate = new Date(lead.createdAt);
-          return leadDate.getMonth() === currentMonth && leadDate.getFullYear() === currentYear;
-        }).length // Keep this as client-side calculation for now
-      };
-    }
-
-    // Fallback to client-side calculation if backend stats not available
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-
-    // Use exact status values from backend: ['Fresh', 'Follow Up', 'Warm', 'Hot', 'Enrolled', 'Will Enroll Later', 'Not Answering', 'Not Interested', 'Junk']
     return {
-      total: (serverResponse as any).totalLeads || (serverResponse as any).total || pagination?.totalRecords || totalItems || (leads || []).length,
-      hot: (leads || []).filter((lead: Lead) => lead.status === 'Hot').length,
-      warm: (leads || []).filter((lead: Lead) => lead.status === 'Warm').length,
-      followup: (leads || []).filter((lead: Lead) => lead.status === 'Follow Up').length,
-      converted: (leads || []).filter((lead: Lead) => lead.status === 'Enrolled').length,
-      thisMonth: (leads || []).filter((lead: Lead) => {
-        const leadDate = new Date(lead.createdAt);
-        return leadDate.getMonth() === currentMonth && leadDate.getFullYear() === currentYear;
-      }).length
+      total: bucketStats?.total ?? '-',
+      hot: bucketStats?.hot ?? '-',
+      warm: bucketStats?.warm ?? '-',
+      followup: bucketStats?.followup ?? '-',
+      converted: bucketStats?.converted ?? '-',
+      thisMonth: bucketStats?.thisMonth ?? '-'
     };
   };
 
   // Individual status count functions for filter buttons
-  const getHotLeadsCount = () => (leads || []).filter((lead: Lead) => lead.status === 'Hot').length;
-  const getWarmLeadsCount = () => (leads || []).filter((lead: Lead) => lead.status === 'Warm').length;
-  const getFollowUpLeadsCount = () => (leads || []).filter((lead: Lead) => lead.status === 'Follow Up').length;
-  const getFreshLeadsCount = () => (leads || []).filter((lead: Lead) => lead.status === 'Fresh').length;
-  const getAllLeadsCount = () => (leads || []).length;
-
-  // Company count functions for filter buttons
-  const getDMHCALeadsCount = () => (leads || []).filter((lead: Lead) => lead.company === 'DMHCA').length;
-  const getIBMPLeadsCount = () => (leads || []).filter((lead: Lead) => lead.company === 'IBMP').length;
+  const getHotLeadsCount = () => bucketStats?.hot ?? '-';
+  const getWarmLeadsCount = () => bucketStats?.warm ?? '-';
+  const getFollowUpLeadsCount = () => bucketStats?.followup ?? '-';
+  const getFreshLeadsCount = () => bucketStats?.fresh ?? '-';
+  const getAllLeadsCount = () => bucketStats?.total ?? '-';
 
   // Advanced Monitoring Functions
-  const getAdvancedMetrics = () => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    const weekAgo = new Date(today);
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    
-    // Lead velocity metrics
-    const todayLeads = leads.filter((lead: Lead) => {
-      const leadDate = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
-      const leadDateOnly = new Date(leadDate.getFullYear(), leadDate.getMonth(), leadDate.getDate());
-      return leadDateOnly.getTime() === today.getTime();
-    });
-    
-    const yesterdayLeads = leads.filter((lead: Lead) => {
-      const leadDate = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
-      const leadDateOnly = new Date(leadDate.getFullYear(), leadDate.getMonth(), leadDate.getDate());
-      return leadDateOnly.getTime() === yesterday.getTime();
-    });
-    
-    const weekLeads = leads.filter((lead: Lead) => {
-      const leadDate = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
-      return leadDate >= weekAgo;
-    });
-    
-    // Conversion metrics
-    const convertedLeads = leads.filter((lead: Lead) => lead.status === 'Enrolled');
-    const conversionRate = leads.length > 0 ? (convertedLeads.length / leads.length * 100) : 0;
-    
-    // Response time metrics - Fixed to match notification logic
-    const followupDueLeads = leads.filter((lead: Lead) => {
-      if (!lead.followUp) return false;
-      const followupDate = new Date(lead.followUp);
-      const now = new Date();
-      return followupDate < now && lead.status !== 'Enrolled' && lead.status !== 'Not Interested';
-    });
-    
-    // Assignment distribution
-    const assignmentDistribution = leads.reduce((acc: Record<string, number>, lead: Lead) => {
-      const assignee = lead.assignedTo || 'Unassigned';
-      acc[assignee] = (acc[assignee] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-    
-    // Source performance
-    const sourcePerformance = leads.reduce((acc: Record<string, {total: number, converted: number}>, lead: Lead) => {
-      const source = lead.source || 'Unknown';
-      if (!acc[source]) {
-        acc[source] = { total: 0, converted: 0 };
-      }
-      acc[source].total++;
-      if (lead.status === 'enrolled') {
-        acc[source].converted++;
-      }
-      return acc;
-    }, {} as Record<string, { total: number, converted: number }>);
-    
-    // Activity metrics
-    const lastActivity = leads.reduce((latest: Date, lead: Lead) => {
-      const leadUpdate = new Date(lead.updatedAt);
-      return leadUpdate > latest ? leadUpdate : latest;
-    }, new Date(0));
-    
-    return {
-      todayCount: todayLeads.length,
-      yesterdayCount: yesterdayLeads.length,
-      weekCount: weekLeads.length,
-      conversionRate: Math.round(conversionRate * 10) / 10,
-      followupDue: followupDueLeads.length,
-      assignmentDistribution,
-      sourcePerformance,
-      lastActivity,
-      leadVelocity: todayLeads.length - yesterdayLeads.length, // Change from yesterday
-      averageLeadsPerDay: Math.round(weekLeads.length / 7 * 10) / 10
-    };
-  };
 
   // Real-time monitoring alerts
-  const getMonitoringAlerts = () => {
-    const metrics = getAdvancedMetrics();
-    const alerts = [];
-    
-    // Check for overdue followups
-    if (metrics.followupDue > 0) {
-      alerts.push({
-        type: 'warning',
-        message: `${metrics.followupDue} leads have overdue followups`,
-        action: 'View Overdue',
-        icon: AlertTriangle
-      });
-    }
-    
-    // Check for low lead velocity
-    if (metrics.leadVelocity < -2) {
-      alerts.push({
-        type: 'danger',
-        message: `Lead generation down ${Math.abs(metrics.leadVelocity)} from yesterday`,
-        action: 'Check Sources',
-        icon: TrendingDown
-      });
-    }
-    
-    // Check for unassigned leads
-    const unassigned = metrics.assignmentDistribution['Unassigned'] || 0;
-    if (unassigned > 5) {
-      alerts.push({
-        type: 'warning',
-        message: `${unassigned} leads are unassigned`,
-        action: 'Assign Now',
-        icon: UserCheck
-      });
-    }
-    
-    // Check for low conversion rate
-    if (metrics.conversionRate < 5 && leads.length > 20) {
-      alerts.push({
-        type: 'info',
-        message: `Conversion rate is ${metrics.conversionRate}% - consider optimization`,
-        action: 'View Analytics',
-        icon: BarChart3
-      });
-    }
-    
-    return alerts;
-  };
-
-  // Check for overdue follow-ups and trigger popup notifications
-  const checkOverdueFollowups = () => {
-    const now = new Date();
-    const overdue = leads.filter((lead: Lead) => {
-      if (!lead.followUp) return false;
-      const followUpDate = new Date(lead.followUp);
-      // Ensure we're comparing dates properly and excluding completed/uninterested leads
-      return followUpDate < now && lead.status !== 'Enrolled' && lead.status !== 'Not Interested';
-    });
-
-    console.log(`🔍 Overdue check: Found ${overdue.length} overdue leads out of ${leads.length} total leads`);
-    
-    setOverdueLeads(overdue);
-
-    // Only trigger popup notifications if there are actual overdue leads
-    if (overdue.length > 0) {
-      const newNotifications = overdue.map((lead: Lead) => ({
-        id: `overdue-${lead.id}`,
-        type: 'overdue',
-        title: '🔔 Overdue Follow-up!',
-        message: `${lead.fullName} (${lead.email}) has an overdue follow-up`,
-        leadId: lead.id,
-        timestamp: new Date(),
-        urgency: 'high'
-      }));
-
-      // Only show notifications for leads that weren't already notified recently
-      const recentNotifications = newNotifications.filter((notif: Notification) => {
-        const existingNotif = popupNotifications.find(p => p.leadId === notif.leadId);
-        if (!existingNotif) return true;
-        
-        // Show again if it's been more than 5 minutes since last notification (matching reminder interval)
-        const timeSince = new Date().getTime() - existingNotif.timestamp.getTime();
-        return timeSince > 300000; // 5 minutes in milliseconds
-      });
-
-      if (recentNotifications.length > 0) {
-        setPopupNotifications(prev => [...prev, ...recentNotifications]);
-      }
-      if (recentNotifications.length > 0) {
-        setPopupNotifications(prev => [...prev, ...recentNotifications]);
-        // setShowOverduePopup(true); // DISABLED - No more popup notifications
-      }
-    }
-
-    return overdue;
-  };
-
-  // Send desktop notification for overdue follow-ups
-  const sendDesktopNotification = (title: string, body: string, leadId?: string) => {
-    if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
-      const notification = new Notification(title, {
-        body,
-        icon: '/favicon.ico',
-        badge: '/favicon.ico',
-        tag: leadId || 'overdue-followup',
-        requireInteraction: true
-      });
-
-      notification.onclick = () => {
-        window.focus();
-        if (leadId) {
-          setSelectedLeadId(leadId);
-          setShowDetailPanel(true);
-        }
-        notification.close();
-      };
-
-      // Auto close after 10 seconds
-      setTimeout(() => notification.close(), 10000);
-    }
-  };
-
-  // Auto-refresh overdue follow-ups every 5 minutes
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (leads.length > 0) {
-        console.log('🔄 Checking for overdue follow-ups (5-min interval)...');
-        const overdue = checkOverdueFollowups();
-        
-        // Only send notifications if there are actual overdue leads
-        if (overdue.length > 0) {
-          console.log(`📢 Found ${overdue.length} overdue leads, sending notifications...`);
-          
-          // Send desktop notifications for critical overdue leads (>3 days)
-          const criticalOverdue = overdue.filter((lead: Lead) => {
-            const daysOverdue = Math.floor((new Date().getTime() - new Date(lead.followUp!).getTime()) / (1000 * 60 * 60 * 24));
-            return daysOverdue >= 3;
-          });
-
-          criticalOverdue.forEach((lead: Lead) => {
-            const daysOverdue = Math.floor((new Date().getTime() - new Date(lead.followUp!).getTime()) / (1000 * 60 * 60 * 24));
-            sendDesktopNotification(
-              `🚨 Critical: ${lead.fullName} - ${daysOverdue} days overdue!`,
-              `Follow-up was due ${daysOverdue} days ago. Contact immediately.`,
-              lead.id
-            );
-          });
-          
-          // Send popup notification for all overdue leads - DISABLED
-          if (overdue.length > 5) {
-            // setPopupNotifications(prev => [...prev, {
-            //   id: `bulk-overdue-${Date.now()}`,
-            //   type: 'bulk-overdue',
-            //   title: '⚠️ Urgent: Overdue Follow-ups!',
-            //   message: `You have ${overdue.length} overdue follow-ups!`,
-            //   timestamp: new Date(),
-            //   urgency: 'high'
-            // }]);
-            console.log(`📊 ${overdue.length} overdue follow-ups detected (popup disabled)`);
-          }
-        } else {
-          console.log('✅ No overdue follow-ups found');
-        }
-      }
-    }, 300000); // 5 minutes (300000ms)
-
-    return () => clearInterval(interval);
-  }, [leads]);
-
-  // Initial check when leads are loaded
-  useEffect(() => {
-    if (leads.length > 0) {
-      setTimeout(checkOverdueFollowups, 2000); // Wait 2 seconds after leads load
-    }
-  }, [leads]);
 
   // Performance insights
-  const getPerformanceInsights = () => {
-    const metrics = getAdvancedMetrics();
-    const insights = [];
-    
-    // Best performing source
-    const sourceEntries = Object.entries(metrics.sourcePerformance) as [string, {total: number, converted: number}][];
-    const bestSource = sourceEntries
-      .filter(([_, data]) => data.total >= 3)
-      .sort((a, b) => (b[1].converted / b[1].total) - (a[1].converted / a[1].total))[0];
-    
-    if (bestSource) {
-      const rate = Math.round((bestSource[1].converted / bestSource[1].total) * 100);
-      insights.push({
-        type: 'success',
-        title: 'Top Performing Source',
-        message: `${bestSource[0]} has ${rate}% conversion rate`,
-        icon: TrendingUp
-      });
-    }
-    
-    // Most active counselor
-    const counselorEntries = Object.entries(metrics.assignmentDistribution) as [string, number][];
-    const topCounselor = counselorEntries
-      .filter(([name]) => name !== 'Unassigned')
-      .sort((a, b) => b[1] - a[1])[0];
-    
-    if (topCounselor) {
-      insights.push({
-        type: 'info',
-        title: 'Most Active Counselor',
-        message: `${topCounselor[0]} managing ${topCounselor[1]} leads`,
-        icon: User
-      });
-    }
-    
-    // Recent activity
-    const timeSinceLastActivity = Date.now() - metrics.lastActivity.getTime();
-    const hoursSince = Math.floor(timeSinceLastActivity / (1000 * 60 * 60));
-    
-    if (hoursSince < 1) {
-      insights.push({
-        type: 'success',
-        title: 'Recent Activity',
-        message: 'Leads updated within the last hour',
-        icon: Zap
-      });
-    } else if (hoursSince > 24) {
-      insights.push({
-        type: 'warning',
-        title: 'Low Activity',
-        message: `No lead updates for ${hoursSince} hours`,
-        icon: Timer
-      });
-    }
-    
-    return insights;
-  };
 
   const stats = calculateStats();
-  const advancedMetrics = getAdvancedMetrics();
-  const monitoringAlerts = getMonitoringAlerts();
-  const performanceInsights = getPerformanceInsights();
 
-  // Get leads updated today count
-  const getLeadsUpdatedTodayCount = () => {
-    return leadsUpdatedToday.length;
-  };
-
-  // Get counts for different updated leads filters
-  const getUpdatedThisWeekCount = () => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay()); // Go to Sunday
-    
-    return (leads || []).filter((lead: Lead) => {
-      const leadUpdated = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
-      return leadUpdated >= startOfWeek;
-    }).length;
-  };
-
-  const getUpdatedThisMonthCount = () => {
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    
-    return (leads || []).filter((lead: Lead) => {
-      const leadUpdated = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
-      return leadUpdated >= startOfMonth;
-    }).length;
-  };
-
-  const getUpdatedYesterdayCount = () => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    
-    return (leads || []).filter((lead: Lead) => {
-      const leadUpdated = lead.updatedAt ? new Date(lead.updatedAt) : new Date(lead.createdAt);
-      const updatedDateOnly = new Date(leadUpdated.getFullYear(), leadUpdated.getMonth(), leadUpdated.getDate());
-      return updatedDateOnly.getTime() === yesterday.getTime();
-    }).length;
-  };
-
-  // Get counts for Created Date filters
-  const getCreatedTodayCount = () => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    
-    return (leads || []).filter((lead: Lead) => {
-      const leadCreated = new Date(lead.createdAt);
-      const createdDateOnly = new Date(leadCreated.getFullYear(), leadCreated.getMonth(), leadCreated.getDate());
-      return createdDateOnly.getTime() === today.getTime();
-    }).length;
-  };
-
-  const getCreatedYesterdayCount = () => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    
-    return (leads || []).filter((lead: Lead) => {
-      const leadCreated = new Date(lead.createdAt);
-      const createdDateOnly = new Date(leadCreated.getFullYear(), leadCreated.getMonth(), leadCreated.getDate());
-      return createdDateOnly.getTime() === yesterday.getTime();
-    }).length;
-  };
-
-  const getCreatedThisWeekCount = () => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay()); // Go to Sunday
-    
-    return (leads || []).filter((lead: Lead) => {
-      const leadCreated = new Date(lead.createdAt);
-      return leadCreated >= startOfWeek;
-    }).length;
-  };
-
-  const getCreatedThisMonthCount = () => {
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    
-    return (leads || []).filter((lead: Lead) => {
-      const leadCreated = new Date(lead.createdAt);
-      return leadCreated >= startOfMonth;
-    }).length;
-  };
-
-  const getCreatedLastMonthCount = () => {
-    const now = new Date();
-    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-    endOfLastMonth.setHours(23, 59, 59, 999);
-    
-    return (leads || []).filter((lead: Lead) => {
-      const leadCreated = new Date(lead.createdAt);
-      return leadCreated >= startOfLastMonth && leadCreated <= endOfLastMonth;
-    }).length;
-  };
+  const getLeadsUpdatedTodayCount = () => bucketStats?.updatedToday ?? '-';
+  const getUpdatedThisWeekCount = () => bucketStats?.updatedThisWeek ?? '-';
+  const getUpdatedThisMonthCount = () => bucketStats?.updatedThisMonth ?? '-';
+  const getUpdatedYesterdayCount = () => bucketStats?.updatedYesterday ?? '-';
+  const getCreatedTodayCount = () => bucketStats?.createdToday ?? '-';
+  const getCreatedYesterdayCount = () => bucketStats?.createdYesterday ?? '-';
+  const getCreatedThisWeekCount = () => bucketStats?.createdThisWeek ?? '-';
+  const getCreatedThisMonthCount = () => bucketStats?.thisMonth ?? '-';
+  const getCreatedLastMonthCount = () => bucketStats?.createdLastMonth ?? '-';
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      {bucketStatsError && (
+        <div role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-red-700">
+          Unable to refresh lead bucket totals: {bucketStatsError.message}
+          <button type="button" className="ml-3 underline" onClick={() => void refetchBucketStats()}>
+            Retry
+          </button>
+        </div>
+      )}
       {/* Header Section */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-6">
@@ -2687,11 +2100,10 @@ const LeadsManagement: React.FC = () => {
                   'CSV/Excel Import Instructions:\n\n' +
                   '✅ FLEXIBLE IMPORT - Column order doesn\'t matter!\n\n' +
                   '📋 REQUIRED COLUMNS:\n' +
-                  '   • Full Name (or "Name")\n\n' +
+                  '   • Full Name (or "Name"), Email, Phone/Mobile\n\n' +
                   '📋 OPTIONAL COLUMNS (use exact data from your file):\n' +
-                  '   • Email (checked for uniqueness if provided)\n' +
-                  '   • Phone, Country, Branch, Qualification\n' +
-                  '   • Source, Course, Status, Assigned To\n' +
+                  '   • Country, Branch, Qualification\n' +
+                  '   • Source, Course\n' +
                   '   • Follow Up Date, Company (DMHCA/IBMP)\n' +
                   '   • Notes (imported and preserved)\n\n' +
                   '🔧 SUPPORTED FORMATS:\n' +
@@ -2699,10 +2111,13 @@ const LeadsManagement: React.FC = () => {
                   '   • Excel files (.xlsx, .xls) ✅\n\n' +
                   '⚙️ HOW IT WORKS:\n' +
                   '   • Uses whatever data you provide\n' +
-                  '   • Empty fields stay empty (no defaults)\n' +
-                  '   • Duplicates skipped (checked by email, then phone)\n' +
-                  '   • All data saved to database\n' +
-                  '   • After import, assign leads via the edit (✏️) icon\n\n' +
+                  '   • Required contact fields must be valid\n' +
+                  '   • Phone must start with +country code, e.g. +91 9876543210 (7 to 15 digits total)\n' +
+                  '   • Store phone cells as text in Excel to preserve the + prefix\n' +
+                  '   • Duplicates skipped if EITHER email OR phone matches anywhere in CRM or repeats in the file\n' +
+                  '   • Review duplicates and invalid rows before upload\n' +
+                  '   • Choose the assignee and status for all new leads before importing\n' +
+                  '   • File assignee/status columns are overridden by your selections\n\n' +
                   '💡 TIP: Export leads first to see the exact column format!'
                 )}
                 className="text-gray-500 hover:text-gray-700 p-2"
@@ -2776,13 +2191,54 @@ const LeadsManagement: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          {/* Overdue Follow-ups Card - Clickable Filter */}
+          <div
+            className={`p-4 rounded-lg shadow-sm border cursor-pointer transition-all transform hover:scale-105 ${
+              showOverdueOnly
+                ? 'border-red-500 bg-red-50 shadow-md'
+                : overdueTotal > 0
+                  ? 'border-red-200 bg-red-50 hover:bg-red-100'
+                  : 'border-gray-200 bg-white hover:bg-gray-50'
+            }`}
+            onClick={() => {
+              setShowOverdueOnly(!showOverdueOnly);
+              setShowOverdueFollowUp(!showOverdueOnly);
+              setCurrentPage(1);
+                if (!showOverdueOnly) {
+                // Reset other filters when showing overdue only
+                setSearchQuery('');
+                setStatusFilter(['all']);
+              }
+            }}
+          >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Converted</p>
-                <p className="text-2xl font-bold text-purple-600">{stats.converted}</p>
+                <p className={`text-sm font-medium ${
+                  overdueTotal > 0 ? 'text-red-700' : 'text-gray-600'
+                }`}>
+                  {showOverdueOnly ? '🔍 Showing ' : ''}Overdue Follow-ups
+                </p>
+                <p className={`text-2xl font-bold ${
+                  overdueTotal > 0 ? 'text-red-600' : 'text-gray-400'
+                }`}>
+                  {bucketStats?.overdueFollowUps ?? '-'}
+                </p>
+                {overdueTotal > 0 && (
+                  <p className="text-xs text-red-500 font-medium animate-pulse">
+                    {showOverdueOnly ? 'Click to show all' : 'Click to filter'}
+                  </p>
+                )}
               </div>
-              <CheckCircle className="h-8 w-8 text-purple-600" />
+              <div className="flex flex-col items-center">
+                <AlertTriangle className={`h-8 w-8 ${
+                  overdueTotal > 0 ? 'text-red-600 animate-bounce' : 'text-gray-400'
+                }`} />
+                {overdueTotal > 0 && (
+                  <span className="text-xs bg-red-500 text-white px-2 py-1 rounded-full mt-1">
+                    URGENT
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -2797,394 +2253,10 @@ const LeadsManagement: React.FC = () => {
                     Last: {lastUpdateTime.toLocaleTimeString()}
                   </p>
                 )}
-                {getLeadsUpdatedTodayCount() > 0 && (
-                  <button
-                    onClick={resetDailyCounter}
-                    className="text-xs text-cyan-600 hover:text-cyan-800 underline mt-1"
-                  >
-                    Reset counter
-                  </button>
-                )}
               </div>
               <Edit3 className="h-8 w-8 text-cyan-600" />
             </div>
           </div>
-
-          {/* Overdue Follow-ups Card - Clickable Filter */}
-          <div 
-            className={`p-4 rounded-lg shadow-sm border cursor-pointer transition-all transform hover:scale-105 ${
-              showOverdueOnly 
-                ? 'border-red-500 bg-red-50 shadow-md' 
-                : overdueLeads.length > 0 
-                  ? 'border-red-200 bg-red-50 hover:bg-red-100' 
-                  : 'border-gray-200 bg-white hover:bg-gray-50'
-            }`}
-            onClick={() => {
-              setShowOverdueOnly(!showOverdueOnly);
-                if (!showOverdueOnly) {
-                // Reset other filters when showing overdue only
-                setSearchQuery('');
-                setStatusFilter(['all']);
-              }
-            }}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className={`text-sm font-medium ${
-                  overdueLeads.length > 0 ? 'text-red-700' : 'text-gray-600'
-                }`}>
-                  {showOverdueOnly ? '🔍 Showing ' : ''}Overdue Follow-ups
-                </p>
-                <p className={`text-2xl font-bold ${
-                  overdueLeads.length > 0 ? 'text-red-600' : 'text-gray-400'
-                }`}>
-                  {overdueLeads.length}
-                </p>
-                {overdueLeads.length > 0 && (
-                  <p className="text-xs text-red-500 font-medium animate-pulse">
-                    {showOverdueOnly ? 'Click to show all' : 'Click to filter'}
-                  </p>
-                )}
-              </div>
-              <div className="flex flex-col items-center">
-                <AlertTriangle className={`h-8 w-8 ${
-                  overdueLeads.length > 0 ? 'text-red-600 animate-bounce' : 'text-gray-400'
-                }`} />
-                {overdueLeads.length > 0 && (
-                  <span className="text-xs bg-red-500 text-white px-2 py-1 rounded-full mt-1">
-                    URGENT
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Advanced Monitoring Dashboard */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          
-          {/* Real-time Alerts */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div 
-              className="flex items-center justify-between mb-4 cursor-pointer hover:bg-gray-50 -m-2 p-2 rounded-lg transition-colors"
-              onClick={() => setShowExpandedAlerts(!showExpandedAlerts)}
-            >
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                <Bell className="w-5 h-5 mr-2 text-red-500" />
-                Monitoring Alerts
-                {showExpandedAlerts ? (
-                  <ChevronUp className="w-4 h-4 ml-2 text-gray-400" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 ml-2 text-gray-400" />
-                )}
-              </h3>
-              <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
-                {monitoringAlerts.length}
-              </span>
-            </div>
-            
-            {monitoringAlerts.length === 0 ? (
-              <div className="text-center py-4">
-                <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-2" />
-                <p className="text-sm text-gray-600">All systems normal</p>
-              </div>
-            ) : showExpandedAlerts ? (
-              <div className="space-y-3">
-                {monitoringAlerts.map((alert, index) => {
-                  const IconComponent = alert.icon;
-                  return (
-                    <div key={index} className={`p-3 rounded-lg border-l-4 ${
-                      alert.type === 'danger' ? 'border-red-500 bg-red-50' :
-                      alert.type === 'warning' ? 'border-yellow-500 bg-yellow-50' :
-                      'border-blue-500 bg-blue-50'
-                    }`}>
-                      <div className="flex items-start">
-                        <IconComponent className={`w-5 h-5 mr-2 mt-0.5 ${
-                          alert.type === 'danger' ? 'text-red-500' :
-                          alert.type === 'warning' ? 'text-yellow-500' :
-                          'text-blue-500'
-                        }`} />
-                        <div className="flex-1">
-                          <p className="text-sm text-gray-800">{alert.message}</p>
-                          <button className={`text-xs mt-1 font-medium ${
-                            alert.type === 'danger' ? 'text-red-600' :
-                            alert.type === 'warning' ? 'text-yellow-600' :
-                            'text-blue-600'
-                          }`}>
-                            {alert.action} →
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-                <div className="mt-4 pt-3 border-t border-gray-200">
-                  <button className="text-xs text-blue-600 hover:text-blue-800 font-medium">
-                    View All Alerts →
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {monitoringAlerts.slice(0, 2).map((alert, index) => {
-                  const IconComponent = alert.icon;
-                  return (
-                    <div key={index} className={`p-2 rounded-lg border-l-4 ${
-                      alert.type === 'danger' ? 'border-red-500 bg-red-50' :
-                      alert.type === 'warning' ? 'border-yellow-500 bg-yellow-50' :
-                      'border-blue-500 bg-blue-50'
-                    }`}>
-                      <div className="flex items-center">
-                        <IconComponent className={`w-4 h-4 mr-2 ${
-                          alert.type === 'danger' ? 'text-red-500' :
-                          alert.type === 'warning' ? 'text-yellow-500' :
-                          'text-blue-500'
-                        }`} />
-                        <p className="text-xs text-gray-800 truncate">{alert.message}</p>
-                      </div>
-                    </div>
-                  );
-                })}
-                {monitoringAlerts.length > 2 && (
-                  <div className="text-center pt-2">
-                    <span className="text-xs text-gray-500">+{monitoringAlerts.length - 2} more alerts</span>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Performance Metrics */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                <BarChart3 className="w-5 h-5 mr-2 text-blue-500" />
-                Performance Metrics
-              </h3>
-              <button className="text-xs text-blue-600 hover:text-blue-800">
-                <RefreshCw className="w-4 h-4" />
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Conversion Rate</span>
-                <div className="flex items-center">
-                  <span className="text-lg font-bold text-green-600">{advancedMetrics.conversionRate}%</span>
-                  {advancedMetrics.conversionRate > 10 ? (
-                    <TrendingUp className="w-4 h-4 text-green-500 ml-1" />
-                  ) : (
-                    <TrendingDown className="w-4 h-4 text-red-500 ml-1" />
-                  )}
-                </div>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Leads Today</span>
-                <div className="flex items-center">
-                  <span className="text-lg font-bold text-blue-600">{advancedMetrics.todayCount}</span>
-                  <span className={`text-xs ml-2 px-2 py-1 rounded-full ${
-                    advancedMetrics.leadVelocity > 0 ? 'bg-green-100 text-green-800' :
-                    advancedMetrics.leadVelocity < 0 ? 'bg-red-100 text-red-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
-                    {advancedMetrics.leadVelocity > 0 ? '+' : ''}{advancedMetrics.leadVelocity}
-                  </span>
-                </div>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Overdue Followups</span>
-                <span className={`text-lg font-bold ${
-                  advancedMetrics.followupDue > 0 ? 'text-red-600' : 'text-green-600'
-                }`}>
-                  {advancedMetrics.followupDue}
-                </span>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Avg/Day (Week)</span>
-                <span className="text-lg font-bold text-purple-600">{advancedMetrics.averageLeadsPerDay}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Performance Insights */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div 
-              className="flex items-center justify-between mb-4 cursor-pointer hover:bg-gray-50 -m-2 p-2 rounded-lg transition-colors"
-              onClick={() => setShowExpandedInsights(!showExpandedInsights)}
-            >
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                <Eye className="w-5 h-5 mr-2 text-purple-500" />
-                Insights
-                {showExpandedInsights ? (
-                  <ChevronUp className="w-4 h-4 ml-2 text-gray-400" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 ml-2 text-gray-400" />
-                )}
-              </h3>
-              <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
-                {performanceInsights.length}
-              </span>
-            </div>
-            
-            {performanceInsights.length === 0 ? (
-              <div className="text-center py-4">
-                <PieChart className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-600">No insights available</p>
-              </div>
-            ) : showExpandedInsights ? (
-              <div className="space-y-4">
-                {performanceInsights.map((insight, index) => {
-                  const IconComponent = insight.icon;
-                  return (
-                    <div key={index} className={`p-3 rounded-lg ${
-                      insight.type === 'success' ? 'bg-green-50 border border-green-200' :
-                      insight.type === 'warning' ? 'bg-yellow-50 border border-yellow-200' :
-                      'bg-blue-50 border border-blue-200'
-                    }`}>
-                      <div className="flex items-start">
-                        <IconComponent className={`w-5 h-5 mr-2 mt-0.5 ${
-                          insight.type === 'success' ? 'text-green-500' :
-                          insight.type === 'warning' ? 'text-yellow-500' :
-                          'text-blue-500'
-                        }`} />
-                        <div>
-                          <p className="text-sm font-medium text-gray-800">{insight.title}</p>
-                          <p className="text-xs text-gray-600">{insight.message}</p>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-                <div className="mt-4 pt-3 border-t border-gray-200">
-                  <button className="text-xs text-purple-600 hover:text-purple-800 font-medium">
-                    View Detailed Analytics →
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {performanceInsights.slice(0, 2).map((insight, index) => {
-                  const IconComponent = insight.icon;
-                  return (
-                    <div key={index} className={`p-2 rounded-lg ${
-                      insight.type === 'success' ? 'bg-green-50 border border-green-200' :
-                      insight.type === 'warning' ? 'bg-yellow-50 border border-yellow-200' :
-                      'bg-blue-50 border border-blue-200'
-                    }`}>
-                      <div className="flex items-center">
-                        <IconComponent className={`w-4 h-4 mr-2 ${
-                          insight.type === 'success' ? 'text-green-500' :
-                          insight.type === 'warning' ? 'text-yellow-500' :
-                          'text-blue-500'
-                        }`} />
-                        <div>
-                          <p className="text-xs font-medium text-gray-800 truncate">{insight.title}</p>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-                {performanceInsights.length > 2 && (
-                  <div className="text-center pt-2">
-                    <span className="text-xs text-gray-500">+{performanceInsights.length - 2} more insights</span>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Team Workload Distribution - Enhanced with Hierarchical Team Members */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center justify-between">
-            <div className="flex items-center">
-              <Users className="w-5 h-5 mr-2 text-indigo-500" />
-              Team Workload Distribution
-            </div>
-            <div className="text-sm text-gray-500">
-              {(user?.role === 'manager' || user?.role === 'senior_manager' || user?.role === 'team_leader') && (
-                <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs">
-                  👥 Including Subordinates ({assignableUsers.length})
-                </span>
-              )}
-              {user?.role === 'counselor' && (
-                <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">
-                  📋 Personal View
-                </span>
-              )}
-            </div>
-          </h3>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 max-h-[300px] overflow-y-auto pr-2">
-            {assignableUsers.map((teamUser) => {
-              const userLeadCount = leads.filter((lead: Lead) => 
-                lead.assignedTo === teamUser.username || lead.assignedTo === teamUser.name
-              ).length;
-              
-              // Determine if this is the current user or a subordinate
-              const isCurrentUser = teamUser.username === user?.username || teamUser.email === user?.email;
-              const isSubordinate = !isCurrentUser;
-              const supervisor = assignableUsers.find(member => member.id === teamUser.reports_to);
-              
-              return (
-                <div 
-                  key={teamUser.id} 
-                  className="text-center cursor-pointer hover:bg-gray-50 rounded-lg p-2 transition-colors duration-200"
-                  onClick={() => handleTeamMemberClick(teamUser)}
-                  title={`Click to view ${teamUser.name}'s leads${isSubordinate ? ` (Reports to ${supervisor?.name || 'your reporting hierarchy'})` : ' (You)'}`}
-                >
-                  <div className={`rounded-lg p-4 mb-2 transition-colors ${
-                    isCurrentUser 
-                      ? 'bg-green-100 hover:bg-green-200' 
-                      : 'bg-indigo-100 hover:bg-indigo-200'
-                  }`}>
-                    <div className="flex items-center justify-center mb-2">
-                      <User className={`w-8 h-8 mx-auto ${
-                        isCurrentUser ? 'text-green-600' : 'text-indigo-600'
-                      }`} />
-                      {isSubordinate && (
-                        <span className="ml-1 text-xs">👤</span>
-                      )}
-                      {isCurrentUser && (
-                        <span className="ml-1 text-xs">🎯</span>
-                      )}
-                    </div>
-                    <span className={`text-2xl font-bold ${
-                      isCurrentUser ? 'text-green-800' : 'text-indigo-800'
-                    }`}>
-                      {userLeadCount}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-600 truncate" title={teamUser.name}>
-                    {teamUser.name}
-                    {isCurrentUser && <span className="text-green-600 ml-1">(You)</span>}
-                  </p>
-                  <p className="text-xs text-gray-400 truncate" title={teamUser.role}>
-                    {teamUser.role}
-                    {isSubordinate && <span className="text-blue-600 ml-1">↳</span>}
-                  </p>
-                  {isSubordinate && supervisor && (
-                    <p className="text-xs text-blue-600 truncate" title={`Reports to ${supervisor.name}`}>
-                      Reports to {supervisor.name}
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-          
-          {assignableUsers.length === 0 && (
-            <div className="text-center py-8">
-              <Users className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-              <p className="text-sm text-gray-600">No team members found</p>
-              <p className="text-xs text-gray-500 mt-1">
-                {user?.role === 'counselor' ? 'Only your personal leads are visible' : 'Check user hierarchy setup'}
-              </p>
-            </div>
-          )}
         </div>
       </div>
 
@@ -3479,11 +2551,6 @@ const LeadsManagement: React.FC = () => {
                     Country: {countryFilter}
                   </span>
                 )}
-                {companyFilter !== 'all' && (
-                  <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">
-                    Company: {companyFilter}
-                  </span>
-                )}
                 {!assignedToFilter.includes('all') && (
                   <span className="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-xs">
                     Assigned: {assignedToFilter.join(', ')}
@@ -3505,48 +2572,6 @@ const LeadsManagement: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* Company Filters */}
-      <div className="mb-4 flex flex-wrap gap-3">
-        <div className="text-sm font-medium text-gray-700 flex items-center mr-4">
-          <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            🏢 Filter by Company:
-          </span>
-        </div>
-        
-        <button
-          onClick={() => quickCompanyFilter('DMHCA')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-            companyFilter === 'DMHCA' 
-              ? 'bg-blue-100 text-blue-800 border-2 border-blue-300 shadow-md' 
-              : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
-          }`}
-        >
-          🏥 DMHCA ({getDMHCALeadsCount()})
-        </button>
-
-        <button
-          onClick={() => quickCompanyFilter('IBMP')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-            companyFilter === 'IBMP' 
-              ? 'bg-green-100 text-green-800 border-2 border-green-300 shadow-md' 
-              : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
-          }`}
-        >
-          🎓 IBMP ({getIBMPLeadsCount()})
-        </button>
-
-        <button
-          onClick={() => quickCompanyFilter('all')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-            companyFilter === 'all' 
-              ? 'bg-gray-100 text-gray-800 border-2 border-gray-300 shadow-md' 
-              : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:shadow-sm'
-          }`}
-        >
-          🌐 All Companies ({getAllLeadsCount()})
-        </button>
-      </div>
 
       {/* Search and Filters */}
       <div className="mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-200">
@@ -3590,7 +2615,7 @@ const LeadsManagement: React.FC = () => {
               <AlertTriangle className="w-5 h-5 text-red-600 mr-2" />
               <span className="text-red-700 font-medium">Showing Overdue Follow-ups Only</span>
               <button
-                onClick={() => setShowOverdueOnly(false)}
+                onClick={() => { setShowOverdueOnly(false); setShowOverdueFollowUp(false); setCurrentPage(1); }}
                 className="ml-3 text-red-600 hover:text-red-800"
               >
                 <X className="w-4 h-4" />
@@ -4254,7 +3279,7 @@ const LeadsManagement: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Leads Management ({paginatedLeads.length} on page)
+                    Leads Management ({paginatedLeads.length} {itemsPerPage === 'all' ? 'in current view' : 'on page'})
                   </h2>
                   <p className="text-sm text-gray-600 mt-1">
                     Total accessible leads: <span className="font-semibold text-blue-600">{totalItems}</span>
@@ -4273,7 +3298,9 @@ const LeadsManagement: React.FC = () => {
                 <div className="flex items-center space-x-3">
                   <input
                     type="checkbox"
-                    checked={selectedLeads.length === filteredLeads.length && filteredLeads.length > 0}
+                    checked={areAllLeadsSelected(filteredLeads, selectedLeads)}
+                    disabled={loadingLeads || !!leadsError || filteredLeads.length === 0}
+                    aria-label={itemsPerPage === 'all' ? 'Select all leads in current view' : 'Select all leads on this page'}
                     onChange={handleSelectAll}
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
@@ -4284,7 +3311,7 @@ const LeadsManagement: React.FC = () => {
               </div>
 
               {/* Enhanced Bulk Actions Row */}
-              {selectedLeads.length > 0 && (
+              {selectedLeads.length > 0 && !loadingLeads && !leadsError && (
                 <div className="flex items-center justify-between bg-blue-50 rounded-lg p-3">
                   <div className="flex items-center space-x-2">
                     <span className="text-sm font-medium text-blue-900">
@@ -4325,7 +3352,12 @@ const LeadsManagement: React.FC = () => {
                     {/* Bulk Transfer */}
                     {canTransferLeads && (
                       <button
-                        onClick={() => setShowBulkTransferModal(true)}
+                        onClick={() => {
+                          setBulkTransferCounselor('');
+                          setBulkTransferReason('');
+                          setBulkTransferStatus('');
+                          setShowBulkTransferModal(true);
+                        }}
                         className="bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 flex items-center space-x-1 text-sm"
                       >
                         <ArrowUpDown className="w-4 h-4" />
@@ -4355,6 +3387,17 @@ const LeadsManagement: React.FC = () => {
               )}
             </div>
 
+            {loadingLeads && (
+              <p role="status" className="px-4 py-3 text-sm text-blue-700">
+                {itemsPerPage === 'all' ? 'Loading all leads in the current view...' : 'Loading leads...'}
+              </p>
+            )}
+            {leadsError && (
+              <div role="alert" className="px-4 py-3 text-sm text-red-700">
+                {leadsError instanceof Error ? leadsError.message : 'Unable to load leads'}
+                <button onClick={() => void refetchLeads()} className="ml-3 underline">Retry</button>
+              </div>
+            )}
             {/* Pagination Controls - Top */}
             <div className="border-t border-gray-200 px-4 py-4 bg-gray-50">
               <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
@@ -4372,11 +3415,13 @@ const LeadsManagement: React.FC = () => {
                     <select
                       value={itemsPerPage}
                       onChange={(e) => {
-                        setItemsPerPage(Number(e.target.value));
+                        setItemsPerPage(e.target.value === 'all' ? 'all' : Number(e.target.value));
                         setCurrentPage(1);
+                        setSelectedLeads([]);
                       }}
                       className="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
+                      <option value="all">All</option>
                       <option value={50}>50</option>
                       <option value={100}>100</option>
                       <option value={200}>200</option>
@@ -4545,6 +3590,7 @@ const LeadsManagement: React.FC = () => {
                       <input
                         type="checkbox"
                         checked={selectedLeads.includes(lead.id)}
+                        disabled={loadingLeads || !!leadsError}
                         onChange={(e) => {
                           e.stopPropagation();
                           handleLeadSelect(lead.id);
@@ -4587,6 +3633,10 @@ const LeadsManagement: React.FC = () => {
                                 onClick={(e) => e.stopPropagation()}
                                 title="Follow Up Date"
                               />
+                              <ScheduledCallField
+                                value={editedLead.scheduledCallAt}
+                                onChange={value => setEditedLead(prev => ({ ...prev, scheduledCallAt: value }))}
+                              />
                             </>
                           ) : (
                             <>
@@ -4614,6 +3664,11 @@ const LeadsManagement: React.FC = () => {
                                 <p className="text-xs text-gray-600 flex items-center">
                                   <Calendar className="w-3 h-3 mr-1" />
                                   Follow: {new Date(lead.followUp).toLocaleDateString()}
+                                </p>
+                              )}
+                              {lead.scheduledCallAt && (
+                                <p className="text-xs text-blue-700">
+                                  Call: {new Date(lead.scheduledCallAt).toLocaleString()}
                                 </p>
                               )}
                             </>
@@ -4727,14 +3782,26 @@ const LeadsManagement: React.FC = () => {
                           {editingLead === lead.id ? (
                             <>
                               <select
-                                value={editedLead.assignedTo || lead.assignedTo}
+                                value={(() => {
+                                  const current = editedLead.assignedTo ?? lead.assignedTo ?? '';
+                                  if (!current || current === 'Unassigned') return '';
+                                  const match = users.find(u =>
+                                    [u.username, u.name, u.email].some(v => v && String(v).toLowerCase() === String(current).toLowerCase())
+                                  );
+                                  return match ? (match.username || match.name || match.email) : current;
+                                })()}
                                 onChange={(e) => setEditedLead(prev => ({ ...prev, assignedTo: e.target.value }))}
                                 className="text-sm text-gray-600 bg-white border border-gray-300 rounded px-2 py-1 w-full"
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 <option value="">Unassigned</option>
+                                {lead.assignedTo && lead.assignedTo !== 'Unassigned' && !users.some(u =>
+                                  [u.username, u.name, u.email].some(v => v && String(v).toLowerCase() === String(lead.assignedTo).toLowerCase())
+                                ) && (
+                                  <option value={lead.assignedTo}>{lead.assignedTo}</option>
+                                )}
                                 {users.map(user => (
-                                  <option key={user.id} value={user.email}>{user.name}</option>
+                                  <option key={user.id} value={user.username || user.name || user.email}>{user.name || user.username}</option>
                                 ))}
                               </select>
                               <select
@@ -4787,6 +3854,10 @@ const LeadsManagement: React.FC = () => {
                                 onClick={(e) => e.stopPropagation()}
                                 placeholder="Follow-up date"
                               />
+                              <ScheduledCallField
+                                value={editedLead.scheduledCallAt}
+                                onChange={value => setEditedLead(prev => ({ ...prev, scheduledCallAt: value }))}
+                              />
                             </>
                           ) : (
                             <>
@@ -4800,6 +3871,11 @@ const LeadsManagement: React.FC = () => {
                               {lead.followUp && (
                                 <p className="text-xs text-gray-500">
                                   Follow: {new Date(lead.followUp).toLocaleDateString()}
+                                </p>
+                              )}
+                              {lead.scheduledCallAt && (
+                                <p className="text-xs text-blue-700">
+                                  Call: {new Date(lead.scheduledCallAt).toLocaleString()}
                                 </p>
                               )}
                             </>
@@ -4963,7 +4039,11 @@ const LeadsManagement: React.FC = () => {
                       <p className="font-medium">Lead not found</p>
                       <p className="text-sm">The selected lead could not be loaded.</p>
                       <button 
-                        onClick={() => setShowDetailPanel(false)}
+                        onClick={async () => {
+                          if (!detailAutosaveRef.current || await detailAutosaveRef.current()) {
+                            setShowDetailPanel(false);
+                          }
+                        }}
                         className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
                       >
                         Close Panel
@@ -4987,7 +4067,11 @@ const LeadsManagement: React.FC = () => {
                       </div>
                     </div>
                     <button
-                      onClick={() => setShowDetailPanel(false)}
+                      onClick={async () => {
+                        if (!detailAutosaveRef.current || await detailAutosaveRef.current()) {
+                          setShowDetailPanel(false);
+                        }
+                      }}
                       className="text-blue-100 hover:text-white transition-colors p-1 rounded-lg hover:bg-white hover:bg-opacity-20"
                       title="Close Detail Panel"
                     >
@@ -4997,6 +4081,29 @@ const LeadsManagement: React.FC = () => {
 
                   {/* Lead Information */}
                   <div className="p-4 space-y-4">
+                    <AutoSaveLeadForm
+                      key={selectedLead.id}
+                      lead={selectedLead}
+                      register={registerDetailAutosave}
+                      save={async (id, patch) => {
+                        if (['estimatedValue', 'estimated_value', 'salePrice', 'sale_price']
+                          .some(field => Object.prototype.hasOwnProperty.call(patch, field))) {
+                          throw new Error('Revenue editing is not supported by the current lead API. Restore the previous value to save other changes.');
+                        }
+                        isUpdatingLeadRef.current = true;
+                        try {
+                          const saved = await updateLeadMutation.mutateAsync({ id, data: patch });
+                          setSelectedLeadCache(previous => previous?.id === id
+                            ? { ...previous, ...patch, ...saved.data }
+                            : { ...selectedLead, ...patch, ...saved.data });
+                          setLastUpdateTime(new Date());
+                        } finally {
+                          isUpdatingLeadRef.current = false;
+                        }
+                      }}
+                    >
+                    {({ editingLead, editedLead, setEditedLead }) => (
+                    <>
                     {/* Primary Contact Info */}
                     <div className="bg-gray-50 rounded-lg p-3">
                       <h4 className="font-semibold text-gray-900 text-base mb-2 flex items-center">
@@ -5009,7 +4116,7 @@ const LeadsManagement: React.FC = () => {
                           {editingLead === selectedLead.id ? (
                             <input
                               type="text"
-                              value={editedLead.fullName || selectedLead.fullName}
+                              value={editedLead.fullName ?? selectedLead.fullName}
                               onChange={(e) => setEditedLead(prev => ({ ...prev, fullName: e.target.value }))}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
@@ -5032,7 +4139,7 @@ const LeadsManagement: React.FC = () => {
                             {editingLead === selectedLead.id ? (
                               <input
                                 type="email"
-                                value={editedLead.email || selectedLead.email}
+                                value={editedLead.email ?? selectedLead.email}
                                 onChange={(e) => setEditedLead(prev => ({ ...prev, email: e.target.value }))}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               />
@@ -5049,7 +4156,7 @@ const LeadsManagement: React.FC = () => {
                             {editingLead === selectedLead.id ? (
                               <input
                                 type="tel"
-                                value={editedLead.phone || selectedLead.phone}
+                                value={editedLead.phone ?? selectedLead.phone}
                                 onChange={(e) => setEditedLead(prev => ({ ...prev, phone: e.target.value }))}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               />
@@ -5075,16 +4182,12 @@ const LeadsManagement: React.FC = () => {
                           <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
                           {editingLead === selectedLead.id ? (
                             <select
-                              value={editedLead.country || selectedLead.country}
+                              value={editedLead.country ?? selectedLead.country}
                               onChange={(e) => {
                                 const selectedCountryName = e.target.value;
-                                const selectedCountry = countryOptions.find(c => c.name === selectedCountryName);
-                                const phoneCode = selectedCountry?.phoneCode || '';
-                                
                                 setEditedLead(prev => ({ 
                                   ...prev, 
-                                  country: selectedCountryName,
-                                  phone: phoneCode
+                                  country: selectedCountryName
                                 }));
                               }}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -5105,7 +4208,7 @@ const LeadsManagement: React.FC = () => {
                           {editingLead === selectedLead.id ? (
                             <input
                               type="text"
-                              value={editedLead.branch || selectedLead.branch}
+                              value={editedLead.branch ?? selectedLead.branch}
                               onChange={(e) => setEditedLead(prev => ({ ...prev, branch: e.target.value }))}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
@@ -5118,7 +4221,7 @@ const LeadsManagement: React.FC = () => {
                           <label className="block text-sm font-medium text-gray-700 mb-1">Qualification</label>
                           {editingLead === selectedLead.id ? (
                             <select
-                              value={editedLead.qualification || selectedLead.qualification}
+                              value={editedLead.qualification ?? selectedLead.qualification}
                               onChange={(e) => setEditedLead(prev => ({ ...prev, qualification: e.target.value }))}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
@@ -5139,7 +4242,7 @@ const LeadsManagement: React.FC = () => {
                           {editingLead === selectedLead.id ? (
                             !showEditCustomCourseInput ? (
                             <select
-                              value={editedLead.course || selectedLead.course}
+                              value={editedLead.course ?? selectedLead.course}
                                 onChange={(e) => {
                                   if (e.target.value === '__custom__') {
                                     setShowEditCustomCourseInput(true);
@@ -5198,7 +4301,7 @@ const LeadsManagement: React.FC = () => {
                           <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
                           {editingLead === selectedLead.id ? (
                             <select
-                              value={editedLead.company || selectedLead.company || ''}
+                              value={editedLead.company ?? selectedLead.company ?? ''}
                               onChange={(e) => setEditedLead(prev => ({ ...prev, company: e.target.value }))}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
@@ -5222,7 +4325,7 @@ const LeadsManagement: React.FC = () => {
                           {editingLead === selectedLead.id ? (
                             !showEditCustomSourceInput ? (
                             <select
-                              value={editedLead.source || selectedLead.source}
+                              value={editedLead.source ?? selectedLead.source}
                                 onChange={(e) => {
                                   if (e.target.value === '__custom__') {
                                     setShowEditCustomSourceInput(true);
@@ -5288,7 +4391,7 @@ const LeadsManagement: React.FC = () => {
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
                           <select
-                            value={editedLead.status || selectedLead.status}
+                            value={editedLead.status ?? selectedLead.status}
                             onChange={(e) => {
                               const newStatus = e.target.value;
                               setEditedLead(prev => ({ ...prev, status: newStatus }));
@@ -5317,7 +4420,8 @@ const LeadsManagement: React.FC = () => {
                           </label>
                           <input
                             type="number"
-                            value={editedLead.estimatedValue || editedLead.estimated_value || selectedLead.estimatedValue || selectedLead.estimated_value || ''}
+                            readOnly
+                            value={editedLead.estimatedValue ?? editedLead.estimated_value ?? ''}
                             onChange={(e) => {
                               const estimatedValue = e.target.value ? parseFloat(e.target.value) : undefined;
                               setEditedLead(prev => ({ ...prev, estimatedValue, estimated_value: estimatedValue }));
@@ -5328,12 +4432,14 @@ const LeadsManagement: React.FC = () => {
                             step={getCurrencyByCompany(editedLead.company || selectedLead.company) === 'USD' ? '1' : '100'}
                           />
                           <div className="mt-1 flex justify-between text-xs text-gray-500">
-                            <span>Potential revenue from this lead</span>
+                            <span>Read-only: revenue storage is not supported by the current lead API.</span>
                             <button
                               type="button"
+                              disabled
                               onClick={() => {
                                 const defaultValue = getDefaultCoursePrice(editedLead.company || selectedLead.company, editedLead.course || selectedLead.course);
                                 setEditedLead(prev => ({ ...prev, estimatedValue: defaultValue, estimated_value: defaultValue }));
+                                void detailAutosaveRef.current?.();
                               }}
                               className="text-blue-600 hover:text-blue-800"
                             >
@@ -5350,7 +4456,8 @@ const LeadsManagement: React.FC = () => {
                             </label>
                             <input
                               type="number"
-                              value={editedLead.salePrice || editedLead.sale_price || selectedLead.salePrice || selectedLead.sale_price || ''}
+                              readOnly
+                              value={editedLead.salePrice ?? editedLead.sale_price ?? ''}
                               onChange={(e) => {
                                 const salePrice = e.target.value ? parseFloat(e.target.value) : undefined;
                                 setEditedLead(prev => ({ ...prev, salePrice, sale_price: salePrice }));
@@ -5375,7 +4482,7 @@ const LeadsManagement: React.FC = () => {
                           <label className="block text-sm font-medium text-gray-700 mb-2">Assigned to</label>
                           {editingLead === selectedLead.id ? (
                             <select
-                              value={editedLead.assignedTo || selectedLead.assignedTo}
+                              value={editedLead.assignedTo ?? selectedLead.assignedTo}
                               onChange={(e) => setEditedLead(prev => ({ ...prev, assignedTo: e.target.value }))}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
@@ -5407,7 +4514,7 @@ const LeadsManagement: React.FC = () => {
                           <input
                             type="datetime-local"
                             value={(() => {
-                              const followUpDate = editedLead.followUp || selectedLead.followUp;
+                              const followUpDate = editedLead.followUp ?? selectedLead.followUp;
                               if (!followUpDate) return '';
                               
                               // Handle various date formats safely
@@ -5446,27 +4553,23 @@ const LeadsManagement: React.FC = () => {
                             }
                           </p>
                         </div>
+                        <ScheduledCallField
+                          autoSave
+                          value={editingLead === selectedLead.id ? editedLead.scheduledCallAt : selectedLead.scheduledCallAt}
+                          onChange={value => {
+                            if (editingLead !== selectedLead.id) handleEditLead(selectedLead);
+                            setEditedLead(prev => ({ ...prev, scheduledCallAt: value }));
+                          }}
+                        />
+                        {selectedLead.scheduledCallDismissedAt && (
+                          <p className="text-xs text-gray-500">Call reminder dismissed. Choose a new call time to enable another reminder.</p>
+                        )}
                       </div>
                     </div>
 
-                    {/* Edit Actions */}
-                    {editingLead === selectedLead.id && (
-                      <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
-                        <button
-                          onClick={handleCancelEdit}
-                          className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          onClick={handleSaveLead}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
-                        >
-                          <CheckCircle className="w-4 h-4" />
-                          <span>Save Changes</span>
-                        </button>
-                      </div>
+                    </>
                     )}
+                    </AutoSaveLeadForm>
 
 
 
@@ -5755,7 +4858,7 @@ const LeadsManagement: React.FC = () => {
       {/* Enhanced Bulk Transfer Modal */}
       {showBulkTransferModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-lg mx-4">
+          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
@@ -5772,7 +4875,7 @@ const LeadsManagement: React.FC = () => {
                 </div>
               </div>
               <button
-                onClick={() => setShowBulkTransferModal(false)}
+                onClick={closeBulkTransfer}
                 disabled={isTransferringLeads}
                 className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100"
               >
@@ -5790,12 +4893,20 @@ const LeadsManagement: React.FC = () => {
               </div>
               <div className="max-h-32 overflow-y-auto space-y-2">
                 {selectedLeads.map(leadId => {
-                  const lead = leads.find((l: Lead) => l.id === leadId);
+                  const lead = leads.find((l: Lead) => l.id === leadId) ||
+                    (selectedLeadCache?.id === leadId ? selectedLeadCache : null);
                   return lead ? (
                     <div key={leadId} className="flex justify-between items-center bg-white p-2 rounded border">
                       <div>
                         <span className="font-medium text-sm text-gray-900">{lead.fullName}</span>
                         <p className="text-xs text-gray-500">{lead.email}</p>
+                        <p className="text-xs text-gray-500 mt-1">Current stage:</p>
+                        <span className={`inline-block px-2 py-0.5 text-xs font-medium rounded-full ${
+                          STATUS_COLORS[lead.status as keyof typeof STATUS_COLORS] || STATUS_COLORS['Fresh']
+                        }`}>{lead.status}</span>
+                        {bulkTransferStatus && (
+                          <p className="text-xs text-blue-700 mt-1">Stage after transfer: {bulkTransferStatus}</p>
+                        )}
                       </div>
                       <div className="text-right">
                         <p className="text-xs text-gray-500">Currently assigned to:</p>
@@ -5833,6 +4944,29 @@ const LeadsManagement: React.FC = () => {
               </div>
               
               <div>
+                <label htmlFor="transfer-lead-stage" className="block text-sm font-medium text-gray-700 mb-2">
+                  Lead Stage After Transfer
+                </label>
+                <select
+                  id="transfer-lead-stage"
+                  value={bulkTransferStatus}
+                  disabled={isTransferringLeads}
+                  onChange={event => {
+                    const value = event.target.value;
+                    setBulkTransferStatus(STATUS_OPTIONS.find(status => status === value) || '');
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">Keep current stage (no change)</option>
+                  {STATUS_OPTIONS.map(status => <option key={status} value={status}>{status}</option>)}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  {bulkTransferStatus ? 'The selected stage will apply to all transferred leads.' :
+                    'Each lead keeps its current stage, including when selected leads have different stages.'}
+                </p>
+              </div>
+
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   <span className="flex items-center space-x-1">
                     <MessageSquare className="w-4 h-4" />
@@ -5855,11 +4989,7 @@ const LeadsManagement: React.FC = () => {
             <div className="flex items-center justify-end space-x-3 mt-6 pt-4 border-t border-gray-200">
               <button
                 disabled={isTransferringLeads}
-                onClick={() => {
-                  setShowBulkTransferModal(false);
-                  setBulkTransferCounselor('');
-                  setBulkTransferReason('');
-                }}
+                onClick={closeBulkTransfer}
                 className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
               >
                 Cancel
@@ -5980,6 +5110,7 @@ const LeadsManagement: React.FC = () => {
               </div>
               <button
                 onClick={handleCancelAddLead}
+                disabled={savingNewLead}
                 className="text-gray-400 hover:text-gray-600"
               >
                 <X className="w-6 h-6" />
@@ -5988,6 +5119,14 @@ const LeadsManagement: React.FC = () => {
 
             {/* Modal Body */}
             <div className="px-6 py-6">
+              <DuplicateLeadNotice
+                duplicates={saveDuplicates.length ? saveDuplicates : duplicateCheck.duplicates}
+                checking={duplicateCheck.checking}
+                error={duplicateCheck.error}
+                onView={viewDuplicateLead}
+                onRetry={duplicateCheck.retry}
+              />
+              <fieldset disabled={savingNewLead}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Full Name */}
                 <div>
@@ -6006,29 +5145,35 @@ const LeadsManagement: React.FC = () => {
                 {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email
+                    Email <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
                     value={newLead.email || ''}
+                    required
                     onChange={(e) => setNewLead({...newLead, email: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Enter email address (optional)"
+                    placeholder="Enter email address"
                   />
                 </div>
 
                 {/* Phone */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone <span className="text-red-500">*</span>
+                    Phone with country code <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="tel"
+                    required
+                    aria-describedby="new-lead-phone-help"
                     value={newLead.phone || ''}
                     onChange={(e) => setNewLead({...newLead, phone: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Enter phone number"
+                    placeholder="+91 9876543210"
                   />
+                  <p id="new-lead-phone-help" className="mt-1 text-xs text-gray-500">
+                    Include + and the country code, followed by the phone number (7 to 15 digits total).
+                  </p>
                 </div>
 
                 {/* Country */}
@@ -6269,27 +5414,35 @@ const LeadsManagement: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
+                <ScheduledCallField
+                  value={newLead.scheduledCallAt}
+                  onChange={value => setNewLead(prev => ({ ...prev, scheduledCallAt: value }))}
+                />
               </div>
+              </fieldset>
             </div>
 
             {/* Modal Footer */}
             <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-end space-x-3">
               <button
                 onClick={handleCancelAddLead}
+                disabled={savingNewLead}
                 className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveNewLead}
-                disabled={loading}
+                disabled={savingNewLead || duplicateCheck.checking || !!duplicateCheck.error ||
+                  duplicateCheck.duplicates.length > 0 || saveDuplicates.length > 0}
                 className={`px-6 py-2 rounded-lg transition-colors flex items-center space-x-2 ${
-                  loading 
+                  savingNewLead || duplicateCheck.checking || !!duplicateCheck.error ||
+                  duplicateCheck.duplicates.length > 0 || saveDuplicates.length > 0
                     ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
                     : 'bg-blue-600 text-white hover:bg-blue-700'
                 }`}
               >
-                {loading ? (
+                {savingNewLead ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
                     <span>Adding Lead...</span>
@@ -6306,8 +5459,62 @@ const LeadsManagement: React.FC = () => {
         </div>
       )}
 
+      {importReview && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div role="dialog" aria-modal="true" aria-labelledby="import-review-title" className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
+            <h2 id="import-review-title" className="text-xl font-semibold">Review Lead Import</h2>
+            <p className="mt-1 text-sm text-gray-600">{importReview.fileName}</p>
+            <div className="my-4 rounded-lg bg-gray-50 p-4 text-sm">
+              <p>Total rows: {importReview.total}</p>
+              <p className="text-green-700">New valid leads: {importReview.accepted.length}</p>
+              <p className="text-amber-700">Duplicates skipped: {importReview.duplicates.length}</p>
+              <p className="text-red-700">Invalid rows skipped: {importReview.invalid.length}</p>
+              <p className="mt-2">Either an existing phone or email marks a duplicate, including repeats within this file.</p>
+            </div>
+            {(importReview.duplicates.length > 0 || importReview.invalid.length > 0) && (
+              <details className="mb-4 text-sm">
+                <summary className="cursor-pointer font-medium">View skipped rows</summary>
+                <div className="mt-2 max-h-48 overflow-auto">
+                  {importReview.duplicates.map(row => <p key={`duplicate-${row.rowNumber}`}>Row {row.rowNumber}: {row.reason}</p>)}
+                  {importReview.invalid.map((row, index) => <p key={`invalid-${index}`}>{row.rowNumber ? `Row ${row.rowNumber}: ` : ''}{row.error}</p>)}
+                </div>
+              </details>
+            )}
+            {importReview.accepted.length > 0 ? (
+              <fieldset disabled={importLoading} className="grid gap-4 md:grid-cols-2">
+                <label className="text-sm font-medium">
+                  Assign all new leads to <span className="text-red-500">*</span>
+                  <select className="mt-2 w-full rounded-lg border p-2" value={importAssignee} onChange={event => setImportAssignee(event.target.value)}>
+                    <option value="">Choose assignee</option>
+                    {user?.username && <option value={user.username}>Me ({user.username})</option>}
+                    {assignableUsers.filter(member => member.username && member.username !== user?.username).map(member => (
+                      <option key={member.id} value={member.username}>{member.name} ({member.role})</option>
+                    ))}
+                  </select>
+                </label>
+                <label className="text-sm font-medium">
+                  Upload status <span className="text-red-500">*</span>
+                  <select className="mt-2 w-full rounded-lg border p-2" value={importStatus} onChange={event => setImportStatus(event.target.value as StatusType | '')}>
+                    <option value="">Choose status</option>
+                    {STATUS_OPTIONS.map(status => <option key={status} value={status}>{status}</option>)}
+                  </select>
+                </label>
+              </fieldset>
+            ) : <p className="text-red-700">No new valid leads to import.</p>}
+            <p className="mt-4 text-xs text-gray-500">Your selections apply to every new lead and override any assignee/status columns in the file. Duplicates are checked again when importing.</p>
+            <div className="mt-6 flex justify-end gap-3">
+              <button type="button" disabled={importLoading} onClick={() => setImportReview(null)} className="rounded-lg border px-4 py-2">Cancel</button>
+              <button type="button" disabled={importLoading || !importAssignee || !importStatus || !importReview.accepted.length}
+                onClick={() => void confirmLeadImport()} className="rounded-lg bg-blue-600 px-4 py-2 text-white disabled:bg-gray-400">
+                {importLoading ? 'Importing...' : `Import ${importReview.accepted.length} leads`}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* No leads found */}
-      {filteredLeads.length === 0 && (
+      {filteredLeads.length === 0 && !loadingLeads && !leadsError && (
         <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-200 mt-6">
           <Target className="mx-auto h-12 w-12 text-gray-400 mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">No leads found</h3>
@@ -6488,7 +5695,7 @@ const LeadsManagement: React.FC = () => {
                               className="text-xs px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               onChange={(e) => {
                                 if (e.target.value) {
-                                  handleTransferTeamMemberLead(lead.id, e.target.value);
+                                  handleTransferTeamMemberLead(lead, e.target.value);
                                   e.target.value = ''; // Reset selection
                                 }
                               }}
@@ -6516,150 +5723,6 @@ const LeadsManagement: React.FC = () => {
         </div>
       )}
 
-      {/* Overdue Follow-up Popup Notifications - DISABLED */}
-      {false && showOverduePopup && popupNotifications.length > 0 && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full mx-4 transform animate-pulse">
-            <div className="bg-red-500 text-white px-6 py-4 rounded-t-lg">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <Bell className="w-6 h-6 mr-3 animate-bounce" />
-                  <h3 className="text-lg font-bold">⚠️ Urgent: Overdue Follow-ups!</h3>
-                </div>
-                <button
-                  onClick={() => {
-                    setShowOverduePopup(false);
-                    setPopupNotifications([]);
-                  }}
-                  className="text-white hover:text-gray-200 transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-            
-            <div className="p-6">
-              <div className="text-center mb-4">
-                <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-2" />
-                <p className="text-gray-700 font-medium">
-                  You have {overdueLeads.length} overdue follow-up{overdueLeads.length !== 1 ? 's' : ''}!
-                </p>
-                <p className="text-sm text-gray-500 mt-1">
-                  These leads require immediate attention
-                </p>
-              </div>
-
-              <div className="max-h-64 overflow-y-auto space-y-3">
-                {overdueLeads.slice(0, 5).map((lead: Lead) => {
-                  const daysOverdue = Math.floor((new Date().getTime() - new Date(lead.followUp!).getTime()) / (1000 * 60 * 60 * 24));
-                  return (
-                    <div key={lead.id} className="bg-red-50 border border-red-200 rounded-lg p-3">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900">{lead.fullName}</h4>
-                          <p className="text-sm text-gray-600">{lead.email}</p>
-                          <p className="text-xs text-red-600 font-medium mt-1">
-                            🔥 {daysOverdue} day{daysOverdue !== 1 ? 's' : ''} overdue
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            Due: {new Date(lead.followUp!).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => {
-                            setSelectedLeadId(lead.id);
-                            setSelectedLeadCache(lead); // Cache the lead data
-                            setShowDetailPanel(true);
-                            setShowOverduePopup(false);
-                            // Load notes and activities for the lead
-                            loadNotesForLead(lead.id);
-                            loadActivitiesForLead(lead.id);
-                          }}
-                          className="ml-3 bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600 transition-colors"
-                        >
-                          View Lead
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-                
-                {overdueLeads.length > 5 && (
-                  <div className="text-center text-sm text-gray-500 mt-3">
-                    ... and {overdueLeads.length - 5} more overdue leads
-                  </div>
-                )}
-              </div>
-
-              <div className="mt-6 flex space-x-3">
-                <button
-                  onClick={() => {
-                    // Reset all filters and show search for overdue leads
-                    setSearchQuery('');
-                    setStatusFilter(['all']);
-                    setCountryFilter('all');
-                    setSourceFilter('all');
-                    setAssignedToFilter(['all']);
-                    setQualificationFilter('all');
-                    setShowOverdueOnly(true);
-                    setShowOverduePopup(false);
-                    
-                    // Scroll to leads table
-                    setTimeout(() => {
-                      document.querySelector('.leads-table')?.scrollIntoView({ behavior: 'smooth' });
-                    }, 100);
-                  }}
-                  className="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors font-medium"
-                >
-                  View All Overdue
-                </button>
-                <button
-                  onClick={() => {
-                    setShowOverduePopup(false);
-                    // Set reminder to show again in 30 minutes
-                    setTimeout(() => {
-                      if (overdueLeads.length > 0) {
-                        setShowOverduePopup(true);
-                      }
-                    }, 1800000); // 30 minutes
-                  }}
-                  className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors font-medium"
-                >
-                  Remind Later
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Desktop Notification Permission Request */}
-      {typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'default' && (
-        <div className="fixed bottom-4 right-4 bg-blue-500 text-white p-4 rounded-lg shadow-lg z-40">
-          <div className="flex items-center space-x-3">
-            <Bell className="w-5 h-5" />
-            <div className="flex-1">
-              <p className="text-sm font-medium">Enable Desktop Notifications</p>
-              <p className="text-xs opacity-90">Get alerts for overdue follow-ups</p>
-            </div>
-            <button
-              onClick={() => {
-                Notification.requestPermission().then(permission => {
-                  if (permission === 'granted') {
-                    new Notification('CRM Notifications Enabled!', {
-                      body: 'You\'ll now receive alerts for overdue follow-ups',
-                      icon: '/favicon.ico'
-                    });
-                  }
-                });
-              }}
-              className="bg-white text-blue-500 px-3 py-1 rounded text-xs font-medium hover:bg-gray-100 transition-colors"
-            >
-              Enable
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -15,7 +15,7 @@ import {
   Filler
 } from 'chart.js';
 import { Line, Bar, Doughnut, Pie } from 'react-chartjs-2';
-import { TrendingUp, Users, DollarSign, Target, Calendar, Download } from 'lucide-react';
+import { TrendingUp, Users, DollarSign, Target, Download } from 'lucide-react';
 
 // Register ChartJS components
 ChartJS.register(
@@ -41,7 +41,7 @@ interface AnalyticsData {
 }
 
 const AdvancedAnalytics: React.FC = () => {
-  const { user } = useAuth();
+  useAuth();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [dateRange, setDateRange] = useState('30d');

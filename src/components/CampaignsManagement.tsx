@@ -4,8 +4,6 @@ import { getApiClient } from '../lib/backend';
 import { 
   Plus,
   Play,
-  Pause,
-  Settings,
   Mail,
   MessageSquare,
   Phone,
@@ -13,15 +11,9 @@ import {
   Eye,
   Edit3,
   Trash2,
-  Calendar,
   Target,
   BarChart3,
-  Send,
-  CheckCircle,
-  AlertCircle,
-  Clock,
   RefreshCw,
-  Filter,
   Search
 } from 'lucide-react';
 
@@ -57,9 +49,9 @@ const CampaignsManagement: React.FC = () => {
   const { user } = useAuth();
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
+  const [, setSelectedCampaign] = useState<Campaign | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [, setShowEditModal] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 

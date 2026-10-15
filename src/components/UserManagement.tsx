@@ -246,23 +246,6 @@ const UserManagement: React.FC = () => {
     });
   };
 
-  // Check if current user can access/see another user based on hierarchy
-  const canAccessUser = (targetUser: DatabaseUser, currentUserId?: string) => {
-    if (!currentUserId || !targetUser) return false;
-    
-    // Admins can see everyone
-    if (currentUser?.role === 'admin') return true;
-    
-    // Super admins can see everyone (except restricted by admin)
-    if (currentUser?.role === 'super_admin') return true;
-    
-    // Users can always see themselves
-    if (targetUser.id === currentUserId) return true;
-    
-    // Check if targetUser reports to currentUser (directly or indirectly)
-    return isSubordinate(targetUser.id, currentUserId);
-  };
-
   // Check if userId is a subordinate of supervisorId (direct or indirect)
   const isSubordinate = (userId: string, supervisorId: string): boolean => {
     const user = users.find(u => u.id === userId);

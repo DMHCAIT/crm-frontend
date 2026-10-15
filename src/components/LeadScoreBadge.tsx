@@ -92,16 +92,13 @@ interface LeadScoreCardProps {
 }
 
 export const LeadScoreCard: React.FC<LeadScoreCardProps> = ({
-  leadId,
   score = 0,
   scoreLevel = 'Low',
   breakdown,
   churnRisk = 0,
-  churnLevel = 'Low',
   recommendations = [],
   nextAction
 }) => {
-  const scoreColor = score >= 75 ? 'text-green-600' : score >= 50 ? 'text-yellow-600' : 'text-gray-600';
   const churnColor = churnRisk > 70 ? 'text-red-600' : churnRisk > 40 ? 'text-orange-600' : 'text-green-600';
 
   return (

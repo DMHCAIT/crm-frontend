@@ -10,14 +10,11 @@ import {
 import { LeadScoreBadge } from './LeadScoreBadge';
 import {
   DollarSign,
-  TrendingUp,
-  TrendingDown,
   Clock,
   Target,
   AlertTriangle,
   RefreshCw,
   Zap,
-  Users,
   Activity
 } from 'lucide-react';
 

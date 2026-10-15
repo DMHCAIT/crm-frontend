@@ -16,6 +16,8 @@ export interface DatabaseLead {
   status?: string;
   assignedTo?: string;
   followUp?: string;
+  scheduledCallAt?: string | null;
+  scheduledCallDismissedAt?: string | null;
 
   notes?: string;
   tags?: string[];

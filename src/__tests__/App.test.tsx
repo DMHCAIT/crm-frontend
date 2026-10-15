@@ -1,15 +1,22 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { test, expect, vi } from 'vitest';
 import App from '../App';
 
-test('renders App component', () => {
-    render(<App />);
-    const linkElement = screen.getByText(/welcome to the app/i);
-    expect(linkElement).toBeInTheDocument();
+vi.mock('../hooks/useAuth', () => ({
+  useAuth: () => ({
+    isAuthenticated: false, loading: false, error: null, user: null,
+    login: vi.fn(), logout: vi.fn()
+  })
+}));
+
+test('requires authentication before displaying CRM content', () => {
+  render(<App />);
+  expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
+  expect(screen.queryByText(/total leads/i)).not.toBeInTheDocument();
 });
 
-test('checks if button is present', () => {
-    render(<App />);
-    const buttonElement = screen.getByRole('button', { name: /click me/i });
-    expect(buttonElement).toBeInTheDocument();
+test('shows the login credential fields', () => {
+  render(<App />);
+  expect(screen.getByPlaceholderText(/username/i)).toBeInTheDocument();
+  expect(screen.getByPlaceholderText(/password/i)).toBeInTheDocument();
 });

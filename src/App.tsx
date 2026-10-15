@@ -178,7 +178,7 @@ const App: React.FC = () => {
             
             {/* Main Content */}
             <div className="flex-1 flex flex-col overflow-hidden">
-              <Header />
+              <Header onNavigate={setActiveSection} />
               
               {/* Connection Status */}
               <div className="px-6 py-2">

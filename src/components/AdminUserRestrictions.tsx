@@ -8,6 +8,7 @@ interface User {
   role: string;
   department?: string;
   branch?: string;
+  location?: string;
 }
 
 const AdminUserRestrictions: React.FC = () => {

@@ -12,7 +12,6 @@ import {
   Target,
   Users,
   Award,
-  AlertTriangle,
   ArrowRight,
   Activity,
   Zap,

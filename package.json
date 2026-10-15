@@ -6,7 +6,11 @@
   "description": "DMHCA CRM Frontend with Production Authentication - AUTH FIX v1.1.1",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --mode production",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit",
+    "test": "npm run test:regression && npm run test:ui",
+    "test:regression": "node --test src/__tests__/*.test.cjs",
+    "test:ui": "vitest run",
+    "build": "npm run typecheck && vite build --mode production",
     "preview": "vite preview --mode production",
     "lint": "eslint .",
     "env-check": "echo \"✅ Production mode - .env file found\" && echo \"Environment variables ready for production deployment\"",
@@ -39,15 +43,20 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.3",
+    "@types/node": "^22.20.5",
     "@types/react": "^18.3.24",
     "@types/react-dom": "^18.3.7",
     "eslint": "^9.9.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.11",
     "globals": "^15.9.0",
+    "jsdom": "^25.0.1",
     "terser": "^5.44.0",
     "typescript": "^5.5.3",
-    "typescript-eslint": "^8.3.0"
+    "typescript-eslint": "^8.3.0",
+    "vitest": "^2.1.9"
   },
   "engines": {
     "node": ">=18.0.0"
