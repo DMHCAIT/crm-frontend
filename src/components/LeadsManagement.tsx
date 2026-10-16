@@ -13,6 +13,8 @@ import { isInternationalPhone } from '../lib/leadDuplicates';
 import { readLeadImportRows } from '../lib/leadImport';
 import { areAllLeadsSelected, toggleAllLeadSelection, type LeadPageSize } from '../lib/leadPagination';
 import { STATUS_OPTIONS, STATUS_COLORS, QUALIFICATION_OPTIONS, type StatusType } from '../constants/crmConstants';
+import { COURSE_OPTIONS, ALL_COURSE_OPTIONS } from '../constants/courseOptions';
+import { useCourseOptions } from '../hooks/useCourseOptions';
 import { buildTransferUpdate } from '../lib/leadTransfer';
 import { useLeads, useLeadBucketStats, useBulkUpdateLeads, useBulkDeleteLeads, useUpdateLead, useAddNote } from '../hooks/useQueries';
 import { 
@@ -185,6 +187,7 @@ const LeadsManagement: React.FC = () => {
   const bulkUpdateMutation = useBulkUpdateLeads();
   const bulkDeleteMutation = useBulkDeleteLeads();
   const updateLeadMutation = useUpdateLead();
+  const { customCourses, registerCustomCourse } = useCourseOptions();
   const addNoteMutation = useAddNote();
   
   // State Management
@@ -324,71 +327,7 @@ const LeadsManagement: React.FC = () => {
   const [qualificationOptions] = useState<string[]>([...QUALIFICATION_OPTIONS]);
   const [assignableUsers, setAssignableUsers] = useState<AssignableUser[]>([]);
   
-  // Default course options with proper prefixes - comprehensive list
-  const defaultCourseOptions = {
-    fellowship: [
-      'Fellowship in Emergency Medicine',
-      'Fellowship in Aesthetic Medicine',
-      'Fellowship in Anesthesiology',
-      'Fellowship in Cardiology',
-      'Fellowship in Critical Care Medicine',
-      'Fellowship in Dermatology',
-      'Fellowship in Endocrinology',
-      'Fellowship in Family Medicine',
-      'Fellowship in Gastroenterology',
-      'Fellowship in General Surgery',
-      'Fellowship in Geriatrics',
-      'Fellowship in Hematology',
-      'Fellowship in Infectious Diseases',
-      'Fellowship in Internal Medicine',
-      'Fellowship in Nephrology',
-      'Fellowship in Neurology',
-      'Fellowship in Obstetrics and Gynecology',
-      'Fellowship in Oncology',
-      'Fellowship in Ophthalmology',
-      'Fellowship in Orthopedics',
-      'Fellowship in Otolaryngology',
-      'Fellowship in Pathology',
-      'Fellowship in Pediatrics',
-      'Fellowship in Psychiatry',
-      'Fellowship in Pulmonology',
-      'Fellowship in Radiology',
-      'Fellowship in infertility Management'
-      'Fellowship in Gynecology'
-      
-    ],
-    pgDiploma: [
-      'PG Diploma in Emergency Medicine',
-      'PG Diploma in Aesthetic Medicine',
-      'PG Diploma in Clinical Cardiology',
-      'PG Diploma in Critical Care Medicine',
-      'PG Diploma in Dermatology',
-      'PG Diploma in Endocrinology',
-      'PG Diploma in Family Medicine',
-      'PG Diploma in Geriatrics',
-      'PG Diploma in Hospital Administration',
-      'PG Diploma in Internal Medicine',
-      'PG Diploma in Nephrology',
-      'PG Diploma in Neurology',
-      'PG Diploma in Obstetrics and Gynecology',
-      'PG Diploma in Orthopedics',
-      'PG Diploma in Pediatrics',
-      'PG Diploma in Psychiatry',
-      'PG Diploma in Pulmonology',
-      'PG Diploma in Radiology',
-      'PG Diploma in Infertility Management',
-      'PG Diploma in Gynecology'
-
-    ],
-    all: [] as string[]
-  };
-  
-  const [courseOptions] = useState<{fellowship: string[], pgDiploma: string[], all: string[]}>(
-    {
-      ...defaultCourseOptions,
-      all: [...defaultCourseOptions.fellowship, ...defaultCourseOptions.pgDiploma]
-    }
-  );
+  const courseOptions = { ...COURSE_OPTIONS, custom: customCourses };
   
   // Filter States
   const [dateFilter, setDateFilter] = useState('all');
@@ -914,6 +853,13 @@ const LeadsManagement: React.FC = () => {
         ...editedLead,
         updatedAt: new Date().toISOString()
       };
+      if (
+        typeof updateData.course === 'string' &&
+        updateData.course !== currentLeadData?.course &&
+        (user?.role === 'admin' || user?.role === 'super_admin')
+      ) {
+        await registerCustomCourse(updateData.course);
+      }
       if (updateData.scheduledCallAt === currentLeadData?.scheduledCallAt) {
         delete updateData.scheduledCallAt;
       }
@@ -1264,6 +1210,7 @@ const LeadsManagement: React.FC = () => {
       const duplicateMatches = await getApiClient().checkLeadDuplicates(newLead.email, newLead.phone);
       setSaveDuplicates(duplicateMatches);
       if (duplicateMatches.length) return;
+      await registerCustomCourse(newLead.course);
 
       // Prepare lead data for database insertion - include ALL fields
       // Custom source/course values from super admin are accepted as-is
@@ -3250,16 +3197,23 @@ const LeadsManagement: React.FC = () => {
                       <option key={`pgdiploma-${course}`} value={course}>{course}</option>
                     ))}
                   </optgroup>
+                  {customCourses.length > 0 && (
+                    <optgroup label="Custom Courses">
+                      {customCourses.map(course => (
+                        <option key={`custom-${course}`} value={course}>{course}</option>
+                      ))}
+                    </optgroup>
+                  )}
                   {/* Include any additional courses from leads data not in predefined list */}
                   {(() => {
-                    const allPredefinedCourses = [...(courseOptions.fellowship || []), ...(courseOptions.pgDiploma || [])];
-                    const customCourses = getUniqueValues('course').filter(course => 
+                    const allPredefinedCourses = [...ALL_COURSE_OPTIONS, ...customCourses];
+                    const databaseCourses = getUniqueValues('course').filter(course =>
                       course && !allPredefinedCourses.includes(course) && course !== 'all'
                     );
-                    if (customCourses.length > 0) {
+                    if (databaseCourses.length > 0) {
                       return (
                         <optgroup label="Custom Courses (from database)">
-                          {customCourses.map(course => (
+                          {databaseCourses.map(course => (
                             <option key={`custom-${course}`} value={course}>{course}</option>
                           ))}
                         </optgroup>
@@ -3744,7 +3698,7 @@ const LeadsManagement: React.FC = () => {
                                 ))}
                               </select>
                               <select
-                                value={editedLead.course || lead.course}
+                                value={editedLead.course ?? lead.course}
                                 onChange={(e) => setEditedLead(prev => ({ ...prev, course: e.target.value }))}
                                 className="text-xs text-gray-400 bg-white border border-gray-300 rounded px-2 py-1 w-full"
                                 onClick={(e) => e.stopPropagation()}
@@ -3757,6 +3711,19 @@ const LeadsManagement: React.FC = () => {
                                 <option value="BUMS">BUMS</option>
                                 <option value="B.Sc Nursing">B.Sc Nursing</option>
                                 <option value="Paramedical">Paramedical</option>
+                                <optgroup label="Fellowship Courses">
+                                  {courseOptions.fellowship.map(course => (
+                                    <option key={`fellowship-${course}`} value={course}>{course}</option>
+                                  ))}
+                                </optgroup>
+                                <optgroup label="PG Diploma Courses">
+                                  {courseOptions.pgDiploma.map(course => (
+                                    <option key={`pgdiploma-${course}`} value={course}>{course}</option>
+                                  ))}
+                                </optgroup>
+                                {[...new Set([...customCourses, lead.course].filter((course): course is string => Boolean(course)))]
+                                  .filter(course => !ALL_COURSE_OPTIONS.includes(course))
+                                  .map(course => <option key={`custom-${course}`} value={course}>{course}</option>)}
                               </select>
                               <select
                                 value={editedLead.company || lead.company || ''}
@@ -4270,6 +4237,15 @@ const LeadsManagement: React.FC = () => {
                                   <option key={`pgdiploma-${course}`} value={course}>{course}</option>
                                 ))}
                               </optgroup>
+                              {[...new Set([...customCourses, selectedLead.course].filter((course): course is string => Boolean(course)))]
+                                .filter(course => !ALL_COURSE_OPTIONS.includes(course))
+                                .length > 0 && (
+                                <optgroup label="Custom Courses">
+                                  {[...new Set([...customCourses, selectedLead.course].filter((course): course is string => Boolean(course)))]
+                                    .filter(course => !ALL_COURSE_OPTIONS.includes(course))
+                                    .map(course => <option key={`custom-${course}`} value={course}>{course}</option>)}
+                                </optgroup>
+                              )}
                                 {user?.role === 'super_admin' && (
                                   <optgroup label="Super Admin Options">
                                     <option value="__custom__">➕ Add Custom Course...</option>
@@ -5328,6 +5304,13 @@ const LeadsManagement: React.FC = () => {
                       <optgroup label="PG Diploma Courses">
                         {courseOptions.pgDiploma.map(course => (
                           <option key={course} value={course}>{course}</option>
+                        ))}
+                      </optgroup>
+                    )}
+                    {customCourses.length > 0 && (
+                      <optgroup label="Custom Courses">
+                        {customCourses.map(course => (
+                          <option key={`custom-${course}`} value={course}>{course}</option>
                         ))}
                       </optgroup>
                     )}

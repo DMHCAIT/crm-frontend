@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
+import { ALL_COURSE_OPTIONS } from '../constants/courseOptions';
+import { useCourseOptions } from '../hooks/useCourseOptions';
 import { 
   Search, 
   GraduationCap, 
@@ -29,6 +31,7 @@ import {
 
 const StudentsManagement: React.FC = () => {
   const { user } = useAuth();
+  const { customCourses } = useCourseOptions();
   const [activeTab, setActiveTab] = useState('all');
   const [students, setStudents] = useState<any[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
@@ -365,6 +368,8 @@ const StudentsManagement: React.FC = () => {
             <option>Critical Care</option>
             <option>Emergency Medicine</option>
             <option>Cardiology</option>
+            {['MBBS', 'BDS', 'BAMS', 'BHMS', 'BUMS', 'B.Sc Nursing', 'Paramedical', ...ALL_COURSE_OPTIONS, ...customCourses]
+              .map(course => <option key={course}>{course}</option>)}
           </select>
           <select className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
             <option>All Years</option>

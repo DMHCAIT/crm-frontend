@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useLeads } from '../hooks/useQueries';
 import { useCunnektWhatsApp } from '../hooks/useCunnektWhatsApp';
+import { ALL_COURSE_OPTIONS } from '../constants/courseOptions';
+import { useCourseOptions } from '../hooks/useCourseOptions';
 import { 
   Filter, 
   Download, 
@@ -81,6 +83,7 @@ interface Campaign {
 }
 
 const LeadSegmentation: React.FC = () => {
+  const { customCourses } = useCourseOptions();
   const notify = useNotify();
   const { sendBulk, testConnection, campaigns, responses, saveCampaign, deleteCampaign, updateCampaignStatus } = useCunnektWhatsApp();
   
@@ -179,13 +182,12 @@ const LeadSegmentation: React.FC = () => {
   }, [allLeads]);
 
   const uniqueCourses = useMemo(() => {
-    const courses = allLeads
+    const courses = [...new Set([...ALL_COURSE_OPTIONS, ...customCourses, ...allLeads
       .map(l => l.course)
-      .filter(Boolean)
-      .filter((v, i, a) => a.indexOf(v) === i)
-      .sort();
-    return courses as string[];
-  }, [allLeads]);
+      .filter((course): course is string => Boolean(course))])]
+      .sort((a, b) => a.localeCompare(b));
+    return courses;
+  }, [allLeads, customCourses]);
 
   const uniqueStatuses = useMemo(() => {
     const statuses = allLeads

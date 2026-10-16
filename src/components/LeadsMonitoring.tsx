@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getApiClient } from '../lib/backend';
 import { STATUS_OPTIONS, STATUS_COLORS } from '../constants/crmConstants';
+import { ALL_COURSE_OPTIONS } from '../constants/courseOptions';
+import { useCourseOptions } from '../hooks/useCourseOptions';
 import { 
   Search, 
   Filter,
@@ -49,6 +51,7 @@ interface Lead {
 
 const LeadsMonitoring: React.FC = () => {
   const { user } = useAuth();
+  const { customCourses } = useCourseOptions();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [filteredLeads, setFilteredLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
@@ -469,6 +472,10 @@ const LeadsMonitoring: React.FC = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="all">All Courses</option>
+                {[...new Set([...ALL_COURSE_OPTIONS, ...customCourses, ...leads.map(lead => lead.course)])]
+                  .filter(course => course && course !== 'Not specified')
+                  .sort((a, b) => a.localeCompare(b))
+                  .map(course => <option key={course} value={course}>{course}</option>)}
                 <option value="MBBS">MBBS</option>
                 <option value="BDS">BDS</option>
                 <option value="BAMS">BAMS</option>
