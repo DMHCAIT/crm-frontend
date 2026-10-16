@@ -352,7 +352,10 @@ const LeadsManagement: React.FC = () => {
       'Fellowship in Pediatrics',
       'Fellowship in Psychiatry',
       'Fellowship in Pulmonology',
-      'Fellowship in Radiology'
+      'Fellowship in Radiology',
+      'Fellowship in infertility Management'
+      'Fellowship in Gynecology'
+      
     ],
     pgDiploma: [
       'PG Diploma in Emergency Medicine',
@@ -372,7 +375,10 @@ const LeadsManagement: React.FC = () => {
       'PG Diploma in Pediatrics',
       'PG Diploma in Psychiatry',
       'PG Diploma in Pulmonology',
-      'PG Diploma in Radiology'
+      'PG Diploma in Radiology',
+      'PG Diploma in Infertility Management',
+      'PG Diploma in Gynecology'
+
     ],
     all: [] as string[]
   };
